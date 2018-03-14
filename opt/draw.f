@@ -1,5 +1,5 @@
 \ Basic graphics option
-[version] $10000
+[version] $000000
 
 create fore 4 cells allot
 : fcolored  ( f: r g b a )  4sf fore 4! ;
@@ -12,7 +12,6 @@ create fore 4 cells allot
 : clearbmp  ( r g b a bmp )  onto 4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
 : *subbmp   ( bmp w h ) at@ 2i 2swap 2i al_create_sub_bitmap ;
-: backdrop  fore 4@ al_clear_to_color ;
 
 \ Predefined Colors
 : 8>p  s>f 255e f/ f>p ;
@@ -37,6 +36,8 @@ bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
 e0 e0 80 createcolor tan  f7 b0 80 createcolor caucasian
 da 42 00 createcolor orange
 
+: backdrop  fore 4@ al_clear_to_color  white ;
+
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color.
 \  Not all effect combinations are available; these are
@@ -59,8 +60,8 @@ da 42 00 createcolor orange
 : sblit  ( bmp dw dh )  0 sblitf ;
 : csrblit  ( bmp sx sy ang )  0 csrblitf ;
 
-: nsblit  ( bmp sx sy )  0 0 csrblitf ;  \ nu stands for non-uniform
-: usblit  ( bmp scale )  dup 0 0 csrblitf ;
+: nsblit  ( bmp sx sy )  0 0 csrblitf ;  \ ns stands for non-uniform scale
+: usblit  ( bmp scale )  dup nsblit ;
 
 \ Text
 variable fnt  default-font fnt ! 
