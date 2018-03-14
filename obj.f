@@ -44,7 +44,7 @@ variable redef  \ should you want to bury anything
 redef on  \ we'll keep this on while compiling RAMEN itself
 var link  var en  var ola
 var x  var y  var vx  var vy
-var hidden  var disp  var beha
+var hidden  var drw  var beha
 
 
 \ objlists and pools
@@ -86,10 +86,9 @@ create dummy  0 ,  dummy as
 
 \ game object stuff
 : ?call  ?dup -exit call ;
-: display enabled? hidden? 0 = and -exit  x 2@ at disp @ ?call ;
-: behave beha @ ?call ;
-: physics  enabled? -exit  behave  vx 2@ x 2+! ;
-: draw>  r> disp ! hidden off ;
+: draw   enabled? hidden? 0 = and -exit  x 2@ at  drw @ ?call ;
+: behave  enabled? -exit  beha @ ?call ;
+: draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
 : from  2+ at ;
 : flicker hidden @ not hidden ! ;
