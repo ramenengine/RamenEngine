@@ -93,3 +93,15 @@ create dummy  0 ,  dummy as
 : from  2+ at ;
 : flicker hidden @ not hidden ! ;
 
+\ roles
+256 cells constant /roledef
+: roledef  create /roledef /allot ;
+variable meta  meta off
+var role
+: quality  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
+: action   quality  does>  @ role @ + @ execute ;
+action wake ( -- )  action changed ( -- )  action end ( -- )
+: :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
+: become   role @ swap  role !  -exit  changed ;
+
+: ->   state @ if postpone { postpone as  ' compile,  postpone } else { as ' execute } then ; immediate
