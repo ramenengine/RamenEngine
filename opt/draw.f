@@ -1,5 +1,5 @@
 \ Basic graphics option
-[version] $000000
+$000100 [version] draw-version
 
 create fore 4 cells allot
 : fcolored  ( f: r g b a )  4sf fore 4! ;

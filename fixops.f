@@ -116,13 +116,7 @@ previous definitions
 : >rgba  ( val -- r g b a ) byt byt byt byt drop >r 3reverse r> ;
 : >rgb   ( val -- r g b )  byt byt byt drop 3reverse ;
 
-\ on stack vector stuff
-: 2min  rot min >r min r> ;
-: 2max  rot max >r max r> ;
+\ on-stack vector stuff (fixed point specific)
 : 2*  rot * >r * r> ;
 : 2/  rot swap / >r / r> ;
-: 2+  rot + >r + r> ;
-: 2-  rot swap - >r - r> ;
 : 2mod  rot swap mod >r mod r> ;
-: 2negate  negate swap negate swap ;
-: 2clamp  ( x y lowx lowy highx highy -- x y ) 2>r 2max 2r> 2min ;

@@ -15,6 +15,3 @@ create penx  0 ,  here 0 ,  constant peny
 
 \ Allegro stuff
 : -bmp  ?dup -exit al_destroy_bitmap ;
-
-
-

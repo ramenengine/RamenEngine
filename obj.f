@@ -59,7 +59,7 @@ struct (objlist) \ objlist struct, also used for pools
 : >last   ol.last @ as ;
 create dummy  0 ,  dummy as
 : object  {  here as  maxsize /allot  me }  dup link !  as ;
-: objects  0 do  object  iloop ;
+: objects  0 do  object  loop ;
 : objlist   create dummy , 0 , 0 , dummy , ;
 : ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
 : add  ( objlist n -- )  over >last  swap ?first  2dup +count  swap objects  me swap ol.last ! ;
@@ -71,7 +71,7 @@ create dummy  0 ,  dummy as
     me objlist ol.last !
     ;
 : each>  ( objlist/pool -- <code> )
-    r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>  nxt  iloop  drop } ;
+    r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>  nxt  loop  drop } ;
 : enough  " r> drop r> drop unloop r> drop " evaluate ; immediate
 : named  me constant ;
 : single  ( objlist -- <name> )  1 add  named ;
