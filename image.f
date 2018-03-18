@@ -21,10 +21,13 @@ struct image
 : imagewh  image.bmp @ bmpwh ;
 
 : /origin  dup imagewh 0.5 0.5 2* rot image.orgx 2! ;
-: init-image ( ALLEGRO_BITMAP image -- )  >r  r@ image >size erase  r@ image.bmp !  r> /origin ;
 
-: image:  ( -- <name> <path> )
-    create here  image >size allot  <filespec> zstring al_load_bitmap swap init-image ;
+: init-image ( ALLEGRO_BITMAP image -- )
+    >r  r@ image sizeof erase  r@ image.bmp !  r> /origin ;
+
+: $image  here  image sizeof allot  -rot  zstring al_load_bitmap  over init-image ;
+: image:  ( path c -- <name> )
+    create $image drop ;
 
 : load-image  ( path c image -- )
     >r  zstring al_load_bitmap  r> init-image ;

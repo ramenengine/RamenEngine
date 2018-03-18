@@ -1,4 +1,4 @@
-$000100 [version] v2d-version
+$000100 [version] v2d-ver
  
 \ 2D vectors!  fixed point or integer either works
 \ in experimental stage

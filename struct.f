@@ -6,5 +6,6 @@
 
 : struct variable ;
 create int
+create cstring
 
-: >size  @ ;
+: sizeof  @ ;
