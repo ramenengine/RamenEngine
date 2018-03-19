@@ -18,6 +18,7 @@
 \   particles
 
 
+[defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
 0 value me
 : as  to me ;
@@ -28,7 +29,8 @@ create mestk  0 , 16 cells allot
 variable used
 variable redef  \ should you want to bury anything
 : ?unique redef @ ?exit >in @  exists if r> drop drop drop exit then  >in ! ;
-: field   ?unique create used @ , used +! does> @ me + ;
+: ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
+: field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
 : var  cell field ;
 : 's   ' >body @ ?lit " +" evaluate ; immediate
 : xfield  ?unique create used @ , used +! does> @ + ;
@@ -40,7 +42,6 @@ variable redef  \ should you want to bury anything
 \  you can itterate over objlists as a whole, or just over a pool at a time
 
 
-256 cells constant maxsize
 redef on  \ we'll keep this on while compiling RAMEN itself
 var link  var en  var ola
 var x  var y  var vx  var vy
@@ -94,7 +95,7 @@ create dummy  0 ,  dummy as
 : flicker hidden @ not hidden ! ;
 
 \ roles
-256 cells constant /roledef
+[defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 : roledef  create /roledef /allot ;
 variable meta  meta off
 var role
