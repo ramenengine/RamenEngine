@@ -7,6 +7,7 @@ include ramen/struct.f
 include ramen/fixops.f
 include kit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
 include ramen/image.f
+include ramen/color.f
 \ --------------------------------------------------------------------------------------------------
 include ramen/obj.f
 include ramen/node.f
