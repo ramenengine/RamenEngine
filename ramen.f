@@ -11,7 +11,6 @@ include ramen/color.f
 include ramen/assets.f
 \ --------------------------------------------------------------------------------------------------
 include ramen/obj.f
-include ramen/node.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
 
