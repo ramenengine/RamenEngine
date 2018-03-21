@@ -1,7 +1,7 @@
 \ Asset manager, simple version
 
-\ Importing
-\ IMPORT  ( path c -- <name> )  Loads an asset from a file, creates word(s) if they don't already exist.  Otherwise it is updated.  The naming convention is:
+\ asseting
+\ asset  ( path c -- <name> )  Loads an asset from a file, creates word(s) if they don't already exist.  Otherwise it is updated.  The naming convention is:
 \ Images: .PNG .JPG .BMP .GIF (and all formats supported by Allegro ): image-<name> ( -- image )
 \ Samples: .WAV .MP3. .OGG etc: sample-name ( -- sample )
 \    and *<name>* ( -- ) Shorthand for playing the sample
@@ -54,7 +54,7 @@ struct file
 \ : *asset  \ just images for now
 \    " image: image-"  2over sanitize strjoin  evaluate ;
 
-: import  ( path c -- <name> )
+: asset  ( path c -- <name> )
     create 2dup $image >r
         assets link,  2dup file>mtime ,  r> ,  0 ( file.type ) ,  here 256 allot place ;
 

@@ -80,15 +80,15 @@ create dummy  0 ,  dummy as
 : goto x 2! ;
 : enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ goto hidden on ;
 : remove  en off  hidden on  1 ola @ +free ;
-: enabled?  en @ ;
+: en?  en @ ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" A pool was exhausted. In: ONE " ;
-: one ( pool -- ) ?noone  dup each> enabled? ?exit  enough  enable  ola !  -1 ola @ +free ;
+: one ( pool -- ) ?noone  dup each> en? ?exit  enough  enable  ola !  -1 ola @ +free ;
 
 \ game object stuff
 : ?call  ?dup -exit call ;
-: draw   enabled? hidden? 0 = and -exit  x 2@ at  drw @ ?call ;
-: behave  enabled? -exit  beha @ ?call ;
+: draw   en? hidden? 0= and -exit  x 2@ at  drw @ ?call ;
+: behave  en? -exit  beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
 : from  2+ at ;

@@ -105,7 +105,7 @@ previous definitions
 : rescale  ( n min1 max1 min2 max2 -- n )  \ transform a number from one range to another.
   locals| max2 min2 max1 min1 n |
   n min1 -  max1 min1 -  /  max2 min2 -  *  min2 + ;
-: radians  1f  d>r  f>p ;
+: >rad  1f  d>r  f>p ;
 
 \ Color stuff
 : c>p  ( c - n )  \ convert from 0...255 (byte) to 0...1.0 (fixed)

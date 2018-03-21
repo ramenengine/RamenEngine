@@ -39,13 +39,13 @@ da 42 00 createcolor orange
 : backdrop  fore 4@ al_clear_to_color  white ;
 
 \ Bitmap drawing utilities - f stands for flipped
-\  All of these words use the current color.
+\  All of these words use the current color for tinting.
 \  Not all effect combinations are available; these are
-\  intended as conveniences.  For more flexibility or
-\  speed use Allegro's drawing or primitive functions directly.
+\  intended as conveniences.
 \  To draw regions of bitmaps, use Allegro's draw bitmap region functions directly
-\  or use sub bitmaps (see subbmp).
+\  or use sub bitmaps (see SUBBMP).
 \  After each call to one of these words, the current color is reset to white.
+\  The anchor for rotation is the center of the passed bitmap.
 
 : blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  at@ 2af  r> al_draw_tinted_bitmap  white ;
 : >center  bmpwh 1 rshift  swap 1 rshift ;
@@ -55,13 +55,11 @@ da 42 00 createcolor orange
 : csrblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |  bmp ?exit
     bmp  fore 4@  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap  white ;
-
 : blit   ( bmp ) 0 blitf ;
-: sblit  ( bmp dw dh )  0 sblitf ;
-: csrblit  ( bmp sx sy ang )  0 csrblitf ;
-
 : nsblit  ( bmp sx sy )  0 0 csrblitf ;  \ ns stands for non-uniform scale
 : usblit  ( bmp scale )  dup nsblit ;
+
+
 
 \ Text
 variable fnt  default-font fnt ! 

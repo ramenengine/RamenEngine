@@ -11,7 +11,7 @@ only forth also v2d definitions
 : 2@  dup @ swap cell+ @ ;
 : 2+!  swap over cell+ +! +! ;
 only forth definitions also v2d
-: vector  ( x y -- <name> )  create swap , , ;
+: vector:  ( x y -- <name> )  create swap , , ;
 2 cells constant /vector
 : 2.  swap . . ;
 : 3.  rot . 2. ;
@@ -30,9 +30,9 @@ only forth definitions also v2d
 : vrnd  >r  2rnd  r> 2! ;
 : uvec  ( deg -- x y )   >r  r@ cos  r> sin ;  \ get unit vector from angle
 : vec  ( deg len -- x y )  >r  uvec  r> dup 2* ;
-: angle  ( vec -- deg )  \ get angle of vector
-    2@ 1f 1f fatan2 r>d f>p ;
-: magnitude  ( vec -- n )  2@ 2f fdup f* fswap fdup f* f+ fsqrt f>p ;
+: angle  ( x y -- deg ) 1f 1f fatan2 r>d f>p ;
+: magnitude  ( x y -- n )  2f fdup f* fswap fdup f* f+ fsqrt f>p ;
+
 : normalize  ( vec -- )  dup 2@ 2dup 0 0 d= ?exit  2dup magnitude dup 2/  ( 1 1 2+ ) rot 2! ;
 : vdif  ( vec1 vec2 -- x y )  2@ rot 2@ 2- ;
 : proximity  ( vec1 vec2 -- n ) vdif magnitude ;   \ distance between two vectors
@@ -47,3 +47,4 @@ only forth definitions also v2d
 : vlerp  ( vec1 vec2 n -- )
     locals| n v2 v1 |
     v1 x@ v2 x@ n lerp  v1 y@ v2 y@ n lerp  v2 2! ;
+only forth definitions
