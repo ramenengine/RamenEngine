@@ -17,7 +17,6 @@
 \   gui objects
 \   particles
 
-
 [defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
 0 value me
@@ -97,12 +96,12 @@ create dummy  0 ,  dummy as
 \ roles
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 : roledef  create /roledef /allot ;
+: derive   ( src -- )  last @ name> >body /roledef move ;
 variable meta  meta off
 var role
 : quality  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
 : action   quality  does>  @ role @ + @ execute ;
-action wake ( -- )  action changed ( -- )  action end ( -- )
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
-: become   role @ swap  role !  -exit  changed ;
+: my  " role @" evaluate  ' >body @ ?lit   " +" evaluate ; immediate
 
 : ->   state @ if postpone { postpone as  ' compile,  postpone } else { as ' execute } then ; immediate
