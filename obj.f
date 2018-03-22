@@ -97,10 +97,10 @@ create dummy  0 ,  dummy as
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 : roledef  create /roledef /allot ;
 : derive   ( src -- )  last @ name> >body /roledef move ;
-variable meta  meta off
+variable meta
 var role
-: quality  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
-: action   quality  does>  @ role @ + @ execute ;
+: rolevar  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
+: action   rolevar  does>  @ role @ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
 : my  " role @" evaluate  ' >body @ ?lit   " +" evaluate ; immediate
 
