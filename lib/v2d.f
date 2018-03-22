@@ -11,6 +11,7 @@ only forth also v2d definitions
 : 2@  dup @ swap cell+ @ ;
 : 2+!  swap over cell+ +! +! ;
 only forth definitions also v2d
+
 : vector:  ( x y -- <name> )  create swap , , ;
 2 cells constant /vector
 : 2.  swap . . ;
