@@ -100,7 +100,7 @@ create dummy  0 ,  dummy as
 : behave   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
-: from  2+ at ;
+: from  x 2@ 2+ at ;
 : flicker hidden @ not hidden ! ;
 
 \ roles
