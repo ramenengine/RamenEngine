@@ -63,12 +63,12 @@ create dummy  0 ,  dummy as
 : objlist   create dummy , 0 , 0 , dummy , ;
 : ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
 : add  ( objlist n -- )  over >last  swap ?first  2dup +count  swap objects  me swap ol.last ! ;
-: pool  ( objlist n -- <name> )
-    locals| n objlist |
-    objlist ?first drop
-    objlist >last  n objlist +count  here  ( 1st )  n objects
+: pool:  ( objlist n -- <name> )
+    locals| n ol |
+    ol ?first drop
+    ol >last  n ol +count  here  ( 1st )  n objects
         create  ( 1st ) , n , n , me ,
-    me objlist ol.last !
+    me ol ol.last !
     ;
 : each>  ( objlist/pool -- <code> )
     r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>  nxt  loop  drop } ;
