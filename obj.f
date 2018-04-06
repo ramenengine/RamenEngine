@@ -25,11 +25,17 @@ create mestk  0 , 16 cells allot
 : {  state @ if " me >r" evaluate else me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk !  then ; immediate
 : }  state @ if " r> as" evaluate else mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @   then ; immediate
 : nxt  me @ to me ;
+
 variable used
 variable redef  \ should you want to bury anything
 
 : isfield?  >body cell+ @ $76543210 = ;
-: ?unique redef @ ?exit >in @  bl word find if  isfield? if  r> 2drop  >in ! exit  then then  drop  >in ! ;
+: ?unique
+    redef @ ?exit
+    >in @
+        bl word find if  isfield? if
+            r> 2drop  >in ! exit  then  >in !  exit  then
+        drop  >in ! ;
 
 : ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
 : field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
