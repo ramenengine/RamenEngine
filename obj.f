@@ -53,41 +53,42 @@ struct (objlist) \ objlist struct, also used for pools
     (objlist) int svar ol.count
     (objlist) int svar ol.#free
     (objlist) int svar ol.last
-: +count  ol.count +! ;
+: count+!  ol.count +! ;
 : >first  ol.first @ as ;
-: +free   ol.#free +! ;
+: free+!   ol.#free +! ;
 : >last   ol.last @ as ;
 create dummy  0 ,  dummy as
 : object  {  here as  maxsize /allot  me }  dup link !  as ;
 : objects  0 do  object  loop ;
 : objlist   create dummy , 0 , 0 , dummy , ;
 : ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
-: add  ( objlist n -- )  over >last  swap ?first  2dup +count  swap objects  me swap ol.last ! ;
+: add  ( objlist n -- )  over >last  swap ?first  2dup count+!  swap objects  me swap ol.last ! ;
 : pool:  ( objlist n -- <name> )
     locals| n ol |
     ol ?first drop
-    ol >last  n ol +count  here  ( 1st )  n objects
+    ol >last  n ol count+!  here  ( 1st )  n objects
         create  ( 1st ) , n , n , me ,
     me ol ol.last !
     ;
 : each>  ( objlist/pool -- <code> )
-    r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>  nxt  loop  drop } ;
+    r> swap  dup >first  { ol.count @ 0 do  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
+: all>  ( objlist/pool -- <code> )
+    r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
 : enough  " r> drop r> drop unloop r> drop " evaluate ; immediate
 : named  me constant ;
 : single  ( objlist -- <name> )  1 add  named ;
 : any?  dup ol.#free @ 0= ;
 : goto x 2! ;
 : enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ goto hidden on ;
-: remove  en off  hidden on  1 ola @ +free ;
-: en?  en @ ;
+: remove  en off  hidden on  1 ola @ free+! ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" A pool was exhausted. In: ONE " ;
-: one ( pool -- ) ?noone  dup each> en? ?exit  enough  enable  ola !  -1 ola @ +free ;
+: one ( pool -- ) ?noone  dup all> en @ ?exit  enough  enable  ola !  -1 ola @ free+! ;
 
 \ game object stuff
 : ?call  ?dup -exit call ;
-: draw   en? hidden? 0= and -exit  x 2@ at  drw @ ?call ;
-: behave  en? -exit  beha @ ?call ;
+: draw   hidden? ?exit  x 2@ at  drw @ ?call ;
+: behave   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
 : from  2+ at ;
