@@ -9,6 +9,6 @@
 : push  ( val cs -- )  >r  1 r@ +!   r> dup @ cells + !  ;
 : pushes  ( ... cs n -- ) swap locals| s |  0 ?do  s push  loop ;
 : pops    ( cs n -- ... ) swap locals| s |  0 ?do  s pop  loop ;
-: splace  ( addr count cs -- ) 2dup !  cell u+  swap imove ;
-: scount  ( cs -- addr count ) dup @  ;
+: scount  ( cs -- addr count ) @+  ;
+: sbounds  ( cs -- end start ) scount cells over + swap ;
 : th  ( cs n -- addr )  1 + cells + ;

@@ -25,11 +25,17 @@ create mestk  0 , 16 cells allot
 : {  state @ if " me >r" evaluate else me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk !  then ; immediate
 : }  state @ if " r> as" evaluate else mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @   then ; immediate
 : nxt  me @ to me ;
+
 variable used
 variable redef  \ should you want to bury anything
 
 : isfield?  >body cell+ @ $76543210 = ;
-: ?unique redef @ ?exit >in @  bl word find if  isfield? if  r> 2drop  >in ! exit  then then  drop  >in ! ;
+: ?unique
+    redef @ ?exit
+    >in @
+        bl word find if  isfield? if
+            r> 2drop  >in ! exit  then  >in !  exit  then
+        drop  >in ! ;
 
 : ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
 : field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
@@ -45,7 +51,7 @@ variable redef  \ should you want to bury anything
 
 
 redef on  \ we'll keep this on while compiling RAMEN itself
-var link  var en  var ola
+var lnk  var en  var ^pool
 var x  var y  var vx  var vy
 var hidden  var drw  var beha
 
@@ -61,7 +67,7 @@ struct (objlist) \ objlist struct, also used for pools
 : free+!   ol.#free +! ;
 : >last   ol.last @ as ;
 create dummy  0 ,  dummy as
-: object  {  here as  maxsize /allot  me }  dup link !  as ;
+: object  {  here as  maxsize /allot  me }  dup lnk !  as ;
 : objects  0 do  object  loop ;
 : objlist   create dummy , 0 , 0 , dummy , ;
 : ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
@@ -83,10 +89,10 @@ create dummy  0 ,  dummy as
 : any?  dup ol.#free @ 0= ;
 : goto x 2! ;
 : enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ goto hidden on ;
-: remove  en off  hidden on  1 ola @ free+! ;
+: remove  en off  hidden on  1 ^pool @ free+! ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" A pool was exhausted. In: ONE " ;
-: one ( pool -- ) ?noone  dup all> en @ ?exit  enough  enable  ola !  -1 ola @ free+! ;
+: one ( pool -- ) ?noone  dup all> en @ ?exit  enough  enable  ^pool !  -1 ^pool @ free+! ;
 
 \ game object stuff
 : ?call  ?dup -exit call ;
@@ -94,7 +100,7 @@ create dummy  0 ,  dummy as
 : behave   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
-: from  2+ at ;
+: from  x 2@ 2+ at ;
 : flicker hidden @ not hidden ! ;
 
 \ roles
