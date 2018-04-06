@@ -21,3 +21,10 @@ redef off  \ from here on fields only defined if not previously defined
 : vieww  displayw global-scale 1p / ;
 : viewh  displayh global-scale 1p / ;
 : viewwh  vieww viewh ;
+
+: transform:  ( x y sx sy ang -- <name> )
+    >r >r >r >r >r
+    create here  /transform allot
+    r> r> r> r> 4af r> >rad 1af al_build_transform ;
+
+: fps  fps 1p ;
