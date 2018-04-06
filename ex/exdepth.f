@@ -11,14 +11,16 @@ $000100 include ramen/brick
 2 constant DIR_RIGHT
 3 constant DIR_LEFT
 
-var dir    \ direction, see above enums
-var img    \ current image used for animation; tied to animation data (flipbooks)
-var data   \ static NPC data, like animation pointers
+redef on
+    var dir    \ direction, see above enums
+    var img    \ current image used for animation; tied to animation data (flipbooks)
+    var data   \ static NPC data, like animation pointers
 
     \ internal:
-    var anm  \ animation pointer
-    var ctr  \ animation counter
-    var spd  \ higher is slower; set by ANIMATE; note there is a hardcoded value passed by NPC-SPRITE
+        var anm  \ animation pointer
+        var ctr  \ animation counter
+        var spd  \ higher is slower; set by ANIMATE; note there is a hardcoded value passed by NPC-SPRITE
+redef off
 
 : ?anmloop  anm @ @ 0 >= ?exit  anm @ cell+ @ anm ! ;
 : animate  ( speed -- adr | 0 )  \ adr points to a cell in the animation data
@@ -67,6 +69,7 @@ npc cat   ' cat-down , ' cat-up , ' cat-left , ' cat-left ,
 
 \ Random walking logic; doing it without tasks to avoid unnecessary coupling
 \ quick n' dirty !!!
+
 var wc  \ walk counter, at 0 NPC will stop and after a bit turn in a random direction and walk.
         \ if the NPC hits the boundaries it will just be impeded by a force field.
 

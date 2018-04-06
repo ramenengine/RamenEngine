@@ -8,5 +8,5 @@ $000100 include ramen/lib/rangetools
 $000100 include ramen/lib/zsort
 $000100 include ramen/lib/v2d
 $000100 include ramen/lib/draw
-\ $000100 include ramen/lib/cgrid
-\ $000100 include ramen/lib/task
+$000100 include ramen/lib/cgrid
+$000100 include ramen/lib/task
