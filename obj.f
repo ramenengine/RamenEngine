@@ -27,12 +27,15 @@ create mestk  0 , 16 cells allot
 : nxt  me @ to me ;
 variable used
 variable redef  \ should you want to bury anything
-: ?unique redef @ ?exit >in @  exists if r> drop drop drop exit then  >in ! ;
+
+: isfield?  >body cell+ @ $76543210 = ;
+: ?unique redef @ ?exit >in @  bl word find if  isfield? if  r> 2drop  >in ! exit  then then  drop  >in ! ;
+
 : ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
 : field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
 : var  cell field ;
 : 's   ' >body @ ?lit " +" evaluate ; immediate
-: xfield  ?unique create used @ , used +! does> @ + ;
+: xfield  ?unique create used @ , $76543210 , used +! does> @ + ;
 : xvar  cell xfield ;
 
 \ objects are organized into objlists, which are forward-linked lists of objects
