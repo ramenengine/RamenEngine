@@ -7,23 +7,26 @@
 \  - Console output 
 \  (See below for a workaround mechanism)
 
-var sp  var rp  12 cells field ds  12 cells field rs
+redef on
+    var sp  var rp  12 cells field ds  12 cells field rs
+redef off
 
 create main  object  \ proxy for the Forth data and return stacks
 
 \ RAMEN version:
-\  Uses NXT to go to next object.
+\  Uses NXTEN to go to next object.
 \  To avoid using the tiny return stack of the tasks, we don't use objlists' counts, and instead rely on ME being 0 to break.
 \  Therefore you cannot call MULTI on a pool, only a plain objlist.
 
 \ important internal note: this word must not CALL anything or use the return stack. (why?)
+: nxten  begin  nxt  me -exit  en @ until ;
 : pause
     \ save state
     dup \ ensure TOS is on stack
     sp@ sp !
     rp@ rp !
     \ look for next task.  rp=0 means no task.  end of list = jump to main task and resume that
-    begin  nxt  me if  rp @  else  main as  true  then  until
+    begin  nxten  me  if  rp @  else  main as  true  then  until
     \ restore state
     rp @ rp!
     sp @ sp!
@@ -40,25 +43,22 @@ create main  object  \ proxy for the Forth data and return stacks
 \ NOTE: you don't have to consume the parameter, and as a bonus, you can leave as much as you want
 \ on the stack.
 
-\ TBD
-\ 20000 cellstack queue
-\ : later  ( val xt -- )  swap queue push queue push ;
-\ : arbitrate
-\     queue scount swap a!>  do  sp@ >r  i 2@ execute  r> sp!  2 cells +loop
-\     queue 0 truncate ;
-: arbitrate ;
-: later  2drop ;
+1000 cellstack: queue
+: later  ( val xt -- )  swap queue push queue push ;
+: arbitrate
+    queue sbounds do  sp@ >r  i 2@ execute  r> sp!  2 cells +loop
+    queue 0 truncate ;
 
 \ pulse the multitasker.
 : multi  ( objlist -- )
     {
-        ol.first @ main link !
+        ol.first @ main 's lnk !
         dup
         sp@ main 's sp !
         rp@ main 's rp !
         main as  ['] pause catch
         ?dup if
-            main as  rp @ rp! sp @ sp!  ( drop <--- why was this here? )  throw
+            main as  rp @ rp! sp @ sp!  throw
         then
         drop
     } 
