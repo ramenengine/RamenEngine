@@ -25,7 +25,12 @@ struct image
 : init-image ( ALLEGRO_BITMAP image -- )
     >r  r@ image sizeof erase  r@ image.bmp !  r> /origin ;
 
-: $image  here  image sizeof allot  -rot  zstring al_load_bitmap  over init-image ;
+: findfile
+    2dup file-exists ?exit
+    including -name #1 + 2swap strjoin 2dup file-exists ?exit
+    true abort" File not found" ;
+
+: $image  image sizeof buffer  -rot  findfile zstring al_load_bitmap  over init-image ;
 : image:  ( path c -- <name> )
     create $image drop ;
 
