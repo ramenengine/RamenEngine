@@ -1,6 +1,6 @@
 redef on
-xvar parent  xvar prev  xvar next   \ node
-xvar length  xvar first  xvar tail  \ container
+    xvar parent  xvar prev  xvar next   \ node
+    xvar length  xvar first  xvar tail  \ container
 redef off
 
 : (unlink)  ( node -- )
@@ -20,6 +20,7 @@ redef off
     r@ first off  r@ tail off
   then
   r> ( container ) drop  ( node ) dup parent off  (unlink) ;
+
 : pushnode  ( node container -- )
   dup 0= if  2drop exit  then
   over parent @ if
