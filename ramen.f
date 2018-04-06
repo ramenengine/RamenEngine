@@ -12,6 +12,8 @@ include ramen/assets.f
 \ --------------------------------------------------------------------------------------------------
 include ramen/obj.f
 \ --------------------------------------------------------------------------------------------------
+include ramen/cellstack.f
+\ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
 
 : displayw  display al_get_display_width 1p ;
