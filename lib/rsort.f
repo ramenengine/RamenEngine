@@ -28,7 +28,9 @@ $000100 [version] rsort-ver
     : dest!  to dest ;
 [then]
 
-defing rsorting
+define rsorting
+  decimal
+
   $0000f000 constant nyb0
   nyb0 value radix
   12 constant pass1shift
@@ -64,6 +66,7 @@ defing rsorting
     16 0 do  i bucket @+ cells dup >r  dest swap move  r> +to dest  loop ;
 
 only forth definitions also rsorting
+fixed
 : rsort  ( addr cells xt -- )  \ destructive, XT is @KEY  ( addr -- key )
     swap 1i swap
     over 0= if 2drop drop exit then
@@ -96,5 +99,5 @@ sortable
 @+ 4123 test
 @+ 4123 test
 drop
-cr .( RSORT tests passed.)
+cr .( == RSORT tests passed. == )
 dispose
