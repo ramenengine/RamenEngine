@@ -3,10 +3,11 @@
 
 include kit/ans/version.f
 $000100 [version] brick-ver
-$000100 include ramen/ramen
-$000100 include ramen/lib/rangetools
-$000100 include ramen/lib/zsort
-$000100 include ramen/lib/v2d
-$000100 include ramen/lib/draw
-$000100 include ramen/lib/cgrid
-$000100 include ramen/lib/task
+$000100 include ramen/ramen.f
+$000100 include ramen/lib/rangetools.f
+$000100 include ramen/lib/zsort.f
+$000100 include ramen/lib/draw.f
+$000100 include ramen/lib/v2d.f
+$000100 include ramen/lib/cgrid.f
+$000100 include ramen/lib/task.f
+$000100 include kit/lib/kb.f
