@@ -6,14 +6,13 @@ $000100 [version] cgrid-ver
 \ Very useful for broad-phase collision checks.
 
 \ Notes:
-\  - Doesn't support hitboxes bigger than sectw x secth
+\  - Doesn't support hitboxes bigger than (sectw/2, secth/2)
 
 struct cbox
 
-var x1  var y1  var x2  var y2  \ absolute hitbox
-
 define cgriding
-
+    cbox int svar x1    cbox int svar y1
+    cbox int svar x2    cbox int svar y2
     cbox int svar s1    cbox int svar s2  \ sectors 1-4
     cbox int svar s3    cbox int svar s4
 
@@ -100,12 +99,12 @@ only forth definitions also cgriding
 : cbox!  ( x y w h cbox -- )  >r  2over 2+  #1 #1 2-  r@ x2 2!  r> x1 2! ;
 : cbox@  ( cbox -- x y w h ) dup >r x1 2@ r> x2 2@  2over 2-  #1 #1 2+ ;
 
-: reset-cgrid ( cgrid -- )
+: resetcgrid ( cgrid -- )
   to cgrid
-  sectors @ cols 2@ * ierase
+  sectors @ cols 2@ * cells erase
   links @ i.link ! ;
 
-: add-cbox  ( cbox cgrid -- )
+: addcbox  ( cbox cgrid -- )
   to cgrid
   ( box ) >r  lastsector off  lastsector2 off
   r@ x1 2@         ?corner ?dup if  dup r@ s1 !  r@ swap link  else  r@ s1 off  then
@@ -117,7 +116,7 @@ only forth definitions also cgriding
 
 \ perform collision checks.  assumes box has already been added to the cgrid.
 \   this avoids unnecessary work for the CPU.
-: check-cgrid  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
+: checkcgrid  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
   to cgrid  is collide
   locals| cbox |
   cbox dup s1 @ ?check-sector -exit
@@ -126,7 +125,7 @@ only forth definitions also cgriding
   cbox dup s4 @ ?check-sector drop ;
 
 \ this doesn't require the box to be added to the cgrid
-: check-cbox  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
+: checkcbox  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
   to cgrid  is collide
   locals| cbox |
   lastsector off lastsector2 off
@@ -145,3 +144,5 @@ only forth definitions also cgriding
 
 : cgrid-size  ( cgrid -- w h )
   to cgrid  cols 2@  sectw secth 2* ;
+
+cbox sizeof field ahb
