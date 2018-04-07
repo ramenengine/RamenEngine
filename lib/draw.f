@@ -75,22 +75,22 @@ variable fnt  default-font fnt !
 : font>  ( font -- <code> )  fnt !  r> call ;
 
 \ Primitives
-\ -1 = hairline thickness
-: line   at@ 2swap 4af fore 4@ -1e 1sf al_draw_line ;
+1e fnegate 1sf constant hairline
+: line   at@ 2swap 4af fore 4@ hairline al_draw_line ;
 : +line  at@ 2+ line ;
 : line+  2dup +line +at ;
 : pixel  at@ 2af  fore 4@  al_draw_pixel ;
-: tri  ( x y x y x y ) 2>r 4af 2r> 2af fore 4@ -1e 1sf al_draw_triangle ;
+: tri  ( x y x y x y ) 2>r 4af 2r> 2af fore 4@ hairline al_draw_triangle ;
 : trif  ( x y x y x y ) 2>r 4af 2r> 2af fore 4@ al_draw_filled_triangle ;
-: rect  ( w h )  at@ 2swap 2over 2+ 4af fore 4@ -1e 1sf al_draw_rectangle ;
+: rect   ( w h )  at@ 2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
 : rectf  ( w h )  at@ 2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
-: capsule  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ -1e 1sf al_draw_rounded_rectangle ;
+: capsule  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
 : capsulef  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
-: circle  ( r ) at@ rot 3af fore 4@ -1e 1sf al_draw_circle ;
+: circle  ( r ) at@ rot 3af fore 4@ hairline al_draw_circle ;
 : circlef ( r ) at@ rot 3af fore 4@ al_draw_filled_circle ;
-: ellipse  ( rx ry ) at@ 2swap 4af fore 4@ -1e 1sf al_draw_ellipse ;
+: ellipse  ( rx ry ) at@ 2swap 4af fore 4@ hairline al_draw_ellipse ;
 : ellipsef ( rx ry ) at@ 2swap 4af fore 4@ al_draw_filled_ellipse ;
-: arc  ( r a1 a2 )  >r at@ 2swap 4af r> 1af fore 4@ -1e 1sf al_draw_arc ;
+: arc  ( r a1 a2 )  >r at@ 2swap 4af r> 1af fore 4@ hairline al_draw_arc ;
 
 \ Clipping rectangle
 variable cx variable cy variable cw variable ch
