@@ -20,6 +20,8 @@ only forth definitions also v2d
 : v+  swap 2@ rot 2+! ;
 : x@  @ ;
 : y@  cell+ @ ;
+: x!  ! ;
+: y!  cell+ ! ;
 : v*  >r  2@ r@ 2*  r> 2! ;
 : v/  >r  2@ r@ 2/  r> 2! ;
 : vmove  swap 2@ rot 2! ;

@@ -87,21 +87,20 @@ create dummy  0 ,  dummy as
 : named  me constant ;
 : single  ( objlist -- <name> )  1 add  named ;
 : any?  dup ol.#free @ 0= ;
-: goto x 2! ;
-: enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ goto hidden on ;
+: enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ x 2! hidden on ;
 : remove  en off  hidden on  1 ^pool @ free+! ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" A pool was exhausted. In: ONE " ;
 : one ( pool -- ) ?noone  dup all> en @ ?exit  enough  enable  ^pool !  -1 ^pool @ free+! ;
 
-\ game object stuff
+\ making stuff move and displaying them
 : ?call  ?dup -exit call ;
 : draw   hidden? ?exit  x 2@ at  drw @ ?call ;
 : behave   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
 : from  x 2@ 2+ at ;
-: flicker hidden @ not hidden ! ;
+: flicker  hidden @ not hidden ! ;
 
 \ roles
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
