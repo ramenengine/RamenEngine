@@ -13,6 +13,7 @@ include ramen/color.f
 include ramen/obj.f
 \ --------------------------------------------------------------------------------------------------
 include ramen/cellstack.f
+include ramen/publish.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
 
