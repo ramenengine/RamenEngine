@@ -3,7 +3,7 @@ defer (startup)
 : startup
     false to allegro?
     0 to display
-    +display  initdata (startup)
+    +display  initaudio initdata (startup)
     ." Test"
     ok ;
 

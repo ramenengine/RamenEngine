@@ -11,3 +11,4 @@ $000100 include ramen/lib/v2d.f
 $000100 include ramen/lib/cgrid.f
 $000100 include ramen/lib/task.f
 $000100 include kit/lib/kb.f
+$010000 include ramen/lib/audio1.f
