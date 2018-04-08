@@ -37,6 +37,11 @@ flist (assets)
 
 : #assets  (assets) listlen ;
 
+: findfile
+    2dup file-exists ?exit
+    including -name #1 + 2swap strjoin 2dup file-exists ?exit
+    true abort" File not found" ;
+
 \ ------------------------------------------------------------------------------
 \ Standard synchronous loader
 
