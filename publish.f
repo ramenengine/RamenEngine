@@ -8,7 +8,8 @@ defer (startup)
     ok ;
 
 
-: gather ;
+: gather
+    assets> srcfile dup count " data/" search if rot place else 3drop then ;
 
 : publish ( xt -- <name> )
     gather  is (startup)  ['] startup 'main !  program ;

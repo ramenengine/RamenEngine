@@ -24,13 +24,14 @@
 \ Asset framework
 
 defer initdata ( -- )
-defer assetdef ( -- <name> )
 
 flist (assets)
 : register  ( asset -- ) (assets) listlink ;
 
 \ TODO: change TRAVERSE> to EACH> after factoring out lists from obj.f
 : assets>  postpone (assets)  postpone traverse> ; immediate
+
+: srcfile  cell+ ;
 
 \ As a convention, the first cell in every asset is a reloader XT.
 : reload  ( asset -- )  ( asset -- )  dup @ execute ;
@@ -42,10 +43,15 @@ flist (assets)
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
+#256 cell+ constant /assetheader
+
+: assetdef  ( -- <name> )  create /assetheader , ;
+
+: .asset  srcfile count dup if  type  else  2drop  then ;
+: .assets  assets> cr .asset ;
+
 \ ------------------------------------------------------------------------------
 \ Standard synchronous loader
 
 : std-initdata  ( -- )  assets> reload ;
-: std-assetdef  ( -- <name> )  create cell , ;
 ' std-initdata is initdata
-' std-assetdef is assetdef

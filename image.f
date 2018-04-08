@@ -14,7 +14,6 @@ assetdef image
     image int svar image.subcount
     image int svar image.orgx          \ initialized to center automatically, but not used by any framework words
     image int svar image.orgy
-    image #256 cstring sfield image.src
 
 \ dimensions, fixed point
 : imagew   image.bmp @ bmpw 1p ;
@@ -24,10 +23,10 @@ assetdef image
 : /origin  dup imagewh 0.5 0.5 2* rot image.orgx 2! ;
 
 : reload-image  ( image -- )
-    >r  r@ image.src count  zstring al_load_bitmap  r@ image.bmp !  r> /origin ;
+    >r  r@ srcfile count  zstring al_load_bitmap  r@ image.bmp !  r> /origin ;
 
 : init-image ( path c image -- )
-    >r  ['] reload-image r@ !  findfile r@ image.src place  r@ reload
+    >r  ['] reload-image r@ !  findfile r@ srcfile place  r@ reload
     r> register ;
 
 : image:  ( path c -- <name> )
