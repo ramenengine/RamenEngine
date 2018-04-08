@@ -3,7 +3,8 @@
     drop create over @ ,  swap +!  does> @ + ;
 : svar  cell swap sfield ;
 
-: struct variable ;
+: struct  variable ;
+
 create int
 create cstring
 

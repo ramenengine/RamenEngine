@@ -3,7 +3,7 @@
 : bmph  al_get_bitmap_height 1p ;
 : bmpwh  dup bmpw swap bmph ;
 
-struct image
+assetdef image
     image int svar image.bmp
     image int svar image.subw
     image int svar image.subh
@@ -14,6 +14,7 @@ struct image
     image int svar image.subcount
     image int svar image.orgx          \ initialized to center automatically, but not used by any framework words
     image int svar image.orgy
+    image #256 cstring sfield image.src
 
 \ dimensions, fixed point
 : imagew   image.bmp @ bmpw 1p ;
@@ -22,17 +23,15 @@ struct image
 
 : /origin  dup imagewh 0.5 0.5 2* rot image.orgx 2! ;
 
-: init-image ( ALLEGRO_BITMAP image -- )
-    >r  r@ image sizeof erase  r@ image.bmp !  r> /origin ;
+: reload-image  ( image -- )
+    >r  r@ image.src count  zstring al_load_bitmap  r@ image.bmp !  r> /origin ;
 
-: findfile
-    2dup file-exists ?exit
-    including -name #1 + 2swap strjoin 2dup file-exists ?exit
-    true abort" File not found" ;
+: init-image ( path c image -- )
+    >r  ['] reload-image r@ !  findfile r@ image.src place  r@ reload
+    r> register ;
 
-: $image  image sizeof buffer  -rot  findfile zstring al_load_bitmap  over init-image ;
 : image:  ( path c -- <name> )
-    create $image drop ;
+    create  image sizeof buffer  init-image ;
 
 : load-image  ( path c image -- )
     >r  zstring al_load_bitmap  r> init-image ;
