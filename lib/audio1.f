@@ -3,7 +3,7 @@ $010000 [version] audio-ver
 \ Audio API 1
 
 variable sid
-: play  ( sample -- ) dup >r  >smp 1e 0e 1e  r>  sid  al_play_sample ;
+: play  ( sample -- ) dup >r  >smp 1e 0e 1e 3sf  r> sample.loop @  sid  al_play_sample ;
 
 ALLEGRO_PLAYMODE_ONCE  constant once
 ALLEGRO_PLAYMODE_BIDIR constant bidir
