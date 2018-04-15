@@ -20,7 +20,7 @@ stage 2000 pool: objects
 : oranges  0 0 vx 2!  yellow @color r 4!  20 rnd 0 ?do  i s !  pause  loop ;
 : apples   0 0 vx 2!  red @color r 4!    50 rnd 0 ?do  i s !  pause  4 +loop ;
 : randmove  green @color r 4!  8 s !  5 rnd 2.5 -  5 rnd 2.5 -  vx 2!  8 pauses ;
-: ?bore  6 rnd pfloor 0= if {  0 0 from  *fly  } then ;
+: ?bore  3 rnd pfloor 0= if {  0 0 from  *fly  } then ;
 : live  100 rnd lifespan + life ! ;
 : darker  0.99 * ;
 : fadeout  300 0 do  r 4@ darker r 4!  pause  loop ;
