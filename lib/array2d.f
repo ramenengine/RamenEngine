@@ -1,13 +1,13 @@
 $000100 [version] array2d-ver
 
-\ ----------------------------- 2d arrays support -----------------------------
 : clip  ( col row #cols #rows #destcols #destrows -- col row #cols #rows )
   2>r  2over 2+  0 0 2r@ 2clamp  2swap  0 0 2r> 2clamp  2swap 2over 2- ;
+
 : batch  ( ... addr #cells xt -- ... )  ( ... addr -- ... )
   >code -rot  cells bounds do  i swap dup >r call  r>  cell +loop  drop ;
+
 : `batch  ( ... addr xt -- ... )  ( ... addr -- ... )  \ -1 is terminator
   >code begin  over @ 0 >=  while  2dup 2>r  call  r> r> cell+ swap repeat  2drop ;
-\ ---------------------------------- array2d ----------------------------------
 
 struct array2d
     array2d int svar numcols
@@ -22,16 +22,18 @@ struct array2d
 : (clamp)  ( col row array2d -- same )
   >r  0 0 r@ numcols 2@ 2clamp  r> ;
 
-\ BUG: this is incomplete!
+\ TODO: this is incomplete!
 \      if dest col/row are negative, we need to adjust the source start address!!
+
 : (clip)   ( col row #cols #rows array2d -- same )
   dims 1 1 2- clip ;
 
 : loc2d  ( col row array2d -- addr )
   (clamp) >r  r@ numcols @ * +  cells  r> data + ;
 
-: @pitch  ( array2d -- /pitch strid)  numcols @ cells ;
-: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc2d r> @pitch ;
+: pitch@  ( array2d -- /pitch strid)  numcols @ cells ;
+
+: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc2d r> pitch@ ;
 
 : write2d  ( src-addr pitch destcol destrow #cols #rows dest -- )
     locals| dest |
@@ -53,13 +55,13 @@ struct array2d
 
 : scan2d  ( ... array2d xt -- ... )  ( ... addr #cells -- ... )
   >r >r  0  0  r@ dims  r> r> some2d ;
+
 : scan2d>  r> code> scan2d ;
 
 \ : some2d>  r> code> some2d ;
 \ : each2d>  r> code> each2d ;
 
 :noname  cr  cells bounds do  i ?  cell +loop ;
-\ : 2d.  literal each2d ;
 : 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
 
 

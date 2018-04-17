@@ -2,8 +2,6 @@ $10000 [version] tiled-ver
 
 \ Tiled module for RAMEN
 
-\ Basically everything you need to make a 2D game.
-
 
 [undefined] draw-ver [if] $000100 include ramen/lib/draw [then]
 [undefined] array2d-ver [if] $000100 include ramen/lib/array2d [then]

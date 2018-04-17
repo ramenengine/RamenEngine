@@ -34,9 +34,12 @@ only forth definitions also xmling
 0 value lasttmx
 create tmxdir  256 allot
 
-: load-objectgroups  objgroupnodes 0 truncate  mapnode " objectgroup" eachel> objgroupnodes push ;
+: aggregate  ( node adr c cellstack -- )  locals| cs c a |
+    cs 0 truncate  a c xmlfirst begin  ?dup while  dup cs push  a c  xmlnext repeat ;
 
-: load-layers  layernodes 0 truncate  mapnode " layer" eachel> layernodes push ;
+: load-objectgroups  mapnode " objectgroup" objgroupnodes aggregate ;
+
+: load-layers  mapnode " layer" layernodes aggregate ;
 
 \ shortcuts to access properties of several node types:
 only forth definitions also xmling
@@ -59,11 +62,11 @@ define tmxing
     : !dir  2dup 2dup [char] / [char] \ replace-char  -name  #1 +  ( add the trailing slash )  tmxdir place ;
     : +dir  tmxdir count 2swap strjoin ;
 
-previous definitions also tmxing
+only forth definitions also xmling also tmxing
 
 : >tsx  @source +dir 2dup cr type loadxml ;
 : +tileset  ( firstgid tileset -- )
-    dup tilesetdoms push  >root " tileset" 0 child  swap tilesets push  tilesets push ;
+    dup tilesetdoms push  " tileset" >first  swap tilesets push  tilesets push ;
 
 : load-tilesets
     tilesetdoms scount for  @+ dom-free  loop drop
@@ -71,11 +74,11 @@ previous definitions also tmxing
     tilesets 0 truncate
     mapnode " tileset" eachel> dup " firstgid" attr  swap >tsx +tileset ;
 
-: >map   " map" >first 0= abort" File is not a recognized TMX file!" ;
+: >map   " map" >first 0= abort" Not a valid TMX file" ;
 : closetmx  lasttmx ?dup -exit dom-free  0 to lasttmx ;
 
 : opentmx  ( path c -- )
-    !dir  closetmx  loadxml dup to lasttmx  >root >map to mapnode  load-tilesets  load-layers  load-objectgroups ;
+    !dir  closetmx  loadxml dup to lasttmx  >map to mapnode  load-tilesets  load-layers  load-objectgroups ;
 
 
 \ Tilesets!
