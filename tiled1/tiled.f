@@ -5,7 +5,9 @@ $10000 [version] tiled-ver
 \ Basically everything you need to make a 2D game.
 
 
-$000100 include ramen/lib/array2d
+[undefined] draw-ver [if] $000100 include ramen/lib/draw [then]
+[undefined] array2d-ver [if] $000100 include ramen/lib/array2d [then]
+[undefined] xml-ver [if] $000100 include kit/lib/xml [then]
 include ramen/tiled1/tmx
 include ramen/tiled1/tilegame
 include ramen/tiled1/loadtmx
@@ -18,7 +20,7 @@ include ramen/tiled1/tilcd
     some2d> cells bounds do i @ convert-tile i ! cell +loop ;
 
 : get  ( layernode destcol destrow -- )
-    3dup tilebuf addr-pitch extract  rot @wh tilebuf convert-tilemap ;
+    3dup tilebuf addr-pitch extract-tile-layer  rot @wh tilebuf convert-tilemap ;
 
 : open  ( map -- )  count opentmx  load-tiles ;
 

@@ -26,11 +26,10 @@ only forth definitions also xmling
 0 value mapnode
 0 value (code)
 
-100 cellstack tilesetdoms
-100 cellstack layernodes
-100 cellstack objgroupnodes
-
-200 cellstack tilesets  \ firstgid , tileset element , first gid , tileset element , ...
+100 cellstack: tilesetdoms
+100 cellstack: layernodes
+100 cellstack: objgroupnodes
+200 cellstack: tilesets  \ firstgid , tileset element , first gid , tileset element , ...
 
 0 value lasttmx
 create tmxdir  256 allot
@@ -104,7 +103,7 @@ previous definitions also tmxing
             i layer[]  unloop exit
         then
     loop  0 ;
-: extract  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
+: extract-tile-layer  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
     third @wh locals| h w pitch dest |  ( layer )
     here >r
         " data" 0 child  >text  b64, \ Base64, no compression!!!

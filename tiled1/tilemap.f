@@ -1,21 +1,18 @@
-le: role tilemap:
-    import bu/mo/tilegame
-    import bu/mo/array2d
-    
-    var sx var sy   \ scroll values
-    \ var wrap        \ wraparound enable
-    var mw var mh   \ map width & height; either scroll will be clipped unless WRAP is on
+
+var scrollx var scrolly
+\ var wrap        \ wraparound enable
+var w var h   \ map width & height; either scroll will be clipped unless WRAP is on
 
 2048 2048 array2d tilebuf
 
 : tilemap
     displaywh mw 2!
     draw>
-        at@ mw 2@ scaled clip>
-        sx 2@ 20 20 scroll tilebuf addr  tilebuf @pitch  draw-tilemap-bg ;
+        at@ w 2@ scaled clip>
+        scrollx 2@ 20 20 scroll tilebuf loc2d  tilebuf @pitch  draw-tilemap-bg ;
 
-: @tile  ( col row -- tile )  tilebuf addr @ ;
+: @tile  ( col row -- tile )  tilebuf loc2d @ ;
 : >gid  ( tile -- gid )  $0000fffc and 10 << ;
 
 \ Very ghetto
-: scroll-tilemap   ( x y tilemap -- )  's sx 2! ;
+: scroll-tilemap   ( x y tilemap -- )  's scrollx 2! ;

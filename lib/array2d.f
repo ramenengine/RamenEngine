@@ -9,16 +9,15 @@ $000100 [version] array2d-ver
   >code begin  over @ 0 >=  while  2dup 2>r  call  r> r> cell+ swap repeat  2drop ;
 \ ---------------------------------- array2d ----------------------------------
 
-object inherit
-    xvar numcols  xvar numrows  0 xfield data
-subclass array2d-class
+struct array2d
+    array2d int svar numcols
+    array2d int svar numrows
+    array2d 0 int sfield data
 
-decimal
-: array2d  ( numcols numrows -- <name> )  ( -- data )
-  2pfloor 2dup  create  here  array2d-class instance,  numcols 2!  2i * cells /allot ;
+: array2d:  ( numcols numrows -- <name> )  ( -- data )
+  2pfloor 2dup  create  here  array2d sizeof /allot  numcols 2!  * cells /allot ;
 : dims  ( array2d -- numcols numrows )  numcols 2@ ;
-: count2d ( array2d -- data #cells )  dup data swap numcols 2@ 2i * ;
-fixed
+: count2d ( array2d -- data #cells )  dup data swap numcols 2@ * ;
 
 : (clamp)  ( col row array2d -- same )
   >r  0 0 r@ numcols 2@ 2clamp  r> ;
@@ -28,20 +27,19 @@ fixed
 : (clip)   ( col row #cols #rows array2d -- same )
   dims 1 1 2- clip ;
 
-: addr  ( col row array2d -- addr )
+: loc2d  ( col row array2d -- addr )
   (clamp) >r  r@ numcols @ * +  cells  r> data + ;
 
 : @pitch  ( array2d -- /pitch strid)  numcols @ cells ;
-: addr-pitch  ( col row array2d -- addr /pitch )  dup >r addr r> @pitch ;
+: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc2d r> @pitch ;
 
-\ -----------------------------------------------------------------------------
-\ use the SRC and DEST "registers":
-: write2d  ( src-addr pitch destcol destrow #cols #rows -- )
+: write2d  ( src-addr pitch destcol destrow #cols #rows dest -- )
+    locals| dest |
   dest (clip)  2swap dest addr-pitch  2swap  swap cells 2move ;
 
-: move2d  ( srcrow srccol destcol destrow #cols #rows -- )
+: move2d  ( srcrow srccol destcol destrow #cols #rows src -- )
+  locals| src |
   2>r 2>r  src addr-pitch  2r> 2r> write2d ;
-\ -----------------------------------------------------------------------------
 
 : some2d  ( ... col row #cols #rows array2d XT -- ... )  ( ... addr #cells -- ... )
   >r >r  r@ (clip)   2swap r> addr-pitch
