@@ -40,8 +40,7 @@ da 42 00 createcolor orange
 
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color for tinting.
-\  Not all effect combinations are available; these are
-\  intended as conveniences.
+\  Not all effect combinations are available; these are intended as conveniences.
 \  To draw regions of bitmaps, use Allegro's draw bitmap region functions directly
 \  or use sub bitmaps (see SUBBMP).
 \  After each call to one of these words, the current color is reset to white.
