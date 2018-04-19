@@ -3,7 +3,7 @@ var scrollx var scrolly
 \ var wrap        \ wraparound enable
 var w var h   \ map width & height; either scroll will be clipped unless WRAP is on
 
-2048 2048 array2d tilebuf
+2048 2048 array2d: tilebuf
 
 : /tilemap
     displaywh w 2!

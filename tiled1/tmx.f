@@ -83,21 +83,17 @@ only forth definitions also xmling also tmxing
 
 \ Tilesets!
 \ "tileset" really refers to a 2 cell data structure defined above, in TILESETS.
-: #tilesets  tilesetdoms #pushed ;
 : tileset[]  2 * tilesets nth ;
-    : >el  cell+ @ ;
-: multi-image?  ( tileset -- flag )  >el " image" 0 child? not ;
+: multi-image?  ( tileset -- flag )  cell+ @ " image" xmlfirst 0= ;
 : @firstgid  ( tileset -- gid )  @ ;
-: single-image  ( tileset -- path c )  >el " image" 0 child @source +dir ;
-: @tilecount  ( tileset -- n )  >el " tilecount" attr ;
+: single-image  ( tileset -- path c )  cell+ @ " image" xmlfirst @source +dir ;
 : tile-gid  ( tileset n -- gid )  over @firstgid >r  >r >el " tile" r> child @id  r> + ;
-: tile-image  ( tileset n -- imagepath c )  >r >el " tile" r> child " image" 0 child @source +dir ;
+: tile-image  ( tileset n -- imagepath c )  >r cell+ @  " tile" r> child " image" 0 child @source +dir ;
 : tile-dims  ( tileset -- w h )  >el dup " tilewidth" attr swap " tileheight" attr ;
 : (tiles)  " tile" eachel>  (code) call ;
 : tiles>  ( tileset -- <code> )  >el  r>  (code) >r  to (code)  (tiles) r> to (code) ;
 
 \ Layers!
-: #layers  layernodes #pushed ;
 : layer[]  layernodes nth @ ;
 : ?layer  ( name c -- layer-node | 0 )  \ find layer by name
     locals| c n |
@@ -109,35 +105,26 @@ only forth definitions also xmling also tmxing
 : extract-tile-layer  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
     third @wh locals| h w pitch dest |  ( layer )
     here >r
-        " data" 0 child  >text  b64, \ Base64, no compression!!!
+        " data" xmlfirst  xmltext  b64, \ Base64, no compression!!!
         r@  w cells  dest  pitch  h  w cells  2move
     r> reclaim ;
-: layers>  ( -- <code> )  ( layernode -- )
-    r>  (code) >r  to (code)  " layer" eachel>  (code) call  r> to (code) ;
+: (layers)  mapnode xmleach> " layer" ?xml -exit over call ;
+: layers>  ( -- <code> )  ( node -- )  r> (layers) drop ;
 
 
 \ Object groups!
-: #objgroups  objgroupnodes #pushed ;
 : objgroup[]  objgroupnodes nth @ ;
-: ?objgroup  ( name c -- objgroup-node | 0 )  \ find object group by name
-    locals| c n |
-    #objgroups for
-        i objgroup[]  xmlname  n c compare 0= if
-            i objgroup[]  unloop exit
-        then
-    loop  0 ;
-: @gid  " gid" attr $0fffffff and ;
-: @rotation  " rotation" ?attr not if 0 then ;
-: @visible  " visible" ?attr if 0<> else true then ;
-: @vflip  " gid" attr $40000000 and 0<> ;
-: @hflip  " gid" attr $80000000 and 0<> ;
-: rectangle?  " gid" ?attr dup if nip then  not ;  \ doesn't actually guarantee it's not some other shape, because TMX is stupid.  so check for those first...
-\ : polygon? ;
-\ : ellipse? ;
-\ : polyline? ;
-: (objects)  " object" eachel>  (code) call ;
-: objects>  ( objgroup -- <code> )  ( objectnode -- )  r>  (code) >r  to (code)  (objects) r> to (code) ;
-: (objgroups)  mapnode " objectgroup" eachel>  (code) call ;
-: objgroups>  ( -- <code> )  ( objectgroupnode -- )  r>  (code) >r  to (code)  (objgroups)  r> to (code) ;
+: ?objgroup  ( name c -- objgroup-node | 0 )  mapnode -rot >first ;
+: @gid  " gid" xmlattr evaluate $0fffffff and ;
+: @rotation  " rotation" xmlvalue not if 0 else evaluate then ;
+: @visible  " visible" xmlvalue if evaluate 0<> then ;
+: @vflip  " gid" xmlvalue evaluate $40000000 and 0<> ;
+: @hflip  " gid" xmlvalue evaluate $80000000 and 0<> ;
+: rectangle?  " gid" xmlvalue dup if nip nip then  not ;  \ doesn't actually guarantee it's not some other shape, because TMX is stupid.  so check for those first...
+: (objects)  xmleach> " object" ?xml -exit over call ;
+: objects>  ( node -- <code> )  ( node -- )  r> swap (objects) drop ;
+: (objgroups)  mapnode xmleach> " objectgroup" ?xml -exit over call ;
+: objgroups>  ( -- <code> )  ( node -- )  r> (objgroups) drop ;
+
 
 only forth definitions

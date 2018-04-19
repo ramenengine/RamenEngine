@@ -14,10 +14,6 @@ le: idiom tilcd:
 create tileprops  #16384 /allot  \ you could screw around with this to do one-way platforms
 tileprops #1 + #16383 $ff fill
 
-private:
-    : vector   create 0 , here 0 , constant ;
-public:
-
 \ what sides the object collided
 0 value lwall?
 0 value rwall?
@@ -34,6 +30,7 @@ private:
 
     : p@  ( gid -- val )  1i tileprops + c@ ;
 
+    : vector   create 0 , here 0 , constant ;
     vector w h
     vector nx ny
     variable t

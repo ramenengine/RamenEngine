@@ -67,8 +67,8 @@ struct array2d
 
 \ test
 marker dispose
-10 15 array2d a
-12 7 array2d b
+10 15 array2d: a
+12 7 array2d: b
 a count2d 5 ifill
 b count2d 10 ifill
 \ quit
