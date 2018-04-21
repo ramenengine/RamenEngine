@@ -1,18 +1,12 @@
-\ Simple tilemap collision - could be superceded later with "v2" added or a new name
+\ Simple tilemap collision
 \ Treats all non-zero tiles as solid.  No slope support.  To have tiles that don't have collision,
 \ put them on another layer and don't perform collision on that.
 \ You can move an object against the tilemap and also perform a check on every tile underneath
 \ the object.
 
-\ This is exclusive to Lantern and uses its tilemap module (unified 2048x2048 tilemap)
-
-le: idiom tilcd:
-    import bu/mo/array2d
-    import bu/mo/rect
-    import le/mo/tilemap
-
 create tileprops  #16384 /allot  \ you could screw around with this to do one-way platforms
-tileprops #1 + #16383 $ff fill
+
+tileprops #1 +  #16383  $FF  fill
 
 \ what sides the object collided
 0 value lwall?
@@ -20,7 +14,9 @@ tileprops #1 + #16383 $ff fill
 0 value floor?
 0 value ceiling?
 
-private:
+var w  var h
+
+define tilecding
     defer map-collide   ' drop is map-collide  ( info -- )
 
     : cel? #1 and ; \ ' ceiling '
@@ -76,21 +72,25 @@ private:
     : ud vy @ -exit vy @ 0 < if ( ucros? -exit ) px ny @ cu exit then ( dcros? -exit ) px ny @ h @ + cd ;
     : lr vx @ -exit vx @ 0 < if ( lcros? -exit ) nx 2@ cl exit then ( rcros? -exit ) nx @ w @ + ny @ crt ;
 
-    : init   to gap  w 2!  x 2@  vx 2@  2+  nx 2!  0 to lwall? 0 to rwall? 0 to floor? 0 to ceiling? ;
+    : init   to gap  x 2@  vx 2@  2+  nx 2!  0 to lwall? 0 to rwall? 0 to floor? 0 to ceiling? ;
     0 value (code)
 
-public:
-: collide-map ( w h tilesize xt -- )  is map-collide  init ud lr ;
-: tiles>   ( w h tilesize -- <code> )  ( gid -- )
-    to gap  w 2!
-    r> to (code)
-    x 2@ at
-    h @ gap / pfloor 1 max for
-        at@ 2>r
-        w @ gap / pfloor 1 max for
-            at@ @tile >gid (code) call  gap 0 +at
-        loop
-        2r> gap + at
-    loop  drop ;
+
+only forth definitions also tilecding
+
+: collide-map ( tilesize xt -- )  is map-collide  init ud lr ;
+
+\ : tiles>   ( w h tilesize -- <code> )  ( gid -- )
+\     to gap  w 2!
+\     r> to (code)
+\     x 2@ at
+\     h @ gap / pfloor 1 max for
+\         at@ 2>r
+\         w @ gap / pfloor 1 max for
+\             at@ map@ >gid (code) call  gap 0 +at
+\         loop
+\         2r> gap + at
+\     loop  drop ;
 
 
+only forth definitions

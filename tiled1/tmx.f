@@ -1,130 +1,102 @@
+$100000 [version] tmx-ver
+
 \ TMX (Tiled) support
 \ This just provides access to the data and some conversion tools
 \ It directly supports only a subset of features
 \  - Object groups
 \  - Single and Multiple image tilesets
-\  - Tilemaps in Base64 uncompressed format (sorry no zlib, maybe later)
+\  - Tilemaps in Base64 uncompressed format
 \  - Rectangles
-\  - Referenced tileset files - in fact in an effort to salvage my sanity embedded tilesets are NOT supported.  Sorry.  (You ought to be using external tilesets anyway. ;)
-\  - Layer Groups are NOT supported.  Sorry.
+\  - Referenced tileset files -
+\       To salvage my sanity, embedded tilesets are NOT supported.  You ought to be using external tilesets anyway.
 
 \ TODO
-\  [ ] - Custom Properties
-\  [ ] - Other shapes besides rectangle
-\  [ ] - Add custom property to allow some tile images not to be loaded since they're for the editor only and would waste RAM
+\  [ ] - Custom Properties (<properties><property>)
+\  [ ] - Animations (<tile><animation><frame>)
+\  [ ] - Other shapes besides rectangles (<ellipse>, <path>, <polyline>, <point>)
+\  [ ] - Text (<text>)
+\  [ ] - Compressed layers
+\  [ ] - Image layers (<imagelayer>)
+\  [ ] - Group layers (<group>)
 
-\ You can access one TMX file at a time.
-\ To preserve global ID coherence, when you load the tiles of a TMX file, ALL tileset nodes are loaded
-\ into the system, freeing what was there before.  To mitigate loading time I might implement asset caching or preloading
-\ at some point...
 
-: b64,  ( base64-src count -- )
-    str-new >r  r@ b64-decode here over allot swap move  r> str-free ;
+: base64  ( base64-src count -- str )   str-new >r  r@ b64-decode  r> ;
 
-only forth definitions also xmling
-
-0 value mapnode
-0 value (code)
-
-100 cellstack: tilesetdoms
-100 cellstack: layernodes
-100 cellstack: objgroupnodes
-200 cellstack: tilesets  \ firstgid , tileset element , first gid , tileset element , ...
-
-0 value lasttmx
-create tmxdir  256 allot
-
-: aggregate  ( node adr c cellstack -- )  locals| cs c a |
-    cs 0 truncate  a c xmlfirst begin  ?dup while  dup cs push  a c  xmlnext repeat ;
-
-: load-objectgroups  mapnode " objectgroup" objgroupnodes aggregate ;
-
-: load-layers  mapnode " layer" layernodes aggregate ;
-
-\ shortcuts to access properties of several node types:
 only forth definitions also xmling
 define tmxing
 
-    : @source   " source" xmlvalue ;
-    : @nameattr " name" xmlvalue ;
-    : ?name     " name" xmlvalue ?dup ;
-    : @w        " width" xmlvalue evaluate ;
-    : @h        " height" xmlvalue evaluate ;
-    : @wh       dup @w swap @h ;
-    : @id       " id" xmlvalue evaluate ;
-    : @x        " x" xmlvalue evaluate ;
-    : @y        " y" xmlvalue evaluate ;
-    : @xy       dup @x swap @y ;
-    : ?type     " type" xmlvalue ?dup ;
+    : source@   " source" val ;
+    : name@     " name" val ; ;
+    : ?name     " name" val ?dup 0<> ;
+    : w@        " width" pval ;
+    : h@        " height" pval ;
+    : wh@       dup w@ swap h@ ;
+    : x@        " x" pval ;
+    : y@        " y" pval ;
+    : xy@       dup x@ swap y@ ;
+    : ?type     " type" val ?dup 0<> ;
+    : firstgid@ " firstgid" pval ;
+    : gid@      " gid" pval ;
+    : id@       " id" pval ;
+    : rotation@ " rotation" pval ;
+    : visible@  " visible" pval ;
+    : hflip@    " hflip" pval ;
+    : vflip@    " vflip" pval ;
+    : orientation@  " orientation" val ;
+    : backgroundcolor?  " backgroundcolor" attr? ;
+    : backgroundcolor@  " backgroundcolor" val [char] $ third c! evaluate ;
+    : tilewidth@  " tilewidth" pval ;
+    : tileheight@  " tileheight" pval ;
+    : tilecount@  " tilecount" pval ;
+    : spacing@  " spacing" pval ;
+    : margin@   " margin" pval ;
 
 
-    \ Opening a TMX
-    : !dir  2dup 2dup [char] / [char] \ replace-char  -name  #1 +  ( add the trailing slash )  tmxdir place ;
-    : +dir  tmxdir count 2swap strjoin ;
+    : is?       named ;
 
-only forth definitions also xmling also tmxing
+    : loadtmx    ( adr c -- dom map ) loadxml " map" 0 element ;
 
-: >tsx  @source +dir 2dup cr type loadxml ;
-: +tileset  ( firstgid tileset -- )
-    dup tilesetdoms push  " tileset" >first  swap tilesets push  tilesets push ;
+    : #tilesets  ( map -- n )  " tileset" #elements ;
 
-: load-tilesets
-    tilesetdoms scount for  @+ dom-free  loop drop
-    tilesetdoms 0 truncate
-    tilesets 0 truncate
-    mapnode " tileset" eachel> dup " firstgid" attr  swap >tsx +tileset ;
+    create tmxpath  256 allot  \ set this for it to be able to find files
 
-: >map   " map" >first 0= abort" Not a valid TMX file" ;
-: closetmx  lasttmx ?dup -exit dom-free  0 to lasttmx ;
+    : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
+        rot source@ tmxpath count strjoin loadxml " tileset" 0 element ;
 
-: opentmx  ( path c -- )
-    !dir  closetmx  loadxml dup to lasttmx  >map to mapnode  load-tilesets  load-layers  load-objectgroups ;
+    : get-tileset  ( map n -- dom tileset gid )
+        " tileset" element dup tileset>source rot firstgid@ ;
 
 
-\ Tilesets!
-\ "tileset" really refers to a 2 cell data structure defined above, in TILESETS.
-: tileset[]  2 * tilesets nth ;
-: multi-image?  ( tileset -- flag )  cell+ @ " image" xmlfirst 0= ;
-: @firstgid  ( tileset -- gid )  @ ;
-: single-image  ( tileset -- path c )  cell+ @ " image" xmlfirst @source +dir ;
-: tile-gid  ( tileset n -- gid )  over @firstgid >r  >r >el " tile" r> child @id  r> + ;
-: tile-image  ( tileset n -- imagepath c )  >r cell+ @  " tile" r> child " image" 0 child @source +dir ;
-: tile-dims  ( tileset -- w h )  >el dup " tilewidth" attr swap " tileheight" attr ;
-: (tiles)  " tile" eachel>  (code) call ;
-: tiles>  ( tileset -- <code> )  >el  r>  (code) >r  to (code)  (tiles) r> to (code) ;
+    : #objgroups ( map -- n )  " objectgroup" #elements ;
+    : objgroup[] ( map n -- objgroup ) " objectgroup" element ;
+    : objgroup   ( map adr c -- dom-nnn | 0 )
+        locals| c adr map |
+        map #objgroups for
+            map i objgroup[]  dup
+                name@  adr c  compare 0= if  unloop  exit  then
+            drop
+        loop  0 ;
 
-\ Layers!
-: layer[]  layernodes nth @ ;
-: ?layer  ( name c -- layer-node | 0 )  \ find layer by name
-    locals| c n |
-    #layers for
-        i layer[]  @name  n c compare 0= if
-            i layer[]  unloop exit
-        then
-    loop  0 ;
-: extract-tile-layer  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
-    third @wh locals| h w pitch dest |  ( layer )
-    here >r
-        " data" xmlfirst  xmltext  b64, \ Base64, no compression!!!
-        r@  w cells  dest  pitch  h  w cells  2move
-    r> reclaim ;
-: (layers)  mapnode xmleach> " layer" ?xml -exit over call ;
-: layers>  ( -- <code> )  ( node -- )  r> (layers) drop ;
+    : #layers ( map -- n )  " layer" #elements ;
+    : layer[] ( map n -- layer ) " layer" element ;
+    : layer   ( map adr c -- layer | 0 )
+        locals| c adr map |
+        map #layers for
+            map i layer[]  dup
+                name@  adr c  compare 0= if  unloop  exit  then
+            drop
+        loop  0 ;
 
+    : #objects  ( objgroup -- n )  " object" #elements ;
+    : #images   ( tileset -- n )  " image" #elements ;
 
-\ Object groups!
-: objgroup[]  objgroupnodes nth @ ;
-: ?objgroup  ( name c -- objgroup-node | 0 )  mapnode -rot >first ;
-: @gid  " gid" xmlattr evaluate $0fffffff and ;
-: @rotation  " rotation" xmlvalue not if 0 else evaluate then ;
-: @visible  " visible" xmlvalue if evaluate 0<> then ;
-: @vflip  " gid" xmlvalue evaluate $40000000 and 0<> ;
-: @hflip  " gid" xmlvalue evaluate $80000000 and 0<> ;
-: rectangle?  " gid" xmlvalue dup if nip nip then  not ;  \ doesn't actually guarantee it's not some other shape, because TMX is stupid.  so check for those first...
-: (objects)  xmleach> " object" ?xml -exit over call ;
-: objects>  ( node -- <code> )  ( node -- )  r> swap (objects) drop ;
-: (objgroups)  mapnode xmleach> " objectgroup" ?xml -exit over call ;
-: objgroups>  ( -- <code> )  ( node -- )  r> (objgroups) drop ;
+    : readlayer  ( layer dest pitch -- str )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
+        third @wh locals| h w pitch dest |  ( layer )
+        " data" 0 element text base64 >r
+        r@ str-get drop  w cells  dest  pitch  h  w cells  2move
+        r> str-free ;
 
+    : rectangle?  ( object -- flag )  " gid" attr? not ;
+    \ Note RECTANGLE? is needed because TMX is stupid and doesn't have a <rectangle> element.
 
 only forth definitions
