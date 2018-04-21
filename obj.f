@@ -29,13 +29,17 @@ create mestk  0 , 16 cells allot
 variable used
 variable redef  \ should you want to bury anything
 
-: isfield?  >body cell+ @ $76543210 = ;
-: ?unique
+: ?unique  ( size -- size | <cancel caller> )
     redef @ ?exit
     >in @
-        bl word find if  isfield? if
-            r> 2drop  >in ! exit  then  >in !  exit  then
-        drop  >in ! ;
+        bl word find  if
+            >body cell+ @ $76543210 =  if
+                r> drop  ( value of >IN ) drop  ( size ) drop  exit
+            then
+        else
+            ( addr ) drop
+        then
+    >in ! ;
 
 : ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
 : field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
