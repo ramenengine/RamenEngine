@@ -1,9 +1,9 @@
 empty
 $000100 include ramen/brick
 
-" data/2200man.png" image: 2200man.image  21 36 2200man.image subdivideimage
-" data/alfador.png" image: alfador.image  18 20 alfador.image subdivideimage
-" data/fairgirl.png" image: fairgirl.image  21 28 fairgirl.image subdivideimage
+" data/2200man.png" image: 2200man.image  21 36 2200man.image subdivide
+" data/alfador.png" image: alfador.image  18 20 alfador.image subdivide
+" data/fairgirl.png" image: fairgirl.image  21 28 fairgirl.image subdivide
 
 \ ENUM doesn't work as expected...
 0 constant DIR_DOWN

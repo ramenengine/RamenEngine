@@ -40,7 +40,7 @@ assetdef image
 : >bmp  image.bmp @ ;
 
 \ ------------------------------ sub-image stuff -------------------------------
-: subdivideimage  ( tilew tileh img -- )
+: subdivide  ( tilew tileh img -- )
     >r  2dup r@ image.subw 2!  2af r@ image.fsubw 2!
     r@ imagewh  r@ image.subw 2@  2/ 2pfloor  2dup r@ image.subcols 2!
     *  r> image.subcount ! ;
