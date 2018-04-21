@@ -14,10 +14,14 @@ struct array2d
     array2d int svar numrows
     array2d 0 int sfield data
 
-: array2d:  ( numcols numrows -- <name> )  ( -- data )
-  2pfloor 2dup  create  here  array2d sizeof /allot  numcols 2!  * cells /allot ;
+decimal
+    : array2d:  ( numcols numrows -- <name> )
+        2pfloor 2dup  create  2,  2i * cells /allot ;
+
+    : count2d ( array2d -- data #cells )  dup data swap numcols 2@ 2i * ;
+fixed
+
 : dims  ( array2d -- numcols numrows )  numcols 2@ ;
-: count2d ( array2d -- data #cells )  dup data swap numcols 2@ * ;
 
 : (clamp)  ( col row array2d -- same )
   >r  0 0 r@ numcols 2@ 2clamp  r> ;
@@ -28,12 +32,14 @@ struct array2d
 : (clip)   ( col row #cols #rows array2d -- same )
   dims 1 1 2- clip ;
 
-: loc2d  ( col row array2d -- addr )
-  (clamp) >r  r@ numcols @ * +  cells  r> data + ;
+decimal
+    : loc  ( col row array2d -- addr )
+      (clamp) >r  2i r@ numcols @ 1i * +  cells  r> data + ;
+fixed
 
 : pitch@  ( array2d -- /pitch strid)  numcols @ cells ;
 
-: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc2d r> pitch@ ;
+: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc r> pitch@ ;
 
 : write2d  ( src-addr pitch destcol destrow #cols #rows dest -- )
     locals| dest |
@@ -71,7 +77,7 @@ marker dispose
 12 7 array2d: b
 a count2d 5 ifill
 b count2d 10 ifill
-\ quit
-cr .( ARRAY2D tests passed. )
+
+cr .( === ARRAY2D tests passed. === )
 dispose
 
