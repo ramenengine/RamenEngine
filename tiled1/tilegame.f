@@ -10,14 +10,14 @@
 
 : add-tiles ( image tilew tileh -- firstn )
     third subdivide
-    tiles #pushed swap  dup subcount @ 0 do  i over imgsubbmp  tiles push  loop  drop ;
+    tiles #pushed swap  dup image.subcount @ 0 do  i over subbmp  tiles push  loop  drop ;
 
 : set-tiles  ( image tilew tileh n -- )
     tiles #pushed >r  tiles swap truncate  add-tiles  drop
     tiles #pushed r> max tiles swap truncate ;
 
 : clear-tiles  ( -- )
-    0 tiles nth a!>  maxtiles 0 do  @+ -bmp  loop  tiles 0 truncate ;
+    0 tiles nth  maxtiles 0 do  @+ -bmp  loop  drop  tiles 0 truncate ;
 
 
 \ Render a tilemap
@@ -35,7 +35,8 @@
 
 0 value tba  \ tile base address
 
-: tilebase!  ( tile# -- )  cells tiles + to tba ;
+: tilebase!  ( tile# -- )  tiles nth to tba ;
+
 0 tilebase!
 
 : tsize  tba cell+ @ bmpwh ;

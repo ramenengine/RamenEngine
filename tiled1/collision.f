@@ -37,7 +37,7 @@ define tilecding
     : py y @ ;
 
     \ point
-    : pt  gap dup 2/  2pfloor  @tile >gid  dup t ! p@ ;
+    : pt  gap dup 2/  2pfloor  map@ >gid  dup t ! p@ ;
 
     \ increment coordinates
     : ve+  swap gap +  w @ #1 - px +  min  swap ;
@@ -73,9 +73,8 @@ define tilecding
     : lr vx @ -exit vx @ 0 < if ( lcros? -exit ) nx 2@ cl exit then ( rcros? -exit ) nx @ w @ + ny @ crt ;
 
     : init   to gap  x 2@  vx 2@  2+  nx 2!  0 to lwall? 0 to rwall? 0 to floor? 0 to ceiling? ;
+
     0 value (code)
-
-
 only forth definitions also tilecding
 
 : collide-map ( tilesize xt -- )  is map-collide  init ud lr ;
