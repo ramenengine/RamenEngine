@@ -7,7 +7,7 @@ assetdef sample
 
 : init-sample  ( looping adr c sample -- )
     >r  findfile r@ srcfile place  r@ sample.loop !  ['] reload-sample r@ register
-    r> reload-sample uff;
+    r> reload-sample ;
 
 : sample:  ( loopmode adr c -- <name> )
     create sample sizeof buffer init-sample ;
