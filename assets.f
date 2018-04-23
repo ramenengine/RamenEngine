@@ -26,7 +26,7 @@
 defer initdata ( -- )
 
 flist (assets)
-: register  ( asset -- ) (assets) listlink ;
+: register  ( reloader-xt asset -- ) dup (assets) listlink  ( xt asset ) ! ;
 
 \ TODO: change TRAVERSE> to EACH> after factoring out lists from obj.f
 : assets>  postpone (assets)  postpone traverse> ; immediate
