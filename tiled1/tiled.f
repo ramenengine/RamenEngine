@@ -4,7 +4,6 @@ $10000 [version] tiled-ver
 
 [undefined] draw-ver [if] $000100 include ramen/lib/draw [then]
 [undefined] array2d-ver [if] $000100 include ramen/lib/array2d [then]
-[undefined] xml-ver [if] $000100 include kit/lib/xml [then]
 include ramen/tiled1/tilegame
 
 \ -------------------------------------------------------------------------------------------------
@@ -16,6 +15,7 @@ include ramen/tiled1/tilegame
 
 \ -------------------------------------------------------------------------------------------------
 [section] tilemap
+
 \ Tilemap objects
 \ A large singular 2D array is used for stability
 
@@ -33,7 +33,7 @@ var w  var h              \ width & height in pixels
 : >gid  ( tile -- gid )  $0000fffc and 10 << ;
 
 \ hex addressing
-: htile@  ( #col #row -- tile ) 2p map@ ;
+: hmap@  ( #col #row -- tile ) 2p map@ ;
 
 include ramen/tiled1/collision
 
@@ -49,3 +49,7 @@ var mbx  var mby  var mbw  var mbh
     each>   x 2@  mbx 2@ x 2+!  onhitmap @ if  mbw 2@  tilesize  onhitmap @ collide-map  then
             x 2! ;
 
+\ -------------------------------------------------------------------------------------------------
+[section] tmx
+
+$10000 include ramen/tiled1/tmx

@@ -1,4 +1,4 @@
-$100000 [version] tmx-ver
+$10000 [version] tmx-ver
 
 \ TMX (Tiled) support
 \ This just provides access to the data and some conversion tools
@@ -15,10 +15,11 @@ $100000 [version] tmx-ver
 \  [ ] - Animations (<tile><animation><frame>)
 \  [ ] - Other shapes besides rectangles (<ellipse>, <path>, <polyline>, <point>)
 \  [ ] - Text (<text>)
-\  [ ] - Compressed layers
+\  [ ] - Compressed layers (with zlib)
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 
+[undefined] xml-ver [if] $000100 include kit/lib/xml [then]
 
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode  r> ;
 
@@ -54,18 +55,16 @@ define tmxing
 
     : is?       named ;
 
-    : loadtmx    ( adr c -- dom map ) loadxml " map" 0 element ;
 
     : #tilesets  ( map -- n )  " tileset" #elements ;
 
-    create tmxpath  256 allot  \ set this for it to be able to find files
+    create tmxpath  256 allot
 
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
-        rot source@ tmxpath count strjoin loadxml " tileset" 0 element ;
+        source@ tmxpath count 2swap strjoin loadxml 0 " tileset" element ;
 
     : get-tileset  ( map n -- dom tileset gid )
         " tileset" element dup tileset>source rot firstgid@ ;
-
 
     : #objgroups ( map -- n )  " objectgroup" #elements ;
     : objgroup[] ( map n -- objgroup ) " objectgroup" element ;
@@ -91,12 +90,18 @@ define tmxing
     : #images   ( tileset -- n )  " image" #elements ;
 
     : readlayer  ( layer dest pitch -- str )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
-        third @wh locals| h w pitch dest |  ( layer )
-        " data" 0 element text base64 >r
+        third wh@ locals| h w pitch dest |  ( layer )
+        0 " data" element text base64 >r
         r@ str-get drop  w cells  dest  pitch  h  w cells  2move
         r> str-free ;
 
     : rectangle?  ( object -- flag )  " gid" attr? not ;
     \ Note RECTANGLE? is needed because TMX is stupid and doesn't have a <rectangle> element.
+
+only forth definitions also xmling also tmxing
+
+: loadtmx    ( adr c -- dom map )
+    2dup -filename tmxpath place
+    loadxml 0 " map" element ;
 
 only forth definitions
