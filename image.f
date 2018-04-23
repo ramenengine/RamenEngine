@@ -26,8 +26,7 @@ assetdef image
     >r  r@ srcfile count  zstring al_load_bitmap  r@ image.bmp !  r> /origin ;
 
 : init-image ( path c image -- )
-    >r  ['] reload-image r@ !  findfile r@ srcfile place  r@ reload
-    r> register ;
+    >r  findfile r@ srcfile place  ['] reload-image r@ register  r> reload-image ;
 
 : image:  ( path c -- <name> )
     create  image sizeof buffer  init-image ;

@@ -6,8 +6,8 @@ assetdef sample
     >r  r@ srcfile count  zstring al_load_sample  r> sample.smp ! ;
 
 : init-sample  ( looping adr c sample -- )
-    >r  ['] reload-sample r@ !  findfile r@ srcfile place
-    r@ reload  r@ sample.loop !  r> register ;
+    >r  findfile r@ srcfile place  r@ sample.loop !  ['] reload-sample r@ register
+    r> reload-sample ;
 
 : sample:  ( loopmode adr c -- <name> )
     create sample sizeof buffer init-sample ;
