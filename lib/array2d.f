@@ -1,5 +1,12 @@
 $000100 [version] array2d-ver
 
+: 2move  ( src /pitch dest /pitch #rows /bytes -- )
+  locals| #bytes #rows destpitch dest srcpitch src |
+  #rows 0 do
+    src dest #bytes move
+    srcpitch +to src  destpitch +to dest
+  loop ;
+
 : clip  ( col row #cols #rows #destcols #destrows -- col row #cols #rows )
   2>r  2over 2+  0 0 2r@ 2clamp  2swap  0 0 2r> 2clamp  2swap 2over 2- ;
 
