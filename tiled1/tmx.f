@@ -21,7 +21,7 @@ $10000 [version] tmx-ver
 
 [undefined] xml-ver [if] $000100 include kit/lib/xml [then]
 
-: base64  ( base64-src count -- str )   str-new >r  r@ b64-decode  r> ;
+: base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 
 only forth definitions also xmling
 define tmxing
@@ -51,10 +51,6 @@ define tmxing
     : tilecount@  " tilecount" pval ;
     : spacing@  " spacing" pval ;
     : margin@   " margin" pval ;
-
-
-    : is?       named ;
-
 
     : #tilesets  ( map -- n )  " tileset" #elements ;
 
@@ -89,7 +85,7 @@ define tmxing
     : #objects  ( objgroup -- n )  " object" #elements ;
     : #images   ( tileset -- n )  " image" #elements ;
 
-    : readlayer  ( layer dest pitch -- str )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
+    : readlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
         third wh@ locals| h w pitch dest |  ( layer )
         0 " data" element text base64 >r
         r@ str-get drop  w cells  dest  pitch  h  w cells  2move

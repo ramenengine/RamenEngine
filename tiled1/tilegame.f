@@ -22,7 +22,7 @@
 
 \ Render a tilemap
 
-\  Given a starting address, a pitch, and a tile base, render tiles to fill the current
+\  Given a starting address, a pitch, and a tileset base, render tiles to fill the current
 \  clip rectangle of the current destination bitmap.
 
 \  The tilemap format is in cells and in the following format:
@@ -33,7 +33,7 @@
 \  NOTE: Base tile + 1's width and height defines the "grid dimensions". (0 is nothing and transparent)
 
 
-0 value tba  \ tile base address
+0 value tba  \ tileset base address
 
 : tilebase!  ( tile# -- )  tiles nth to tba ;
 
