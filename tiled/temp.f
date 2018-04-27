@@ -23,7 +23,7 @@
 \ -------------------------------------------------------------------------------------------------
 [section] tmx
 
-$10000 include ramen/tiled1/tmx
+$10000 include ramen/tiled/tmx
 
 \ Load tilemap and objects
 \  2 arrays, one to store unique tile bitmaps and one for object initializers.

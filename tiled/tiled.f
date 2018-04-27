@@ -4,7 +4,7 @@ $10000 [version] tiled-ver
 
 [undefined] draw-ver [if] $000100 include ramen/lib/draw [then]
 [undefined] array2d-ver [if] $000100 include ramen/lib/array2d [then]
-include ramen/tiled1/tilegame
+include ramen/tiled/tilegame
 
 \ -------------------------------------------------------------------------------------------------
 [section] buffers
@@ -35,7 +35,7 @@ var w  var h              \ width & height in pixels
 \ hex addressing
 : hmap@  ( #col #row -- tile ) 2p map@ ;
 
-include ramen/tiled1/collision
+include ramen/tiled/collision
 
 var onhitmap  \ XT;  ( info -- )  must be assigned to something to enable tilemap collision detection
 
@@ -52,5 +52,5 @@ var mbx  var mby  var mbw  var mbh
 \ -------------------------------------------------------------------------------------------------
 [section] tmx
 
-$10000 include ramen/tiled1/tmx
+$10000 include ramen/tiled/tmx
 
