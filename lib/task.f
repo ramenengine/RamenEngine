@@ -1,3 +1,5 @@
+$000100 [version] task-ver
+
 \ Multitasking for game objects
 
 \ The following words should only be used within a task:
@@ -32,7 +34,6 @@ create main  object  \ proxy for the Forth data and return stacks
     sp @ sp!
     drop \ ensure TOS is in TOS register
 ;
-
 : end    remove pause ;
 : halt   begin pause again ;
 : pauses 0 do pause loop ;
@@ -64,7 +65,6 @@ create main  object  \ proxy for the Forth data and return stacks
     } 
     { arbitrate }
 ;
-
 
 : self?  sp@ ds >=  sp@ rs <= and ;
 
