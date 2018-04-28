@@ -2,24 +2,27 @@
 \  Loading tiles, tile and tilemap display and collision routines
 \  Maximum 4096 tiles.
 
-4096 dup constant maxtiles
-    cellstack: tiles
+[undefined] #MAXTILES [if] 10000 dup constant #MAXTILES [else] #MAXTILES [then]
+    cellstack: tiles  \ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
 
-: tile>sb  ( n -- subbmp )
-    maxtiles 1 - and tiles nth @ ;
+\ -------------------------------------------------------------------------------------------------
+\ Break up a bitmap into tiles
 
-: add-tiles ( image tilew tileh -- firstn )
-    third subdivide
-    tiles #pushed swap  dup image.subcount @ 0 do  i over subbmp  tiles push  loop  drop ;
+: tilebmp  ( n -- subbmp )  #MAXTILES 1 - and tiles [] @ ;
 
-: set-tiles  ( image tilew tileh n -- )
-    tiles #pushed >r  tiles swap truncate  add-tiles  drop
-    tiles #pushed r> max tiles swap truncate ;
+: maketiles  ( bitmap tilew tileh firstid -- )
+    locals| id th tw bmp |
+    bmp bmph 0 do
+        bmp bmpw 0 do
+            bmp i j 2i tw th 2i al_create_sub_bitmap  tiles id [] !
+            1 +to id
+        tw +loop
+    th +loop
+;
 
-: clear-tiles  ( -- )
-    0 tiles nth  maxtiles 0 do  @+ -bmp  loop  drop  tiles 0 truncate ;
+: -tiles  #MAXTILES for  tiles i @ [] dup @ -bmp  off  loop ;
 
-
+\ -------------------------------------------------------------------------------------------------
 \ Render a tilemap
 
 \  Given a starting address, a pitch, and a tileset base, render tiles to fill the current
@@ -32,7 +35,6 @@
 
 \  NOTE: Base tile + 1's width and height defines the "grid dimensions". (0 is nothing and transparent)
 
-
 0 value tba  \ tileset base address
 
 : tilebase!  ( tile# -- )  tiles nth to tba ;
@@ -44,7 +46,7 @@
 : tile  ( width index -- )  \ NOT A GID
     ?dup if  dup $0000fffc and tba + @  swap 28 >>  blitf  then  0 +at ;
 
-: draw-tilemap  ( addr /pitch -- )
+: tilemap  ( addr /pitch -- )
     tsize  clipwh 1 1 2+  2over 2/  locals| rows cols th tw pitch |
     rows for
         at@  ( addr x y )

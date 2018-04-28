@@ -34,7 +34,6 @@ defer onloadtile  ( dom-nnn -- )  ' drop is onloadtile
 0 value ts                        \ dom-nnn
 create tempimg  /image /allot
 
-var gid
 
 \ Deferred words.
 \ They can all assume ONE has just been called.

@@ -11,7 +11,6 @@ create fore 4 cells allot
 : *bmp   ( w h -- bmp ) 2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto 4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
-: *subbmp   ( bmp w h ) at@ 2i 2swap 2i al_create_sub_bitmap ;
 
 \ Predefined Colors
 : 8>p  s>f 255e f/ f>p ;

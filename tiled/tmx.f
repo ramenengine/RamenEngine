@@ -1,21 +1,20 @@
 $10000 [version] tmx-ver
 
 \ TMX (Tiled) support
-\ This just provides access to the data and some conversion tools
+\ This just provides convenient data access and loading of "normal" tilemap layers
 \ It directly supports only a subset of features
 \  - Object groups
 \  - Single and Multiple image tilesets
 \  - Tilemaps in Base64 uncompressed format
 \  - Rectangles
-\  - Referenced tileset files -
-\       To salvage my sanity, embedded tilesets are NOT supported.  You ought to be using external tilesets anyway.
+\  - Embedded tilesets and Referenced tileset files
 
 \ TODO
 \  [ ] - Custom Properties (<properties><property>)
 \  [ ] - Animations (<tile><animation><frame>)
 \  [ ] - Other shapes besides rectangles (<ellipse>, <path>, <polyline>, <point>)
 \  [ ] - Text (<text>)
-\  [ ] - Compressed layers (with zlib)
+\  [ ] - Compressed layers (with zlib... it's simple)
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 
@@ -27,6 +26,7 @@ only forth definitions also xmling
 define tmxing
 
     : source@   " source" val ;
+    : source?   " source" attr? ;
     : name@     " name" val ; ;
     : ?name     " name" val ?dup 0<> ;
     : w@        " width" pval ;
@@ -46,8 +46,9 @@ define tmxing
     : orientation@  " orientation" val ;
     : backgroundcolor?  " backgroundcolor" attr? ;
     : backgroundcolor@  " backgroundcolor" val [char] $ third c! evaluate ;
-    : tilewidth@  " tilewidth" pval ;
-    : tileheight@  " tileheight" pval ;
+    : tilew@  " tilewidth" pval ;
+    : tileh@  " tileheight" pval ;
+    : tilewh@  dup tilew@ swap tileh@ ;
     : tilecount@  " tilecount" pval ;
     : spacing@  " spacing" pval ;
     : margin@   " margin" pval ;
@@ -56,11 +57,17 @@ define tmxing
 
     create tmxpath  256 allot
 
-    : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
-        source@ tmxpath count 2swap strjoin loadxml 0 " tileset" element ;
+    : tmxpath+  tmxpath count 2swap strjoin ;
 
-    : get-tileset  ( map n -- dom tileset gid )
-        " tileset" element dup tileset>source rot firstgid@ ;
+    : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
+        source@ tmxpath+ loadxml 0 " tileset" element ;
+
+    : tileset  ( map n -- dom|0 tileset gid )
+        " tileset" element
+        dup source? if   dup tileset>source rot firstgid@
+                    else  0 swap dup firstgid@  then ;
+
+    : ?dom-free  ?dup -exit dom-free ;
 
     : #objgroups ( map -- n )  " objectgroup" #elements ;
     : objgroup[] ( map n -- objgroup ) " objectgroup" element ;
@@ -90,6 +97,9 @@ define tmxing
         0 " data" element text base64 >r
         r@ str-get drop  w cells  dest  pitch  h  w cells  2move
         r> str-free ;
+
+    : tile>bmp  ( tile-nnn -- bitmap )  0 " image" element source@ tmxpath+ zstring al_load_bitmap ;
+    : tileset>bmp  ( tileset-nnn -- bitmap )  tile>bmp ;  \ it's the same
 
     : rectangle?  ( object -- flag )  " gid" attr? not ;
     \ Note RECTANGLE? is needed because TMX is stupid and doesn't have a <rectangle> element.

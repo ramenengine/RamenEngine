@@ -50,5 +50,5 @@ assetdef image
 : afsubimg  ( n img -- ALLEGRO_BITMAP fx fy fw fh )   \ helps with calling Allegro blit functions
     >r  r@ image.bmp @  swap r@ >subxy 2af  r> image.fsubw 2@ ;
 
-: subbmp  ( n img -- subbmp )
+: imgsubbmp  ( n img -- subbmp )
     >r  r@ image.bmp @  swap r@ >subxy  r> image.subw 2@   4i  al_create_sub_bitmap ;

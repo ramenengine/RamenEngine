@@ -6,7 +6,7 @@
 \      (There is a global tile table provided in tilegame.f)
 \      If your tilemap only uses one tileset you could get away with using afsubimg directly,
 \      but you'd need to write your own tilemap-drawing routine.
-\   B) Load multiple images (one-image-per-tile) into the same array, as normal bitmaps.
+\   B) Load multiple images (one-image-per-tile) into the global tile array, as allegro bitmaps.
 \      These bitmaps are then referenced indirectly by GID for display.
 \   C) Don't load the images at all, just use the paths to instantiate objects sharing
 \      the same base name.  (This is more convenient than using Tiled's "type" field.)
@@ -21,8 +21,9 @@
 \   B) Reference layers by name and instantiate objects into different object lists.
 \   C) Some kind of dynamic system
 \   D) Treat an object group as a "background layer" full of "tile" objects.  See Tilesets > B
+\   E) Mix and match the above
 
-\ How instantiation works:
+\ How scripted game object instantiation works:
 \   RAMEN has no idea about "classes" so normally object instantiation is pretty open-ended.
 \   Code that defines the creation of an object is called a recipe.
 \
@@ -31,7 +32,7 @@
 \
 \   Here's an example:
 \   : *myobjectmaker   ( ??? -- )  ( objlist )  ONE  ( initialization ) ;
-\   [defined] tmx [if]
+\   [defined] :tmx [if]
 \       :tmx <myobjectname>  ( object-node -- )  ... *myobjectmaker ... ;
 \   [then]
 \

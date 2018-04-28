@@ -4,14 +4,14 @@ $10000 [version] tiled-ver
 
 [undefined] draw-ver [if] $000100 include ramen/lib/draw [then]
 [undefined] array2d-ver [if] $000100 include ramen/lib/array2d [then]
-include ramen/tiled/tilegame
 
 \ -------------------------------------------------------------------------------------------------
 [section] buffers
 
+10000 constant #MAXTILES
+include ramen/tiled/tilegame
 1024 1024 array2d: tilebuf
-1000 cellstack: bitmaps
-1000 cellstack: initializers
+#MAXTILES cellstack: recipes
 
 \ -------------------------------------------------------------------------------------------------
 [section] tilemap
@@ -53,4 +53,85 @@ var mbx  var mby  var mbw  var mbh
 [section] tmx
 
 $10000 include ramen/tiled/tmx
+var gid
 
+: @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
+
+\ Image (background) object support (multi-image tileset) -----------------------------------------
+: load-tileset-bitmaps  ( tileset firstgid -- )
+    locals| gid0 |
+    eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] !   ;
+
+\ Load a single-image tileset ---------------------------------------------------------------------
+: load-tileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
+    tileset over tileset>bmp locals| bmp firstgid ts dom |
+    bmp ts tilewh@ ts firstgid@ maketiles
+    dom ?dom-free ;
+
+\ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
+: de-Tiled  ( n -- n )
+    dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
+
+: load-tilemap  ( layer destcol destrow -- )
+    3dup
+        tilebuf loc  tilebuf pitch@ readlayer
+        rot wh@ tilebuf some2d> cells bounds do   \ convert it!
+            i @ de-Tiled i !
+        cell +loop ;
+
+\ Load object recipes from tileset ----------------------------------------------------------------
+\ No images are loaded in this use case.
+\ Instead we load any object recipes that aren't loaded.
+
+\ Load objects and rectangles into a pool ---------------------------------------------------------
+\ This supports 3 kinds of objects that can be stored in TMX files.
+\ 1) Regular scripted game objects where the tile gid points to a recipe XT in a table.
+\ 2) Rectangular objects with no associated tile
+\ 3) Background (image) objects where the gid points to a bitmap in the global tileset
+
+\ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
+\ They all can expect the pen has already been set to the XY position.
+
+defer tmxobj   ( object-nnn XT -- )  \ XT is the TMX recipe for the object loaded from the script
+defer tmxrect  ( object-nnn w h -- )
+defer tmxbg    ( object-nnn gid -- )
+
+: -recipes  ( -- )  recipes 0 [] #MAXTILES cells erase ;
+
+\ Define a TMX recipe.  TMXING is in the search order while compiling.
+define (;) : ;   previous previous  postpone ;  ; immediate
+only forth definitions
+: :TMX  ( -- XT )  ( object-nnn -- )
+    :noname  also tmxing  also (;)
+;
+
+\ LOAD-RECIPES
+\ Conditionally load recipes that aren't defined and then stores them in RECIPES
+\ Tile image source paths are important!  They correspond to the object script filenames!
+\ When a tile does not have an image, it will load a recipe if the tile
+\ has its TYPE set to something.
+: (load-recipe)
+;
+
+: load-recipes  ( tileset -- )
+    eachelement> that's tile
+        dup 0 " image" element ?dup if
+        else
+            
+        then
+;
+
+: load-objects  ( objgroup -- )
+    eachelement> that's object
+        dup xy@ at
+        dup rectangle? if
+            dup wh@ tmxrect
+        else
+
+
+        then
+;
+
+
+: loadnewtmx  ( adr c -- dom map )
+    -recipes  -tiles  loadtmx ;
