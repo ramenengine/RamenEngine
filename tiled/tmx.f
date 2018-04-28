@@ -35,7 +35,7 @@ define tmxing
     : x@        " x" pval ;
     : y@        " y" pval ;
     : xy@       dup x@ swap y@ ;
-    : ?type     " type" val ?dup 0<> ;
+    : ?type     dup " type" attr? if  " type" val  true  else  drop  false then ;
     : firstgid@ " firstgid" pval ;
     : gid@      " gid" pval ;
     : id@       " id" pval ;

@@ -83,7 +83,7 @@ var gid
 \ No images are loaded in this use case.
 \ Instead we load any object recipes that aren't loaded.
 
-\ Load objects and rectangles into a pool ---------------------------------------------------------
+\ Load object groups ------------------------------------------------------------------------------
 \ This supports 3 kinds of objects that can be stored in TMX files.
 \ 1) Regular scripted game objects where the tile gid points to a recipe XT in a table.
 \ 2) Rectangular objects with no associated tile
@@ -94,30 +94,46 @@ var gid
 
 defer tmxobj   ( object-nnn XT -- )  \ XT is the TMX recipe for the object loaded from the script
 defer tmxrect  ( object-nnn w h -- )
-defer tmxbg    ( object-nnn gid -- )
+defer tmximage ( object-nnn gid -- )
 
 : -recipes  ( -- )  recipes 0 [] #MAXTILES cells erase ;
 
+\ : reload-recipes ;
+
 \ Define a TMX recipe.  TMXING is in the search order while compiling.
-define (;) : ;   previous previous  postpone ;  ; immediate
+\ All TMX recipe definitions are kept in the TMXING vocabulary.
+define (;) : ;   previous previous definitions postpone ;  ; immediate
 only forth definitions
-: :TMX  ( -- XT )  ( object-nnn -- )
-    :noname  also tmxing  also (;)
-;
+
+: :TMX  ( -- <name> )  ( object-nnn -- )  \ name must match the filename
+    also (;)  also tmxing definitions
+    :noname  >in @
+    defined if  is  >in !  else  dup >in !  defer  >in !  is  then ;
 
 \ LOAD-RECIPES
 \ Conditionally load recipes that aren't defined and then stores them in RECIPES
 \ Tile image source paths are important!  They correspond to the object script filenames!
 \ When a tile does not have an image, it will load a recipe if the tile
 \ has its TYPE set to something.
-: (load-recipe)
-;
+
+: uncount  drop #1 - ;
+
+: >recipe  ( name c -- XT )
+    locals| c name |
+    also tmxing  name c uncount find  previous  ( xt|a flag )  ?exit
+    drop  tmxpath count s[  " /objects/" +s  name c +s  " .f" +s  ]s
+        included ;
+
+: (load-recipe)  ( gid name c -- )  >recipe  swap recipes nth ! ;
 
 : load-recipes  ( tileset -- )
+    dup firstgid@ locals| firstgid |
     eachelement> that's tile
+        dup id@ firstgid + swap
         dup 0 " image" element ?dup if
+            source@ -path -ext (load-recipe)
         else
-            
+            ?type if  (load-recipe)  else  ( gid ) drop  then
         then
 ;
 
@@ -125,10 +141,13 @@ only forth definitions
     eachelement> that's object
         dup xy@ at
         dup rectangle? if
-            dup wh@ tmxrect
+            dup wh@ ( nnn w h ) tmxrect
         else
-
-
+            dup gid@ dup recipes nth @ ?dup if
+                ( nnn gid xt ) nip ( nnn xt ) tmxobj
+            else
+                ( nnn gid ) tmximage
+            then
         then
 ;
 
