@@ -61,13 +61,14 @@ var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: loadbitmaps  ( tileset firstgid -- )
-    locals| gid0 |
-    eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] !   ;
+: loadbitmaps  ( map n -- )
+    tileset[]  locals| gid0 ts dom |
+    ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 .s + [] !
+    dom ?dom-free ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
 : loadtileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
-    tileset over tileset>bmp locals| bmp firstgid ts dom |
+    tileset[] over tileset>bmp locals| bmp firstgid ts dom |
     bmp ts tilewh@ ts firstgid@ maketiles
     dom ?dom-free ;
 

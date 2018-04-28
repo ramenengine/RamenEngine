@@ -62,7 +62,7 @@ define tmxing
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
         source@ tmxpath+ loadxml 0 " tileset" element ;
 
-    : tileset  ( map n -- dom|0 tileset gid )
+    : tileset[]  ( map n -- dom|0 tileset gid )
         " tileset" element
         dup source? if   dup tileset>source rot firstgid@
                     else  0 swap dup firstgid@  then ;
@@ -98,7 +98,8 @@ define tmxing
         r@ str-get drop  w cells  dest  pitch  h  w cells  2move
         r> str-free ;
 
-    : tile>bmp  ( tile-nnn -- bitmap )  0 " image" element source@ tmxpath+ zstring al_load_bitmap ;
+    : tile>bmp  ( tile-nnn -- bitmap | 0 )
+        0 " image" element dup -exit  source@ tmxpath+ zstring al_load_bitmap ;
     : tileset>bmp  ( tileset-nnn -- bitmap )  tile>bmp ;  \ it's the same
 
     : rectangle?  ( object -- flag )  " gid" attr? not ;
