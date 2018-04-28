@@ -12,6 +12,7 @@ $10000 [version] tiled-ver
 include ramen/tiled/tilegame
 1024 1024 array2d: tilebuf
 #MAXTILES cellstack: recipes
+100 cellstack: bitmaps        \ single-image tileset's bitmaps
 
 \ -------------------------------------------------------------------------------------------------
 [section] tilemap
@@ -69,6 +70,7 @@ var gid
 \ Load a single-image tileset ---------------------------------------------------------------------
 : loadtileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
     tileset[] over tileset>bmp locals| bmp firstgid ts dom |
+    bmp bitmaps push
     bmp ts tilewh@ ts firstgid@ maketiles
     dom ?dom-free ;
 
@@ -157,7 +159,9 @@ set-current set-order
         then
 ;
 
+: -bitmaps  bitmaps scount do  i @ -bmp  loop  bitmaps 0 truncate ;
+
 : loadnewtmx  ( adr c -- dom map )
-    -recipes  -tiles  loadtmx ;
+    -recipes  -tiles  loadtmx  -bitmaps ;
 
 only forth definitions
