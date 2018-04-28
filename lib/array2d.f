@@ -74,7 +74,7 @@ fixed
 \ : some2d>  r> code> some2d ;
 \ : each2d>  r> code> each2d ;
 
-:noname  cr  cells bounds do  i ?  cell +loop ;
+:noname  cr  cells bounds do  i @ h.  cell +loop ;
 : 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
 
 

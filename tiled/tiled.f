@@ -26,7 +26,7 @@ var w  var h              \ width & height in pixels
     displaywh w 2!
     draw>
         at@ w 2@ clip>
-        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  draw-tilemap ;
+        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : map@  ( col row -- tile )  tilebuf loc @ ;
 
@@ -53,17 +53,20 @@ var mbx  var mby  var mbw  var mbh
 [section] tmx
 
 $10000 include ramen/tiled/tmx
+
+also xmling  also tmxing
+
 var gid
 
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: load-tileset-bitmaps  ( tileset firstgid -- )
+: loadbitmaps  ( tileset firstgid -- )
     locals| gid0 |
     eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] !   ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
-: load-tileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
+: loadtileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
     tileset over tileset>bmp locals| bmp firstgid ts dom |
     bmp ts tilewh@ ts firstgid@ maketiles
     dom ?dom-free ;
@@ -72,7 +75,7 @@ var gid
 : de-Tiled  ( n -- n )
     dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
 
-: load-tilemap  ( layer destcol destrow -- )
+: loadtilemap  ( layer destcol destrow -- )
     3dup
         tilebuf loc  tilebuf pitch@ readlayer
         rot wh@ tilebuf some2d> cells bounds do   \ convert it!
@@ -102,13 +105,15 @@ defer tmximage ( object-nnn gid -- )
 
 \ Define a TMX recipe.  TMXING is in the search order while compiling.
 \ All TMX recipe definitions are kept in the TMXING vocabulary.
-define (;) : ;   previous previous definitions postpone ;  ; immediate
-only forth definitions
+get-order get-current
+    define (;) : ;   previous previous definitions postpone ;  ; immediate
+set-current set-order
 
 : :TMX  ( -- <name> )  ( object-nnn -- )  \ name must match the filename
     also (;)  also tmxing definitions
     :noname  >in @
-    defined if  is  >in !  else  dup >in !  defer  >in !  is  then ;
+    defined if  postpone is  >in !
+            else  dup >in !  defer  >in !  postpone is  then ;
 
 \ LOAD-RECIPES
 \ Conditionally load recipes that aren't defined and then stores them in RECIPES
@@ -124,20 +129,20 @@ only forth definitions
     drop  tmxpath count s[  " /objects/" +s  name c +s  " .f" +s  ]s
         included ;
 
-: (load-recipe)  ( gid name c -- )  >recipe  swap recipes nth ! ;
+: (loadrecipe)  ( gid name c -- )  >recipe  swap recipes nth ! ;
 
-: load-recipes  ( tileset -- )
+: loadrecipes  ( tileset -- )
     dup firstgid@ locals| firstgid |
     eachelement> that's tile
         dup id@ firstgid + swap
         dup 0 " image" element ?dup if
-            source@ -path -ext (load-recipe)
+            source@ -path -ext (loadrecipe)
         else
-            ?type if  (load-recipe)  else  ( gid ) drop  then
+            ?type if  (loadrecipe)  else  ( gid ) drop  then
         then
 ;
 
-: load-objects  ( objgroup -- )
+: loadobjects  ( objgroup -- )
     eachelement> that's object
         dup xy@ at
         dup rectangle? if
@@ -153,3 +158,5 @@ only forth definitions
 
 : loadnewtmx  ( adr c -- dom map )
     -recipes  -tiles  loadtmx ;
+
+only forth definitions
