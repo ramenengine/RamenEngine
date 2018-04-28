@@ -151,6 +151,5 @@ only forth definitions
         then
 ;
 
-
 : loadnewtmx  ( adr c -- dom map )
     -recipes  -tiles  loadtmx ;
