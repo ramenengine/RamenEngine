@@ -8,7 +8,6 @@ objlist stage
 
 \ -----------------------------------------------------------------------
 [section] camera
-create m  16 cells /allot
 
 : track
     ?dup -exit
@@ -17,9 +16,10 @@ create m  16 cells /allot
 
 : camtrans
     cam ?check
-    m al_identity_transform
-    m  cam 's x 2@ 2pfloor 2negate 2af  al_translate_transform
-    m al_use_transform ;
+    m1 al_identity_transform
+    m1 global-scale 1af dup al_scale_transform
+    m1  cam 's x 2@ 2pfloor 2negate 2af  al_translate_transform
+    m1 al_use_transform ;
 
 
 \ -----------------------------------------------------------------------

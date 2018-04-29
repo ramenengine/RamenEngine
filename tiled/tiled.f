@@ -26,8 +26,14 @@ var w  var h              \ width & height in pixels
 : /tilemap
     displaywh w 2!
     draw>
-        at@ w 2@ clip>
+        \ at@ w 2@ clip>
         scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  tilemap ;
+
+: /isotilemap
+    displaywh w 2!
+    draw>
+        \ at@ w 2@ clip>
+        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  isotilemap ;
 
 : map@  ( col row -- tile )  tilebuf loc @ ;
 
@@ -62,17 +68,21 @@ var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: loadbitmaps  ( map n -- )
-    tileset[]  locals| gid0 ts dom |
-    ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] !
-    dom ?dom-free ;
+: (loadbitmaps)  ( map n -- dom )
+    tileset[]  locals| gid0 ts |
+    ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] ! ;
+
+: loadbitmaps  ( map n -- )  (loadbitmaps)  ?dom-free ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
 : loadtileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
     tileset[] over tileset>bmp locals| bmp firstgid ts dom |
     bmp bitmaps push
-    bmp ts tilewh@ ts firstgid@ maketiles
+    bmp  ts tilewh@  firstgid maketiles
     dom ?dom-free ;
+
+\ don't execute this frequently!
+: @tilesetwh  ( map n -- tw th )  tileset[] drop tilewh@ rot ?dom-free ;
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
 : de-Tiled  ( n -- n )
@@ -141,7 +151,7 @@ set-current set-order
 
 : (loadrecipe)  ( gid name c -- )  >recipe  swap recipes nth ! ;
 
-: (loadrecipes)  locals| firstgid |
+: (loadrecipes)  tileset[]  locals| firstgid |
     ( tileset ) eachelement> that's tile
         dup  id@ firstgid +  swap
             0 " image" element ?dup if
@@ -149,7 +159,7 @@ set-current set-order
             else
                 ?type if  (loadrecipe)  else  ( gid ) drop  then
             then ;
-: loadrecipes  ( map n -- )  tileset[]  (loadrecipes)  ?dom-free ;
+: loadrecipes  ( map n -- )  (loadrecipes)  ?dom-free ;
 
 : loadobjects  ( objgroup -- )
     eachelement> that's object
