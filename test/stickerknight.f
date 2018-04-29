@@ -27,6 +27,7 @@ map 0 loadbitmaps
 
 map " parallax" objgroup loadobjects
 map " game" objgroup loadobjects
+map " bounds" objgroup loadobjects
 
 \ ------------------------------------------------------------------------------------------------
 : left?  ( -- flag )  <left> kstate  <pad_4> kstate or  ; \ 0 0 joy x -0.25 <= or ;
