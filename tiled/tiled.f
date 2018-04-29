@@ -64,7 +64,7 @@ var gid
 \ Image (background) object support (multi-image tileset) -----------------------------------------
 : loadbitmaps  ( map n -- )
     tileset[]  locals| gid0 ts dom |
-    ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 .s + [] !
+    ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] !
     dom ?dom-free ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
@@ -151,7 +151,7 @@ set-current set-order
         dup rectangle? if
             dup wh@ ( nnn w h ) tmxrect
         else
-            dup gid@ dup recipes nth @ ?dup if
+            dup gid@ dup  recipes nth @ ?dup if
                 ( nnn gid xt ) nip ( nnn xt ) tmxobj
             else
                 ( nnn gid ) tmximage

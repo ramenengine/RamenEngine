@@ -74,9 +74,9 @@ define tmxing
     : objgroup   ( map adr c -- dom-nnn | 0 )
         locals| c adr map |
         map #objgroups for
-            map i objgroup[]  dup
-                name@  adr c  compare 0= if  unloop  exit  then
-            drop
+            map i objgroup[]
+                dup name@  adr c  compare 0= if  unloop  exit  then
+                drop
         loop  0 ;
 
     : #layers ( map -- n )  " layer" #elements ;

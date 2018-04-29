@@ -14,16 +14,21 @@ only forth definitions also xmling also tmxing
 
 map 0 loadbitmaps
 
-:noname [ is tmxobj ] ( object-nnn XT -- )  .s 2drop ;
+:noname [ is tmxobj ] ( object-nnn XT -- )  drop  ?type if cr type then ;
 :noname [ is tmxrect ] ( object-nnn w h -- )  .s 3drop ;
 :noname [ is tmximage ] ( object-nnn gid -- )
     layer0 one  gid !  drop
     draw>  @gidbmp blit ;
 
+\ for testing purposes, fill the recipes array with a dummy.
+:noname
+    #MAXTILES for  ['] noop  recipes push  loop
+; execute
+
 map " parallax" objgroup loadobjects
+map " game" objgroup loadobjects
 
 \ ------------------------------------------------------------------------------------------------
-\ 4-way input
 : left?  ( -- flag )  <left> kstate  <pad_4> kstate or  ; \ 0 0 joy x -0.25 <= or ;
 : right?  ( -- flag ) <right> kstate  <pad_6> kstate or ; \ 0 0 joy x 0.25 >= or ;
 : up?  ( -- flag )    <up> kstate  <pad_8> kstate or    ; \ 0 0 joy y -0.25 <= or ;
