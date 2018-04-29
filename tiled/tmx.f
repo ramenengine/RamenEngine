@@ -59,8 +59,10 @@ define tmxing
 
     : tmxpath+  tmxpath count 2swap strjoin ;
 
+    : >srcpath  source@ slashes tmxpath+ cr 2dup type ;
+
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
-        source@ tmxpath+ loadxml 0 " tileset" element ;
+        >srcpath loadxml 0 " tileset" element ;
 
     : tileset[]  ( map n -- dom|0 tileset gid )
         " tileset" element
@@ -99,7 +101,7 @@ define tmxing
         r> str-free ;
 
     : tile>bmp  ( tile-nnn -- bitmap | 0 )
-        0 " image" element dup -exit  source@ tmxpath+ zstring al_load_bitmap ;
+        0 " image" element dup -exit  >srcpath zstring al_load_bitmap ;
     : tileset>bmp  ( tileset-nnn -- bitmap )  tile>bmp ;  \ it's the same
 
     : rectangle?  ( object -- flag )  " gid" attr? not ;
