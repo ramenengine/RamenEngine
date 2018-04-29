@@ -43,18 +43,32 @@
 
 : tsize  tba cell+ @ bmpwh ;
 
-: tile  ( width index -- )  \ NOT A GID
-    ?dup if  dup $0000fffc and tba + @  swap 28 >>  blitf  then  0 +at ;
+: tile  ( stridex stridey index -- )
+    ?dup if  dup $0000fffc and tba + @  swap 28 >>  blitf  then  +at ;
 
 : tilemap  ( addr /pitch -- )
     tsize  clipwh 1 1 2+  2over 2/  locals| rows cols th tw pitch |
     rows for
         at@  ( addr x y )
             third  cols for
-                tw over @ tile  cell+
+                tw th third @ tile  cell+
             loop  drop
         th + at   ( addr )  pitch +
     loop  drop  ;
 
 : scroll  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
     2over 2over 2mod 2negate +at   2/ 2pfloor ;
+
+\ Isometric support
+: >iso  2dup swap 1 >> - >r  +  r> ;
+: >car  2dup 2 / swap 2 / + >r   -   r> ;
+
+: isotilemap  ( addr /pitch -- )
+    tsize 2 2 2/  20 20  locals| rows cols th tw pitch |
+    rows for
+        at@  ( addr x y )
+            third  cols for
+                tw th third @ tile  cell+
+            loop  drop
+        tw negate th 2+ at   ( addr )  pitch +
+    loop  drop  ;
