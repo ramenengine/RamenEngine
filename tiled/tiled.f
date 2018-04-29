@@ -98,7 +98,7 @@ var gid
 \ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
 \ They all can expect the pen has already been set to the XY position.
 
-defer tmxobj   ( object-nnn XT -- )  \ XT is the TMX recipe for the object loaded from the script
+defer tmxobj   ( object-nnn XT -- )   \ XT is the TMX recipe for the object loaded from the script
 defer tmxrect  ( object-nnn w h -- )
 defer tmximage ( object-nnn gid -- )
 
