@@ -109,41 +109,47 @@ defer tmximage ( object-nnn gid -- )
 \ Define a TMX recipe.  TMXING is in the search order while compiling.
 \ All TMX recipe definitions are kept in the TMXING vocabulary.
 get-order get-current
-    define (;) : ;   previous previous definitions postpone ;  ; immediate
+    define (;)   : ;   previous previous definitions  postpone ;   ; immediate
 set-current set-order
 
+
+0 value (rcp)
 : :TMX  ( -- <name> )  ( object-nnn -- )  \ name must match the filename
     also (;)  also tmxing definitions
-    :noname  >in @
-    defined if  postpone is  >in !
-            else  dup >in !  defer  >in !  postpone is  then ;
+    >in @
+    defined rot >in !  not if  drop create here to (rcp) 0 ,
+                           else  >body to (rcp) then
+    :noname (rcp) ! ;
 
-\ LOAD-RECIPES
+\ LOADRECIPES
 \ Conditionally load recipes that aren't defined and then stores them in RECIPES
 \ Tile image source paths are important!  They correspond to the object script filenames!
 \ When a tile does not have an image, it will load a recipe if the tile
 \ has its TYPE set to something.
 
 : uncount  drop #1 - ;
-
-: >recipe  ( name c -- XT )
+: (saveorder)  get-order  r> call  >r  set-order  r> ;
+: >recipe  ( name c -- recipe|0 )
+    \ cr 2dup type
     locals| c name |
-    also tmxing  name c uncount find  previous  ( xt|a flag )  ?exit
-    drop  tmxpath count s[  " /objects/" +s  name c +s  " .f" +s  ]s
-        included ;
+    (saveorder)
+    only tmxing  name c uncount  find  ( xt|a flag )  ?exit
+    drop  tmxpath count s[  " objects/" +s  name c +s  " .f" +s  ]s  slashes
+        2dup file-exists 0= if  2drop 0 exit  then
+        only forth definitions
+        included  (rcp) ;
 
 : (loadrecipe)  ( gid name c -- )  >recipe  swap recipes nth ! ;
 
-: loadrecipes  ( tileset -- )
-    dup firstgid@ locals| firstgid |
-    eachelement> that's tile
-        dup id@ firstgid + swap
-        dup 0 " image" element ?dup if
-            source@ -path -ext (loadrecipe)
-        else
-            ?type if  (loadrecipe)  else  ( gid ) drop  then
-        then
-;
+: (loadrecipes)  locals| firstgid |
+    ( tileset ) eachelement> that's tile
+        dup  id@ firstgid +  swap
+            0 " image" element ?dup if
+                source@ -path -ext (loadrecipe)
+            else
+                ?type if  (loadrecipe)  else  ( gid ) drop  then
+            then ;
+: loadrecipes  ( map n -- )  tileset[]  (loadrecipes)  ?dom-free ;
 
 : loadobjects  ( objgroup -- )
     eachelement> that's object
@@ -152,7 +158,7 @@ set-current set-order
             dup wh@ ( nnn w h ) tmxrect
         else
             dup gid@ dup  recipes nth @ ?dup if
-                ( nnn gid xt ) nip ( nnn xt ) tmxobj
+                ( nnn gid recipe ) nip  @ ( nnn xt ) tmxobj
             else
                 ( nnn gid ) tmximage
             then

@@ -13,17 +13,19 @@ stage 1000 pool: layer0
 only forth definitions also xmling also tmxing
 
 map 0 loadbitmaps
+map 0 loadrecipes
 
-:noname [ is tmxobj ] ( object-nnn XT -- )  drop  ?type if cr type then ;
+:noname [ is tmxobj ] ( object-nnn XT -- )  over ?type if cr type then  execute ;
 :noname [ is tmxrect ] ( object-nnn w h -- )  .s 3drop ;
 :noname [ is tmximage ] ( object-nnn gid -- )
     layer0 one  gid !  drop
     draw>  @gidbmp blit ;
 
 \ for testing purposes, fill the recipes array with a dummy.
-:noname
-    #MAXTILES for  ['] noop  recipes push  loop
-; execute
+\ note that uncommenting this makes all objects disappear
+\ :noname
+\     #MAXTILES for  ['] noop  recipes push  loop
+\ ; execute
 
 map " parallax" objgroup loadobjects
 map " game" objgroup loadobjects
@@ -38,10 +40,10 @@ map " bounds" objgroup loadobjects
 : udlrvec  ( 2vec -- )
   >r
   0 0 r@ 2!
-  left? if  -2 r@ x! then
-  right? if  2 r@ x! then
-  up? if    -2 r@ y! then
-  down? if   2 r@ y! then
+  left? if  -4 r@ x! then
+  right? if  4 r@ x! then
+  up? if    -4 r@ y! then
+  down? if   4 r@ y! then
   r> drop ;
 
 : scroller   layer0 one  me to cam  act>  vx udlrvec ;
