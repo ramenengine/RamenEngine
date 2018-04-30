@@ -1,4 +1,10 @@
 $000100 [version] stage-ver
+\ This is a simple scrolling 2D game framework to use in simple games or as just a way
+\ to help you get started more quickly.
+
+\ PLAYER and CAM need to be set for scrolling to work.
+\ Note that you should put scrolling tilemaps in a different objlist, move them around to offset
+\ the global scrolling, and/or replace the renderer or they will scroll too fast and be clipped.
 
 0 value player
 0 value cam
