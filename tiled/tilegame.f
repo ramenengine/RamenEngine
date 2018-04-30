@@ -63,8 +63,8 @@
 : >iso  2dup swap 1 >> - >r  +  r> ;
 : >car  2dup 2 / swap 2 / + >r   -   r> ;
 
-: isotilemap  ( addr /pitch -- )
-    tsize 2 2 2/  20 20  locals| rows cols th tw pitch |
+: isotilemap  ( addr /pitch cols rows -- )
+    tsize 2 2 2/  locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
             third  cols for

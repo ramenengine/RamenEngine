@@ -30,10 +30,9 @@ var w  var h              \ width & height in pixels
         scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap
-    displaywh w 2!
     draw>
         \ at@ w 2@ clip>
-        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  isotilemap ;
+        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
 : map@  ( col row -- tile )  tilebuf loc @ ;
 
