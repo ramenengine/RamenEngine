@@ -11,4 +11,5 @@
 : pops    ( cs n -- ... ) swap locals| s |  0 ?do  s pop  loop ;
 : scount  ( cs -- addr count ) @+  ;
 : sbounds  ( cs -- end start ) scount cells over + swap ;
-: th  ( cs n -- addr )  1 + cells + ;
+: []  ( cs n -- addr )  1 + cells + ;
+: nth  swap [] ;

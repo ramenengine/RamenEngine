@@ -11,7 +11,6 @@ create fore 4 cells allot
 : *bmp   ( w h -- bmp ) 2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto 4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
-: *subbmp   ( bmp w h ) at@ 2i 2swap 2i al_create_sub_bitmap ;
 
 \ Predefined Colors
 : 8>p  s>f 255e f/ f>p ;
@@ -40,8 +39,7 @@ da 42 00 createcolor orange
 
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color for tinting.
-\  Not all effect combinations are available; these are
-\  intended as conveniences.
+\  Not all effect combinations are available; these are intended as conveniences.
 \  To draw regions of bitmaps, use Allegro's draw bitmap region functions directly
 \  or use sub bitmaps (see SUBBMP).
 \  After each call to one of these words, the current color is reset to white.
