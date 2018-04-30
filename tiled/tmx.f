@@ -56,18 +56,18 @@ define tmxing
     : #tilesets  ( map -- n )  " tileset" #elements ;
 
     create tmxpath  256 allot
+    create tsxpath  256 allot
 
     : tmxpath+  tmxpath count 2swap strjoin ;
-
-    : >srcpath  source@ slashes tmxpath+ cr 2dup type ;
+    : tsxpath+  tsxpath @ -exit  tsxpath count 2swap strjoin  cr 2dup type ;
 
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
-        >srcpath loadxml 0 " tileset" element ;
+        source@ slashes tmxpath+  2dup -filename tsxpath place  loadxml 0 " tileset" element ;
 
-    : tileset[]  ( map n -- dom|0 tileset gid )
+    : tileset[]  ( map n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
         " tileset" element
-        dup source? if   dup tileset>source rot firstgid@
-                    else  0 swap dup firstgid@  then ;
+        dup source? if   dup tileset>source  rot firstgid@
+                    else  0 swap dup firstgid@  tsxpath off  then ;
 
     : ?dom-free  ?dup -exit dom-free ;
 
@@ -100,8 +100,8 @@ define tmxing
         r@ str-get drop  w cells  dest  pitch  h  w cells  2move
         r> str-free ;
 
-    : tile>bmp  ( tile-nnn -- bitmap | 0 )
-        0 " image" element dup -exit  >srcpath zstring al_load_bitmap ;
+    : tile>bmp  ( tile-nnn -- bitmap | 0 )  \ uses TSXPATH
+        0 " image" element dup -exit  source@ slashes tsxpath+  zstring al_load_bitmap ;
     : tileset>bmp  ( tileset-nnn -- bitmap )  tile>bmp ;  \ it's the same
 
     : rectangle?  ( object -- flag )  " gid" attr? not ;
