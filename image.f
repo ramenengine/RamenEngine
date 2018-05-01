@@ -47,6 +47,8 @@ assetdef image
 : >subxy  ( n img -- x y )   \ locate a subimg by index
     >r  pfloor  r@ image.subcols @  /mod  2pfloor  r> image.subw 2@ 2* ;
 
+: >subxywh  ( n img -- w h )  dup >r  >subxy  r> image.subw 2@ ;
+
 : afsubimg  ( n img -- ALLEGRO_BITMAP fx fy fw fh )   \ helps with calling Allegro blit functions
     >r  r@ image.bmp @  swap r@ >subxy 2af  r> image.fsubw 2@ ;
 
