@@ -12,7 +12,6 @@ objlist stage
 
 :is subject 0 ;
 
-
 \ -----------------------------------------------------------------------
 [section] camera
 
@@ -32,8 +31,8 @@ objlist stage
 \ -----------------------------------------------------------------------
 [section] go
 : think  stage each> behave ;
-: physics  stage each>  vx x v+ ;
-: playfield  stage each> draw ;
+: physics  stage each>  vx x v+  y @ zdepth ! ;
+: playfield  stage drawzsorted ;
 : (go)    go>  noop ;
 : (step)  step>  think  stage multi  physics ;
 : (show)  show>  black backdrop  subject track  camtrans  playfield ;
