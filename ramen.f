@@ -25,8 +25,8 @@ redef off  \ from here on fields only defined if not previously defined
 : displayh  display al_get_display_height 1p ;
 : displaywh  displayw displayh ;
 
-: vieww  displayw global-scale 1p / ;
-: viewh  displayh global-scale 1p / ;
+: vieww  displayw #globalscale 1p / ;
+: viewh  displayh #globalscale 1p / ;
 : viewwh  vieww viewh ;
 
 : transform:  ( x y sx sy ang -- <name> )

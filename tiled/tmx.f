@@ -59,7 +59,7 @@ define tmxing
     create tsxpath  256 allot
 
     : tmxpath+  tmxpath count 2swap strjoin ;
-    : tsxpath+  tsxpath @ -exit  tsxpath count 2swap strjoin  cr 2dup type ;
+    : tsxpath+  tsxpath @ -exit  tsxpath count 2swap strjoin ;
 
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
         source@ slashes tmxpath+  2dup -filename tsxpath place  loadxml 0 " tileset" element ;
