@@ -10,7 +10,7 @@ assetdef sample
     r> reload-sample ;
 
 : sample:  ( loopmode adr c -- <name> )
-    create sample sizeof buffer init-sample ;
+    create sample sizeof allotment init-sample ;
 
 : >smp  sample.smp @ ;
 

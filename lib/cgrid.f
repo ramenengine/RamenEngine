@@ -137,7 +137,7 @@ only forth definitions also cgriding
 : >#sectors  sectw 1 - secth 1 - 2+  sectw secth 2/  2pfloor ;
 
 : cgrid:  ( maxboxes width height -- <name> )  \ give width and height in regular units
-  create  %cgrid sizeof buffer  to cgrid
+  create  %cgrid sizeof allotment  to cgrid
   >#sectors
   2dup cols 2!  here sectors !  ( cols rows ) * cells /allot
                 here links !    ( maxboxes )  4 * 2 cells * /allot ;

@@ -10,5 +10,5 @@ assetdef %buffer
     ['] recreate-buffer r> register ;
 
 : buffer:   ( size -- <name> )
-    create  %buffer sizeof buffer  init-buffer
+    create  %buffer sizeof allotment  init-buffer
     does>  buffer.data @ ; 

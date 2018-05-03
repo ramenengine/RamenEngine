@@ -29,7 +29,7 @@ assetdef image
     >r  findfile r@ srcfile place  ['] reload-image r@ register  r> reload-image ;
 
 : image:  ( path c -- <name> )
-    create  image sizeof buffer  init-image ;
+    create  image sizeof allotment  init-image ;
 
 : load-image  ( path c image -- )
     >r  zstring al_load_bitmap  r> init-image ;
