@@ -22,16 +22,19 @@ include ramen/tiled/tilegame
 
 var scrollx  var scrolly  \ used to define starting column and row!
 var w  var h              \ width & height in pixels
+var tbi                   \ tile base index
 
 : /tilemap
     displaywh w 2!
     draw>
+        tbi @ tilebase!
         at@ w 2@ clip>
-        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  tilemap ;
+        scrollx 2@  tsize scroll  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap
     draw>
-        scrollx 2@  20 20 scroll  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
+        tbi @ tilebase!
+        scrollx 2@  tsize scroll  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
 : map@  ( col row -- tile )  tilebuf loc @ ;
 
