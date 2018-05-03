@@ -90,12 +90,29 @@ variable fnt  default-font fnt !
 : ellipsef ( rx ry ) at@ 2swap 4af fore 4@ al_draw_filled_ellipse ;
 : arc  ( r a1 a2 )  >r at@ 2swap 4af r> 1af fore 4@ hairline al_draw_arc ;
 
+
+create ftemp  2 cells allot
+: 2transform  ( x y transform -- x y )  \ transform coordinates
+    >r 2f 2sf ftemp 2!
+    r> ftemp dup cell+ al_transform_coordinates
+    ftemp sf@ f>p  ftemp cell+ sf@ f>p ;
+
+: 2screen  ( x y -- x y )  al_get_current_transform 2transform ;  \ convert coordinates into screen space
+
 \ Clipping rectangle
-variable cx variable cy variable cw variable ch
-: clipxy  cx cy cw ch al_get_clipping_rectangle  cx @ cy @ 2p ;
-: clipwh  cx cy cw ch al_get_clipping_rectangle  cw @ ch @ 2p ;
-: clip>  ( x y w h -- <code> )
+variable cx variable cy variable cw variable ch      \ old clip
+variable ccx variable ccy variable ccw variable cch  \ current clip
+: clipxy  ccx @ ccy @ ;
+: clipwh  ccw @ cch @ ;
+0 value (code)
+: clip>  ( x y w h -- <code> )  \ note this won't work properly for rotated transforms.
+                                \ TODO: implement our own clipping box using the alpha channel or something
+    r> to (code)
+    ccx @ ccy @ ccw @ cch @ 2>r 2>r
+    2over 2over cch ! ccw ! ccy ! ccx !
     cx cy cw ch al_get_clipping_rectangle
-    4i al_set_clipping_rectangle   r> call
-    cx @ cy @ cw @ ch @ al_set_clipping_rectangle ;
+    2over 2+ 2screen 2swap 2screen 2swap 2over 2-
+    4i al_set_clipping_rectangle   (code) call
+    cx @ cy @ cw @ ch @ al_set_clipping_rectangle
+    2r> 2r>  cch ! ccw ! ccy ! ccx ! ;
 
