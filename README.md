@@ -2,7 +2,13 @@
 
 RAMEN is a cross-platform 2D game engine in Forth.  It is based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) cross-platform standard Forth framework.
 
-RAMEN is actually better described as a frengine - a framework-engine hybrid.  It has some features of an engine but it's like a framework in that a large part of its modules are optional or replaceable.  The modules were designed to be easy-to-understand,  organizationally.
+RAMEN is actually better described as a "breakaway engine."  Think of a Kit-Kat, or a Mr. Potatohead. It's a framework-engine hybrid.  It has a standard configuration, but most of its parts are optional. I strive to make those parts easy-to-understand and as decoupled as possible.
+
+Thanks to Forth's ability to redefine any routine you can customize things to your heart's content without having to modify the original files.
+
+Of course be aware of the potential tradeoffs like when you add, change or remove words.  Distinguish your configuration well (by giving it a name and encapsulating it in a single file) to avoid problems.  (This is called making an "engine variant.")
+
+It's recommended to have a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation.  That way you won't have to deal with version conflicts as much, and you can optionally make deep modifications in your own branch.
 
 ## Features
 
@@ -44,7 +50,7 @@ I'm available to help one-on-one [on Facebook](https://www.facebook.com/inkajoo)
 
 ## In the Pipeline
 
-- [ ] Scaling, rotation, and flipping
+- [ ] Scaling, rotation, tint, and flip support w/ TMX files  
 - [ ] Isometric collision detection
 - [ ] Shaders
 - [ ] GUI module
