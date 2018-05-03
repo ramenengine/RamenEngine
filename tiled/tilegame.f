@@ -20,7 +20,7 @@
     th +loop
 ;
 
-: -tiles  #MAXTILES for  tiles i @ [] dup @ -bmp  off  loop ;
+: -tiles  #MAXTILES for  tiles i [] dup @ -bmp  off  loop ;
 
 \ -------------------------------------------------------------------------------------------------
 \ Render a tilemap
@@ -31,7 +31,7 @@
 \  The tilemap format is in cells and in the following format:
 \  00vh 0000 0000 0000 tttt tttt tttt tt00  ( t=tile # 0-16383, v=vflip, h=hflip)
 
-\  DRAW-TILEMAP draws within the clip rectangle + (1,1) pixels
+\  TILEMAP draws within the clip rectangle + (1,1) pixels
 
 \  NOTE: Base tile + 1's width and height defines the "grid dimensions". (0 is nothing and transparent)
 
@@ -51,7 +51,7 @@
     rows for
         at@  ( addr x y )
             third  cols for
-                tw th third @ tile  cell+
+                tw 0 third @ tile  cell+
             loop  drop
         th + at   ( addr )  pitch +
     loop  drop  ;
