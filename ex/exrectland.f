@@ -110,7 +110,7 @@ create m  16 cells /allot
         boxes drawlist  sprites drawlist ;
 
 : (go)  go>  noop ;
-: (step)  step>  sprites each>  behave  vx x v+ ;
+: (step)  step>  sprites each>  act  vx x v+ ;
 
 : go  (go) (step) (show) ;
 

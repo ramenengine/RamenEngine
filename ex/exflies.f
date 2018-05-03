@@ -30,7 +30,7 @@ stage 2000 pool: objects
 : twitch  green @color r 4!  0 perform>  begin  apples randmove oranges randmove ?bore ?die  again ;
 :noname  [ is *fly ]  obj  mortal  twitch  draw>  r 4@ colored  s @ circlef ;
 
-: think  stage each> behave ;
+: think  stage each> act ;
 : locomote  stage each>  vx x v+ ;
 : playfield  stage each> draw ;
 : (go)    go>  noop ;

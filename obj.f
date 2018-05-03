@@ -71,8 +71,8 @@ struct (objlist) \ objlist struct, also used for pools
 : free+!   ol.#free +! ;
 : >last   ol.last @ as ;
 create dummy  0 ,  dummy as
-: object  {  here as  maxsize /allot  me }  dup lnk !  as ;
-: objects  0 do  object  loop ;
+: object  {  here  maxsize /allot  }  dup lnk !  as ;
+: objects  for  object  loop ;
 : objlist   create dummy , 0 , 0 , dummy , ;
 : ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
 : add  ( objlist n -- )  over >last  swap ?first  2dup count+!  swap objects  me swap ol.last ! ;
@@ -100,7 +100,7 @@ create dummy  0 ,  dummy as
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;
 : draw   hidden? ?exit  x 2@ at  drw @ ?call ;
-: behave   beha @ ?call ;
+: act   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
 : from  x 2@ 2+ at ;

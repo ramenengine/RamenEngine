@@ -112,7 +112,7 @@ create roster  ' girl , ' man , ' cat ,
 
 250 sprinkle
 
-: think  stage each> behave ;
+: think  stage each> act ;
 : locomote  stage each> vx x v+  y @ zdepth ! ;
 : playfield  stage drawzsorted ;
 : (step)  step>  think  locomote ;

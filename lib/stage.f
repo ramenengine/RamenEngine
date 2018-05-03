@@ -46,7 +46,7 @@ flyby
 
 \ -----------------------------------------------------------------------
 [section] go
-: think  stage each> behave ;
+: think  stage each> act ;
 : physics  stage each>  vx x v+  y @ zdepth ! ;
 : (go)    go>  noop ;
 : (step)  step>  think  stage multi  physics ;
