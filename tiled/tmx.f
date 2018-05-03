@@ -67,7 +67,7 @@ define tmxing
     : tileset[]  ( map n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
         " tileset" element
         dup source? if   dup tileset>source  rot firstgid@
-                    else  0 swap dup firstgid@  tsxpath off  then ;
+                    else  0 swap dup firstgid@  tmxpath count tsxpath place then ;
 
     : ?dom-free  ?dup -exit dom-free ;
 
@@ -110,7 +110,7 @@ define tmxing
 only forth definitions also xmling also tmxing
 
 : loadtmx    ( adr c -- dom map )
-    2dup -filename tmxpath place
+    2dup -filename  2dup tmxpath place  tsxpath place
     loadxml 0 " map" element ;
 
 only forth definitions
