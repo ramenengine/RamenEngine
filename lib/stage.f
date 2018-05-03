@@ -7,8 +7,8 @@ $000100 [version] stage-ver
 \ the global scrolling, and/or replace the renderer or they will scroll too fast and be clipped.
 
 defer subject
-0 value cam
 objlist stage
+create cam  stage 1 add  enable  \ static objects are not enabled by default
 
 :is subject 0 ;
 
@@ -27,14 +27,29 @@ objlist stage
     m1 #globalscale s>f 1sf dup al_scale_transform
     m1 al_use_transform ;
 
+: left?  ( -- flag )  <left> kstate  <pad_4> kstate or  ; \ 0 0 joy x -0.25 <= or ;
+: right?  ( -- flag ) <right> kstate  <pad_6> kstate or ; \ 0 0 joy x 0.25 >= or ;
+: up?  ( -- flag )    <up> kstate  <pad_8> kstate or    ; \ 0 0 joy y -0.25 <= or ;
+: down?  ( -- flag )  <down> kstate  <pad_2> kstate or  ; \ 0 0 joy y 0.25 >= or ;
+
+: udlrvec  ( 2vec -- )
+  >r
+  0 0 r@ 2!
+  left? if  -4 r@ x! then
+  right? if  4 r@ x! then
+  up? if    -4 r@ y! then
+  down? if   4 r@ y! then
+  r> drop ;
+
+: flyby   cam as  act>  subject ?exit  vx udlrvec ;
+flyby
 
 \ -----------------------------------------------------------------------
 [section] go
 : think  stage each> behave ;
 : physics  stage each>  vx x v+  y @ zdepth ! ;
-: playfield  stage drawzsorted ;
 : (go)    go>  noop ;
 : (step)  step>  think  stage multi  physics ;
-: (show)  show>  black backdrop  subject track  camtrans  playfield ;
+: (show)  show>  black backdrop  subject track  camtrans  stage drawzsorted ;
 : go  (go)  (step)  (show) ;
 
