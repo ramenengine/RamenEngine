@@ -19,6 +19,16 @@ RAMEN is actually better described as a frengine - a framework-engine hybrid.  I
 - Fixed-point number support
 - 2D vector wordset
 
+## See it in action
+
+Want to watch some videos?  Here's footage of examples from my previous engine.  They're being brought over to RAMEN.  
+
+https://www.youtube.com/playlist?list=PLO8m1cHe8erpbejS5yZVJAsQNI4Lmpo_Y
+
+You can also check out The Lady, a commercial game I wrote in Forth to prove it can be done.  Large chunks of this game's engine live on in RAMEN.
+
+https://store.steampowered.com/app/341060/The_Lady/
+
 ## Getting Started
 
 1. Clone an [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) instance. See the README for supported platforms and installation instructions.
