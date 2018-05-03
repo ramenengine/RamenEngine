@@ -47,7 +47,7 @@
     ?dup if  dup $0000fffc and tba + @  swap 28 >>  blitf  then  +at ;
 
 : tilemap  ( addr /pitch -- )
-    tsize  clipwh 1 1 2+  2over 2/  locals| rows cols th tw pitch |
+    hold>  tsize  clipwh  2over 2/  1 1 2+ locals| rows cols th tw pitch |
     rows for
         at@  ( addr x y )
             third  cols for
@@ -64,7 +64,7 @@
 : >car  2dup 2 / swap 2 / + >r   -   r> ;
 
 : isotilemap  ( addr /pitch cols rows -- )
-    tsize 2 2 2/  locals| th tw rows cols pitch |
+    hold>  tsize 2 2 2/  locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
             third  cols for
