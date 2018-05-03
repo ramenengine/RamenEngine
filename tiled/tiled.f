@@ -173,9 +173,9 @@ set-current set-order
         then
 ;
 
-: -bitmaps  bitmaps scount do  i @ -bmp  loop  bitmaps 0 truncate ;
+: -bitmaps  bitmaps sbounds do  i @ -bmp  cell +loop  bitmaps 0 truncate ;
 
 : loadnewtmx  ( adr c -- dom map )
-    -recipes  -tiles  loadtmx  -bitmaps ;
+    -recipes  -tiles  -bitmaps  loadtmx ;
 
 only forth definitions
