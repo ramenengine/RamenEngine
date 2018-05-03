@@ -7,10 +7,11 @@ RAMEN is actually better described as a frengine - a framework-engine hybrid.  I
 ## Features
 
 - Robust [Tiled](https://www.mapeditor.org/) map support (with some features coming soon)
+- Sprite animation
 - Display list 
 - Fast AABB (rectangle) collision detection
 - Roundrobin multitasking
-- Simplified graphics library
+- Simplified graphics routine module
 - Publish facility
 - Z-sorting
 - Basic sound effect support and BGM streaming
@@ -30,3 +31,11 @@ RAMEN is actually better described as a frengine - a framework-engine hybrid.  I
 Documentation currently consists of explanatory comments strewn throughout the source, plus the examples and tests.  The Wiki tab will be the place for dox and the Issues tab will be the place for discussion.
 
 I'm available to help one-on-one [on Facebook](https://www.facebook.com/inkajoo).  
+
+## In the Pipeline
+
+- [ ] Scaling, rotation, and flipping
+- [ ] Isometric collision detection
+- [ ] Shaders
+- [ ] GUI module
+- [ ] More examples
