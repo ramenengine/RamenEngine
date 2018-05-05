@@ -44,15 +44,15 @@
 : tsize  tba cell+ @ bmpwh ;
 
 : tile  ( stridex stridey index -- )
-    ?dup if  dup $0000fffc and tba + @  swap 28 >>  blitf  then  +at ;
+    ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> 28 >>  al_draw_bitmap  then  +at ;
 
 : tilemap  ( addr /pitch -- )
-    hold>  tsize  clipwh  2over 2/  1 1 2+ locals| rows cols th tw pitch |
+    hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch |
     rows for
         at@  ( addr x y )
-            third  cols for
-                tw 0 third @ tile  cell+
-            loop  drop
+            third  cols cells over + swap do
+                tw 0 i @ tile  tw 0 i cell+ @ tile
+            [ 2 cells ]# +loop
         th + at   ( addr )  pitch +
     loop  drop  ;
 
