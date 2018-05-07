@@ -11,5 +11,10 @@ defer (startup)
 : gather
     assets> srcfile dup count " data/" search if rot place else 3drop then ;
 
+\ TODO: support for other systems
+[defined] program [if]
 : publish ( xt -- <name> )
     gather  is (startup)  ['] startup 'main !  program ;
+[else]
+cr .( PROGRAM not defined; PUBLISH disabled )
+[then]
