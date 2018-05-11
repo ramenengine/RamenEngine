@@ -110,6 +110,7 @@ define tmxing
 only forth definitions also xmling also tmxing
 
 : loadtmx    ( adr c -- dom map )
+    findfile
     2dup -filename  2dup tmxpath place  tsxpath place
     loadxml 0 " map" element ;
 
