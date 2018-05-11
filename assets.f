@@ -38,7 +38,8 @@ flist (assets)
 
 : #assets  (assets) listlen ;
 
-\ TODO: "Found" files won't currently work on other computers!!!
+\ Note: Don't worry that the paths during development are absolute;
+\ in publish.f, all asset paths are "normalized".
 : findfile
     2dup file-exists ?exit
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
