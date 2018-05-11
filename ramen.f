@@ -9,6 +9,7 @@ include kit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point lite
 
 include ramen/assets.f
 include ramen/image.f
+include ramen/font.f
 include ramen/buffer.f
 include ramen/sample.f
 
