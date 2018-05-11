@@ -38,6 +38,7 @@ flist (assets)
 
 : #assets  (assets) listlen ;
 
+\ TODO: "Found" files won't currently work on other computers!!!
 : findfile
     2dup file-exists ?exit
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
