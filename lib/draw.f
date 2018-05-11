@@ -54,9 +54,6 @@ da 42 00 createcolor orange
     locals| flip ang sy sx bmp |  bmp ?exit
     bmp  fore 4@  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap  white ;
 : blit   ( bmp ) 0 blitf ;
-: nsblit  ( bmp sx sy )  0 0 csrblitf ;  \ ns stands for non-uniform scale
-: usblit  ( bmp scale )  dup nsblit ;
-
 
 
 \ Text
