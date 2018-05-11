@@ -96,6 +96,7 @@ create dummy  0 ,  dummy as
 : hidden?  hidden @ ;
 : ?noone  any? abort" A pool was exhausted. In: ONE " ;
 : one ( pool -- ) ?noone  dup all> en @ ?exit  enough  enable  ^pool !  -1 ^pool @ free+! ;
+: object:  ( objlist -- <name> )  create 1 add enable ;
 
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;
@@ -105,6 +106,7 @@ create dummy  0 ,  dummy as
 : act>   r> beha ! ;
 : from  x 2@ 2+ at ;
 : flicker  hidden @ not hidden ! ;
+: -act  act> noop ;
 
 \ roles
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
