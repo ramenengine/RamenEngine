@@ -10,7 +10,7 @@ $10000 [version] tmx-ver
 \  - Embedded tilesets and Referenced tileset files
 
 \ TODO
-\  [ ] - Custom Properties (<properties><property>)
+\  [x] - Custom Properties (<properties><property>)
 \  [ ] - Animations (<tile><animation><frame>)
 \  [ ] - Other shapes besides rectangles (<ellipse>, <path>, <polyline>, <point>)
 \  [ ] - Text (<text>)
@@ -27,8 +27,9 @@ define tmxing
 
     : source@   " source" val ;
     : source?   " source" attr? ;
-    : name@     " name" val ; ;
+    : name@     " name" val ;
     : ?name     " name" val ?dup 0<> ;
+    : value@     " value" val ;
     : w@        " width" pval ;
     : h@        " height" pval ;
     : wh@       dup w@ swap h@ ;
@@ -106,6 +107,16 @@ define tmxing
 
     : rectangle?  ( object -- flag )  " gid" attr? not ;
     \ Note RECTANGLE? is needed because TMX is stupid and doesn't have a <rectangle> element.
+
+    : property  ( element str c -- adr c true | false )
+        0 locals| props c str el |
+        el 0 " properties" element dup -exit  to props
+        props " property" #elements for
+            props i " property" element name@ str c compare 0= if
+                props i " property" element value@  true  unloop exit
+            then
+        loop  false ;
+
 
 only forth definitions also xmling also tmxing
 
