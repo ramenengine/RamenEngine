@@ -12,8 +12,8 @@
 
 : maketiles  ( bitmap tilew tileh firstid -- )
     locals| id th tw bmp |
-    bmp bmph 0 do
-        bmp bmpw 0 do
+    bmp bmph dup th mod - 0 do
+        bmp bmpw dup tw mod - 0 do
             bmp i j 2i tw th 2i al_create_sub_bitmap  tiles id [] !
             1 +to id
         tw +loop
