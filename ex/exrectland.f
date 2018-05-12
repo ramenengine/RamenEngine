@@ -8,8 +8,8 @@ objlist stage
 stage 100 pool: sprites
 stage 2000 pool: boxes
 
-sprites one named cam
-sprites one named player
+sprites one me value cam
+sprites one me value player
 
 2000 4000 4000 cgrid: boxgrid
 : extents  0 0 4000 4000 ;

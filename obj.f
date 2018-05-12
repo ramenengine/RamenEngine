@@ -88,8 +88,6 @@ create dummy  0 ,  dummy as
 : all>  ( objlist/pool -- <code> )
     r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
 : enough  " r> drop r> drop unloop r> drop " evaluate ; immediate
-: named  me constant ;
-: single  ( objlist -- <name> )  1 add  named ;
 : any?  dup ol.#free @ 0= ;
 : enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ x 2! hidden on ;
 : remove  en off  hidden on  1 ^pool @ free+! ;
