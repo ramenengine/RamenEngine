@@ -28,7 +28,7 @@ create tm object  /tilemap  50 50 x 2!  300 300 w 2!
     vx 2@ tm 's scrollx 2+! ;
 
 
-create dummy  stage 1 add  10 15 x 2!  enable  bounce
+stage object: dummy  10 15 x 2!  bounce
 
 : (show)  show>  black backdrop  tm -> draw   subject track  camtrans  stage drawzsorted ;
 

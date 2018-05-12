@@ -28,7 +28,7 @@ defer initdata ( -- )
 flist (assets)
 : register  ( reloader-xt asset -- ) dup (assets) listlink  ( xt asset ) ! ;
 
-\ TODO: change TRAVERSE> to EACH> after factoring out lists from obj.f
+\ TODO: change TRAVERSE> to EACH> (or ALL>) after factoring out lists from obj.f
 : assets>  postpone (assets)  postpone traverse> ; immediate
 
 : srcfile  cell+ ;

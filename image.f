@@ -23,10 +23,10 @@ assetdef image
 : /origin  dup imagewh 0.5 0.5 2* rot image.orgx 2! ;
 
 : reload-image  ( image -- )
-    >r  r@ srcfile count  zstring al_load_bitmap  r@ image.bmp !  r> /origin ;
+    >r  r@ srcfile count  findfile  zstring al_load_bitmap  r@ image.bmp !  r> /origin ;
 
 : init-image ( path c image -- )
-    >r  findfile r@ srcfile place  ['] reload-image r@ register  r> reload-image ;
+    >r  r@ srcfile place  ['] reload-image r@ register  r> reload-image ;
 
 : image:  ( path c -- <name> )
     create  image sizeof allotment  init-image ;

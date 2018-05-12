@@ -6,11 +6,11 @@ assetdef font
 : >fnt  font.fnt @ ;
 
 : reload-font  ( font -- )
-    >r  r@ srcfile count zstring  r@ font.size @ 1i  r@ font.flags @  al_load_font  r> font.fnt ! ;
+    >r  r@ srcfile count findfile zstring  r@ font.size @ 1i  r@ font.flags @  al_load_font  r> font.fnt ! ;
 
 : init-font  ( path c size flags font -- )
     >r  r@ font.flags !  r@ font.size !
-    findfile r@ srcfile place  ['] reload-font r@ register  r> reload-font ;
+    r@ srcfile place  ['] reload-font r@ register  r> reload-font ;
 
 : font:  ( path c size flags -- <name> )
     create  font sizeof allotment  init-font ;
