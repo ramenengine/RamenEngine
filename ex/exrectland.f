@@ -20,7 +20,7 @@ var w  var h  var flags
 : *box
     boxes one
     4000 4000 256 256 2- 2rnd x 2!
-    128 128 2rnd 5 5 2max w 2!
+    256 256 2rnd 5 5 2max w 2!
     x 2@ w 2@  ahb cbox!
     draw>  blue w 2@ rect ;
 
@@ -115,6 +115,6 @@ create m  16 cells /allot
 : go  (go) (step) (show) ;
 
 boxgrid resetcgrid
-2000 *boxes
+1000 *boxes
 player as /player
 go ok

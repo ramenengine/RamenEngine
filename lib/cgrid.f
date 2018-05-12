@@ -5,9 +5,6 @@ $000100 [version] cgrid-ver
 \ numbers of AABB (axis-aligned bounding boxes).
 \ Very useful for broad-phase collision checks.
 
-\ Notes:
-\  - Doesn't support hitboxes bigger than (sectw/2, secth/2)
-
 struct cbox
 
 define cgriding
@@ -16,7 +13,7 @@ define cgriding
     cbox int svar s1    cbox int svar s2  \ sectors 1-4
     cbox int svar s3    cbox int svar s4
 
-    #8 #12 + constant bitshift
+    #8 #12 + constant #bitshift
 
     \ variable topleft
     \ variable topright
@@ -38,16 +35,12 @@ define cgriding
     %cgrid cell int cgrid-var links           \
     %cgrid cell int cgrid-var i.link          \ points to structure in links:  link to next ( i.link , box , )
 
-
     256 constant sectw
     256 constant secth
-    \ the size of each sector is a constant.
-    \  use a smaller size if you're going to have lots of small objects.
-    \  use a larger size if you're going to have lots of large objects.
 
     decimal
     : sector  ( x y -- addr )
-      ( y ) bitshift >> cols @ p* swap ( x ) bitshift >> + cells sectors @ + ;
+      ( y ) #bitshift >> cols @ p* swap ( x ) #bitshift >> + cells sectors @ + ;
     fixed
 
     \ find if 2 rectangles (x1,y1,x2,y2) and (x3,y3,x4,y4) overlap.
