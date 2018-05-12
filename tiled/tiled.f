@@ -145,7 +145,7 @@ set-current set-order
     locals| c name |
     (saveorder)
     only tmxing  name c uncount  find  ( xt|a flag )  ?exit
-    drop  tmxpath count s[  " objects/" +s  name c +s  " .f" +s  ]s  slashes
+    drop  objpath count s[  name c +s  " .f" +s  ]s
         2dup file-exists 0= if  2drop 0 exit  then
         only forth definitions
         included  (rcp) ;

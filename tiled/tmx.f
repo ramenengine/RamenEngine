@@ -58,6 +58,7 @@ define tmxing
 
     create tmxpath  256 allot
     create tsxpath  256 allot
+    create objpath  256 allot
 
     : tmxpath+  tmxpath count 2swap strjoin ;
     : tsxpath+  tsxpath @ -exit  tsxpath count 2swap strjoin ;
@@ -120,9 +121,12 @@ define tmxing
 
 only forth definitions also xmling also tmxing
 
+: >objpath  " data/" search drop " objects/" strjoin  slashes ;
+
 : loadtmx    ( adr c -- dom map )
-    findfile
-    2dup -filename  2dup tmxpath place  tsxpath place
+    slashes findfile
+    2dup -filename  2dup tmxpath place  2dup tsxpath place
+    >objpath objpath place
     loadxml 0 " map" element ;
 
 only forth definitions
