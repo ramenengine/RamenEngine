@@ -2,6 +2,7 @@ include kit/ans/version.f
 $000102 [version] ramen-ver
 \ --------------------------------------------------------------------------------------------------
 $000900 include kit/kit.f
+include kit/dep/zlib/zlib.f
 include ramen/utils.f
 include ramen/struct.f
 include ramen/fixops.f

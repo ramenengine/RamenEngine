@@ -4,7 +4,7 @@ $000100 include ramen/lib/stage
 $10000 include ramen/tiled/tiled
 
 
-" ramen/test/island/island.tmx" loadnewtmx  constant map  constant dom
+" ramen/test/island/islandz.tmx" loadnewtmx  constant map  constant dom
 
 only forth definitions also xmling also tmxing
 

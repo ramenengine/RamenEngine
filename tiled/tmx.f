@@ -53,6 +53,7 @@ define tmxing
     : tilecount@  " tilecount" pval ;
     : spacing@  " spacing" pval ;
     : margin@   " margin" pval ;
+    : >data     0 " data" element ;
 
     : #tilesets  ( map -- n )  " tileset" #elements ;
 
@@ -96,11 +97,13 @@ define tmxing
     : #objects  ( objgroup -- n )  " object" #elements ;
     : #images   ( tileset -- n )  " image" #elements ;
 
-    : readlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
-        third wh@ locals| h w pitch dest |  ( layer )
-        0 " data" element text base64 >r
-        r@ str-get drop  w cells  dest  pitch  h  w cells  2move
-        r> str-free ;
+    \ : readlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
+    \     third wh@ locals| h w pitch dest layer |
+    \     layer >data text base64 >r
+    \     r@ str-get drop  w cells  dest  pitch  h  w cells  2move
+    \     r> str-free ;
+
+    include ramen/tiled/tmxz.f
 
     : tile>bmp  ( tile-nnn -- bitmap | 0 )  \ uses TSXPATH
         0 " image" element dup -exit  source@ slashes tsxpath+  zstring al_load_bitmap ;
