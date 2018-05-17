@@ -66,11 +66,11 @@ struct (objlist) \ objlist struct, also used for pools
     (objlist) int svar ol.count
     (objlist) int svar ol.#free
     (objlist) int svar ol.last
+create dummy  maxsize /allot  dummy as
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
 : free+!   ol.#free +! ;
 : >last   ol.last @ as ;
-create dummy  0 ,  dummy as
 : object  {  here  maxsize /allot  }  dup lnk !  as ;
 : objects  for  object  loop ;
 : objlist   create dummy , 0 , 0 , dummy , ;
