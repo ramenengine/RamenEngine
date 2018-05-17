@@ -57,17 +57,20 @@ da 42 00 createcolor orange
 
 
 \ Text
-variable fnt  default-font fnt ! 
+variable fnt  default-font fnt !
+variable (x)
 : fontw  z" A" al_get_text_width 1p ;
-: textw  ;
 : fonth  al_get_font_line_height 1p ;
 : aprint ( str count alignment -- )
+    at@ drop (x) !
     -rot zstring >r  >r  fnt @ fore 4@ at@ 2af r> r@ al_draw_text
     fnt @ r> al_get_text_width 1p 0 +at ;
 : print  ( str count -- )  ALLEGRO_ALIGN_LEFT aprint ;
 : printr  ( str count -- )  ALLEGRO_ALIGN_RIGHT aprint ;
 : printc  ( str count -- )  ALLEGRO_ALIGN_CENTER aprint ;
 : font>  ( font -- <code> )  fnt !  r> call ;
+: newline  (x) @ at@ nip fnt @ fonth + at ;
+: textw  zstring fnt @ swap al_get_text_width 1p ;
 
 \ Primitives
 1e fnegate 1sf constant hairline
