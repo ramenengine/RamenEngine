@@ -57,9 +57,9 @@ define tmxing
 
     : #tilesets  ( map -- n )  " tileset" #elements ;
 
-    create tmxpath  256 allot
-    create tsxpath  256 allot
-    create objpath  256 allot
+    create tmxpath  #256 allot
+    create tsxpath  #256 allot
+    create objpath  #256 allot
 
     : tmxpath+  tmxpath count 2swap strjoin ;
     : tsxpath+  tsxpath @ -exit  tsxpath count 2swap strjoin ;

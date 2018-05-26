@@ -181,7 +181,5 @@ set-current set-order
 : loadnewtmx  ( adr c -- dom map )
     -recipes  -tiles  -bitmaps  loadtmx ;
 
-0 value map
-: tmx>  ( adr c -- )  ( -- )  loadnewtmx  to map   r> call  dom-free ;
 
 only forth definitions
