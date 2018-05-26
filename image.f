@@ -31,12 +31,12 @@ assetdef image
 : image:  ( path c -- <name> )
     create  image sizeof allotment  init-image ;
 
-: load-image  ( path c image -- )
-    >r  zstring al_load_bitmap  r> init-image ;
-
-: free-image  ( image -- ) image.bmp @ -bmp ;
-
 : >bmp  image.bmp @ ;
+
+\ these are for use with images you allocate yourself, not images declared with IMAGE:
+: load-image  ( path c image -- )  >r  zstring al_load_bitmap  r> init-image ;
+: free-image  ( image -- )  image.bmp @ -bmp ;
+
 
 \ ------------------------------ sub-image stuff -------------------------------
 : subdivide  ( tilew tileh img -- )
@@ -47,10 +47,10 @@ assetdef image
 : >subxy  ( n img -- x y )   \ locate a subimg by index
     >r  pfloor  r@ image.subcols @  /mod  2pfloor  r> image.subw 2@ 2* ;
 
-: >subxywh  ( n img -- w h )  dup >r  >subxy  r> image.subw 2@ ;
+: >subxywh  ( n img -- x y w h )  dup >r  >subxy  r> image.subw 2@ ;
 
 : afsubimg  ( n img -- ALLEGRO_BITMAP fx fy fw fh )   \ helps with calling Allegro blit functions
     >r  r@ image.bmp @  swap r@ >subxy 2af  r> image.fsubw 2@ ;
 
 : imgsubbmp  ( n img -- subbmp )
-    >r  r@ image.bmp @  swap r@ >subxy  r> image.subw 2@   4i  al_create_sub_bitmap ;
+    dup image.bmp @ -rot  >subxywh 4i  al_create_sub_bitmap ;
