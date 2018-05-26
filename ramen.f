@@ -2,6 +2,7 @@ include kit/ans/version.f
 $000102 [version] ramen-ver
 \ --------------------------------------------------------------------------------------------------
 $000900 include kit/kit.f
+include ramen/plat.f
 include kit/dep/zlib/zlib.f
 include ramen/utils.f
 include ramen/struct.f
@@ -39,3 +40,4 @@ redef off  \ from here on fields only defined if not previously defined
     r> r> r> r> 4af r> >rad 1af al_build_transform ;
 
 : fps  fps 1p ;
+
