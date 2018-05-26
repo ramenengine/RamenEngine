@@ -89,12 +89,13 @@ create dummy  maxsize /allot  dummy as
     r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
 : enough  " r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
-: enable  x [ maxsize 3 cells - ]# 0 cfill en on at@ x 2! hidden on ;
-: remove  en off  hidden on  1 ^pool @ free+! ;
+: (init)  x [ maxsize 3 cells - ]# 0 cfill at@ x 2! hidden on ;
+: remove  ( object -- )  { as  en off  hidden on  1 ^pool @ free+!  } ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" A pool was exhausted. In: ONE " ;
-: one ( pool -- ) ?noone  dup all> en @ ?exit  enough  enable  ^pool !  -1 ^pool @ free+! ;
-: object:  ( objlist -- <name> )  create 1 add enable ;
+: slot  ( pool -- me=obj )  ?noone  all>  en @ ?exit  en on  enough ;
+: one ( pool -- me=obj )  dup slot  (init)  dup ^pool !  -1 swap free+! ;
+: object:  ( objlist -- <name> )  create 1 add (init) ;
 
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;
