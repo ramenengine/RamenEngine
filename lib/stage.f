@@ -6,11 +6,11 @@ $000100 [version] stage-ver
 \ Note that you should put scrolling tilemaps in a different objlist, move them around to offset
 \ the global scrolling, and/or replace the renderer or they will scroll too fast and be clipped.
 
-defer subject
+0 value subject
 objlist stage
-create cam  stage 1 add  enable  \ static objects are not enabled by default
+stage object: cam
 
-:is subject 0 ;
+
 
 \ -----------------------------------------------------------------------
 [section] camera
