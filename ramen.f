@@ -23,6 +23,8 @@ include ramen/publish.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
 
+: resolution  2i resolution ;
+
 : displayw  display al_get_display_width 1p ;
 : displayh  display al_get_display_height 1p ;
 : displaywh  displayw displayh ;
