@@ -1,28 +1,24 @@
 # Really Accessible Multimedia ENgine
 
-RAMEN is a cross-platform 2D game engine in Forth.  It is based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) cross-platform standard Forth framework.
+RAMEN is a 2D game engine in ANS Forth.  It is based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) cross-platform standard Forth framework.
 
-RAMEN is actually better described as a "breakaway engine."  Think of a Kit-Kat, or a Mr. Potatohead. It's a framework-engine hybrid.  It has a standard configuration, but most of its parts are optional. I strive to make those parts easy-to-understand and as decoupled as possible.
+RAMEN is a "breakaway engine."  Think of a Kit-Kat, or a Mr. Potatohead. It has the traits of a game engine but it's also a framework; it has a standard configuration, but most of its parts are optional. I strive to make the parts easy-to-understand and sufficiently decoupled.
 
-Thanks to Forth's ability to redefine any routine you can customize things to your heart's content without having to modify the original files.
-
-Of course be aware of the potential tradeoffs like when you add, change or remove words.  Distinguish your configuration well (by giving it a name and encapsulating it in a single file) to avoid problems.  (This is called making an "engine variant.")
-
-It's recommended to have a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation.  That way you won't have to deal with version conflicts as much, and you can optionally make deep modifications in your own branch.
+It's recommended to have a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation.  That way you won't have to deal with conflicts as much, and you can make deep modifications in your own branch.
 
 ## Features
 
-- Robust [Tiled](https://www.mapeditor.org/) map support (with some features coming soon)
+- [Tiled](https://www.mapeditor.org/) map support (partial)
 - Sprite animation
 - Display list 
 - Fast AABB (rectangle) collision detection
 - Roundrobin multitasking
-- Simplified graphics routine module
+- Simplified graphics wordset
 - Publish facility
 - Z-sorting
 - Basic sound effect support and BGM streaming
 - Data structures: 2D arrays, stacks, node trees
-- Fixed-point number support
+- Fixed-point literals
 - 2D vector wordset
 
 ## See it in action
