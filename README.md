@@ -2,9 +2,9 @@
 
 RAMEN is a 2D game engine in ANS Forth.  It is based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) cross-platform standard Forth framework.
 
-RAMEN is a "breakaway engine."  Think of a Kit-Kat, or a Mr. Potatohead. It has the traits of a game engine but it's also a framework; it has a standard configuration, but most of its parts are optional. I strive to make the parts easy-to-understand and sufficiently decoupled.
+RAMEN is a "breakaway engine."  It has the traits of a game engine but it's also a framework; it has a standard configuration, but most of its parts are optional. Like a Mr. Potatohead. I've strived to make the parts easy-to-understand and sufficiently decoupled.
 
-It's recommended to have a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation.  That way you won't have to deal with conflicts as much, and you can make deep modifications in your own branch.
+I recommend having a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation so you won't have to deal with conflicts as much, and you can make deep modifications in your own branch.
 
 ## Features
 
