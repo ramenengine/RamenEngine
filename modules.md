@@ -122,7 +122,11 @@ The quickest way to understand this is to try it.  After loading RAMEN into Fort
 
 ### Assets (assets.f)
 
+The asset system lets you declare assets in your code which will get automatically loaded when your game starts.
+
 #### Images (image.f)
+
+Stores info about an Allegro bitmap.
 
 #### Fonts (font.f)
 
