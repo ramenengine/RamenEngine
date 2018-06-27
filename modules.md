@@ -1,6 +1,6 @@
 # Module References
 
-## Structs - struct.f
+## Structs[]() - struct.f
 
 Simple data structure support.  Provisions for type information are there but aren't currently actually used.
 
@@ -19,7 +19,7 @@ struct color
     color 0 svar color.a
 ```
 
-## Fixed-point operators - fixops.f
+## Fixed-point operators[]() - fixops.f
 
 Low-level words for working with fixed-point numbers.
 
@@ -104,7 +104,7 @@ Generally you shouldn't be writing code that depends on the current base, but on
 | fixed | Switch to fixed point mode.
 | decimal | Switch to decimal mode.
 
-## Fixed-point literals - fixedp.f
+## Fixed-point literals[]() - fixedp.f
 
 This file is actually packaged with AllegroForthKit.
 
@@ -116,7 +116,7 @@ The theory behind this is that you can write literals naturally, with no require
 
 The quickest way to understand is to try it.  After loading RAMEN into Forth, type `1.5 3 + .` and press `<enter>`.   Notice that the decimal point is optional.
 
-## Assets - assets.f
+## Assets[]() - assets.f
 
 The asset system lets you declare assets in your code which will get automatically loaded when your game starts.  It also lets you add new asset types which know how to load themselves on initial game executable start.
 
@@ -137,9 +137,9 @@ Additional asset-related words:
 | .assets   | ( -- ) | List all assets
 | findfile  | ( path c -- path c ) | Searches for an asset's file first in its path relative to the current working directory and second relative to the current source file being compiled.  If not found, abort and throw an error message.
 
-### Images - image.f
+### Images[]() - image.f
 
-Asset that stores info about an Allegro bitmap, as well as information necessary to address "subimages" in the bitmap - that is, to treat it as an image strip, commonly used in games.
+Asset that stores info about an Allegro bitmap, as well as information necessary to address "subimages" in the bitmap[]() - that is, to treat it as an image strip, commonly used in games.
 
 All of the fields are public.
 
@@ -178,11 +178,11 @@ All of the fields are public.
 | afsubimg  | ( n image -- ALLEGRO_BITMAP fx fy fw fh ) | Get the bitmap and the rectangle values as floats of a subimage.  (Useful for passing to the Allegro library.)
 | imgsubbmp | ( n image -- subbitmap ) | Create an ALLEGRO_SUBBITMAP that stores info about a subimage.
 
-### Fonts - font.f
+### Fonts[]() - font.f
 
-### Buffers - buffer.f
+### Buffers[]() - buffer.f
 
-### Samples - sample.f
+### Samples[]() - sample.f
 
 ### Defining an asset type
 
@@ -197,15 +197,15 @@ See the asset definition source files for examples.
 
 ### The preloader
 
-## Color - color.f
+## Color[]() - color.f
 
-## Objects - obj.f
+## Objects[]() - obj.f
 
 RAMEN's polymorphic data structure.  See [Objects](objects.md)
 
-## Cellstacks - cellstack.f
+## Cellstacks []() - cellstack.f
 
-## Publish - []() publish.f
+## Publish[]() - publish.f
 
 See [Publishing Games](publish.md)
 
