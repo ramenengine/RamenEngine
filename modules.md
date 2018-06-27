@@ -68,16 +68,16 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Advanced Math
 
-| cos   ( deg -- n )           | Cosine
-| sin   ( deg -- n )           | Sine
-| acos  ( n -- deg )           | Inverse Cosine
-| asin  ( n -- deg )           | Inverse Sine
-| lerp  ( src dest factor -- ) | Interpolate
-| sqrt  ( n -- n )             | Square root
-| atan  ( n -- n )             | Arctangent
-| atan2 ( n n -- n )           |
-| log2  ( n -- n )             | Logarithm
-| \>rad  ( n -- n )            | Convert degrees to radians
+| cos   | ( deg -- n )           | Cosine
+| sin   | ( deg -- n )           | Sine
+| acos  | ( n -- deg )           | Inverse Cosine
+| asin  | ( n -- deg )           | Inverse Sine
+| lerp  | ( src dest factor -- ) | Interpolate
+| sqrt  | ( n -- n )             | Square root
+| atan  | ( n -- n )             | Arctangent
+| atan2 | ( n n -- n )           |
+| log2  | ( n -- n )             | Logarithm
+| \>rad |  ( n -- n )            | Convert degrees to radians
 | rescale | ( n min1 max1 min2 max2 -- n ) | Rescale a number proportionally from one range to another
 | anglerp | ( src dest factor -- ) Interpolate angles
 
@@ -129,7 +129,7 @@ All assets have the following fields:
 | srcfile | cstring | Path of source file |
 | \<no name\> | xt | "Reloader" XT |
 
-The reloader is a unnamed field.  You can, however, directly `reload ( asset -- ) ` an asset.
+The reloader is a unnamed field.  You can, however, directly `reload ( asset -- )` an asset.
 
 Additional asset-related words:
 
