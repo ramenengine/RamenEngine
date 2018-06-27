@@ -27,7 +27,7 @@ struct color
 
 Low-level words for working with fixed-point numbers.
 
-Fixed-point numbers in RAMEN have a 24-bit integer part and a 12-bit fractional part.  They're meant to enable sub-pixel motion of objects and rough geometrical calculations.  If you need more mathematical precision, use floats and convert, bit shifting, or fractions (e.g. `*/`.)
+Fixed-point numbers in RAMEN have a 20-bit integer part and a 12-bit fractional part.  They're meant to enable sub-pixel motion of objects and rough geometrical calculations.  If you need more mathematical precision, use floats and convert, bit shifting, or fractions (e.g. `*/`.)
 
 Many Forth words are redefined to use  fixed-point numbers.  This, combined with fixed-point literal support, makes things almost completely transparent.  The need to work with integers is less frequent. A simple way to remember if you need a fixed-point word or an integer word is if the number is a quantity of bytes or not.
 
@@ -118,21 +118,88 @@ All numbers that aren't qualified by a base prefix such as `$` are interpreted a
 
 The theory behind this is that you can write literals naturally, with no requirement to use a decimal point, making fixed-point number use almost transparent.
 
-The quickest way to understand this is to try it.  After loading RAMEN into Forth, type `1.5 3 + .` and press `<enter>`.   Notice that the decimal point is optional.
+The quickest way to understand is to try it.  After loading RAMEN into Forth, type `1.5 3 + .` and press `<enter>`.   Notice that the decimal point is optional.
 
 ### Assets (assets.f)
 
-The asset system lets you declare assets in your code which will get automatically loaded when your game starts.
+The asset system lets you declare assets in your code which will get automatically loaded when your game starts.  It also lets you add new asset types which know how to load themselves on initial game executable start.
+
+All assets have the following fields:
+
+| field | type | description |
+|-------|------|-------------|
+| srcfile | cstring | Path of source file |
+| \<no name\> | xt | "Reloader" XT |
+
+The reloader is a unnamed field.  You can, however, directly `reload ( asset -- ) ` an asset.
+
+Additional asset-related words:
+
+| assets>   | ( -- \<code\> ) ( asset -- ) | Execute remainder of colon definition on each asset in the order they were declared.
+| #assets   | ( -- n ) | Total number of declared assets.
+| .asset    | ( asset -- ) | Print some info about an asset
+| .assets   | ( -- ) | List all assets
+| findfile  | ( path c -- path c ) | Searches for an asset's file first in its path relative to the current working directory and second relative to the current source file being compiled.  If not found, abort and throw an error message.
 
 #### Images (image.f)
 
-Stores info about an Allegro bitmap.
+Asset that stores info about an Allegro bitmap, as well as information necessary to address "subimages" in the bitmap - that is, to treat it as an image strip, commonly used in games.
+
+All of the fields are public.
+
+| field | type | description |
+|-------|------|-------------|
+| image.bmp      | ALLEGRO_BITMAP address | Bitmap pointed to by the image
+| image.subw     | fixedp | Subimage width
+| image.subh     | fixedp | Subimage height
+| image.fsubw    | float  | Same as `subw`
+| image.fsubh    | float  | Same as `subh`
+| image.subcols  | fixedp | Number of subimage columns
+| image.subrows  | fixedp | Number of subimage rows
+| image.subcount | fixedp | Total number of subimages
+| image.orgx     | fixedp | Origin X (to be treated by a game as the center of rotation and scaling)
+| image.orgy     | fixedp | Origin Y
+
+##### Image management
+
+| imagew       | ( -- ) | Get image width
+| imageh       | ( -- ) | Get image height
+| imagewh      | ( -- ) | Get image dimensions
+| /origin      | ( -- ) | Set image's origin to its center.
+| reload-image | ( image -- ) | Load bitmap from its stored path and initialize the origin.
+| init-image   | ( path c image -- ) | Initialize image (calling `reload-image`.)
+| image:       | ( path count -- \<name\> ) |
+| >bmp         | ( image -- bitmap ) | Get Allegro bitmap
+| load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed.
+| free-image   | ( image -- ) | The bitmap is destroyed.
+    Note that the pointer is not cleared.
+
+##### Subimages
+
+| subdivide | ( tilew tileh image -- ) | Initialize the subimage fields.
+| >subxy    | ( n image -- x y ) | Get the coordinates of the top left of a subimage.
+| >subxywh  | ( n image -- x y w h ) | Get the top-left coordinates, and the dimensions of a subimage.
+| afsubimg  | ( n image -- ALLEGRO_BITMAP fx fy fw fh ) | Get the bitmap and the rectangle values as floats of a subimage.  (Useful for passing to the Allegro library.)
+| imgsubbmp | ( n image -- subbitmap ) | Create an ALLEGRO_SUBBITMAP that stores info about a subimage.
 
 #### Fonts (font.f)
 
 #### Buffers (buffer.f)
 
 #### Samples (sample.f)
+
+#### Defining an asset type
+
+An asset type is a struct that extends the "header" described above.  Defining an asset type is largely the same as defining a struct.
+
+You will also need to define the asset loader and asset declaration word.
+
+See the asset definition source files for examples.
+
+| assetdef | ( -- \<name\> ) | Define an asset type (or "asset definition")
+| register | ( reloader-xt asset -- )  Add asset to the preload list and assign its reloader.
+
+#### The preloader
 
 ### Color (color.f)
 

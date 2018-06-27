@@ -15,7 +15,7 @@ RAMEN is built on [AllegroForthKit](https://rogerlevy.github.io/AllegroForthKit/
 
 ### [Basic Usage](basic-usage.md)
 ### [Running the Examples](examples.md)
-### [Fixed-Point Numbers](fixed.md)
+### [Fixed-Point Numbers](https://rogerlevy.github.io/AllegroForthKit/fixed.md)
 ### [Data Structures](structs.md)
 ### [Objects](objects.md)
 ### [Publishing Games](publish.md)
