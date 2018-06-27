@@ -170,8 +170,7 @@ All of the fields are public.
 | image:       | ( path count -- \<name\> ) | Declare an image, loading it at compile-time. |
 | \>bmp        | ( image -- bitmap ) | Get Allegro bitmap |
 | load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed. |
-| free-image   | ( image -- ) | The bitmap is destroyed.
-    Note that the pointer is not cleared. |
+| free-image   | ( image -- ) | The bitmap is destroyed. Note that the pointer is not cleared. |
 
 #### Subimages
 
