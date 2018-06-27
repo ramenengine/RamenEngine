@@ -2,9 +2,7 @@
 
 RAMEN is divided into core modules and optional libraries.
 
-## Core Modules
-
-### Structs (struct.f)
+## Structs (struct.f)
 
 Simple data structure support.  Provisions for type information are there but aren't currently actually used.
 
@@ -23,7 +21,7 @@ struct color
     color 0 svar color.a
 ```
 
-### Fixed-point operators (fixops.f)
+## Fixed-point operators (fixops.f)
 
 Low-level words for working with fixed-point numbers.
 
@@ -33,7 +31,7 @@ Many Forth words are redefined to use  fixed-point numbers.  This, combined with
 
 These words are really important for you to learn as they're used *everywhere* in RAMEN.
 
-#### Conversion
+### Conversion
 
 | 1p | ( i -- n ) | Convert int to fixed
 | 2p | ( i i -- n n ) | Convert int(s) to fixed's
@@ -49,7 +47,7 @@ These words are really important for you to learn as they're used *everywhere* i
 | 4f | ( n n n n -- f: n n n n ) | Convert fixed's to floats
 | f>p | ( f: n -- n ) | Convert float to fixedp
 
-#### Math
+### Math
 
 | pfloor  | ( n -- n ) | Round down
 | pceil   | ( n -- n ) | Round up
@@ -61,14 +59,14 @@ These words are really important for you to learn as they're used *everywhere* i
 
 `-` and `+` work with integers and fixed-point numbers already so those are left alone.
 
-#### External library conversion
+### External library conversion
 
 | 1af | ( n -- sf )      | Convert fixedp to float on data stack.
 | 2af | ( n n -- sf sf ) | Convert fixedp to float on data stack.
 | 3af | ( n n n -- sf sf sf ) | Convert fixedp to float on data stack.
 | 4af | ( n n n n -- sf sf sf sf ) | Convert fixedp to float on data stack.
 
-#### Advanced Math
+### Advanced Math
 
 | cos   ( deg -- n )           | Cosine
 | sin   ( deg -- n )           | Sine
@@ -83,17 +81,17 @@ These words are really important for you to learn as they're used *everywhere* i
 | rescale | ( n min1 max1 min2 max2 -- n ) | Rescale a number proportionally from one range to another
 | anglerp | ( src dest factor -- ) Interpolate angles
 
-#### Integers
+### Integers
 
 |i*|Integer multiply|
 |i/|Integer divide|
 
-#### Color unpacking
+### Color unpacking
 
 | : >rgba | ( val -- r g b a ) | Unpack hex RGBA to fixedp components (0 ~ 1.0)
 | : >rgb  | ( val -- r g b )   | Unpack hex RGB to fixedp components (0 ~ 1.0)
 
-#### On-stack vectors
+### On-stack vectors
 
 `2+` and `2-` are defined in `roger.f`.  Other double number words are provided in the standard.
 
@@ -101,14 +99,14 @@ These words are really important for you to learn as they're used *everywhere* i
 | 2/   | ( x y x y -- x y ) | Two-Divide
 | 2mod | ( x y x y -- x y ) | Two-Mod (modulus)
 
-#### Modes
+### Modes
 
 Generally you shouldn't be writing code that depends on the current base, but on occasion it's convenient, for instance when compiling  standard Forth code into a RAMEN project.
 
 | fixed | Switch to fixed point mode.
 | decimal | Switch to decimal mode.
 
-### Fixed-point literals (fixedp.f)
+## Fixed-point literals (fixedp.f)
 
 This file is actually packaged with AllegroForthKit.
 
@@ -120,7 +118,7 @@ The theory behind this is that you can write literals naturally, with no require
 
 The quickest way to understand is to try it.  After loading RAMEN into Forth, type `1.5 3 + .` and press `<enter>`.   Notice that the decimal point is optional.
 
-### Assets (assets.f)
+## Assets (assets.f)
 
 The asset system lets you declare assets in your code which will get automatically loaded when your game starts.  It also lets you add new asset types which know how to load themselves on initial game executable start.
 
@@ -141,7 +139,7 @@ Additional asset-related words:
 | .assets   | ( -- ) | List all assets
 | findfile  | ( path c -- path c ) | Searches for an asset's file first in its path relative to the current working directory and second relative to the current source file being compiled.  If not found, abort and throw an error message.
 
-#### Images (image.f)
+### Images (image.f)
 
 Asset that stores info about an Allegro bitmap, as well as information necessary to address "subimages" in the bitmap - that is, to treat it as an image strip, commonly used in games.
 
@@ -160,7 +158,7 @@ All of the fields are public.
 | image.orgx     | fixedp | Origin X (to be treated by a game as the center of rotation and scaling)
 | image.orgy     | fixedp | Origin Y
 
-##### Image management
+#### Image management
 
 | imagew       | ( -- ) | Get image width
 | imageh       | ( -- ) | Get image height
@@ -169,12 +167,12 @@ All of the fields are public.
 | reload-image | ( image -- ) | Load bitmap from its stored path and initialize the origin.
 | init-image   | ( path c image -- ) | Initialize image (calling `reload-image`.)
 | image:       | ( path count -- \<name\> ) |
-| \>bmp         | ( image -- bitmap ) | Get Allegro bitmap
+| \>bmp        | ( image -- bitmap ) | Get Allegro bitmap
 | load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed.
 | free-image   | ( image -- ) | The bitmap is destroyed.
     Note that the pointer is not cleared.
 
-##### Subimages
+#### Subimages
 
 | subdivide | ( tilew tileh image -- ) | Initialize the subimage fields.
 | >subxy    | ( n image -- x y ) | Get the coordinates of the top left of a subimage.
@@ -182,13 +180,13 @@ All of the fields are public.
 | afsubimg  | ( n image -- ALLEGRO_BITMAP fx fy fw fh ) | Get the bitmap and the rectangle values as floats of a subimage.  (Useful for passing to the Allegro library.)
 | imgsubbmp | ( n image -- subbitmap ) | Create an ALLEGRO_SUBBITMAP that stores info about a subimage.
 
-#### Fonts (font.f)
+### Fonts (font.f)
 
-#### Buffers (buffer.f)
+### Buffers (buffer.f)
 
-#### Samples (sample.f)
+### Samples (sample.f)
 
-#### Defining an asset type
+### Defining an asset type
 
 An asset type is a struct that extends the "header" described above.  Defining an asset type is largely the same as defining a struct.
 
@@ -199,18 +197,17 @@ See the asset definition source files for examples.
 | assetdef | ( -- \<name\> ) | Define an asset type (or "asset definition")
 | register | ( reloader-xt asset -- ) | Add asset to the preload list and assign its reloader.
 
-#### The preloader
+### The preloader
 
-### Color (color.f)
+## Color (color.f)
 
-### Objects (obj.f)
+## Objects (obj.f)
 
 RAMEN's polymorphic data structure.  See [Objects](objects.md)
 
-### Cellstacks (cellstack.f)
+## Cellstacks (cellstack.f)
 
-### Publish (publish.f)
+## Publish (publish.f)
 
 See [Publishing Games](publish.md)
 
-## Libraries
