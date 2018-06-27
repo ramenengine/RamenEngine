@@ -160,17 +160,18 @@ All of the fields are public.
 
 #### Image management
 
-| imagew       | ( -- ) | Get image width
-| imageh       | ( -- ) | Get image height
-| imagewh      | ( -- ) | Get image dimensions
-| /origin      | ( -- ) | Set image's origin to its center.
-| reload-image | ( image -- ) | Load bitmap from its stored path and initialize the origin.
-| init-image   | ( path c image -- ) | Initialize image (calling `reload-image`.)
-| image:       | ( path count -- \<name\> ) |
-| \>bmp        | ( image -- bitmap ) | Get Allegro bitmap
-| load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed.
+
+| imagew       | ( -- ) | Get image width |
+| imageh       | ( -- ) | Get image height |
+| imagewh      | ( -- ) | Get image dimensions |
+| /origin      | ( -- ) | Set image's origin to its center. |
+| reload-image | ( image -- ) | Load bitmap from its stored path and initialize the origin. |
+| init-image   | ( path c image -- ) | Initialize image (calling `reload-image`.) |
+| image:       | ( path count -- \<name\> ) | Declare an image, loading it at compile-time. |
+| \>bmp        | ( image -- bitmap ) | Get Allegro bitmap |
+| load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed. |
 | free-image   | ( image -- ) | The bitmap is destroyed.
-    Note that the pointer is not cleared.
+    Note that the pointer is not cleared. |
 
 #### Subimages
 
