@@ -169,7 +169,7 @@ All of the fields are public.
 | reload-image | ( image -- ) | Load bitmap from its stored path and initialize the origin.
 | init-image   | ( path c image -- ) | Initialize image (calling `reload-image`.)
 | image:       | ( path count -- \<name\> ) |
-| >bmp         | ( image -- bitmap ) | Get Allegro bitmap
+| \>bmp         | ( image -- bitmap ) | Get Allegro bitmap
 | load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed.
 | free-image   | ( image -- ) | The bitmap is destroyed.
     Note that the pointer is not cleared.
@@ -197,7 +197,7 @@ You will also need to define the asset loader and asset declaration word.
 See the asset definition source files for examples.
 
 | assetdef | ( -- \<name\> ) | Define an asset type (or "asset definition")
-| register | ( reloader-xt asset -- )  Add asset to the preload list and assign its reloader.
+| register | ( reloader-xt asset -- ) | Add asset to the preload list and assign its reloader.
 
 #### The preloader
 
