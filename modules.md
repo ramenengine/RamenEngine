@@ -1,7 +1,5 @@
 # Module References
 
-RAMEN is divided into core modules and optional libraries.
-
 ## Structs - struct.f
 
 Simple data structure support.  Provisions for type information are there but aren't currently actually used.

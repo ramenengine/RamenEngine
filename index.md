@@ -7,6 +7,8 @@ RAMEN (Really Accessible Multimedia Engine) is a 2D game engine written in Forth
 
 RAMEN is built on [AllegroForthKit](https://rogerlevy.github.io/AllegroForthKit/).
 
+RAMEN is divided into core modules and optional libraries.  The words "module" and "library" are used interchangeably, but only in the sense that a library should be considered a kind of module.
+
 ## Download
 
 [Github](https://github.com/RogerLevy/ramen/)
