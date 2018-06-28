@@ -2,7 +2,7 @@
 
 ## Structs[]() - struct.f
 
-Simple data structure support.  Provisions for type information are there but aren't currently actually used.
+There is simple data structure support.  Provisions for type information are there but aren't currently being used.
 
 |struct|( -- \<name\> )|Declare a struct
 |sfield|( struct bytes valtype -- \<name\> )  ( adr -- adr+n )|Declare a struct field
@@ -21,11 +21,11 @@ struct color
 
 ## Fixed-point operators[]() - fixops.f
 
-Low-level words for working with fixed-point numbers.
+These are low-level words for working with fixed-point numbers.
 
 Fixed-point numbers in RAMEN have a 20-bit integer part and a 12-bit fractional part.  They're meant to enable sub-pixel motion of objects and rough geometrical calculations.  If you need more mathematical precision, use floats and convert, bit shifting, or fractions (e.g. `*/`.)
 
-Many Forth words are redefined to use  fixed-point numbers.  This, combined with fixed-point literal support, makes things almost completely transparent.  The need to work with integers is less frequent. A simple way to remember if you need a fixed-point word or an integer word is if the number is a quantity of bytes or not.
+The need to work with integers is infrequent, so many Forth words are redefined to use fixed-point numbers.  This, combined with fixed-point literal support, makes working with fixed-point in RAMEN almost transparent.  An easy way to remember if you need a fixed-point word or an integer word is if the number is a quantity of bytes or not.
 
 These words are really important for you to learn as they're used *everywhere* in RAMEN.
 
@@ -77,7 +77,7 @@ These words are really important for you to learn as they're used *everywhere* i
 | log2  | ( n -- n )             | Logarithm
 | \>rad |  ( n -- n )            | Convert degrees to radians
 | rescale | ( n min1 max1 min2 max2 -- n ) | Rescale a number proportionally from one range to another
-| anglerp | ( src dest factor -- ) Interpolate angles
+| anglerp | ( src dest factor -- ) | Interpolate angles
 
 ### Integers
 
@@ -86,8 +86,8 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Color unpacking
 
-| : >rgba | ( val -- r g b a ) | Unpack hex RGBA to fixedp components (0 ~ 1.0)
-| : >rgb  | ( val -- r g b )   | Unpack hex RGB to fixedp components (0 ~ 1.0)
+| >rgba | ( val -- r g b a ) | Unpack hex RGBA to fixedp components (0 ~ 1.0)
+| >rgb  | ( val -- r g b )   | Unpack hex RGB to fixedp components (0 ~ 1.0)
 
 ### On-stack vectors
 
@@ -186,7 +186,7 @@ All of the fields are public.
 
 ### Defining an asset type
 
-An asset type is a struct that extends the "header" described above.  Defining an asset type is largely the same as defining a struct.
+An asset type is a struct that extends the header described above.  Defining an asset type is largely the same as defining a struct.
 
 You will also need to define the asset loader and asset declaration word.
 
