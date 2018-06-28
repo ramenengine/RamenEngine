@@ -2,7 +2,7 @@
 
 ## Structs[]() - struct.f
 
-There is simple data structure support.  Provisions for type information are there but aren't currently being used.
+RAMEN uses a simple data structure facility.  Provisions for type information are there but aren't currently being used.
 
 |struct|( -- \<name\> )|Declare a struct
 |sfield|( struct bytes valtype -- \<name\> )  ( adr -- adr+n )|Declare a struct field
@@ -91,11 +91,13 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### On-stack vectors
 
-`2+` and `2-` are defined in `roger.f`.  Other double number words are provided in the standard.
-
+| 2+   | ( x y x y -- x y ) | Two-Add
+| 2-   | ( x y x y -- x y ) | Two-Sub
 | 2*   | ( x y x y -- x y ) | Two-Multiply
 | 2/   | ( x y x y -- x y ) | Two-Divide
 | 2mod | ( x y x y -- x y ) | Two-Mod (modulus)
+
+`2+` and `2-` are redefined in AFKIT in `roger.f`.  (The standard's versions aren't useful in the engine's program domain.)  Other double number words are provided in the standard.
 
 ### Modes
 
