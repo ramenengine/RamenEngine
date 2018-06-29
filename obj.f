@@ -4,13 +4,6 @@
 \ [x] - but provide a way to "force" property definitions (REDEF flag)
 \ [ ] - prototypes???  putting it off.  
 
-\ things smallfry could bring to this;
-\   inspection
-\   more efficient use of memory (at the cost of speed...)
-\   prototypes and embedded objects
-\   proper subclassing
-\   polymorphism / mixin support / interface support
-
 \ for simplicity this will be used for more than just game objects.  possibilities:
 \   audio channels
 \   disembodied tasks
