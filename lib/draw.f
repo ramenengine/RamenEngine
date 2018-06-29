@@ -6,15 +6,15 @@ create fore 4 cells allot
 : colored   ( r g b a )  4af fore 4! ;
 
 \ Bitmaps, backbuffer
-: onto  r>  al_get_target_bitmap >r  swap al_set_target_bitmap  call  r> al_set_target_bitmap ;
-: movebmp  ( src sx sy w h ) write-rgba blend>  at@ 2af 0 al_draw_bitmap ;
-: *bmp   ( w h -- bmp ) 2i al_create_bitmap ;
-: clearbmp  ( r g b a bmp )  onto 4af al_clear_to_color ;
+: onto>  r>  al_get_target_bitmap >r  swap al_set_target_bitmap  call  r> al_set_target_bitmap ;
+: movebmp  ( src sx sy w h )  write-rgba blend>  at@ 2af 0 al_draw_bitmap ;
+: *bmp   ( w h -- bmp )  2i al_create_bitmap ;
+: clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
 
 \ Predefined Colors
 : 8>p  s>f 255e f/ f>p ;
-: createcolor create 8>p swap 8>p rot 8>p , , , 1 .0 ,  does> 4@ colored ;
+: createcolor create 8>p swap 8>p rot 8>p , , , 1.0 ,  does> 4@ colored ;
 : (sf+)  dup sf@ f>p swap cell+ ;
 : @color  fore (sf+) (sf+) (sf+) (sf+) drop ;
 
@@ -61,12 +61,10 @@ variable fnt  default-font fnt !
 variable lmargin
 : fontw  z" A" al_get_text_width 1p ;
 : fonth  al_get_font_line_height 1p ;
-: aprint ( str count alignment -- )
-    -rot zstring >r  >r  fnt @ fore 4@ at@ 2af r> r@ al_draw_text
+: print ( str count -- )
+    at@ drop (x) !
+    -rot zstring >r  fnt @ fore 4@ at@ 2af ALLEGRO_ALIGN_LEFT r@ al_draw_text
     fnt @ r> al_get_text_width 1p 0 +at ;
-: print  ( str count -- )  ALLEGRO_ALIGN_LEFT aprint ;
-: printr  ( str count -- )  ALLEGRO_ALIGN_RIGHT aprint ;
-: printc  ( str count -- )  ALLEGRO_ALIGN_CENTER aprint ;
 : font>  ( font -- <code> )  fnt !  r> call ;
 : newline  lmargin @ at@ nip fnt @ fonth + at ;
 : textw  zstring fnt @ swap al_get_text_width 1p ;
@@ -77,17 +75,12 @@ variable lmargin
 : +line  at@ 2+ line ;
 : line+  2dup +line +at ;
 : pixel  at@ 2af  fore 4@  al_draw_pixel ;
-: tri  ( x y x y x y ) 2>r 4af 2r> 2af fore 4@ hairline al_draw_triangle ;
-: trif  ( x y x y x y ) 2>r 4af 2r> 2af fore 4@ al_draw_filled_triangle ;
 : rect   ( w h )  at@ 2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
 : rectf  ( w h )  at@ 2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
 : capsule  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
 : capsulef  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
-: circle  ( r ) at@ rot 3af fore 4@ hairline al_draw_circle ;
-: circlef ( r ) at@ rot 3af fore 4@ al_draw_filled_circle ;
 : ellipse  ( rx ry ) at@ 2swap 4af fore 4@ hairline al_draw_ellipse ;
 : ellipsef ( rx ry ) at@ 2swap 4af fore 4@ al_draw_filled_ellipse ;
-: arc  ( r a1 a2 )  >r at@ 2swap 4af r> 1af fore 4@ hairline al_draw_arc ;
 
 
 create ftemp  2 cells allot
