@@ -150,26 +150,30 @@ set-current set-order
         only forth definitions
         included  (rcp) ;
 
-: (loadrecipe)  ( gid name c -- )  >recipe  swap recipes nth ! ;
+: (loadrecipe)  ( gid name c -- recipe|0 )  >recipe  dup rot recipes nth ! ;
 
 : (loadrecipes)  tileset[]  locals| firstgid |
     ( tileset ) eachelement> that's tile
         dup  id@ firstgid +  swap
             0 " image" element ?dup if
-                source@ -path -ext (loadrecipe)
+                source@ -path -ext (loadrecipe) drop
             else
-                ?type if  (loadrecipe)  else  ( gid ) drop  then
+                ?type if  (loadrecipe) drop  else  ( gid ) drop  then
             then ;
 : loadrecipes  ( map n -- )  (loadrecipes)  ?dom-free ;
+
+: ?tmxobj  dup if  tmxobj  else  2drop  then ;
 
 : loadobjects  ( objgroup -- )
     eachelement> that's object
         dup xy@ at
         dup rectangle? if
+            dup ?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  \ rectangles with types are treated as game objects.
+                                                                        \ you can get the dimensions from the xml element if needed.
             dup wh@ ( nnn w h ) tmxrect
         else
             dup gid@ dup  recipes nth @ ?dup if
-                ( nnn gid recipe ) nip  @ ( nnn xt ) tmxobj
+                ( nnn gid recipe ) nip  @ ( nnn xt ) ?tmxobj
             else
                 ( nnn gid ) tmximage
             then
