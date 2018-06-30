@@ -1,13 +1,13 @@
-include kit/ans/version.f
+include afkit/ans/version.f
 $000102 [version] ramen-ver
 \ --------------------------------------------------------------------------------------------------
-$000900 include kit/kit.f
+$000900 include afkit/kit.f
 include ramen/plat.f
-include kit/dep/zlib/zlib.f
+include afkit/dep/zlib/zlib.f
 include ramen/utils.f
 include ramen/struct.f
 include ramen/fixops.f
-include kit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
+include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
 
 include ramen/assets.f
 include ramen/image.f

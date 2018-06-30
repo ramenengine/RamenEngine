@@ -18,6 +18,7 @@
             1 +to id
         tw +loop
     th +loop
+    id
 ;
 
 : -tiles  #MAXTILES for  tiles i [] dup @ -bmp  off  loop ;

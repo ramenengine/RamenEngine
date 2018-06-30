@@ -18,7 +18,7 @@ $10000 [version] tmx-ver
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 
-[undefined] xml-ver [if] $000100 include kit/lib/xml [then]
+[undefined] xml-ver [if] $000100 include afkit/lib/xml [then]
 
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 

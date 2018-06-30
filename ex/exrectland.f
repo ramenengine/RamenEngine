@@ -1,4 +1,4 @@
-include kit/ans/section
+include afkit/ans/section
 [section] preamble
 
 empty
