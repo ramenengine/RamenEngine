@@ -39,7 +39,6 @@
 0 value tba  \ tileset base address
 
 : tilebase!  ( tile# -- )  tiles nth to tba ;
-
 0 tilebase!
 
 : tsize  tba cell+ @ bmpwh ;

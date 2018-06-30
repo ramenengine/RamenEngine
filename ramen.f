@@ -1,7 +1,7 @@
 include afkit/ans/version.f
-$000102 [version] ramen-ver
+#1 0 0 [version]
 \ --------------------------------------------------------------------------------------------------
-$000900 include afkit/kit.f
+0 #10 0 include afkit/kit.f
 include ramen/plat.f
 include afkit/dep/zlib/zlib.f
 include ramen/utils.f
@@ -24,7 +24,9 @@ include ramen/publish.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
 
-: resolution  2i resolution ;
+: resolution  ( w h -- ) 2i resolution ;
+
+: nativewh  native 2@ 2p ;
 
 : displayw  display al_get_display_width 1p ;
 : displayh  display al_get_display_height 1p ;

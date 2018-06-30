@@ -1,15 +1,15 @@
 [section] preamble
-$10000 [version] tiled-ver
+#1 1 0 [version]
 \ Tiled module for RAMEN
 
-[undefined] draw-ver [if] $000100 include ramen/lib/draw [then]
-[undefined] array2d-ver [if] $000100 include ramen/lib/array2d [then]
+    require ramen/lib/draw
+    require ramen/lib/array2d
 
 \ -------------------------------------------------------------------------------------------------
 [section] buffers
 
 10000 constant #MAXTILES
-include ramen/tiled/tilegame
+    include ramen/tiled/tilegame
 1024 1024 array2d: tilebuf
 #MAXTILES cellstack: recipes
 100 cellstack: bitmaps        \ single-image tileset's bitmaps
@@ -43,7 +43,7 @@ var tbi                   \ tile base index
 \ hex addressing
 : hmap@  ( #col #row -- tile ) 2p map@ ;
 
-include ramen/tiled/collision
+    include ramen/tiled/collision
 
 var onhitmap  \ XT;  ( info -- )  must be assigned to something to enable tilemap collision detection
 

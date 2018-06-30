@@ -1,4 +1,3 @@
-$000100 [version] rangetool-ver
 
 : lowerupper  ( n n -- lower higher )  2dup > if  swap  then ;
 : between  ( n n -- n )  lowerupper  over -  #1 +  rnd + ;

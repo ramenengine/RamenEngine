@@ -1,8 +1,7 @@
-$000100 [version] zsort-ver
 
 \ Z-sorted game objects
 
-[undefined] rsort [if] $000100 include ramen/lib/rsort [then]
+    require ramen/lib/rsort
 
 var zdepth
 

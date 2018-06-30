@@ -1,4 +1,3 @@
-$10000 [version] tmx-ver
 
 \ TMX (Tiled) support
 \ This just provides convenient data access and loading of "normal" tilemap layers
@@ -18,7 +17,7 @@ $10000 [version] tmx-ver
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 
-[undefined] xml-ver [if] $000100 include afkit/lib/xml [then]
+    require afkit/lib/xml
 
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 

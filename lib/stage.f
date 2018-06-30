@@ -1,4 +1,3 @@
-$000100 [version] stage-ver
 \ This is a simple scrolling 2D game framework to use in simple games or as just a way
 \ to help you get started more quickly.
 

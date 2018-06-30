@@ -1,4 +1,3 @@
-$000100 [version] rect-ver
 
 struct rect
     rect int svar rect.x

@@ -1,4 +1,3 @@
-$000100 [version] rsort-ver
 
 \ 16-bit positive-integer-fixed-point-identifier optimized radix sort!
 \ supports sorting a range of numbers between and including 0 ~ 65535

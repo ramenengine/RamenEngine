@@ -2,7 +2,7 @@
 \ Based on code written for Win32Forth around the year 2000
 
 empty
-$000100 include ramen/brick
+#1 0 0 include ramen/brick
 
 \ This program was inspired by the motion of flies.
 \ Usually the flies die out before things get interesting or they
@@ -28,7 +28,7 @@ stage 2000 pool: objects
 : mortal  live  act>  life -- ;
 : ?die  life @ 0 <= -exit  die ;
 : twitch  green @color r 4!  0 perform>  begin  apples randmove oranges randmove ?bore ?die  again ;
-:noname  [ is *fly ]  obj  mortal  twitch  draw>  r 4@ colored  s @ circlef ;
+:noname  [ is *fly ]  obj  mortal  twitch  draw>  r 4@ alpha colored  s @ circlef ;
 
 : think  stage each> act ;
 : locomote  stage each>  vx x v+ ;

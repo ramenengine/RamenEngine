@@ -1,9 +1,8 @@
 \ Basic graphics option
-$000100 [version] draw-ver
 
-create fore 4 cells allot
-: fcolored  ( f: r g b a )  4sf fore 4! ;
-: colored   ( r g b a )  4af fore 4! ;
+create fore 1e sf, 1e sf, 1e sf, 1e sf, 
+: colored   ( r g b )  3af fore 3! ;
+: alpha     1af fore 3 cells + ! ;
 
 \ Bitmaps, backbuffer
 : onto>  r>  al_get_target_bitmap >r  swap al_set_target_bitmap  call  r> al_set_target_bitmap ;
@@ -13,10 +12,8 @@ create fore 4 cells allot
 : backbuf  display al_get_backbuffer ;
 
 \ Predefined Colors
-: 8>p  s>f 255e f/ f>p ;
-: createcolor create 8>p swap 8>p rot 8>p , , , 1.0 ,  does> 4@ colored ;
-: (sf+)  dup sf@ f>p swap cell+ ;
-: @color  fore (sf+) (sf+) (sf+) (sf+) drop ;
+: 8>f  s>f 255e f/ ;
+: createcolor create rot 8>f sf, swap 8>f sf, 8>f sf, does> 3@ fore 3! 1 alpha ;
 
 hex
 00 00 00 createcolor black 69 71 75 createcolor dgrey
@@ -32,7 +29,7 @@ bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
 31 a2 f2 createcolor lblue 93 73 eb createcolor purple
 96 4b a8 createcolor dpurple cb 5c cf createcolor magenta
 80 00 80 createcolor dmagenta ff ff 80 createcolor lyellow
-e0 e0 80 createcolor tan  f7 b0 80 createcolor caucasian
+e0 e0 80 createcolor tan  
 da 42 00 createcolor orange
 
 : backdrop  fore 4@ al_clear_to_color  white ;
@@ -76,10 +73,12 @@ variable lmargin
 : pixel  at@ 2af  fore 4@  al_draw_pixel ;
 : rect   ( w h )  at@ 2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
 : rectf  ( w h )  at@ 2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
-: capsule  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
-: capsulef  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
+: rrect  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
+: rrectf  ( w h rx ry )  2>r at@ 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
 : ellipse  ( rx ry ) at@ 2swap 4af fore 4@ hairline al_draw_ellipse ;
 : ellipsef ( rx ry ) at@ 2swap 4af fore 4@ al_draw_filled_ellipse ;
+: circle  dup ellipse ;
+: circlef  dup ellipsef ;
 
 
 create ftemp  2 cells allot
@@ -93,6 +92,7 @@ create ftemp  2 cells allot
 \ Clipping rectangle
 variable cx variable cy variable cw variable ch      \ old clip
 variable ccx variable ccy variable ccw variable cch  \ current clip
+displaywh ch ! cw !
 : clipxy  ccx @ ccy @ ;
 : clipwh  ccw @ cch @ ;
 0 value (code)

@@ -1,4 +1,3 @@
-$000100 [version] array2d-ver
 
 : 2move  ( src /pitch dest /pitch #rows /bytes -- )
   locals| #bytes #rows destpitch dest srcpitch src |

@@ -1,4 +1,3 @@
-$010000 [version] audio-ver
 
 \ Audio API 1
 

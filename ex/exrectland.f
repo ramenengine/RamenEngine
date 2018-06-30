@@ -2,7 +2,7 @@ include afkit/ans/section
 [section] preamble
 
 empty
-$000100 include ramen/brick
+#1 0 0 include ramen/brick
 
 objlist stage
 stage 100 pool: sprites

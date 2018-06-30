@@ -1,4 +1,3 @@
-$000100 [version] task-ver
 
 \ Multitasking for game objects
 

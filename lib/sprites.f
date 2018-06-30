@@ -1,4 +1,3 @@
-$0000100 [version] sprites-ver
 
 \ Sprite objects!
 \ - Render subimages or image regions

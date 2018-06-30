@@ -1,4 +1,3 @@
-$000100 [version] cgrid-ver
 
 \ Fast collision manager object (RAMEN).
 \ Does efficient collision checks of massive
