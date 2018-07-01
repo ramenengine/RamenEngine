@@ -137,7 +137,14 @@ Additional asset-related words:
 | #assets   | ( -- n ) | Total number of declared assets.
 | .asset    | ( asset -- ) | Print some info about an asset
 | .assets   | ( -- ) | List all assets
-| findfile  | ( path c -- path c ) | Searches for an asset's file first in its path relative to the current working directory and second relative to the current source file being compiled.  If not found, abort and throw an error message.
+
+
+``` findfile  ( path c -- path c ) ```
+Search for an asset's file first in these locations, in this order:
+- Relative to the current working directory
+- Relative to the current source file being compiled.
+- Relative to `<project folder>/src/`.
+If not found, abort and throw an error message.
 
 ### Images[]() - image.f
 
