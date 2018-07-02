@@ -2,17 +2,18 @@
 #1 1 0 [version]
 \ Tiled module for RAMEN
 
+\ -------------------------------------------------------------------------------------------------
+[section] preamble
+
     require ramen/lib/draw
     require ramen/lib/array2d
 
-\ -------------------------------------------------------------------------------------------------
-[section] buffers
-
-10000 constant #MAXTILES
+    [undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
     include ramen/tiled/tilegame
-1024 1024 array2d: tilebuf
-#MAXTILES cellstack: recipes
-100 cellstack: bitmaps        \ single-image tileset's bitmaps
+
+    1024 1024 array2d: tilebuf
+    #MAXTILES cellstack: recipes
+    100 cellstack: bitmaps        \ single-image tileset's bitmaps
 
 \ -------------------------------------------------------------------------------------------------
 [section] tilemap
@@ -20,9 +21,9 @@
 \ Tilemap objects
 \ A large singular 2D array is used for stability
 
-var scrollx  var scrolly  \ used to define starting column and row!
-var w  var h              \ width & height in pixels
-var tbi                   \ tile base index
+    var scrollx  var scrolly  \ used to define starting column and row!
+    var w  var h              \ width & height in pixels
+    var tbi                   \ tile base index
 
 : /tilemap
     displaywh w 2!
@@ -40,15 +41,15 @@ var tbi                   \ tile base index
 
 : >gid  ( tile -- gid )  $0000fffc and 10 << ;
 
-\ hex addressing
+\ integer addressing
 : hmap@  ( #col #row -- tile ) 2p map@ ;
 
     include ramen/tiled/collision
 
-var onhitmap  \ XT;  ( info -- )  must be assigned to something to enable tilemap collision detection
+    var onhitmap  \ XT;  ( info -- )  must be assigned to something to enable tilemap collision detection
 
 \ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
-var mbx  var mby  var mbw  var mbh
+    var mbx  var mby  var mbw  var mbh
 
 : onhitmap>  ( -- <code> ) r> code> onhitmap ! ;
 
@@ -57,14 +58,15 @@ var mbx  var mby  var mbw  var mbh
     each>   x 2@  mbx 2@ x 2+!  onhitmap @ if  mbw 2@  tilesize  onhitmap @ collide-map  then
             x 2! ;
 
+
 \ -------------------------------------------------------------------------------------------------
 [section] tmx
 
-$10000 include ramen/tiled/tmx
+    include ramen/tiled/tmx
 
 also xmling  also tmxing
 
-var gid
+    var gid
 
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
@@ -89,7 +91,7 @@ var gid
 : de-Tiled  ( n -- n )
     dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
 
-: loadtilemap  ( layer destcol destrow -- )
+: loadlayer  ( layer destcol destrow -- )
     3dup
         tilebuf loc  tilebuf pitch@ readlayer
         rot wh@ tilebuf some2d> cells bounds do   \ convert it!
@@ -109,9 +111,9 @@ var gid
 \ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
 \ They all can expect the pen has already been set to the XY position.
 
-defer tmxobj   ( object-nnn XT -- )   \ XT is the TMX recipe for the object loaded from the script
-defer tmxrect  ( object-nnn w h -- )
-defer tmximage ( object-nnn gid -- )
+    defer tmxobj   ( object-nnn XT -- )   \ XT is the TMX recipe for the object loaded from the script
+    defer tmxrect  ( object-nnn w h -- )
+    defer tmximage ( object-nnn gid -- )
 
 : -recipes  ( -- )  recipes 0 [] #MAXTILES cells erase ;
 
@@ -184,6 +186,5 @@ set-current set-order
 
 : loadnewtmx  ( adr c -- dom map )
     -recipes  -tiles  -bitmaps  loadtmx ;
-
 
 only forth definitions

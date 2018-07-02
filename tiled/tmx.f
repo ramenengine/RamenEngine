@@ -75,7 +75,7 @@ define tmxing
 
     : #objgroups ( map -- n )  " objectgroup" #elements ;
     : objgroup[] ( map n -- objgroup ) " objectgroup" element ;
-    : objgroup   ( map adr c -- dom-nnn | 0 )
+    : objgroup   ( map name c -- dom-nnn | 0 )
         locals| c adr map |
         map #objgroups for
             map i objgroup[]
@@ -85,7 +85,7 @@ define tmxing
 
     : #layers ( map -- n )  " layer" #elements ;
     : layer[] ( map n -- layer ) " layer" element ;
-    : layer   ( map adr c -- layer | 0 )
+    : layer   ( map name c -- layer | 0 )
         locals| c adr map |
         map #layers for
             map i layer[]  dup
@@ -125,7 +125,7 @@ only forth definitions also xmling also tmxing
 
 : >objpath  " data/" search drop " objects/" strjoin  slashes ;
 
-: loadtmx    ( adr c -- dom map )
+: loadtmx    ( path c -- dom map )
     slashes findfile
     2dup -filename  2dup tmxpath place  2dup tsxpath place
     >objpath objpath place

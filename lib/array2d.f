@@ -1,7 +1,7 @@
-
+fixed 
 : 2move  ( src /pitch dest /pitch #rows /bytes -- )
   locals| #bytes #rows destpitch dest srcpitch src |
-  #rows 0 do
+  #rows for
     src dest #bytes move
     srcpitch +to src  destpitch +to dest
   loop ;
