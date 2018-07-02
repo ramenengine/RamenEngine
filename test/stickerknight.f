@@ -1,7 +1,7 @@
 empty
-$000100 include ramen/brick
-$10000 include ramen/tiled/tiled
-$000100 include ramen/lib/stage
+    0 0 0 include ramen/brick
+    include ramen/tiled/tiled
+    include ramen/lib/stage
 
 #1 to #globalscale
 stage 1000 pool: layer0

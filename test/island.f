@@ -1,5 +1,5 @@
 empty
-    #1 0 0 include ramen/brick
+    0 0 0 include ramen/brick
     require ramen/lib/stage
     include ramen/tiled/tiled
 

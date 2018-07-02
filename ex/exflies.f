@@ -2,7 +2,7 @@
 \ Based on code written for Win32Forth around the year 2000
 
 empty
-#1 0 0 include ramen/brick
+0 0 0 include ramen/brick
 
 \ This program was inspired by the motion of flies.
 \ Usually the flies die out before things get interesting or they

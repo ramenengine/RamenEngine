@@ -1,5 +1,5 @@
 include afkit/ans/version.f
-#1 0 0 [version]
+#1 1 0 [version]
 \ --------------------------------------------------------------------------------------------------
 0 #10 0 include afkit/kit.f
 include ramen/plat.f
