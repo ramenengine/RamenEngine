@@ -70,29 +70,29 @@ also xmling  also tmxing
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: (loadbitmaps)  ( map n -- dom )
-    tileset[]  locals| gid0 ts |
+: (loadbitmaps)  ( n -- dom )
+    tmxtileset  locals| gid0 ts |
     ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] ! ;
 
-: loadbitmaps  ( map n -- )  (loadbitmaps)  ?dom-free ;
+: load-bitmaps  ( n -- )  (loadbitmaps)  ?dom-free ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
-: loadtileset  ( map n -- ) \ load bitmap and split it up, adding it to the global tileset
-    tileset[] over tileset>bmp locals| bmp firstgid ts dom |
+: load-tmxtileset  ( n -- ) \ load bitmap and split it up, adding it to the global tileset
+    tmxtileset over tileset>bmp locals| bmp firstgid ts dom |
     bmp bitmaps push
     bmp  ts tilewh@  firstgid maketiles
     dom ?dom-free ;
 
 \ don't execute this frequently!
-: @tilesetwh  ( map n -- tw th )  tileset[] drop tilewh@ rot ?dom-free ;
+: @tilesetwh  ( n -- tw th )  tmxtileset drop tilewh@ rot ?dom-free ;
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
 : de-Tiled  ( n -- n )
     dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
 
-: loadlayer  ( layer destcol destrow -- )
+: load-tmxlayer  ( layer destcol destrow -- )
     3dup
-        tilebuf loc  tilebuf pitch@ readlayer
+        tilebuf loc  tilebuf pitch@ read-tmxlayer
         rot wh@ tilebuf some2d> cells bounds do   \ convert it!
             i @ de-Tiled i !
         cell +loop ;
@@ -153,7 +153,7 @@ set-current set-order
 
 : (loadrecipe)  ( gid name c -- recipe|0 )  >recipe  dup rot recipes nth ! ;
 
-: (loadrecipes)  tileset[]  locals| firstgid |
+: (loadrecipes)  tmxtileset  locals| firstgid |
     ( tileset ) eachelement> that's tile
         dup  id@ firstgid +  swap
             0 " image" element ?dup if
@@ -181,9 +181,16 @@ set-current set-order
         then
 ;
 
-: -bitmaps  bitmaps sbounds do  i @ -bmp  cell +loop  bitmaps 0 truncate ;
+: -bitmaps  bitmaps #pushed for  bitmaps pop -bmp  loop ;
 
-: loadnewtmx  ( adr c -- dom map )
-    -recipes  -tiles  -bitmaps  loadtmx ;
+: open-map  ( path c -- )
+    -recipes  -tiles  -bitmaps  open-tmx ;
+
+: open-tilemap  ( path c -- )  \ doesn't delete any tiles; assumes static tileset
+    -recipes  -bitmaps  open-tmx ;
+
+: close-map  close-tmx ;
+: close-tilemap  close-tmx ;
+
 
 only forth definitions

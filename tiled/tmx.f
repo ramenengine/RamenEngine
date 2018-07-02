@@ -66,41 +66,10 @@ define tmxing
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
         source@ slashes tmxpath+  2dup -filename tsxpath place  loadxml 0 " tileset" element ;
 
-    : tileset[]  ( map n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
-        " tileset" element
-        dup source? if   dup tileset>source  rot firstgid@
-                    else  0 swap dup firstgid@  tmxpath count tsxpath place then ;
-
     : ?dom-free  ?dup -exit dom-free ;
-
-    : #objgroups ( map -- n )  " objectgroup" #elements ;
-    : objgroup[] ( map n -- objgroup ) " objectgroup" element ;
-    : objgroup   ( map name c -- dom-nnn | 0 )
-        locals| c adr map |
-        map #objgroups for
-            map i objgroup[]
-                dup name@  adr c  compare 0= if  unloop  exit  then
-                drop
-        loop  0 ;
-
-    : #layers ( map -- n )  " layer" #elements ;
-    : layer[] ( map n -- layer ) " layer" element ;
-    : layer   ( map name c -- layer | 0 )
-        locals| c adr map |
-        map #layers for
-            map i layer[]  dup
-                name@  adr c  compare 0= if  unloop  exit  then
-            drop
-        loop  0 ;
 
     : #objects  ( objgroup -- n )  " object" #elements ;
     : #images   ( tileset -- n )  " image" #elements ;
-
-    \ : readlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)  Base64 uncompressed only
-    \     third wh@ locals| h w pitch dest layer |
-    \     layer >data text base64 >r
-    \     r@ str-get drop  w cells  dest  pitch  h  w cells  2move
-    \     r> str-free ;
 
     include ramen/tiled/tmxz.f
 
@@ -111,24 +80,53 @@ define tmxing
     : rectangle?  ( object -- flag )  " gid" attr? not ;
     \ Note RECTANGLE? is needed because TMX is stupid and doesn't have a <rectangle> element.
 
-    : property  ( element str c -- adr c true | false )
-        0 locals| props c str el |
-        el 0 " properties" element dup -exit  to props
-        props " property" #elements for
-            props i " property" element name@ str c compare 0= if
-                props i " property" element value@  true  unloop exit
-            then
-        loop  false ;
-
-
 only forth definitions also xmling also tmxing
+
+   0 value map
+   0 value tmx
+
+: tmxtileset  ( n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
+    map swap " tileset" element
+        dup source? if   dup tileset>source  rot firstgid@
+                    else  0 swap dup firstgid@  tmxpath count tsxpath place then ;
+
+: #objgroups ( -- n )  map " objectgroup" #elements ;
+: objgroup ( n -- objgroup ) map swap " objectgroup" element ;
+: find-objgroup   ( name c -- dom-nnn | 0 )
+    locals| c adr |
+    map #objgroups for
+        map objgroup
+            dup name@  adr c  compare 0= if  unloop  exit  then
+            drop
+    loop  0 ;
+
+: #tmxlayers ( -- n )  map " layer" #elements ;
+: tmxlayer ( n -- layer ) map swap " layer" element ;
+: find-tmxlayer   ( name c -- layer | 0 )
+    locals| c adr |
+    map #tmxlayers for
+        map i tmxlayer  dup
+            name@  adr c  compare 0= if  unloop  exit  then
+        drop
+    loop  0 ;
+
+: property  ( element str c -- adr c true | false )
+    0 locals| props c str el |
+    el 0 " properties" element dup -exit  to props
+    props " property" #elements for
+        props i " property" element  dup  name@ str c compare 0= if
+            value@  true  unloop exit
+        else  drop  then
+    loop  false ;
 
 : >objpath  " data/" search drop " objects/" strjoin  slashes ;
 
-: loadtmx    ( path c -- dom map )
+: open-tmx    ( path c -- )
     slashes findfile
     2dup -filename  2dup tmxpath place  2dup tsxpath place
     >objpath objpath place
-    loadxml 0 " map" element ;
+    loadxml  swap to tmx  0 " map" element to map  ;
+
+: close-tmx   tmx ?dom-free  0 to map ;
 
 only forth definitions

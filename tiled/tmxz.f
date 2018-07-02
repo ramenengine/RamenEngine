@@ -11,7 +11,7 @@
 
 : buf  layersize allocate throw ;
 
-: readlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)
+: read-tmxlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)
     third wh@ 0 locals| str h w pitch dest layer |
     layer >data text base64 to str
     layer compressed? if
