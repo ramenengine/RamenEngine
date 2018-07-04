@@ -36,25 +36,29 @@
 
 \  NOTE: Base tile + 1's width and height defines the "grid dimensions". (0 is nothing and transparent)
 
-0 value tba  \ tileset base address
+\ -------------------------------------------------------------------------------------------------
 
-: tilebase!  ( tile# -- )  tiles nth to tba ;
-0 tilebase!
+    0 value tba  \ tileset base address
+
+: tilebase!  ( tile# -- )  tiles nth to tba ;  0 tilebase!
 
 : tsize  tba cell+ @ bmpwh ;
 
 : tile  ( stridex stridey index -- )
     ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> 28 >>  al_draw_bitmap  then  +at ;
 
+\ using values is WAYyYYyy faster than using locals (on SwiftForth)
+    0 value tw  0 value th  0 value pitch
 : tilemap  ( addr /pitch -- )
-    hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch |
+    hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols | to th to tw to pitch
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
-                tw 0 i @ tile  tw 0 i cell+ @ tile
-            [ 2 cells ]# +loop
+                tw 0 i @ tile
+            cell +loop
         th + at   ( addr )  pitch +
     loop  drop  ;
+
 
 : scroll  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
     2over 2over 2mod 2negate +at   2/ 2pfloor ;
@@ -64,7 +68,7 @@
 : >car  2dup 2 / swap 2 / + >r   -   r> ;
 
 : isotilemap  ( addr /pitch cols rows -- )
-    hold>  tsize 2 2 2/  locals| th tw rows cols pitch |
+    hold>  tsize 2 2 2/  2swap  locals| rows cols | to th to tw to pitch
     rows for
         at@  ( addr x y )
             third  cols for
