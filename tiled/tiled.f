@@ -18,7 +18,8 @@
 [section] tilemap
 
 \ Tilemap objects
-\ A large singular 2D array is used for stability
+\ They don't allocate any buffers for map data.  The singular buffer TILEBUF is pointed to
+\ using the scrollx/scrolly values.
 
     var scrollx  var scrolly  \ used to define starting column and row!
     var w  var h              \ width & height in pixels
