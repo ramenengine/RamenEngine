@@ -38,7 +38,7 @@ create main  object  \ proxy for the Forth data and return stacks
 : pauses 0 do pause loop ;
 : secs   fps * pauses ;  \ not meant for precision timing
 
-\ external-calls facility - say "['] word later" to schedule a word that calls an external library.
+\ external-calls facility - say "<val> ['] word later" to schedule a word that calls an external library.
 \ you can pass a single parameter to each call, such as an object or an asset.
 \ NOTE: you don't have to consume the parameter, and as a bonus, you can leave as much as you want
 \ on the stack.
@@ -46,8 +46,10 @@ create main  object  \ proxy for the Forth data and return stacks
 1000 cellstack: queue
 : later  ( val xt -- )  swap queue push queue push ;
 : arbitrate
-    queue sbounds do  sp@ >r  i 2@ execute  r> sp!  2 cells +loop
-    queue 0 truncate ;
+    {
+        queue sbounds do  sp@  i  swap >r  2@ execute  r> sp!  2 cells +loop
+        queue 0 truncate
+    } ;
 
 \ pulse the multitasker.
 : multi  ( objlist -- )
@@ -62,7 +64,7 @@ create main  object  \ proxy for the Forth data and return stacks
         then
         drop
     } 
-    { arbitrate }
+    arbitrate
 ;
 
 : self?  sp@ ds >=  sp@ rs <= and ;
