@@ -1,5 +1,5 @@
 empty
-0 0 0 include ramen/brick
+0 0 0 include ramen/brick.f
 
 " data/2200man.png" image: 2200man.image  21 36 2200man.image subdivide
 " data/alfador.png" image: alfador.image  18 20 alfador.image subdivide

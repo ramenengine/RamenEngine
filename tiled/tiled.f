@@ -4,11 +4,11 @@
 \ -------------------------------------------------------------------------------------------------
 [section] preamble
 
-    require ramen/lib/draw
-    require ramen/lib/array2d
+    require ramen/lib/draw.f
+    require ramen/lib/array2d.f
 
     [undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
-    include ramen/tiled/tilegame
+    include ramen/tiled/tilegame.f
 
     1024 1024 array2d: tilebuf
     #MAXTILES cellstack: recipes
@@ -43,7 +43,7 @@
 \ integer addressing
 : hmap@  ( #col #row -- tile ) 2p map@ ;
 
-    include ramen/tiled/collision
+    include ramen/tiled/collision.f
 
     var onhitmap  \ XT;  ( info -- )  must be assigned to something to enable tilemap collision detection
 
@@ -61,7 +61,7 @@
 \ -------------------------------------------------------------------------------------------------
 [section] tmx
 
-    include ramen/tiled/tmx
+    include ramen/tiled/tmx.f
 
 also xmling  also tmxing
 

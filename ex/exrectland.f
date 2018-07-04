@@ -1,8 +1,8 @@
-include afkit/ans/section
+include afkit/ans/section.f
 [section] preamble
 
 empty
-0 0 0 include ramen/brick
+0 0 0 include ramen/brick.f
 
 objlist stage
 stage 100 pool: sprites

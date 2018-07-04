@@ -1,7 +1,7 @@
 empty
-    0 0 0 include ramen/brick
-    require ramen/lib/stage
-    include ramen/tiled/tiled
+    0 0 0 include ramen/brick.f
+    require ramen/lib/stage.f
+    include ramen/tiled/tiled.f
 
 
 " ramen/test/island/islandz.tmx" loadnewtmx  constant map  constant dom

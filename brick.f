@@ -2,11 +2,11 @@
 \ Very general purpose
 
     ( M m R passed by includer ) include ramen/ramen.f
-    include ramen/lib/rangetools.f
-    include ramen/lib/zsort.f
-    include ramen/lib/draw.f
-    include ramen/lib/v2d.f
-    include ramen/lib/cgrid.f
-    include ramen/lib/task.f
-    include afkit/lib/kb.f
-    include ramen/lib/audio1.f
+    require ramen/lib/rangetools.f
+    require ramen/lib/zsort.f
+    require ramen/lib/draw.f
+    require ramen/lib/v2d.f
+    require ramen/lib/cgrid.f
+    require ramen/lib/task.f
+    require afkit/lib/kb.f
+    require ramen/lib/audio1.f
