@@ -185,13 +185,9 @@ set-current set-order
 : -bitmaps  bitmaps #pushed for  bitmaps pop -bmp  loop ;
 
 : open-map  ( path c -- )
-    -recipes  -tiles  -bitmaps  open-tmx ;
+    close-tmx  -recipes  -tiles  -bitmaps  open-tmx ;
 
 : open-tilemap  ( path c -- )  \ doesn't delete any tiles; assumes static tileset
-    -recipes  -bitmaps  open-tmx ;
-
-: close-map  close-tmx ;
-: close-tilemap  close-tmx ;
-
+    close-tmx  -recipes  -bitmaps  open-tmx ;
 
 only forth definitions
