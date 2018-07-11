@@ -9,6 +9,7 @@ assetdef %buffer
     >r  dup r@ buffer.size !  allocate throw  r@ buffer.data !
     ['] recreate-buffer r> register ;
 
+: buffer  ( size -- )  %buffer sizeof allotment  init-buffer ;
+
 : buffer:   ( size -- <name> )
-    create  %buffer sizeof allotment  init-buffer
-    does>  buffer.data @ ; 
+    create  buffer  does>  buffer.data @ ; 

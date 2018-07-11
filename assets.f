@@ -44,10 +44,10 @@ flist (assets)
     locals| c fn |
     fn c 2dup file-exists ?exit
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
-    " src/" fn c strjoin 2dup file-exists ?exit
+    s" src/" fn c strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
-#256 cell+ constant /assetheader
+cell #256 + constant /assetheader
 
 : assetdef  ( -- <name> )  create /assetheader , ;
 

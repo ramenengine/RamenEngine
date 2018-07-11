@@ -15,8 +15,8 @@
 0 value me
 : as  to me ;
 create mestk  0 , 16 cells allot
-: {  state @ if " me >r" evaluate else me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk !  then ; immediate
-: }  state @ if " r> as" evaluate else mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @   then ; immediate
+: {  state @ if s" me >r" evaluate else me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk !  then ; immediate
+: }  state @ if s" r> as" evaluate else mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @   then ; immediate
 : nxt  me @ to me ;
 
 variable used
@@ -37,7 +37,7 @@ variable redef  \ should you want to bury anything
 : ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
 : field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
 : var  cell field ;
-: 's   ' >body @ ?lit " +" evaluate ; immediate
+: 's   ' >body @ ?lit s" +" evaluate ; immediate
 : xfield  ?unique create used @ , $76543210 , used +! does> @ + ;
 : xvar  cell xfield ;
 
@@ -80,7 +80,7 @@ create dummy  maxsize /allot  dummy as
     r> swap  dup >first  { ol.count @ 0 do  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
 : all>  ( objlist/pool -- <code> )
     r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
-: enough  " r> drop r> drop unloop r> drop " evaluate ; immediate
+: enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
 : (init)  x [ maxsize 3 cells - ]# 0 cfill at@ x 2! hidden on ;
 : remove  ( object -- )  { as  en off  hidden on  1 ^pool @ free+!  } ;
@@ -109,6 +109,6 @@ var role
 : rolevar  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
 : action   rolevar  does>  @ role @ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
-: my  " role @" evaluate  ' >body @ ?lit   " +" evaluate ; immediate
+: my  s" role @" evaluate  ' >body @ ?lit   postpone + ; immediate
 
 : ->   state @ if postpone { postpone as  ' compile,  postpone } else { as ' execute } then ; immediate

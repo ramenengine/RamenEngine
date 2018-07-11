@@ -5,8 +5,8 @@
 
 : compressed?  ( layer -- flag )
     >data
-    dup " compression" attr? not if  drop  false  exit then
-    " compression" val " zlib" compare 0= ?dup ?exit
+    dup s" compression" attr? not if  drop  false  exit then
+    s" compression" val s" zlib" compare 0= ?dup ?exit
     -1 abort" Error in COMPRESSED? : Only zlib compression is supported." ;
 
 : buf  layersize allocate throw ;

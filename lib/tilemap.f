@@ -1,9 +1,11 @@
-\ Global tileset system
+\ Tilemap rendering
 \  Loading tiles, tile and tilemap display and collision routines
-\  Maximum 4096 tiles.
 
-[undefined] #MAXTILES [if] 10000 dup constant #MAXTILES [else] #MAXTILES [then]
-    cellstack: tiles  \ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
+    require ramen/lib/draw.f
+    require ramen/lib/array2d.f
+
+[undefined] #MAXTILES [if] 16384 constant #MAXTILES [else] #MAXTILES [then]
+    create tiles cellstack \ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
 
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
@@ -48,9 +50,8 @@
     ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> 28 >>  al_draw_bitmap  then  +at ;
 
 \ using values is WAYyYYyy faster than using locals (on SwiftForth)
-    0 value tw  0 value th  0 value pitch
 : tilemap  ( addr /pitch -- )
-    hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols | to th to tw to pitch
+    hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch | 
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
@@ -68,7 +69,7 @@
 : >car  2dup 2 / swap 2 / + >r   -   r> ;
 
 : isotilemap  ( addr /pitch cols rows -- )
-    hold>  tsize 2 2 2/  2swap  locals| rows cols | to th to tw to pitch
+    hold>  tsize 2 2 2/  2swap  locals| rows cols th tw pitch |
     rows for
         at@  ( addr x y )
             third  cols for

@@ -16,8 +16,8 @@ assetdef image
     image int svar image.orgy
 
 \ dimensions, fixed point
-: imagew   image.bmp @ bmpw 1p ;
-: imageh   image.bmp @ bmph 1p ;
+: imagew   image.bmp @ bmpw ;
+: imageh   image.bmp @ bmph ;
 : imagewh  image.bmp @ bmpwh ;
 
 : /origin  dup imagewh 0.5 0.5 2* rot image.orgx 2! ;

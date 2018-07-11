@@ -1,4 +1,5 @@
-fixed 
+fixed
+
 : 2move  ( src /pitch dest /pitch #rows /bytes -- )
   locals| #bytes #rows destpitch dest srcpitch src |
   #rows for
@@ -15,22 +16,29 @@ fixed
 : `batch  ( ... addr xt -- ... )  ( ... addr -- ... )  \ -1 is terminator
   >code begin  over @ 0 >=  while  2dup 2>r  call  r> r> cell+ swap repeat  2drop ;
 
-struct array2d
-    array2d int svar numcols
-    array2d int svar numrows
-    array2d 0 int sfield data
+struct %array2d
+    %array2d int svar array2d.cols
+    %array2d int svar array2d.rows
+    %array2d int svar array2d.pitch
+    %array2d int svar array2d.data
+    
+: array2d-head,  udup  2pfloor 2,  cells ,  here cell+ , ;
 
 decimal
-    : array2d:  ( numcols numrows -- <name> )
-        2pfloor 2dup  create  2,  2i * cells /allot ;
+    \ by default the data field is set to the following dictionary space
 
-    : count2d ( array2d -- data #cells )  dup data swap numcols 2@ 2i * ;
+    : array2d  ( numcols numrows -- )
+        2dup  array2d-head,  2i * cells /allot ;
+
+    : count2d ( array2d -- data #cells )
+        dup array2d.data @ swap array2d.cols 2@ 2i * ;
 fixed
 
-: dims  ( array2d -- numcols numrows )  numcols 2@ ;
+: dims  ( array2d -- numcols numrows )
+    array2d.cols 2@ ;
 
 : (clamp)  ( col row array2d -- same )
-  >r  0 0 r@ numcols 2@ 2clamp  r> ;
+    >r  0 0 r@ array2d.cols 2@ 2clamp  r> ;
 
 \ TODO: this is incomplete!
 \      if dest col/row are negative, we need to adjust the source start address!!
@@ -38,14 +46,12 @@ fixed
 : (clip)   ( col row #cols #rows array2d -- same )
   dims 1 1 2- clip ;
 
-decimal
-    : loc  ( col row array2d -- addr )
-      (clamp) >r  2i r@ numcols @ 1i * +  cells  r> data + ;
-fixed
+: loc  ( col row array2d -- addr )
+  (clamp) >r  r@ array2d.pitch @ * swap cells +  r> array2d.data @ + ;
 
-: pitch@  ( array2d -- /pitch strid)  numcols @ cells ;
+: pitch@  ( array2d -- /pitch strid)  array2d.pitch @ ;
 
-: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc r> pitch@ ;
+: addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc r> array2d.pitch @ ;
 
 : write2d  ( src-addr pitch destcol destrow #cols #rows dest -- )
     locals| dest |
@@ -79,8 +85,8 @@ fixed
 
 \ test
 marker dispose
-10 15 array2d: a
-12 7 array2d: b
+create a  10 15 array2d
+create b  12 7 array2d
 a count2d 5 ifill
 b count2d 10 ifill
 

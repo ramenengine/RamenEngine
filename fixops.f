@@ -44,11 +44,11 @@ $1000 constant 1.0
 [then]
 
 \ NTS: keep these as one-liners, I might make them macros...
-: 1p  " /FRAC alshift" evaluate ; immediate
+: 1p  s" /FRAC alshift" evaluate ; immediate
 : 2p  1p swap 1p swap ;
 : 3p  1p rot 1p rot 1p rot ;
 : 4p  2p 2swap 2p 2swap ;
-: 1i  " /frac arshift" evaluate ; immediate
+: 1i  s" /frac arshift" evaluate ; immediate
 : 2i  swap 1i swap 1i ;
 : 3i  rot 1i rot 1i rot 1i ;
 : 4i  2i 2swap 2i 2swap ;
@@ -71,7 +71,7 @@ fixed definitions
     : *  ( n n -- n )  1f s>f f* f>s ;
     : /  ( n n -- n )  swap s>f 1f f/ f>s ;
     : /mod  ( n n -- r q ) 2dup mod -rot / ;
-    : loop  " 1.0 +loop" evaluate ; immediate
+    : loop  s" 1.0 +loop" evaluate ; immediate
 previous definitions
 
 \ Literal helpers

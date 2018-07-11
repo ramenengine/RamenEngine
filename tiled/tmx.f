@@ -24,37 +24,37 @@
 only forth definitions also xmling
 define tmxing
 
-    : source@   " source" val ;
-    : source?   " source" attr? ;
-    : name@     " name" val ;
-    : ?name     " name" val ?dup 0<> ;
-    : value@     " value" val ;
-    : w@        " width" pval ;
-    : h@        " height" pval ;
+    : source@   s" source" val ;
+    : source?   s" source" attr? ;
+    : name@     s" name" val ;
+    : ?name     s" name" val ?dup 0<> ;
+    : value@    s" value" val ;
+    : w@        s" width" pval ;
+    : h@        s" height" pval ;
     : wh@       dup w@ swap h@ ;
-    : x@        " x" pval ;
-    : y@        " y" pval ;
+    : x@        s" x" pval ;
+    : y@        s" y" pval ;
     : xy@       dup x@ swap y@ ;
-    : ?type     dup " type" attr? if  " type" val  true  else  drop  false then ;
-    : firstgid@ " firstgid" pval ;
-    : gid@      " gid" pval ;
-    : id@       " id" pval ;
-    : rotation@ " rotation" pval ;
-    : visible@  " visible" pval ;
-    : hflip@    " hflip" pval ;
-    : vflip@    " vflip" pval ;
-    : orientation@  " orientation" val ;
-    : backgroundcolor?  " backgroundcolor" attr? ;
-    : backgroundcolor@  " backgroundcolor" val [char] $ third c! evaluate ;
-    : tilew@  " tilewidth" pval ;
-    : tileh@  " tileheight" pval ;
+    : ?type     dup s" type" attr? if  s" type" val  true  else  drop  false then ;
+    : firstgid@ s" firstgid" pval ;
+    : gid@      s" gid" pval ;
+    : id@       s" id" pval ;
+    : rotation@ s" rotation" pval ;
+    : visible@  s" visible" pval ;
+    : hflip@    s" hflip" pval ;
+    : vflip@    s" vflip" pval ;
+    : orientation@  s" orientation" val ;
+    : backgroundcolor?  s" backgroundcolor" attr? ;
+    : backgroundcolor@  s" backgroundcolor" val [char] $ third c! evaluate ;
+    : tilew@  s" tilewidth" pval ;
+    : tileh@  s" tileheight" pval ;
     : tilewh@  dup tilew@ swap tileh@ ;
-    : tilecount@  " tilecount" pval ;
-    : spacing@  " spacing" pval ;
-    : margin@   " margin" pval ;
-    : >data     0 " data" element ;
+    : tilecount@  s" tilecount" pval ;
+    : spacing@  s" spacing" pval ;
+    : margin@   s" margin" pval ;
+    : >data     0 s" data" element ;
 
-    : #tilesets  ( map -- n )  " tileset" #elements ;
+    : #tilesets  ( map -- n )  s" tileset" #elements ;
 
     create tmxpath  #256 allot
     create tsxpath  #256 allot
@@ -64,20 +64,20 @@ define tmxing
     : tsxpath+  tsxpath @ -exit  tsxpath count 2swap strjoin ;
 
     : tileset>source  ( tileset -- dom tileset )  \ path should end in a slash
-        source@ slashes tmxpath+  2dup -filename tsxpath place  loadxml 0 " tileset" element ;
+        source@ slashes tmxpath+  2dup -filename tsxpath place  loadxml 0 s" tileset" element ;
 
     : ?dom-free  ?dup -exit dom-free ;
 
-    : #objects  ( objgroup -- n )  " object" #elements ;
-    : #images   ( tileset -- n )  " image" #elements ;
+    : #objects  ( objgroup -- n )  s" object" #elements ;
+    : #images   ( tileset -- n )  s" image" #elements ;
 
     include ramen/tiled/tmxz.f
 
     : tile>bmp  ( tile-nnn -- bitmap | 0 )  \ uses TSXPATH
-        0 " image" element dup -exit  source@ slashes tsxpath+  zstring al_load_bitmap ;
+        0 s" image" element dup -exit  source@ slashes tsxpath+  zstring al_load_bitmap ;
     : tileset>bmp  ( tileset-nnn -- bitmap )  tile>bmp ;  \ it's the same
 
-    : rectangle?  ( object -- flag )  " gid" attr? not ;
+    : rectangle?  ( object -- flag )  s" gid" attr? not ;
     \ Note RECTANGLE? is needed because TMX is stupid and doesn't have a <rectangle> element.
 
 only forth definitions also xmling also tmxing
@@ -86,12 +86,12 @@ only forth definitions also xmling also tmxing
    0 value tmx
 
 : tmxtileset  ( n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
-    map swap " tileset" element
+    map swap s" tileset" element
         dup source? if   dup tileset>source  rot firstgid@
                     else  0 swap dup firstgid@  tmxpath count tsxpath place then ;
 
-: #objgroups ( -- n )  map " objectgroup" #elements ;
-: objgroup ( n -- objgroup ) map swap " objectgroup" element ;
+: #objgroups ( -- n )  map s" objectgroup" #elements ;
+: objgroup ( n -- objgroup ) map swap s" objectgroup" element ;
 : find-objgroup   ( name c -- dom-nnn | 0 )
     locals| c adr |
     map #objgroups for
@@ -100,8 +100,8 @@ only forth definitions also xmling also tmxing
             drop
     loop  0 ;
 
-: #tmxlayers ( -- n )  map " layer" #elements ;
-: tmxlayer ( n -- layer ) map swap " layer" element ;
+: #tmxlayers ( -- n )  map s" layer" #elements ;
+: tmxlayer ( n -- layer ) map swap s" layer" element ;
 : find-tmxlayer   ( name c -- layer | 0 )
     locals| c adr |
     map #tmxlayers for
@@ -112,20 +112,20 @@ only forth definitions also xmling also tmxing
 
 : property  ( element str c -- adr c true | false )
     0 locals| props c str el |
-    el 0 " properties" element dup -exit  to props
-    props " property" #elements for
-        props i " property" element  dup  name@ str c compare 0= if
+    el 0 s" properties" element dup -exit  to props
+    props s" property" #elements for
+        props i s" property" element  dup  name@ str c compare 0= if
             value@  true  unloop exit
         else  drop  then
     loop  false ;
 
-: >objpath  " data/" search drop " objects/" strjoin  slashes ;
+: >objpath  s" data/" search drop s" objects/" strjoin  slashes ;
 
 : open-tmx    ( path c -- )
     slashes findfile
     2dup -filename  2dup tmxpath place  2dup tsxpath place
     >objpath objpath place
-    loadxml  swap to tmx  0 " map" element to map  ;
+    loadxml  swap to tmx  0 s" map" element to map  ;
 
 : close-tmx   tmx ?dom-free  0 to map ;
 

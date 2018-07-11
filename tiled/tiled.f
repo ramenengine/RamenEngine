@@ -6,13 +6,14 @@
 
     require ramen/lib/draw.f
     require ramen/lib/array2d.f
+    require ramen/lib/buffer2d.f
 
     [undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
-    include ramen/tiled/tilegame.f
+    include ramen/lib/tilemap.f
 
-    1024 1024 array2d: tilebuf
-    #MAXTILES cellstack: recipes
-    100 cellstack: bitmaps        \ single-image tileset's bitmaps
+    1024 1024 buffer2d: tilebuf 
+    create recipes #MAXTILES cellstack
+    create bitmaps 100 cellstack         \ single-image tileset's bitmaps
 
 \ -------------------------------------------------------------------------------------------------
 [section] tilemap
@@ -30,7 +31,7 @@
     draw>
         tbi @ tilebase!
         at@ w 2@ clip>
-        scrollx 2@  tsize scroll  tilebuf loc  tilebuf pitch@  tilemap ;
+            scrollx 2@  tsize scroll  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap
     draw>
@@ -91,7 +92,8 @@ also xmling  also tmxing
 : de-Tiled  ( n -- n )
     dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
 
-: load-tmxlayer  ( layer destcol destrow -- )
+: load-tmxlayer  ( layer destarray2d destcol destrow -- )
+    rot locals| tilebuf |
     3dup
         tilebuf loc  tilebuf pitch@ read-tmxlayer
         rot wh@ tilebuf some2d> cells bounds do   \ convert it!
@@ -147,7 +149,7 @@ set-current set-order
     locals| c name |
     (saveorder)
     only tmxing  name c uncount  find  ( xt|a flag )  ?exit
-    drop  objpath count s[  name c +s  " .f" +s  ]s
+    drop  objpath count s[  name c +s  s" .f" +s  ]s
         2dup file-exists 0= if  2drop 0 exit  then
         only forth definitions
         included  (rcp) ;
@@ -157,7 +159,7 @@ set-current set-order
 : (loadrecipes)  tmxtileset  locals| firstgid |
     ( tileset ) eachelement> that's tile
         dup  id@ firstgid +  swap
-            0 " image" element ?dup if
+            0 s" image" element ?dup if
                 source@ -path -ext (loadrecipe) drop
             else
                 ?type if  (loadrecipe) drop  else  ( gid ) drop  then

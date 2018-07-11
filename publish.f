@@ -9,7 +9,7 @@ defer (startup)
 
 
 : gather
-    assets> srcfile dup count " data/" search if rot place else 3drop then ;
+    assets> srcfile dup count s" data/" search if rot place else 3drop then ;
 
 \ TODO: support for other systems
 [defined] program [if]

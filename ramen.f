@@ -1,7 +1,7 @@
 include afkit/ans/version.f
-#1 1 0 [version]
+#2 0 0 [version]
 \ --------------------------------------------------------------------------------------------------
-0 #10 0 include afkit/kit.f
+#1 0 0 include afkit/afkit.f
 include ramen/plat.f
 include afkit/dep/zlib/zlib.f
 include ramen/utils.f
