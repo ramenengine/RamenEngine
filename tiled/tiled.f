@@ -16,11 +16,11 @@
     create bitmaps 100 cellstack         \ single-image tileset's bitmaps
 
 \ -------------------------------------------------------------------------------------------------
-[section] tilemap
-
 \ Tilemap objects
-\ They don't allocate any buffers for map data.  The singular buffer TILEBUF is pointed to
-\ using the scrollx/scrolly values.
+\ They don't allocate any buffers for map data.
+\ A part of the singular buffer TILEBUF is located using the scrollx/scrolly values.
+
+[section] tilemap
 
     var scrollx  var scrolly  \ used to define starting column and row!
     var w  var h              \ width & height in pixels
@@ -47,9 +47,9 @@
 
     include ramen/tiled/collision.f
 
-    var onhitmap  \ XT;  ( info -- )  must be assigned to something to enable tilemap collision detection
+    var onhitmap   \ XT ( info -- )
 
-\ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
+    \ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
     var mbx  var mby  var mbw  var mbh
 
 : onhitmap>  ( -- <code> ) r> code> onhitmap ! ;

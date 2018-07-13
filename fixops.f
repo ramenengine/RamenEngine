@@ -26,36 +26,31 @@ $1000 constant 1.0
 : i/  / ;
 : iloop  postpone loop ; immediate
 
+: 1p  state @ if /frac postpone literal postpone lshift else /frac lshift then ; immediate
+
+
 [in-platform] sf [if]
-    \ SwiftForth/X86 only - arithmetic shift
-    ICODE ARSHIFT ( x1 n -- x2 )
-       EBX ECX MOV                      \ shift count in ecx
-       POP(EBX)                         \ get new tos
-       EBX CL SAR                       \ and shift bits right
-       RET   END-CODE
-    ICODE ALSHIFT ( x1 n -- x2 )
-       EBX ECX MOV                      \ shift count in ecx
-       POP(EBX)                         \ get new tos
-       EBX CL SHL                       \ and shift bits right
-       RET   END-CODE
+    icode arshift ( x1 n -- x2 ) 
+       ebx ecx mov                      \ shift count in ecx 
+       pop(ebx)                         \ get new tos 
+       ebx cl sar                       \ and shift bits right 
+       ret   end-code
+    package OPTIMIZING-COMPILER
+        optimize (literal) arshift with lit-shift assemble sar
+    end-package
+    : 1i  state @ if /frac postpone literal postpone arshift  else  /frac arshift then ; immediate
 [else]
-    cr .( Fatal error: Fixops.f doesn't support this platform: )  platform type
-    quit
+    : 1i  state @ if 1.0 postpone literal postpone / else 1.0 / then ; immediate
 [then]
 
-\ NTS: keep these as one-liners, I might make them macros...
-: 1p  s" /FRAC alshift" evaluate ; immediate
 : 2p  1p swap 1p swap ;
 : 3p  1p rot 1p rot 1p rot ;
 : 4p  2p 2swap 2p 2swap ;
-: 1i  s" /frac arshift" evaluate ; immediate
 : 2i  swap 1i swap 1i ;
-: 3i  rot 1i rot 1i rot 1i ;
-: 4i  2i 2swap 2i 2swap ;
+: 3i  >r 1i swap 1i swap r> 1i ;
+: 4i  swap 1i swap 1i  2>r  swap 1i swap 1i  2r> ;
 : 1f  s>f FPGRAN f/ ;
 : 2f  swap 1f 1f ;
-: 3f  rot 1f 2f ;
-: 4f  2swap 2f 2f ;
 : pfloor  INT_MASK and ;
 : pceil   pfloor 1.0 + ;
 : 2pfloor  pfloor swap pfloor swap ;

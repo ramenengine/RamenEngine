@@ -46,10 +46,11 @@
 
 : tsize  tba cell+ @ bmpwh ;
 
+decimal \ for speed
 : tile  ( stridex stridey index -- )
-    ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> 28 >>  al_draw_bitmap  then  +at ;
+    ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> #28 rshift  al_draw_bitmap  then  +at ;
+fixed
 
-\ using values is WAYyYYyy faster than using locals (on SwiftForth)
 : tilemap  ( addr /pitch -- )
     hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch | 
     rows for
@@ -69,7 +70,7 @@
 : >car  2dup 2 / swap 2 / + >r   -   r> ;
 
 : isotilemap  ( addr /pitch cols rows -- )
-    hold>  tsize 2 2 2/  2swap  locals| rows cols th tw pitch |
+    hold>  tsize locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
             third  cols for
