@@ -4,11 +4,14 @@
 
 RAMEN uses a simple data structure facility.  Provisions for type information are there but aren't currently being used.
 
+
+| word | stack diagram | description |
+|-------|------|-------------|
 |struct|( -- \<name\> )|Declare a struct
 |sfield|( struct bytes valtype -- \<name\> )  ( adr -- adr+n )|Declare a struct field
 |svar|( struct valtype -- \<name\>|Short for `cell <type> sfield <name>`
 
-The naming convention for fields is `<struct>.<fieldname>`.  This will help with readability and avoiding name collisions.  It'll also encourage you to have short struct names.
+The naming convention for fields is `<struct>.<fieldname>`.  This will help with readability and avoiding name collisions.  It will be good to give your structs short and simple names.
 
 Example:
 ```
@@ -31,6 +34,9 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Conversion
 
+
+| word | stack diagram | description |
+|-------|------|-------------|
 | 1p | ( i -- n ) | Convert int to fixed
 | 2p | ( i i -- n n ) | Convert int(s) to fixed's
 | 3p | ( i i i -- n n n ) | Convert int(s) to fixed's
@@ -47,6 +53,9 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Math
 
+
+| word | stack diagram | description |
+|-------|------|-------------|
 | pfloor  | ( n -- n ) | Round down
 | pceil   | ( n -- n ) | Round up
 | 2pfloor | ( n n -- n n ) |
@@ -59,6 +68,8 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### External library conversion
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | 1af | ( n -- sf )      | Convert fixedp to float on data stack.
 | 2af | ( n n -- sf sf ) | Convert fixedp to float on data stack.
 | 3af | ( n n n -- sf sf sf ) | Convert fixedp to float on data stack.
@@ -66,6 +77,8 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Advanced Math
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | cos   | ( deg -- n )           | Cosine
 | sin   | ( deg -- n )           | Sine
 | acos  | ( n -- deg )           | Inverse Cosine
@@ -81,16 +94,22 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Integers
 
+| word | description |
+|-------|------|-------------|
 |i*|Integer multiply|
 |i/|Integer divide|
 
 ### Color unpacking
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | >rgba | ( val -- r g b a ) | Unpack hex RGBA to fixedp components (0 ~ 1.0)
 | >rgb  | ( val -- r g b )   | Unpack hex RGB to fixedp components (0 ~ 1.0)
 
 ### On-stack vectors
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | 2+   | ( x y x y -- x y ) | Two-Add
 | 2-   | ( x y x y -- x y ) | Two-Sub
 | 2*   | ( x y x y -- x y ) | Two-Multiply
@@ -103,6 +122,8 @@ These words are really important for you to learn as they're used *everywhere* i
 
 Generally you shouldn't be writing code that depends on the current base, but on occasion it's convenient, for instance when compiling  standard Forth code into a RAMEN project.
 
+| word | description |
+|-------|------|-------------|
 | fixed | Switch to fixed point mode.
 | decimal | Switch to decimal mode.
 
@@ -133,6 +154,8 @@ The reloader is a unnamed field.  You can, however, directly `reload ( asset -- 
 
 Additional asset-related words:
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | assets>   | ( -- \<code\> ) ( asset -- ) | Execute remainder of colon definition on each asset in the order they were declared.
 | #assets   | ( -- n ) | Total number of declared assets.
 | .asset    | ( asset -- ) | Print some info about an asset
@@ -168,6 +191,8 @@ All of the fields are public.
 #### Image management
 
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | imagew       | ( -- ) | Get image width |
 | imageh       | ( -- ) | Get image height |
 | imagewh      | ( -- ) | Get image dimensions |
@@ -181,6 +206,8 @@ All of the fields are public.
 
 #### Subimages
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | subdivide | ( tilew tileh image -- ) | Initialize the subimage fields.
 | >subxy    | ( n image -- x y ) | Get the coordinates of the top left of a subimage.
 | >subxywh  | ( n image -- x y w h ) | Get the top-left coordinates, and the dimensions of a subimage.
@@ -201,6 +228,8 @@ You will also need to define the asset loader and asset declaration word.
 
 See the asset definition source files for examples.
 
+| word | stack diagram | description |
+|-------|------|-------------|
 | assetdef | ( -- \<name\> ) | Define an asset type (or "asset definition")
 | register | ( reloader-xt asset -- ) | Add asset to the preload list and assign its reloader.
 
@@ -210,7 +239,7 @@ See the asset definition source files for examples.
 
 ## Objects[]() - obj.f
 
-RAMEN's polymorphic data structure.  See [Objects](objects.md)
+RAMEN's special data structure for game objects.  See [Objects](objects.md)
 
 ## Cellstacks []() - cellstack.f
 
@@ -218,3 +247,6 @@ RAMEN's polymorphic data structure.  See [Objects](objects.md)
 
 See [Publishing Games](publish.md)
 
+## Tiled[]() - tiled.f
+
+See [Tiled](tiled.md)
