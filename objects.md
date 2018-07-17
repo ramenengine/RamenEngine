@@ -26,7 +26,7 @@ In RAMEN, you have two main kinds of data structures: normal data structures, an
 
 All objects are polymorphic or potentially so.  We can use the same words to manage other kinds of data structures, such as background tasks and GUI objects.
 
-Objects also support a kind of multiple inheritance.  You can easily treat an object as being of several types, not just one.  For instance if you want your game object to also be a task - you can, because it already is.  (And this is exactly how the multitasking module works.)  You can add features which apply to every object of your game, such as physics, or in the case of an RPG, properties of the elements (e.g. fire, ice, wind, earth, etc).  
+Objects also support a kind of multiple inheritance.  You can easily treat an object as being of several types, not just one.  For instance if you want any game object to also be a task, you can.  (And this is exactly how the multitasking module works.)  You can add features which apply to every object of your game, such as physics, or in the case of an RPG, properties of the elements (e.g. fire, ice, wind, earth, etc).  
 
 **TECHNICAL NOTE:** None of this is incredibly original or groundbreaking - but this implementation of game objects works well in Forth and with the intended scope of RAMEN.  Some may call it wasteful of memory, but memory on the intended platform is plentiful, and besides, frequently the game objects of other engines are substantially larger than the default 1KB, due to many factors, not least of which is the monolithic design approach that is predominant.
 

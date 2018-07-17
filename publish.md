@@ -1,1 +1,1 @@
-# Publishing Games
+# Publishing

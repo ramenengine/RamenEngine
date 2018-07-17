@@ -24,6 +24,8 @@ struct color
 
 ## Fixed-point operators[]() - fixops.f
 
+See [Fixed-Point Numbers](https://rogerlevy.github.io/afkit/fixedp.html) on AllegroForthKit's documentation for more info.
+
 These are low-level words for working with fixed-point numbers.
 
 Fixed-point numbers in RAMEN have a 20-bit integer part and a 12-bit fractional part.  They're meant to enable sub-pixel motion of objects and rough geometrical calculations.  If you need more mathematical precision, use floats and convert, bit shifting, or fractions (e.g. `*/`.)
@@ -38,17 +40,15 @@ These words are really important for you to learn as they're used *everywhere* i
 | word | stack diagram | description |
 |-------|------|-------------|
 | 1p | ( i -- n ) | Convert int to fixed
-| 2p | ( i i -- n n ) | Convert int(s) to fixed's
-| 3p | ( i i i -- n n n ) | Convert int(s) to fixed's
-| 4p | ( i i i i -- n n n n ) | Convert int(s) to fixed's
-| 2i | ( n -- i ) | Convert fixed to int
-| 1i | ( n n -- i i ) | Convert fixed's to ints
-| 3i | ( n n n -- i i i ) | Convert fixed's to ints
-| 4i | ( n n n n -- i i i i ) | Convert fixed's to ints
+| 2p | ( i i -- n n ) | Convert 2 int(s) to fixed's
+| 3p | ( i i i -- n n n ) | Convert 3 int(s) to fixed's
+| 4p | ( i i i i -- n n n n ) | Convert 4 int(s) to fixed's
+| 1i | ( n -- i ) | Convert fixed to int
+| 2i | ( n n -- i i ) | Convert 2 fixed's to ints
+| 3i | ( n n n -- i i i ) | Convert 3 fixed's to ints
+| 4i | ( n n n n -- i i i i ) | Convert 4 fixed's to ints
 | 1f | ( n -- f: n ) | Convert fixed to float
-| 2f | ( n n -- f: n n ) | Convert fixed's to floats
-| 3f | ( n n n -- f: n n n ) | Convert fixed's to floats
-| 4f | ( n n n n -- f: n n n n ) | Convert fixed's to floats
+| 2f | ( n n -- f: n n ) | Convert 2 fixed's to floats
 | f>p | ( f: n -- n ) | Convert float to fixedp
 
 ### Math
@@ -246,7 +246,7 @@ RAMEN's special data structure for game objects.  See [Objects](objects.md)
 
 ## Publish[]() - publish.f
 
-See [Publishing Games](publish.md)
+See [Publishing](publish.md)
 
 ## Tiled[]() - tiled.f
 
