@@ -10,3 +10,4 @@
     require ramen/lib/task.f
     require afkit/lib/kb.f
     require ramen/lib/audio1.f
+    require ramen/lib/sprites.f
