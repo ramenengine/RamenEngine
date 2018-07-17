@@ -1,10 +1,12 @@
-# Really Accessible Multimedia ENgine
+# RAMEN - the Really Accessible Multimedia ENgine
 
-RAMEN is a 2D game engine in ANS Forth.  It is based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) cross-platform standard Forth framework.
+RAMEN is a game engine written in standard Forth, based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) framework.
 
-RAMEN is a "breakaway engine."  It has the traits of a game engine but it's also a framework; it has a standard configuration, but most of its parts are optional. Like a Mr. Potatohead. I've strived to make the parts easy-to-understand and sufficiently decoupled.
+With RAMEN you can create 2D, hardware-accelerated games on desktop OS's supported by standard Forth systems - Windows, Linux, Mac.  (You could in theory also create create 3D games using Allegro's capabilities but there is no support in RAMEN itself.)
 
-I recommend having a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation so you won't have to deal with conflicts as much, and you can make deep modifications in your own branch.
+RAMEN is originally being developed on SwiftForth for Windows and Linux.
+
+RAMEN is a "breakaway engine."  It functions as a game engine but it's also a framework - it has a standard configuration, but most of its parts are optional, like a Mr. Potatohead. I've strived to make the parts easy-to-understand and sufficiently decoupled.
 
 ## Features
 
@@ -21,33 +23,37 @@ I recommend having a one-project-per-instance workflow.  Clone it for each proje
 - Fixed-point literals
 - 2D vector wordset
 
-## See it in action
+## See RAMEN in Action
 
-Want to watch some videos?  Here's footage of examples from my previous engine.  They're being brought over to RAMEN.  
+Want to watch some videos?  Here's footage of examples from RAMEN's predecessor.  They're being updated to work on RAMEN.
 
 https://www.youtube.com/playlist?list=PLO8m1cHe8erpbejS5yZVJAsQNI4Lmpo_Y
 
-You can also check out The Lady, a commercial game I wrote in Forth to prove it can be done.  Large chunks of this game's engine live on in RAMEN.
+Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
+), a commercial game I wrote in Forth to prove it can be done.  Large chunks of this game's engine live on in RAMEN.
 
-https://store.steampowered.com/app/341060/The_Lady/
 
 ## Getting Started
 
-1. Clone an [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) instance. See the README for supported platforms and installation instructions.
-1. Go into your install directory and `git clone https://github.com/RogerLevy/ramen.git` 
-1. Load up your Forth system and check out the included examples in the ex/ folder.  (E.g. `sf include ramen/ex/exdepth` on SwiftForth.)
+1. Download or clone [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) into your project folder. See the README for supported platforms and installation instructions.
+1. Download or clone RAMEN into your project folder (as a subfolder `ramen/`). `git clone https://github.com/RogerLevy/ramen.git` 
+1. Documentation is available at [Github Pages](http://rogerlevy.github.com/ramen).
+1. Start your Forth system and check out the included examples in the ex/ folder.  (E.g. `sf include ramen/ex/exdepth` on SwiftForth.)
 1. There is also some stuff in the test/ directory.
+
+I recommend having a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation so you won't have to deal with conflicts as much, and you can make deep modifications in your own branch.
 
 ## Help
 
-Documentation currently consists of explanatory comments strewn throughout the source, plus the examples and tests.  The Wiki tab will be the place for dox and the Issues tab will be the place for discussion.
+- [Documentation](http://rogerlevy.github.com/ramen) is hosted by Github Pages.
 
-I'm available to help one-on-one [on Facebook](https://www.facebook.com/inkajoo).  
+- I'm available to help one-on-one [on Facebook](https://www.facebook.com/inkajoo).  
 
-## In the Pipeline
+- The [Forth 21st Century Programming Facebook](https://www.facebook.com/groups/PROGRAMMINGFORTH/) group is a good place to ask questions or report problems, as is [ForthHub on Github](https://github.com/ForthHub/discussion/issues).
 
-- [ ] Scaling, rotation, tint, and flip support w/ TMX files  
-- [ ] Isometric collision detection
-- [ ] Shaders
-- [ ] GUI module
-- [ ] More examples
+## Future
+
+- [ ] Scaling, rotation, tint, and h/v flip for game objects
+- [ ] Isometric tilemap and object collision detection
+- [ ] Shader support
+- [ ] GUI framework
