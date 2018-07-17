@@ -169,7 +169,23 @@ Search for an asset's file first in these locations, in this order:
 - Relative to `<project folder>/src/`.
 If not found, abort and throw an error message.
 
-### Images[]() - image.f
+
+### Defining an asset type
+
+An asset type is a struct that extends the header described above.  Defining an asset type is largely the same as defining a struct.
+
+You will also need to define the asset loader and asset declaration word.
+
+See the asset definition source files for examples.
+
+| word | stack diagram | description |
+|-------|------|-------------|
+| assetdef | ( -- \<name\> ) | Define an asset type (or "asset definition")
+| register | ( reloader-xt asset -- ) | Add asset to the preload list and assign its reloader.
+
+### The preloader
+
+## Images[]() - image.f
 
 Asset that stores info about an Allegro bitmap, as well as information necessary to address "subimages" in the bitmap[]() - that is, to treat it as an image strip, commonly used in games.
 
@@ -188,7 +204,7 @@ All of the fields are public.
 | image.orgx     | fixedp | Origin X (to be treated by a game as the center of rotation and scaling)
 | image.orgy     | fixedp | Origin Y
 
-#### Image management
+### Image management
 
 
 | word | stack diagram | description |
@@ -204,7 +220,7 @@ All of the fields are public.
 | load-image   | ( path count image -- ) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed. |
 | free-image   | ( image -- ) | The bitmap is destroyed. Note that the pointer is not cleared. |
 
-#### Subimages
+### Subimages
 
 | word | stack diagram | description |
 |-------|------|-------------|
@@ -214,26 +230,11 @@ All of the fields are public.
 | afsubimg  | ( n image -- ALLEGRO_BITMAP fx fy fw fh ) | Get the bitmap and the rectangle values as floats of a subimage.  (Useful for passing to the Allegro library.)
 | imgsubbmp | ( n image -- subbitmap ) | Create an ALLEGRO_SUBBITMAP that stores info about a subimage.
 
-### Fonts[]() - font.f
+## Fonts[]() - font.f
 
-### Buffers[]() - buffer.f
+## Buffers[]() - buffer.f
 
-### Samples[]() - sample.f
-
-### Defining an asset type
-
-An asset type is a struct that extends the header described above.  Defining an asset type is largely the same as defining a struct.
-
-You will also need to define the asset loader and asset declaration word.
-
-See the asset definition source files for examples.
-
-| word | stack diagram | description |
-|-------|------|-------------|
-| assetdef | ( -- \<name\> ) | Define an asset type (or "asset definition")
-| register | ( reloader-xt asset -- ) | Add asset to the preload list and assign its reloader.
-
-### The preloader
+## Samples[]() - sample.f
 
 ## Color[]() - color.f
 
