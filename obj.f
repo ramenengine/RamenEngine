@@ -96,8 +96,7 @@ create dummy  maxsize /allot  dummy as
 : act   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
-: from  x 2@ 2+ at ;
-: flicker  hidden @ not hidden ! ;
+: from  ( x y obj -- x y ) 's x 2@ 2+ at ;
 : -act  act> noop ;
 
 \ roles
