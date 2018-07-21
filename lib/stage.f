@@ -1,5 +1,5 @@
-\ This is a simple scrolling 2D game framework to use in simple games or as just a way
-\ to help you get started more quickly.
+\ A simple scrolling 2D game framework.
+\ Use as-is, or as a template to copy and customize.
 
 \ SUBJECT and CAM need to be set for scrolling to work.
 \ Note that you should put scrolling tilemaps in a different objlist, move them around to offset
@@ -41,7 +41,6 @@ stage object: cam
   r> drop ;
 
 : flyby   cam as  act>  subject ?exit  vx udlrvec ;
-flyby
 
 \ -----------------------------------------------------------------------
 [section] go
