@@ -49,7 +49,7 @@ fixed
 : loc  ( col row array2d -- addr )
   (clamp) >r  r@ array2d.pitch @ * swap cells +  r> array2d.data @ + ;
 
-: pitch@  ( array2d -- /pitch strid)  array2d.pitch @ ;
+: pitch@  ( array2d -- /pitch stride )  array2d.pitch @ ;
 
 : addr-pitch  ( col row array2d -- addr /pitch )  dup >r loc r> array2d.pitch @ ;
 
