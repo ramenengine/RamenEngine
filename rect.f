@@ -1,9 +1,9 @@
 
 struct rect
-    rect int svar rect.x
-    rect int svar rect.y
-    rect int svar rect.w
-    rect int svar rect.h
+    rect 0 svar rect.x
+    rect 0 svar rect.y
+    rect 0 svar rect.w
+    rect 0 svar rect.h
 
 : x@    @ ;                       : x!    ! ;
 : y@    cell+ @ ;                 : y!    cell+ ! ;
@@ -12,7 +12,8 @@ struct rect
 : xy@   2@ ;                      : xy!   2! ;
 : wh@   rect.w 2@ ;               : wh!   rect.w 2! ;
 
-: .rect  dup @xy 2. rot @wh 2. ;
+: rect.  dup xy@ 2. rot wh@ 2. ;
+
 : xywh@  4@ ;                     : xywh! 4! ;
 : x2@   dup x@ swap w@ + ;        : x2@   >r r@ x@ - r> w! ;
 : y2@   dup y@ swap h@ + ;        : y2@   >r r@ y@ - r> h! ;

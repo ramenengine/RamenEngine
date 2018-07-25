@@ -35,7 +35,6 @@ only forth definitions also v2d
 : vec  ( deg len -- x y )  >r  uvec  r> dup 2* ;
 : angle  ( x y -- deg ) 1f 1f fatan2 r>d f>p  360 + 360 mod ;
 : magnitude  ( x y -- n )  2f fdup f* fswap fdup f* f+ fsqrt f>p ;
-
 : normalize  ( vec -- )  dup 2@ 2dup 0 0 d= ?exit  2dup magnitude dup 2/  ( 1 1 2+ ) rot 2! ;
 : vdif  ( vec1 vec2 -- x y )  2@ rot 2@ 2- ;
 : proximity  ( vec1 vec2 -- n ) vdif magnitude ;   \ distance between two vectors

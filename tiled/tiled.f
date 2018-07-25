@@ -66,12 +66,10 @@ var mbx  var mby  var mbw  var mbh
 \ -------------------------------------------------------------------------------------------------
 [section] tmx
 
-    include ramen/tiled/tmx.f
-
+include ramen/tiled/tmx.f
 also xmling  also tmxing
 
-    var gid
-
+var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
@@ -176,7 +174,7 @@ set-current set-order
         dup xy@ at
         dup rectangle? if
             dup ?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  \ rectangles with types are treated as game objects.
-                                                                        \ you can get the dimensions from the xml element if needed.
+                                                                         \ you can get the dimensions from the xml element if needed.
             dup wh@ ( nnn w h ) tmxrect
         else
             dup gid@ dup  recipes nth @ ?dup if

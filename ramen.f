@@ -1,25 +1,30 @@
 include afkit/ans/version.f
-#2 0 0 [version]
+#1 0 0 [version]
 \ --------------------------------------------------------------------------------------------------
+
+\ AllegroForthKit
 #1 0 0 include afkit/afkit.f
+
+\ 
 include ramen/plat.f
 include afkit/dep/zlib/zlib.f
 include ramen/utils.f
 include ramen/struct.f
+include ramen/color.f
 include ramen/fixops.f
 include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
+include ramen/cellstack.f
+include ramen/rect.f
 
+\ Assets
 include ramen/assets.f
 include ramen/image.f
 include ramen/font.f
 include ramen/buffer.f
 include ramen/sample.f
 
-include ramen/color.f
-\ --------------------------------------------------------------------------------------------------
+\ Higher level facilities
 include ramen/obj.f
-\ --------------------------------------------------------------------------------------------------
-include ramen/cellstack.f
 include ramen/publish.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
