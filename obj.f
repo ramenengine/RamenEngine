@@ -106,7 +106,7 @@ create dummy  maxsize /allot  dummy as
 variable meta
 var role
 : rolevar  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
-: action   rolevar  does>  @ role @ + @ execute ;
+: action   rolevar  does>  @ role @ dup 0= abort" Can't execute action, role is null." + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
 : my  s" role @" evaluate  ' >body @ ?lit   postpone + ; immediate
 

@@ -45,19 +45,22 @@
 \ integer addressing
 : hmap@  ( #col #row -- tile ) 2p map@ ;
 
-    include ramen/tiled/collision.f
+\ Tilemap collision
+include ramen/tiled/collision.f
 
-    var onhitmap   \ XT ( info -- )
+var onhitmap   \ XT ( tile -- )
 
-    \ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
-    var mbx  var mby  var mbw  var mbh
+\ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
+var mbx  var mby  var mbw  var mbh
 
-: onhitmap>  ( -- <code> ) r> code> onhitmap ! ;
+: onhitmap>  ( -- <code> ) r> code> onhitmap ! ;  ( tile -- )
+
+: ?'drop  ?dup ?exit  ['] drop ;
 
 : collide-objects-map  ( objlist tilesize -- )
     locals| tilesize |
-    each>   x 2@  mbx 2@ x 2+!  onhitmap @ if  mbw 2@  tilesize  onhitmap @ collide-map  then
-            x 2! ;
+    each>   mbw 2@ or -exit
+            onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
 
 
 \ -------------------------------------------------------------------------------------------------
