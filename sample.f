@@ -9,8 +9,10 @@ assetdef sample
     >r  r@ srcfile place  r@ sample.loop !  ['] reload-sample r@ register
     r> reload-sample ;
 
-: sample:  ( loopmode adr c -- <name> )
-    create sample sizeof allotment init-sample ;
-
+\ sample  ( path c -- image )  create unnamed sample.  (redefining SAMPLE is a nice way of "sealing" the struct.)
+\ sample:  ( loopmode adr c -- <name> )  create named sample
+\ >smp  ( sample -- ALLEGRO_SAMPLE )
+: sample   here >r  sample sizeof allotment init-sample  r> ; 
+: sample:  create  sample  drop ;
 : >smp  sample.smp @ ;
 

@@ -4,16 +4,16 @@
 \ -------------------------------------------------------------------------------------------------
 [section] preamble
 
-    require ramen/lib/draw.f
-    require ramen/lib/array2d.f
-    require ramen/lib/buffer2d.f
+require ramen/lib/draw.f
+require ramen/lib/array2d.f
+require ramen/lib/buffer2d.f
 
-    [undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
-    include ramen/lib/tilemap.f
+[undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
+include ramen/lib/tilemap.f
 
-    1024 1024 buffer2d: tilebuf 
-    create recipes #MAXTILES cellstack
-    create bitmaps 100 cellstack         \ single-image tileset's bitmaps
+1024 1024 buffer2d: tilebuf 
+create recipes #MAXTILES cellstack
+create bitmaps 100 cellstack         \ single-image tileset's bitmaps
 
 \ -------------------------------------------------------------------------------------------------
 \ Tilemap objects
@@ -114,9 +114,9 @@ var gid
 \ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
 \ They all can expect the pen has already been set to the XY position.
 
-    defer tmxobj   ( object-nnn XT -- )   \ XT is the TMX recipe for the object loaded from the script
-    defer tmxrect  ( object-nnn w h -- )
-    defer tmximage ( object-nnn gid -- )
+defer tmxobj   ( object-nnn XT -- )   \ XT is the TMX recipe for the object loaded from the script
+defer tmxrect  ( object-nnn w h -- )
+defer tmximage ( object-nnn gid -- )
 
 : -recipes  ( -- )  recipes 0 [] #MAXTILES cells erase ;
 
