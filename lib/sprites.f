@@ -18,7 +18,7 @@ redef on
     color sizeof field tint
 
     \ animation state:
-    var img  var anm  var rgntbl  var anmspd  var ctr  \ don't change the order of the first four...
+    var img  var anm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
 redef off
 
 \ Drawing
@@ -43,21 +43,23 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
     anm @ -exit
     anm @ cell+ 2@ +at  \ apply the offset
     img @ ?dup if  curframe  curflip sprite  then
-    anmspd @ ctr +!
-    begin  ctr @ 1 >= while
-        ctr --  /frame anm +!
+    anmspd @ anmctr +!
+    begin  anmctr @ 1 >= while
+        anmctr --  /frame anm +!
         anm @ @ $deadbeef = if  anm @ cell+ @ anm +!  animlooped  then
     repeat
 ;
 
-\ Play an animation.  
-: /animate  anm @ ?exit  1 1 sx 2!  1 1 1 1 tint 4!  ;
-: animate  ( speed anim -- )  /animate  anm !  anmspd !  draw> sprite+ ;
+\ Play an animation.
+: /scale  1 1 sx 2! ;
+: /tint   1 1 1 1 tint 4! ;
+: /animate  anm @ ?exit  /scale  /tint ;  \ first time call initializes scale and tint
+: animate  ( anim -- )  /animate  anm !  0 anmctr !  draw> sprite+ ;
 
 \ Define self-playing animations
-: anim:  ( image speed regiontable|0 -- loopaddr )  ( -- )  \ when defined word is called, animation plays
+: anim:  ( image regiontable|0 speed -- loopaddr )  ( -- )  \ when defined word is called, animation plays
     create  3,  here
-    does>  @+ img !  @+ ( speed )  swap   @+ rgntbl !  animate ;
+    does>  @+ img !  @+ rgntbl !  @+ anmspd !   animate ;
 : frames,  for  3dup 3, loop 3drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
