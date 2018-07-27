@@ -12,8 +12,8 @@ require ramen/lib/buffer2d.f
 include ramen/lib/tilemap.f
 
 1024 1024 buffer2d: tilebuf 
-create recipes #MAXTILES cellstack
-create bitmaps 100 cellstack         \ single-image tileset's bitmaps
+create recipes #MAXTILES stack
+create bitmaps 100 stack         \ single-image tileset's bitmaps
 
 \ -------------------------------------------------------------------------------------------------
 \ Tilemap objects

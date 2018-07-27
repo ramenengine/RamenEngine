@@ -1,7 +1,8 @@
 \ TODO
 \ [ ] overflow checking
 
-: cellstack  0 ,  cells /allot ;
+
+: stack  0 ,  cells /allot ;
 : #pushed  @ ;
 : truncate  ( cs newsize -- )  swap ! ;
 : pop  ( cs -- val )
@@ -13,3 +14,7 @@
 : sbounds  ( cs -- end start ) scount cells over + swap ;
 : []  ( cs n -- addr )  1 + cells + ;
 : nth  swap [] ;
+
+\ tables are fixed-size stacks you can comma data into
+: table:  create here 0 , ;
+: ;table  here over - cell/ swap ! ;

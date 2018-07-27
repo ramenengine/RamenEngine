@@ -42,7 +42,7 @@ create main  object  \ proxy for the Forth data and return stacks
 \ NOTE: you don't have to consume the parameter, and as a bonus, you can leave as much as you want
 \ on the stack.
 
-create queue 1000 cellstack 
+create queue 1000 stack 
 : later  ( val xt -- )  swap queue push queue push ;
 : arbitrate
     {
