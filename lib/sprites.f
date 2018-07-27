@@ -51,22 +51,25 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 ;
 
 \ Play an animation.
-: /scale  1 1 sx 2! ;
-: /tint   1 1 1 1 tint 4! ;
-: /animate  anm @ ?exit  /scale  /tint ;  \ first time call initializes scale and tint
-: animate  ( anim -- )  /animate  anm !  0 anmctr !  draw> sprite+ ;
-
+\ /scale    ( -- )  init scale to 1,1
+\ /tint     ( -- )  init tint to white
+\ ?/st      ( -- )  first time call initializes scale and tint
+\ animate   ( anim -- )  play animation from beginning
+: /scale    1 1 sx 2! ;
+: /tint     1 1 1 1 tint 4! ;
+: ?/st      anm @ ?exit  /scale  /tint ;
+: animate   ?/st  anm !  0 anmctr !  draw> sprite+ ;
+    
 \ Define self-playing animations
-: anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  \ when defined word is called, animation plays
-    create  3,  here
-    does>  @+ rgntbl !  @+ img !  @+ anmspd !   animate ;
+\ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
+: anim:  create  3,  here  does>  @+ rgntbl !  @+ img !  @+ anmspd !   animate ;
 : frames,  for  3dup 3, loop 3drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
 : animrange,  ( start len -- ) over + swap do  i , 0 , 0 ,  loop  ;
 
-\ Animation tables
-: addanim:  ( cellstack -- cellstack loopaddr ) here over push here ;
+\ +anim:  ( stack -- stack loopaddr )  animation table helper
+: +anim:  here over push here ;
 
 \ frames  ( str c -- regiontable image )  Helper for doing unnamed images + region tables
 : frames  image  here  swap ;

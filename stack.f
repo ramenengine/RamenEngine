@@ -1,6 +1,4 @@
-\ TODO
 \ [ ] overflow checking
-
 
 : stack  0 ,  cells /allot ;
 : #pushed  @ ;
