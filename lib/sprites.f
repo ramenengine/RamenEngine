@@ -57,9 +57,9 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 : animate  ( anim -- )  /animate  anm !  0 anmctr !  draw> sprite+ ;
 
 \ Define self-playing animations
-: anim:  ( image regiontable|0 speed -- loopaddr )  ( -- )  \ when defined word is called, animation plays
+: anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  \ when defined word is called, animation plays
     create  3,  here
-    does>  @+ img !  @+ rgntbl !  @+ anmspd !   animate ;
+    does>  @+ rgntbl !  @+ img !  @+ anmspd !   animate ;
 : frames,  for  3dup 3, loop 3drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
@@ -67,3 +67,11 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 
 \ Animation tables
 : addanim:  ( cellstack -- cellstack loopaddr ) here over push here ;
+
+\ frames  ( str c -- regiontable image )  Helper for doing unnamed images + region tables
+: frames  image  here  swap ;
+
+\ flipped frame utilities
+: h,  #1 or , ;
+: v,  #2 or , ;
+: hv, #3 or , ;
