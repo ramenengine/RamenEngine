@@ -62,7 +62,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 : /scale    1 1 sx 2! ;
 : /tint     1 1 1 1 tint 4! ;
 : ?/st      anm @ ?exit  /scale  /tint ;
-: animate   ?/st  anm !  0 anmctr !  draw> sprite+ ;
+: animate   ?/st  anm !  0 anmctr !  anm @ -exit  draw> sprite+ ;
     
 \ Define self-playing animations
 \ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
