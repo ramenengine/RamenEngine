@@ -35,10 +35,11 @@ variable redef  \ should you want to bury anything
     >in ! ;
 
 : ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
-: field   ?unique ?maxsize create used @ , $76543210 , used +! does> @ me + ;
+: create-field  create used @ , $76543210 , used +! ;
+: field   ?unique ?maxsize create-field does> @ me + ;
 : var  cell field ;
 : 's   ' >body @ ?lit s" +" evaluate ; immediate
-: xfield  ?unique create used @ , $76543210 , used +! does> @ + ;
+: xfield  ?unique ?maxsize create-field does> @ + ;
 : xvar  cell xfield ;
 
 \ objects are organized into objlists, which are forward-linked lists of objects
@@ -99,15 +100,19 @@ create dummy  maxsize /allot  dummy as
 : from  ( x y obj -- x y ) 's x 2@ 2+ at ;
 : -act  act> noop ;
 
-\ roles
+\ Roles
+\ Note that role vars are global and not tied to any specific role.
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
-: roledef  create /roledef /allot ;
-: derive   ( src -- )  last @ name> >body /roledef move ;
-variable meta
 var role
-: rolevar  create  meta @ ,  $99991111 ,  cell meta +!  does>  @ + ;
-: action   rolevar  does>  @ role @ dup 0= abort" Can't execute action, role is null." + @ execute ;
+variable meta
+create dummy object 
+: roledef:  me  create  here dummy 's role !  dummy as  /roledef /allot ;
+: ;roledef  as ;
+: derive:   ( src -- <name> )  roledef:  swap   last @ name> >body /roledef move ;
+: role@  role @ dup 0= abort" Error: Role is null." ;
+: create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
+: rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
+: action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
-: my  s" role @" evaluate  ' >body @ ?lit   postpone + ; immediate
 
 : ->   state @ if postpone { postpone as  ' compile,  postpone } else { as ' execute } then ; immediate
