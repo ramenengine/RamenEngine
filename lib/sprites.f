@@ -29,6 +29,7 @@ redef off
 : objsubimage  ( image n flip -- )  >r  over >subxywh  r> sprite ;
 
 \ Get current frame data
+: ?regorg  rgntbl @ ?dup -exit  anm @ @  /region * + 4 cells + 2@ 2negate +at ;
 : curframe  ( -- srcx srcy w h )
     rgntbl @ ?dup if
         anm @ @  /region * +  4@
@@ -41,13 +42,16 @@ redef off
 defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
 : sprite+  ( -- )
     anm @ -exit
-    anm @ cell+ 2@ +at  \ apply the offset
-    img @ ?dup if  curframe  curflip sprite  then
-    anmspd @ anmctr +!
-    begin  anmctr @ 1 >= while
-        anmctr --  /frame anm +!
-        anm @ @ $deadbeef = if  anm @ cell+ @ anm +!  animlooped  then
-    repeat
+    at@ 
+        anm @ cell+ 2@ +at  \ apply the frame offset
+        ?regorg  \ apply the region origin
+        img @ ?dup if  curframe  curflip sprite  then
+        anmspd @ anmctr +!
+        begin  anmctr @ 1 >= while
+            anmctr --  /frame anm +!
+            anm @ @ $deadbeef = if  anm @ cell+ @ anm +!  animlooped  then
+        repeat
+    at  \ restore pen
 ;
 
 \ Play an animation.
