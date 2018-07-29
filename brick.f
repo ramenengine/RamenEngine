@@ -8,6 +8,6 @@ require ramen/lib/draw.f
 require ramen/lib/v2d.f
 require ramen/lib/cgrid.f
 require ramen/lib/task.f
-require afkit/lib/kb.f
+decimal  require afkit/lib/kb.f  fixed
 require ramen/lib/audio1.f
 require ramen/lib/sprites.f

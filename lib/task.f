@@ -9,7 +9,7 @@
 \  (See below for a workaround mechanism)
 
 redef on
-    var sp  var rp  12 cells field ds  12 cells field rs
+    var sp  var rp  20 cells field ds  20 cells field rs
 redef off
 
 create main  object  \ proxy for the Forth data and return stacks
@@ -34,7 +34,8 @@ create main  object  \ proxy for the Forth data and return stacks
     drop \ ensure TOS is in TOS register
 ;
 : end    remove pause ;
-: pauses 0 do pause loop ;
+: halt   begin pause again ;
+: pauses  for  pause  loop ;
 : secs   fps * pauses ;  \ not meant for precision timing
 
 \ external-calls facility - say "<val> ['] word later" to schedule a word that calls an external library.
@@ -70,18 +71,18 @@ create queue 1000 stack
 
 decimal
     : perform> ( n -- <code> )
-        self? if    ds 10 cells + sp!  r>  rs 10 cells + rp!  >r  exit
-              else  ds 10 cells + !  ds 9 cells + sp !  r> rs 10 cells + !  rs 10 cells + rp !
-                    ['] halt >code rs 11 cells + !
+        self? if    ds 18 cells + sp!  r>  rs 18 cells + rp!  >r  exit
+              else  ds 18 cells + !  ds 17 cells + sp !  r> rs 18 cells + !  rs 18 cells + rp !
+                    ['] halt >code rs 19 cells + !
               then ;
 
     : perform  ( xt n obj -- )
         { as
-        ds 10 cells + !
-        ds 9 cells + sp !
-        >code rs 10 cells + !
-        ['] halt >code rs 11 cells + !
-        rs 10 cells + rp !
+        ds 18 cells + !
+        ds 17 cells + sp !
+        >code rs 18 cells + !
+        ['] halt >code rs 19 cells + !
+        rs 18 cells + rp !
         }
     ;
 fixed
