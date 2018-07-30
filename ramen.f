@@ -8,7 +8,6 @@ include afkit/ans/version.f
 \ 
 include ramen/plat.f
 include afkit/dep/zlib/zlib.f
-include ramen/utils.f
 include ramen/struct.f
 include ramen/color.f
 include ramen/fixops.f

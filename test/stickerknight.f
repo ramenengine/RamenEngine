@@ -1,7 +1,7 @@
 empty
-    0 0 0 include ramen/brick.f
-    include ramen/tiled/tiled.f
-    include ramen/lib/stage.f
+0 0 0 include ramen/cutlet.f
+include ramen/tiled/tiled.f
+include ramen/lib/stage.f
 
 #1 to #globalscale
 stage 1000 pool: layer0

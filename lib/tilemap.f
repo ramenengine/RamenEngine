@@ -48,7 +48,7 @@
 
 decimal \ for speed
 : tile  ( stridex stridey index -- )
-    ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> #28 rshift  al_draw_bitmap  then  +at ;
+    ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> #28 >>  al_draw_bitmap  then  +at ;
 fixed
 
 : tilemap  ( addr /pitch -- )

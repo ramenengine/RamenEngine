@@ -21,6 +21,7 @@ create mestk  0 , 16 cells allot
 
 variable used
 variable redef  \ should you want to bury anything
+redef on  \ we'll keep this on while compiling RAMEN itself
 
 : ?unique  ( size -- size | <cancel caller> )
     redef @ ?exit
@@ -48,7 +49,6 @@ variable redef  \ should you want to bury anything
 \  you can itterate over objlists as a whole, or just over a pool at a time
 
 
-redef on  \ we'll keep this on while compiling RAMEN itself
 var lnk  var en  var ^pool
 var x  var y  var vx  var vy
 var hidden  var drw  var beha
