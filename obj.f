@@ -15,8 +15,8 @@
 0 value me
 : as  to me ;
 create mestk  0 , 16 cells allot
-: i{ me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk ! ;  \ interpretive version, uses a sw stack
-: i} mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @ ; 
+: i{ me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpretive version, uses a sw stack
+: i} mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ to me ; 
 : {  state @ if s" me >r" evaluate else  i{  then ; immediate
 : }  state @ if s" r> as" evaluate else  i}  then ; immediate
 : nxt  me @ to me ;
@@ -117,6 +117,6 @@ create dummy object
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
 
-: (->)  {  swap as  ( xt )  execute  } ;  
+: (->)  i{  swap as  ['] i} >code  r> swap >r >r  ( xt ) execute ;  
 : ->   state @ if  postpone [']  postpone (->)  else { as ' execute } then ; immediate
 
