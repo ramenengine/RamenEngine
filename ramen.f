@@ -36,8 +36,9 @@ redef off  \ from here on fields only defined if not previously defined
 : displayh  display al_get_display_height 1p ;
 : displaywh  displayw displayh ;
 
-: vieww  displayw #globalscale 1p / ;
-: viewh  displayh #globalscale 1p / ;
+: globalscale  #globalscale 1p ;
+: vieww  displayw globalscale / ;
+: viewh  displayh globalscale / ;
 : viewwh  vieww viewh ;
 
 : transform:  ( x y sx sy ang -- <name> )
@@ -47,3 +48,4 @@ redef off  \ from here on fields only defined if not previously defined
 
 : fps  fps 1p ;
 
+    

@@ -9,7 +9,7 @@
 \ additional words for conversion to and from other formats
 \   1p 2p 3p 4p  --- int to fixed
 \   1i 2i 3i 4i  --- fixed to int
-\   1f 2f 3f 4f  --- fixed to float
+\   1pf 2pf 3pf 4pf  --- fixed to float
 
 \ words should take fixed unless otherwise noted:
 \   ( n -- )  <-- fixed
@@ -49,8 +49,8 @@ $1000 constant 1.0
 : 2i  swap 1i swap 1i ;
 : 3i  >r 1i swap 1i swap r> 1i ;
 : 4i  swap 1i swap 1i  2>r  swap 1i swap 1i  2r> ;
-: 1f  s>f FPGRAN f/ ;
-: 2f  swap 1f 1f ;
+: 1pf  s>f FPGRAN f/ ;
+: 2pf  swap 1pf 1pf ;
 : pfloor  INT_MASK and ;
 : pceil   pfloor 1.0 + ;
 : 2pfloor  pfloor swap pfloor swap ;
@@ -63,8 +63,8 @@ wordlist constant fixpointing
 
 \ NTS: keep these as one-liners, I might make them macros...
 fixed definitions
-    : *  ( n n -- n )  1f s>f f* f>s ;
-    : /  ( n n -- n )  swap s>f 1f f/ f>s ;
+    : *  ( n n -- n )  1pf s>f f* f>s ;
+    : /  ( n n -- n )  swap s>f 1pf f/ f>s ;
     : /mod  ( n n -- r q ) 2dup mod -rot / ;
     : loop  s" 1.0 +loop" evaluate ; immediate
 previous definitions
@@ -80,27 +80,27 @@ previous definitions
 : .875  1p $e00 or ;
 
 \ External library helpers
-: 1af  1f 1sf ;                                     \ covert a fixed point value to allegro on-stack float
-: 2af  1f 1f 1sf 1sf ;
-: 3af  1f 1f 1f 1sf 1sf 1sf ;
-: 4af  1f 1f 1f 1f 1sf 1sf 1sf 1sf ;
+: 1af  1pf 1sf ;                                     \ covert a fixed point value to allegro on-stack float
+: 2af  1pf 1pf 1sf 1sf ;
+: 3af  1pf 1pf 1pf 1sf 1sf 1sf ;
+: 4af  1pf 1pf 1pf 1pf 1sf 1sf 1sf 1sf ;
 
 \ advanced fixed point math
-: cos  ( deg -- n )   1f cos f>p ;
-: sin  ( deg -- n )   1f sin f>p ;
-: asin  ( n -- deg )  1f fasin r>d f>p ;
-: acos  ( n -- deg )  1f facos r>d f>p ;
+: cos  ( deg -- n )   1pf cos f>p ;
+: sin  ( deg -- n )   1pf sin f>p ;
+: asin  ( n -- deg )  1pf fasin r>d f>p ;
+: acos  ( n -- deg )  1pf facos r>d f>p ;
 : lerp  ( src dest factor -- )  >r over - r> * + ;
 : anglerp  ( src dest factor -- )
   >r  over -  360 mod  540 +  360 mod  180 -  r> * + ;
-: sqrt  ( n -- n )  1f fsqrt f>p ;
-: atan  ( n -- n )  1f fatan f>p ;
-: atan2 ( n n -- n )  2f fatan2 f>p ;
-: log2  ( n -- n )  1e 1f y*log2(x) f>p ;  \ binary logarithm (for fixed-point)
+: sqrt  ( n -- n )  1pf fsqrt f>p ;
+: atan  ( n -- n )  1pf fatan f>p ;
+: atan2 ( n n -- n )  2pf fatan2 f>p ;
+: log2  ( n -- n )  1e 1pf y*log2(x) f>p ;  \ binary logarithm (for fixed-point)
 : rescale  ( n min1 max1 min2 max2 -- n )  \ transform a number from one range to another.
   locals| max2 min2 max1 min1 n |
   n min1 -  max1 min1 -  /  max2 min2 -  *  min2 + ;
-: >rad  1f  d>r  f>p ;
+: >rad  1pf  d>r  f>p ;
 
 \ Color stuff
 : c>p  ( c - n )  \ convert from 0...255 (byte) to 0...1.0 (fixed)

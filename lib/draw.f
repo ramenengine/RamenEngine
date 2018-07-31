@@ -83,7 +83,7 @@ variable lmargin
 
 create ftemp  2 cells allot
 : 2transform  ( x y transform -- x y )  \ transform coordinates
-    >r 2f 2sf ftemp 2!
+    >r 2pf 2sf ftemp 2!
     r> ftemp dup cell+ al_transform_coordinates
     ftemp sf@ f>p  ftemp cell+ sf@ f>p ;
 

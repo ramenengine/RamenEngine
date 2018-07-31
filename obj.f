@@ -15,8 +15,10 @@
 0 value me
 : as  to me ;
 create mestk  0 , 16 cells allot
-: {  state @ if s" me >r" evaluate else me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk !  then ; immediate
-: }  state @ if s" r> as" evaluate else mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @   then ; immediate
+: i{ me mestk dup @ + cell+ !  mestk @ cell+ 63 and mestk ! ;  \ interpretive version, uses a sw stack
+: i} mestk @ cell- 63 and mestk !  mestk dup @ + cell+ @ ; 
+: {  state @ if s" me >r" evaluate else  i{  then ; immediate
+: }  state @ if s" r> as" evaluate else  i}  then ; immediate
 : nxt  me @ to me ;
 
 variable used
@@ -86,7 +88,7 @@ create dummy  maxsize /allot  dummy as
 : initme  x [ maxsize 3 cells - ]# 0 cfill at@ x 2! en on ;
 : remove  ( object -- )  { as  en off  hidden on  1 ^pool @ free+!  } ;
 : hidden?  hidden @ ;
-: ?noone  any? abort" A pool was exhausted. In: ONE " ;
+: ?noone  any? abort" ONE: A pool was exhausted. " ;
 : (slot)  ( pool -- me=obj )  ?noone  all>  en @ ?exit  enough ;
 : one ( pool -- me=obj )  dup (slot)  initme  dup ^pool !  -1 swap free+! ;
 : object:  ( objlist -- <name> )  create 1 add initme ;
@@ -115,4 +117,6 @@ create dummy object
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
 
-: ->   state @ if postpone { postpone as  ' compile,  postpone } else { as ' execute } then ; immediate
+: (->)  {  swap as  ( xt )  execute  } ;  
+: ->   state @ if  postpone [']  postpone (->)  else { as ' execute } then ; immediate
+
