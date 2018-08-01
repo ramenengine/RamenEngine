@@ -2,11 +2,13 @@
 
 Ramen is a game engine written in standard Forth, based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) framework.
 
-With Ramen you can create 2D, hardware-accelerated games on desktop OS's supported by standard Forth systems - Windows, Linux, Mac.  
+With Ramen you can rapidly create 2D, hardware-accelerated games on desktop OS's supported by standard Forth systems - Windows, Linux, Mac.  
 
 Ramen is originally being developed on SwiftForth for Windows and Linux.
 
-Ramen is a "breakaway engine."  It functions as a game engine but it's also a framework - it has a standard configuration, but most of its parts are optional, like a Mr. Potatohead. I've strived to make the parts easy-to-understand and sufficiently decoupled.
+With Ramen and Forth, compilation of your game (and the engine itself) is near-instantaneous, like a scripting language, but runtime is  almost as fast as C.  Like interpretive languages, it's also interactive.  Update your code from within a running instance of your game, test functions, try out ideas, or change variables.  Like Assembly language, Forth also doesn't hold your hand when it comes to type-checking, but unlike Assembly you can test your functions deeply and thoroughly before putting them all together.
+
+Ramen is a "breakaway" engine.  It functions as a game engine but also as a framework; there is a standard configuration, but most of its parts are optional and mix-and-match.  You could even replace whole parts with your own.  I've strived to make the parts easy-to-understand and decoupled.
 
 ## Features
 
