@@ -1,20 +1,33 @@
-defer (startup)
+\ TODO: support for other systems
 
-: startup
+defer warm
+
+: boot
     false to allegro?
     0 to display
-    +display  initaudio initdata (startup)
-    ." Test"
-    ok ;
+    +display
+    initaudio
+    initdata
+;
+
+: startup
+    boot
+    warm
+    ok
+;
 
 
 : gather
     assets> srcfile dup count s" data/" search if rot place else 3drop then ;
 
-\ TODO: support for other systems
 [defined] program [if]
-: publish ( xt -- <name> )
-    gather  is (startup)  ['] startup 'main !  program ;
+
+    'main @ constant default-main
+    
+    :noname  0 ExitProcess ;  is bye
+    
+    : publish ( xt -- <name> )
+        gather  is warm  ['] startup 'main !  program  default-main 'main ! ;
 [else]
-cr .( PROGRAM not defined; PUBLISH disabled )
+    cr .( PROGRAM not defined; PUBLISH disabled )
 [then]
