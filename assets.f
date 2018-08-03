@@ -54,8 +54,9 @@ cell #256 + constant /assetheader
 : .asset  srcfile count dup if  type  else  2drop  then ;
 : .assets  assets> cr .asset ;
 
+: loadtrig  ( xt -- )  here   swap ,   (assets) listlink ;
+
 \ ------------------------------------------------------------------------------
 \ Standard synchronous loader
 
-: std-initdata  ( -- )  assets> reload ;
-' std-initdata is initdata
+:is initdata  assets> reload ;
