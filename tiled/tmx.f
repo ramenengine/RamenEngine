@@ -17,7 +17,7 @@
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 
-    require afkit/lib/xml
+require afkit/lib/xml
 
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 
@@ -82,8 +82,9 @@ define tmxing
 
 only forth definitions also xmling also tmxing
 
-   0 value map
-   0 value tmx
+0 value map
+0 value tmx
+:noname  0 to map  0 to tmx  ; loadtrig  \ initialize these on game load
 
 : tmxtileset  ( n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
     map swap s" tileset" element
