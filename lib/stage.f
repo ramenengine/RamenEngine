@@ -22,8 +22,7 @@ stage object: cam
 : camtrans
     cam -exit
     m1 al_identity_transform
-    m1  cam 's x 2@ 2pfloor 2negate 2af  al_translate_transform
-    m1 globalscale 1af dup al_scale_transform
+    m1 cam 's x 2@ 2pfloor  gscale  2negate 2af  al_translate_transform
     m1 al_use_transform ;
 
 : left?  ( -- flag )  <left> kstate  <pad_4> kstate or  ; \ 0 0 joy x -0.25 <= or ;

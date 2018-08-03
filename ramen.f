@@ -37,9 +37,9 @@ redef off  \ from here on fields only defined if not previously defined
 : displaywh  displayw displayh ;
 
 : globalscale  #globalscale 1p ;
-: vieww  displayw globalscale / ;
-: viewh  displayh globalscale / ;
-: viewwh  vieww viewh ;
+: viewwh  desired-res xy@ 2p ;
+: vieww  viewwh drop ;
+: viewh  viewwh nip ;
 
 : transform:  ( x y sx sy ang -- <name> )
     >r >r >r >r >r
@@ -48,4 +48,4 @@ redef off  \ from here on fields only defined if not previously defined
 
 : fps  fps 1p ;
 
-    
+: gscale  globalscale dup 2* ;

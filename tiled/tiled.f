@@ -27,7 +27,7 @@ create bitmaps 100 stack         \ single-image tileset's bitmaps
     var tbi                   \ tile base index
 
 : /tilemap
-    displaywh w 2!
+    viewwh w 2!
     draw>
         tbi @ tilebase!
         at@ w 2@ clip>

@@ -33,7 +33,7 @@ only forth definitions also v2d
 : vrnd  >r  2rnd  r> 2! ;
 : uvec  ( deg -- x y )   >r  r@ cos  r> sin ;  \ get unit vector from angle
 : vec  ( deg len -- x y )  >r  uvec  r> dup 2* ;
-: angle  ( x y -- deg ) 1pf 1f fatan2 r>d f>p  360 + 360 mod ;
+: angle  ( x y -- deg ) 1pf 1pf fatan2 r>d f>p  360 + 360 mod ;
 : magnitude  ( x y -- n )  2pf fdup f* fswap fdup f* f+ fsqrt f>p ;
 : normalize  ( vec -- )  dup 2@ 2dup 0 0 d= ?exit  2dup magnitude dup 2/  ( 1 1 2+ ) rot 2! ;
 : vdif  ( vec1 vec2 -- x y )  2@ rot 2@ 2- ;

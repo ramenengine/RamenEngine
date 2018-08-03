@@ -4,7 +4,12 @@ defer warm
 
 : boot
     false to allegro?
-    0 to display
+    false to display
+    false to dev
+    #3 to #globalscale
+    ALLEGRO_WINDOWED
+    ALLEGRO_NOFRAME or
+        to allegro-display-flags
     +display
     initaudio
     initdata

@@ -31,6 +31,7 @@ bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
 80 00 80 createcolor dmagenta ff ff 80 createcolor lyellow
 e0 e0 80 createcolor tan  
 da 42 00 createcolor orange
+fixed
 
 : backdrop  fore 4@ al_clear_to_color  white ;
 
@@ -92,18 +93,29 @@ create ftemp  2 cells allot
 \ Clipping rectangle
 variable cx variable cy variable cw variable ch      \ old clip
 variable ccx variable ccy variable ccw variable cch  \ current clip
-displaywh ch ! cw !
+viewwh ch ! cw !
 : clipxy  ccx @ ccy @ ;
 : clipwh  ccw @ cch @ ;
 0 value (code)
+
 : clip>  ( x y w h -- <code> )  \ note this won't work properly for rotated transforms.
                                 \ TODO: implement our own clipping box using the alpha channel or something
     r> to (code)
+
+    
     ccx @ ccy @ ccw @ cch @ 2>r 2>r
-    2over 2over cch ! ccw ! ccy ! ccx !
+    
+    2over 2over   cch ! ccw ! ccy ! ccx !
+    
     cx cy cw ch al_get_clipping_rectangle
-    2over 2+ 2screen 2swap 2screen 2swap 2over 2-
+    
+    2over 2+
+    2screen 2swap 2screen 2swap
+    2over 2-
+    
     4i al_set_clipping_rectangle   (code) call
+    
     cx @ cy @ cw @ ch @ al_set_clipping_rectangle
+    
     2r> 2r>  cch ! ccw ! ccy ! ccx ! ;
 
