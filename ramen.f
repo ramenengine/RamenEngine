@@ -5,7 +5,6 @@ include afkit/ans/version.f
 \ AllegroForthKit
 #1 0 0 include afkit/afkit.f
 
-\ 
 include ramen/plat.f
 include afkit/dep/zlib/zlib.f
 include ramen/struct.f
@@ -49,3 +48,4 @@ redef off  \ from here on fields only defined if not previously defined
 : fps  fps 1p ;
 
 : gscale  globalscale dup 2* ;
+

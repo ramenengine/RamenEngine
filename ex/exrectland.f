@@ -109,12 +109,12 @@ create m  16 cells /allot
     show>  tracked  black backdrop  camtransform
         boxes drawlist  sprites drawlist ;
 
-: (go)  go>  noop ;
+: (pump)  pump>  noop ;
 : (step)  step>  sprites each>  act  vx x v+ ;
 
-: go  (go) (step) (show) ;
+:is warm  (pump) (step) (show) ;
 
 boxgrid resetcgrid
 1000 *boxes
 player as /player
-go ok
+warm go

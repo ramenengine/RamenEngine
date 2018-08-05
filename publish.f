@@ -1,6 +1,6 @@
 \ TODO: support for other systems
 
-defer warm
+defer warm  :is warm ;
 
 : boot
     false to allegro?
@@ -15,10 +15,10 @@ defer warm
     initdata
 ;
 
-: startup
+: runtime
     boot
     warm
-    ok
+    go
 ;
 
 
@@ -26,13 +26,16 @@ defer warm
     assets> srcfile dup count s" data/" search if rot place else 3drop then ;
 
 [defined] program [if]
-
-    'main @ constant default-main
     
     :noname  0 ExitProcess ;  is bye
     
-    : publish ( xt -- <name> )
-        gather  is warm  ['] startup 'main !  program  default-main 'main ! ;
+    : publish ( -- <name> )
+        cr ." Publishing to "  >in @  bl parse type >in !  ." .exe ... "
+        gather
+        'main @ >r
+            ['] runtime 'main !
+            program
+        r> 'main ! ;
 [else]
     cr .( PROGRAM not defined; PUBLISH disabled )
 [then]

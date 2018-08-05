@@ -116,8 +116,8 @@ create roster  ' girl , ' man , ' cat ,
 : locomote  stage each> vx x v+  y @ zdepth ! ;
 : playfield  stage drawzsorted ;
 : (step)  step>  think  locomote ;
-: (go)  go>  noop ;
+: (pump)  pump>  noop ;
 : (show)  show>  grey backdrop  magnified playfield ;
-: go  (go)  (step)  (show) ;
+:is warm  (pump)  (step)  (show) ;
 
-go ok
+warm go

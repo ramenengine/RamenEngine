@@ -33,10 +33,10 @@ stage 2000 pool: objects
 : think  stage each> act ;
 : locomote  stage each>  vx x v+ ;
 : playfield  stage each> draw ;
-: (go)    go>  noop ;
+: (pump)    pump>  noop ;
 : (step)  step>  think  stage multi  locomote ;
 : (show)  show>  black backdrop  playfield ;
-: go  (go)  (step)  (show) ;
+:is warm  (pump)  (step)  (show) ;
 
 viewwh 0.5 0.5 2* at  *fly  named og
-go ok
+warm go

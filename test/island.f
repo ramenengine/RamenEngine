@@ -30,6 +30,7 @@ create tm object  /tilemap  50 50 x 2!  300 300 w 2!
 
 stage object: dummy  10 15 x 2!  bounce
 
-: (show)  show>  black backdrop  tm -> draw   subject track  camtrans  stage drawzsorted ;
+: show-stage  show>  black backdrop  tm -> draw   subject track  camtrans  stage drawzsorted ;
+:is warm  pump-noop  step-stage  show-stage ;
 
-go (show) ok
+warm go
