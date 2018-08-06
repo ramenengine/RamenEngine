@@ -7,6 +7,7 @@
 require ramen/lib/draw.f
 require ramen/lib/array2d.f
 require ramen/lib/buffer2d.f
+require afkit/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
 include ramen/lib/tilemap.f
@@ -14,6 +15,7 @@ include ramen/lib/tilemap.f
 1024 1024 buffer2d: tilebuf 
 create recipes #MAXTILES stack
 create bitmaps 100 stack         \ single-image tileset's bitmaps
+defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )  
 
 \ -------------------------------------------------------------------------------------------------
 \ Tilemap objects
@@ -53,7 +55,7 @@ var onhitmap   \ XT ( tile -- )
 \ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
 var mbx  var mby  var mbw  var mbh
 
-: onhitmap>  ( -- <code> ) r> code> onhitmap ! ;  ( tile -- )
+: onhitmap>  ( -- <code> ) r> code> onhitmap ! ;  ( tilecell -- )
 
 : ?'drop  ?dup ?exit  ['] drop ;
 
@@ -62,6 +64,12 @@ var mbx  var mby  var mbw  var mbh
     each>   mbw 2@ or -exit
             onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
 
+
+: (counttiles)  map@ tileprops@ (bm) and -exit  1 +to (count) ;
+: counttiles  ( x y w h bitmask tilesize -- count )
+    swap  to (bm)  0 to (count)  locals| ts h w y x |
+    ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
+    (count) ; 
 
 \ -------------------------------------------------------------------------------------------------
 [section] tmx

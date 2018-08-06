@@ -9,7 +9,7 @@
 \  (See below for a workaround mechanism)
 
 redef on
-    var sp  var rp  20 cells field ds  20 cells field rs
+    var sp  var rp  60 cells field ds  60 cells field rs
 redef off
 
 create main  object  \ proxy for the Forth data and return stacks
@@ -71,18 +71,18 @@ create queue 1000 stack
 
 decimal
     : perform> ( n -- <code> )
-        self? if    ds 18 cells + sp!  r>  rs 18 cells + rp!  >r  exit
-              else  ds 18 cells + !  ds 17 cells + sp !  r> rs 18 cells + !  rs 18 cells + rp !
-                    ['] halt >code rs 19 cells + !
+        self? if    ds 58 cells + sp!  r>  rs 58 cells + rp!  >r  exit
+              else  ds 58 cells + !  ds 57 cells + sp !  r> rs 58 cells + !  rs 58 cells + rp !
+                    ['] halt >code rs 59 cells + !
               then ;
 
     : perform  ( xt n obj -- )
         { as
-        ds 18 cells + !
-        ds 17 cells + sp !
-        >code rs 18 cells + !
-        ['] halt >code rs 19 cells + !
-        rs 18 cells + rp !
+        ds 58 cells + !
+        ds 57 cells + sp !
+        >code rs 58 cells + !
+        ['] halt >code rs 59 cells + !
+        rs 58 cells + rp !
         }
     ;
 fixed

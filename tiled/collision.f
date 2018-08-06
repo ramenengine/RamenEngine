@@ -11,8 +11,7 @@ require ramen/lib/array2d.f
 
 var mbx  var mby  var mbw  var mbh  \ map box 
 
-defer map-collide   ' drop is map-collide  ( info -- )
-defer tileprops@   :noname drop 0 ; is tileprops@  ( tile# -- bitmask )  
+defer map-collide   ' drop is map-collide  ( tilecell -- )
 
 #1
     bit BIT_CEL
@@ -39,7 +38,7 @@ define tilecding
 
     \ also forth definitions fixed
         : xy>cr  ( x y tilesize -- ) dup  2/  2pfloor ;
-        : pt  gap xy>cr  map@ >gid  dup t !  tileprops@ ;          \ point
+        : pt  gap xy>cr  map@ dup t !  tileprops@ ;          \ point
     \ previous
 
     \ increment coordinates

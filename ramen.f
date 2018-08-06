@@ -5,6 +5,7 @@ include afkit/ans/version.f
 \ AllegroForthKit
 #1 0 0 include afkit/afkit.f
 
+include ramen/variables.f
 include ramen/plat.f
 include afkit/dep/zlib/zlib.f
 include ramen/struct.f
