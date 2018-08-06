@@ -12,7 +12,7 @@
 
 [defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
-0 value me
+\ ME is defined in afkit
 : as  to me ;
 create mestk  0 , 16 cells allot
 : i{ me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpretive version, uses a sw stack

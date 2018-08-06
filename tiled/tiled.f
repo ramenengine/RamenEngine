@@ -44,9 +44,6 @@ defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )
 
 : >gid  ( tile -- gid )  $0000fffc and 10 << ;
 
-\ integer addressing
-: hmap@  ( #col #row -- tile ) 2p map@ ;
-
 \ Tilemap collision
 include ramen/tiled/collision.f
 
@@ -65,7 +62,7 @@ var mbx  var mby  var mbw  var mbh
             onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
 
 
-: (counttiles)  map@ tileprops@ (bm) and -exit  1 +to (count) ;
+: (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
 : counttiles  ( x y w h bitmask tilesize -- count )
     swap  to (bm)  0 to (count)  locals| ts h w y x |
     ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
