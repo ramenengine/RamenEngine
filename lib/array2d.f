@@ -37,13 +37,13 @@ fixed
 : dims  ( array2d -- numcols numrows )
     array2d.cols 2@ ;
 
-: (clamp)  ( col row array2d -- same )
-    >r  0 0 r@ array2d.cols 2@ 2clamp  r> ;
+: (clamp)  ( col row array2d -- col row array2d  )
+    >r  2pfloor  0 0 r@ array2d.cols 2@ 2clamp  r> ;
 
 \ TODO: this is incomplete!
 \      if dest col/row are negative, we need to adjust the source start address!!
 
-: (clip)   ( col row #cols #rows array2d -- same )
+: (clip)   ( col row #cols #rows array2d -- col row #cols #rows array2d  )
   dims 1 1 2- clip ;
 
 : loc  ( col row array2d -- addr )
