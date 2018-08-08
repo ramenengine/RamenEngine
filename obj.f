@@ -67,16 +67,15 @@ create dummy  maxsize /allot  dummy as
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
 : free+!   ol.#free +! ;
-: >last   ol.last @ as ;
+: >last   ol.last @ ;
 : object  {  here  maxsize /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
 : objlist   create dummy , 0 , 0 , dummy , ;
 : ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
-: add  ( objlist n -- )  over >last  swap ?first  2dup count+!  swap objects  me swap ol.last ! ;
 : pool:  ( objlist n -- <name> )
     locals| n ol |
     ol ?first drop
-    ol >last  n ol count+!  here  ( 1st )  n objects
+    ol >last as  n ol count+!  here  ( 1st )  n objects
         create  ( 1st ) , n , n , me ,
     me ol ol.last !
     ;
@@ -92,7 +91,11 @@ create dummy  maxsize /allot  dummy as
 : ?noone  any? abort" ONE: A pool was exhausted. " ;
 : (slot)  ( pool -- me=obj )  ?noone  all>  en @ ?exit  enough ;
 : one ( pool -- me=obj )  dup (slot)  initme  dup ^pool !  -1 swap free+! ;
-: object:  ( objlist -- <name> )  create 1 add initme ;
+
+\ static object lists
+: (add)  ( objlist -- )  >r r@ >last as  r@ ?first drop  1 r@ count+!  1 objects  me r> ol.last !  initme ;
+: add  ( objlist n -- )  for dup (add) loop drop ; 
+: object:  ( objlist -- <name> )  create 1 add ;
 
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;
