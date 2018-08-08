@@ -13,13 +13,14 @@
 [defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
 \ ME is defined in afkit
-: as  to me ;
+: as  s" to me" evaluate ; immediate
 create mestk  0 , 16 cells allot
 : i{ me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpretive version, uses a sw stack
 : i} mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ to me ; 
 : {  state @ if s" me >r" evaluate else  i{  then ; immediate
 : }  state @ if s" r> as" evaluate else  i}  then ; immediate
 : nxt  me @ to me ;
+: >{   s" { as " evaluate ; immediate
 
 variable used
 variable redef  \ should you want to bury anything
@@ -117,6 +118,4 @@ create dummy object
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
 
-: (->)  i{  swap as  ['] i} >code  r> swap >r >r  ( xt ) execute ;  
-: ->   state @ if  postpone [']  postpone (->)  else { as ' execute } then ; immediate
 
