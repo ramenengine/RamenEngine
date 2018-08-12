@@ -70,14 +70,14 @@ fixed definitions
 previous definitions
 
 \ Literal helpers
-: .0    1p ;
-: .125  1p $200 or ;
-: .25   1p $400 or ;
-: .375  1p $600 or ;
-: .5    1p $800 or ;
-: .625  1p $a00 or ;
-: .75   1p $c00 or ;
-: .875  1p $e00 or ;
+\ : .0    1p ;
+\ : .125  1p $200 or ;
+\ : .25   1p $400 or ;
+\ : .375  1p $600 or ;
+\ : .5    1p $800 or ;
+\ : .625  1p $a00 or ;
+\ : .75   1p $c00 or ;
+\ : .875  1p $e00 or ;
 
 \ External library helpers
 : 1af  1pf 1sf ;                                     \ covert a fixed point value to allegro on-stack float
