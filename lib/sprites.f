@@ -24,16 +24,20 @@ redef off
 \ Drawing
 : sprite ( srcx srcy w h flip )  \ pass a rectangle defining the region to draw
     locals| flip h w y x |
-    img @  x y w h 4af  tint 4@ 4af  cx 2@  at@  4af  sx 3@ 3af  flip
+    img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  at@  4af  sx 3@ 3af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 : objsubimage  ( image n flip -- )  >r  over >subxywh  r> sprite ;
 
 \ Get current frame data
 : ?regorg  rgntbl @ ?dup -exit  anm @ @  /region * + 4 cells + 2@ 2negate +at ;
+
+: >framexywh  ( rgntbl n -- srcx srcy w h )
+    /region * +  4@ ;
+
 : curframe  ( -- srcx srcy w h )
     anm @ 0= if  0 0 img @ imagewh  exit then 
     rgntbl @ ?dup if
-        anm @ @  /region * +  4@
+        anm @ @  >framexywh
     else
         anm @ @  img @  >subxywh
     then ;
