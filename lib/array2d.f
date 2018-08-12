@@ -34,7 +34,7 @@ decimal
         dup array2d.data @ swap array2d.cols 2@ 2i * ;
 fixed
 
-: dims  ( array2d -- numcols numrows )
+: dims@  ( array2d -- numcols numrows )
     array2d.cols 2@ ;
 
 : (clamp)  ( col row array2d -- col row array2d  )
@@ -44,7 +44,7 @@ fixed
 \      if dest col/row are negative, we need to adjust the source start address!!
 
 : (clip)   ( col row #cols #rows array2d -- col row #cols #rows array2d  )
-  dims 1 1 2- clip ;
+  dims@ 1 1 2- clip ;
 
 : loc  ( col row array2d -- addr )
   (clamp) >r  r@ array2d.pitch @ * swap cells +  r> array2d.data @ + ;
@@ -72,7 +72,7 @@ fixed
 : fill2d  ( val col row #cols #rows array2d -- )  literal some2d  drop ;
 
 : scan2d  ( ... array2d xt -- ... )  ( ... addr #cells -- ... )
-  >r >r  0  0  r@ dims  r> r> some2d ;
+  >r >r  0  0  r@ dims@  r> r> some2d ;
 
 : scan2d>  r> code> scan2d ;
 
@@ -80,7 +80,7 @@ fixed
 \ : each2d>  r> code> each2d ;
 
 :noname  cr  cells bounds do  i @ h.  cell +loop ;
-: 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
+: 2d.  >r 0 0 r@ dims@ 16 16 2min  r> literal some2d  ;
 
 
 \ test
