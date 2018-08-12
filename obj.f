@@ -52,10 +52,15 @@ redef on  \ we'll keep this on while compiling RAMEN itself
 \  you can itterate over objlists as a whole, or just over a pool at a time
 
 
-var lnk  var en  var ^pool
-var x  var y  var vx  var vy
+var lnk  var ^pool
+var x  var y  var en  var vx  var vy
 var hidden  var drw  var beha
 
+
+
+create defaults  maxsize /allot         \ default values are stored here
+                                        \ they are copied to new instances by INITME
+defaults as  en on 
 
 \ objlists and pools
 struct (objlist) \ objlist struct, also used for pools
@@ -63,15 +68,14 @@ struct (objlist) \ objlist struct, also used for pools
     (objlist) int svar ol.count
     (objlist) int svar ol.#free
     (objlist) int svar ol.last
-create dummy  maxsize /allot  dummy as
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
 : free+!   ol.#free +! ;
 : >last   ol.last @ ;
 : object  {  here  maxsize /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
-: objlist   create dummy , 0 , 0 , dummy , ;
-: ?first  dup ol.first @ dummy = -exit  here over ol.first ! ;
+: objlist   create defaults , 0 , 0 , defaults , ;
+: ?first  dup ol.first @ defaults = -exit  here over ol.first ! ;
 : pool:  ( objlist n -- <name> )
     locals| n ol |
     ol ?first drop
@@ -85,8 +89,8 @@ create dummy  maxsize /allot  dummy as
     r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
 : enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
-: initme  x [ maxsize 3 cells - ]# 0 cfill at@ x 2! en on ;
-: remove  ( object -- )  { as  en off  hidden on  1 ^pool @ free+!  } ;
+: initme  at@ x 2!  defaults 4 cells +  en  [ maxsize 4 cells - ]# move ;
+: remove  ( object -- )  >{  en off  hidden on  1 ^pool @ free+!  } ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" ONE: A pool was exhausted. " ;
 : (slot)  ( pool -- me=obj )  ?noone  all>  en @ ?exit  enough ;
@@ -111,8 +115,8 @@ create dummy  maxsize /allot  dummy as
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 var role
 variable meta
-create dummy object 
-: roledef:  me  create  here dummy 's role !  dummy as  /roledef /allot ;
+create (temp) object  \ internal: for natural setting of role var values and action defaults
+: roledef:  me  create  here (temp) 's role !  (temp) as  /roledef /allot ;
 : ;roledef  as ;
 : derive:   ( src -- <name> )  roledef:  swap   last @ name> >body /roledef move ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
@@ -120,5 +124,6 @@ create dummy object
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
+
 
 

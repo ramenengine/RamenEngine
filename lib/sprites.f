@@ -19,6 +19,9 @@ redef on
 
     \ animation state:
     var img  var anm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
+    defaults >{
+        1 1 sx 2!  1 1 1 1 tint 4!  1 anmspd !
+    }
 redef off
 
 \ Drawing
@@ -61,14 +64,9 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 ;
 
 \ Play an animation.
-\ /scale    ( -- )  init scale to 1,1
-\ /tint     ( -- )  init tint to white
 \ ?/st      ( -- )  first time call initializes scale and tint
 \ animate   ( anim -- )  play animation from beginning
-: /scale    1 1 sx 2! ;
-: /tint     1 1 1 1 tint 4! ;
-: ?/st      anm @ ?exit  /scale  /tint ;
-: animate   ?/st  anm !  0 anmctr !  anm @ -exit  draw> sprite+ ;
+: animate   anm !  0 anmctr !  anm @ -exit  draw> sprite+ ;
     
 \ Define self-playing animations
 \ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
