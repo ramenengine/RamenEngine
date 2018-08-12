@@ -22,15 +22,16 @@ redef on
 redef off
 
 \ Drawing
-: sprite ( image srcx srcy w h flip )  \ pass a rectangle defining the region to draw
+: sprite ( srcx srcy w h flip )  \ pass a rectangle defining the region to draw
     locals| flip h w y x |
-    image.bmp @  x y w h 4af  tint 4@ 4af  cx 2@  at@  4af  sx 3@ 3af  flip
+    img @  x y w h 4af  tint 4@ 4af  cx 2@  at@  4af  sx 3@ 3af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 : objsubimage  ( image n flip -- )  >r  over >subxywh  r> sprite ;
 
 \ Get current frame data
 : ?regorg  rgntbl @ ?dup -exit  anm @ @  /region * + 4 cells + 2@ 2negate +at ;
 : curframe  ( -- srcx srcy w h )
+    anm @ 0= if  0 0 img @ imagewh  exit then 
     rgntbl @ ?dup if
         anm @ @  /region * +  4@
     else
@@ -41,11 +42,12 @@ redef off
 \ Draw + animate
 defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
 : sprite+  ( -- )
-    anm @ -exit
+
+    anm @ 0= if  curframe  curflip sprite  exit  then 
     at@ 
         anm @ cell+ 2@ +at  \ apply the frame offset
         ?regorg  \ apply the region origin
-        img @ ?dup if  curframe  curflip sprite  then
+        img @ if  curframe  curflip sprite  then
         anmspd @ anmctr +!
         begin  anmctr @ 1 >= while
             anmctr --  /frame anm +!

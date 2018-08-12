@@ -13,6 +13,7 @@
 : []  ( stk n -- addr )  pfloor 1 + cells + ;
 : nth ( n stk -- addr )   swap pfloor [] ;
 
-\ tables are fixed-size stacks you can comma data into
+\ TABLE: ( -- <name> adr ) create an array you can comma data into
+\ ;TABLE ( adr -- ) call to terminate the definition
 : table:  create here 0 , ;
 : ;table  here over - cell/ swap ! ;
