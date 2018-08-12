@@ -22,16 +22,15 @@ struct %array2d
     %array2d int svar array2d.pitch
     %array2d int svar array2d.data
     
-: array2d-head,  udup  2pfloor 2,  cells ,  here cell+ , ;
+: array2d-head,  ( cols rows -- )  udup  2pfloor 2,  cells ,  here cell+ , ;
 
 decimal
-    \ by default the data field is set to the following dictionary space
+\ by default the data field is set to the adjacent dictionary space
+: array2d  ( numcols numrows -- )
+    2dup  array2d-head,  2i * cells /allot ;
 
-    : array2d  ( numcols numrows -- )
-        2dup  array2d-head,  2i * cells /allot ;
-
-    : count2d ( array2d -- data #cells )
-        dup array2d.data @ swap array2d.cols 2@ 2i * ;
+: count2d ( array2d -- data #cells )
+    dup array2d.data @ swap array2d.cols 2@ 2i * ;
 fixed
 
 : dims@  ( array2d -- numcols numrows )
@@ -81,6 +80,16 @@ fixed
 
 :noname  cr  cells bounds do  i @ h.  cell +loop ;
 : 2d.  >r 0 0 r@ dims@ 16 16 2min  r> literal some2d  ;
+
+
+\ TABLE2D: ( cols -- <name> array2d adr ) 
+\ TABLE2D  ( cols -- array2d array2d adr )  the table will be left on the stack after ;TABLE2D
+\ ;TABLE2D ( array2d adr -- ) call to terminate the definition
+
+: table2d   here swap 0 array2d-head, dup here ;
+: table2d:  create table2d nip ;
+: ;table2d  here swap - cell/ 1p over array2d.cols @ / pceil swap array2d.rows ! ;
+
 
 
 \ test
