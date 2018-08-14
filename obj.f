@@ -107,7 +107,7 @@ struct (objlist) \ objlist struct, also used for pools
 : act   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
-: from  ( x y obj -- x y ) 's x 2@ 2+ at ;
+: from  ( obj x y -- ) rot 's x 2@ 2+ at ;
 : -act  act> noop ;
 
 \ Roles
