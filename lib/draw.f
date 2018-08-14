@@ -60,9 +60,8 @@ variable lmargin
 : fontw  z" A" al_get_text_width 1p ;
 : fonth  al_get_font_line_height 1p ;
 : print ( str count -- )
-    -rot zstring >r  fnt @ fore 4@ at@ 2af ALLEGRO_ALIGN_LEFT r@ al_draw_text
+    zstring >r  fnt @ fore 4@ at@ 2af ALLEGRO_ALIGN_LEFT r@ al_draw_text
     fnt @ r> al_get_text_width 1p 0 +at ;
-: font>  ( font -- <code> )  fnt !  r> call ;
 : newline  lmargin @ at@ nip fnt @ fonth + at ;
 : textw  zstring fnt @ swap al_get_text_width 1p ;
 
