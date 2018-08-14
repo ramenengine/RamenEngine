@@ -1,5 +1,8 @@
 \ TODO: support for other systems
 
+create default-font
+    /assetheader /allot  al-default-font , 8 , 0 , \ note: not a registered asset
+
 defer warm  :is warm ;
 
 : boot
@@ -13,6 +16,7 @@ defer warm  :is warm ;
     +display
     initaudio
     initdata
+    al-default-font default-font font.fnt !
 ;
 
 : runtime

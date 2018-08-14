@@ -54,16 +54,19 @@ fixed
 : blit   ( bmp ) 0 blitf ;
 
 
-\ Text
+\ Text; uses Ramen font assets
 variable fnt  default-font fnt !
 variable lmargin
-: fontw  z" A" al_get_text_width 1p ;
-: fonth  al_get_font_line_height 1p ;
+: chrw  >fnt z" A" al_get_text_width 1p ;
+: chrh  >fnt al_get_font_line_height 1p ;
 : print ( str count -- )
-    zstring >r  fnt @ fore 4@ at@ 2af ALLEGRO_ALIGN_LEFT r@ al_draw_text
-    fnt @ r> al_get_text_width 1p 0 +at ;
+    zstring >r  fnt @ >fnt fore 4@ at@ 2af ALLEGRO_ALIGN_LEFT r@ al_draw_text
+    fnt @ >fnt r> al_get_text_width 1p 0 +at ;
+: stringw  zstring fnt @ >fnt swap al_get_text_width 1p ;
+: stringwh  stringw fnt @ chrh ;
+: fontw  fnt @ chrw ;
+: fonth  fnt @ chrh ;
 : newline  lmargin @ at@ nip fnt @ fonth + at ;
-: textw  zstring fnt @ swap al_get_text_width 1p ;
 
 \ Primitives
 1e fnegate 1sf constant hairline
