@@ -26,8 +26,8 @@ defer warm  :is warm ;
 ;
 
 
-: gather
-    assets> srcfile dup count s" data/" search if rot place else 3drop then ;
+: relify  srcfile dup count s" data/" search if  rot place  else 3drop then ;
+: gather  assets> relify ;
 
 [defined] program [if]
     
