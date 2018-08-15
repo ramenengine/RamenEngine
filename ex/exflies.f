@@ -28,7 +28,7 @@ stage 2000 pool: objects
 : mortal  live  act>  life -- ;
 : ?die  life @ 0 <= -exit  die ;
 : twitch  green @color r 4!  0 perform>  begin  apples randmove oranges randmove ?bore ?die  again ;
-:noname  [ is *fly ]  obj  mortal  twitch  draw>  r 4@ alpha colored  s @ circlef ;
+:noname  [ is *fly ]  obj  mortal  twitch  draw>  r 4@ rgba  s @ circlef ;
 
 : think  stage each> act ;
 : locomote  stage each>  vx x v+ ;

@@ -18,7 +18,7 @@ redef on
     color sizeof field tint
 
     \ animation state:
-    var img  var anm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
+    var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
     defaults >{
         1 1 sx 2!  1 1 1 1 tint 4!  1 anmspd !
     }
@@ -32,33 +32,33 @@ redef off
 : objsubimage  ( image n flip -- )  >r  over >subxywh  r> sprite ;
 
 \ Get current frame data
-: ?regorg  rgntbl @ ?dup -exit  anm @ @  /region * + 4 cells + 2@ 2negate +at ;
+: ?regorg  rgntbl @ ?dup -exit  frm @ @  /region * + 4 cells + 2@ 2negate +at ;
 
-: >framexywh  ( rgntbl n -- srcx srcy w h )
-    /region * +  4@ ;
+: >framexywh  ( n rgntbl -- srcx srcy w h )
+    swap /region * +  4@ ;
 
 : curframe  ( -- srcx srcy w h )
-    anm @ 0= if  0 0 img @ imagewh  exit then 
-    rgntbl @ ?dup if
-        anm @ @  >framexywh
+    frm @ 0= if  0 0 img @ imagewh  exit then 
+    rgntbl @ if
+        frm @ @  rgntbl @  >framexywh
     else
-        anm @ @  img @  >subxywh
+        frm @ @  img @  >subxywh
     then ;
-: curflip  anm @ @ #3 and ;
+: curflip  frm @ @ #3 and ;
 
 \ Draw + animate
 defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
 : sprite+  ( -- )
 
-    anm @ 0= if  curframe  curflip sprite  exit  then 
+    frm @ 0= if  curframe  curflip sprite  exit  then 
     at@ 
-        anm @ cell+ 2@ +at  \ apply the frame offset
+        frm @ cell+ 2@ +at  \ apply the frame offset
         ?regorg  \ apply the region origin
         img @ if  curframe  curflip sprite  then
         anmspd @ anmctr +!
         begin  anmctr @ 1 >= while
-            anmctr --  /frame anm +!
-            anm @ @ $deadbeef = if  anm @ cell+ @ anm +!  animlooped  then
+            anmctr --  /frame frm +!
+            frm @ @ $deadbeef = if  frm @ cell+ @ frm +!  animlooped  then
         repeat
     at  \ restore pen
 ;
@@ -66,7 +66,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 \ Play an animation.
 \ ?/st      ( -- )  first time call initializes scale and tint
 \ animate   ( anim -- )  play animation from beginning
-: animate   anm !  0 anmctr !  anm @ -exit  draw> sprite+ ;
+: animate   frm !  0 anmctr !  frm @ -exit  draw> sprite+ ;
     
 \ Define self-playing animations
 \ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
