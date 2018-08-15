@@ -1,8 +1,9 @@
 \ Basic graphics option
 
 create fore 1e sf, 1e sf, 1e sf, 1e sf, 
-: colored   ( r g b )  3af fore 3! ;
-: alpha     1af fore 3 cells + ! ;
+: rgb  ( r g b )  3af fore 3! ;
+: alpha  ( a )  1af fore 3 cells + ! ;
+: rgba   alpha rgb ;
 
 \ Bitmaps, backbuffer
 : onto>  r>  al_get_target_bitmap >r  swap al_set_target_bitmap  call  r> al_set_target_bitmap ;
@@ -34,23 +35,24 @@ da 42 00 createcolor orange
 fixed
 
 : backdrop  fore 4@ al_clear_to_color  white ;
+: untinted  white ;
+
 
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color for tinting.
 \  Not all effect combinations are available; these are intended as conveniences.
 \  To draw regions of bitmaps, use Allegro's draw bitmap region functions directly
 \  or use sub bitmaps (see SUBBMP).
-\  After each call to one of these words, the current color is reset to white.
-\  The anchor for rotation is the center of the passed bitmap.
+\  The anchor for rotation with CSRBLITF is the center of the passed bitmap.
 
-: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  at@ 2af  r> al_draw_tinted_bitmap  white ;
+: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  at@ 2af  r> al_draw_tinted_bitmap ;
 : >center  bmpwh 1 rshift  swap 1 rshift ;
 : sblitf  ( bmp dw dh flip )
     locals| flip dh dw | ?dup ?exit
-    ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  at@ dw dh 4af  flip  al_draw_tinted_scaled_bitmap  white ;
+    ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  at@ dw dh 4af  flip  al_draw_tinted_scaled_bitmap ;
 : csrblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |  bmp ?exit
-    bmp  fore 4@  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap  white ;
+    bmp  fore 4@  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap ;
 : blit   ( bmp ) 0 blitf ;
 
 
