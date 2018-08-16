@@ -3,15 +3,18 @@
 : bmph  al_get_bitmap_height 1p ;
 : bmpwh  dup bmpw swap bmph ;
 
-assetdef image
-    image int svar image.bmp
-    image int svar image.subw
-    image int svar image.subh
-    image int svar image.fsubw
-    image int svar image.fsubh
-    image int svar image.subcols
-    image int svar image.subrows
-    image int svar image.subcount
+assetdef %image
+    %image 0 svar image.bmp
+    %image 0 svar image.subw
+    %image 0 svar image.subh
+    %image 0 svar image.fsubw
+    %image 0 svar image.fsubh
+    %image 0 svar image.subcols
+    %image 0 svar image.subrows
+    %image 0 svar image.subcount
+    %image 0 svar canvas.w
+    %image 0 svar canvas.h
+    
 
 \ get dimensions, fixed point
 : imagew   image.bmp @ bmpw ;
@@ -25,7 +28,7 @@ assetdef image
 \ >bmp  ( image -- ALLEGRO_BITMAP )
 : reload-image  >r  r@ srcfile count  findfile  zstring al_load_bitmap  r> image.bmp ! ;
 : init-image  >r  r@ srcfile place  ['] reload-image r@ register  r> reload-image ;
-: image   here >r  image sizeof allotment init-image  r> ; 
+: image   here >r  %image sizeof allotment init-image  r> ; 
 : image:  create  image  drop ;
 : >bmp  image.bmp @ ;
 
@@ -34,6 +37,18 @@ assetdef image
 : load-image  >r  zstring al_load_bitmap  r> init-image ;
 : free-image  image.bmp @ -bmp ;
 
+\ Canvas (images without source files)
+
+\ recreate-canvas  ( image -- )
+\ resize-canvas  ( w h image -- )
+\ init-canvas  ( w h image -- )
+\ canvas  ( w h -- image )
+\ canvas:  ( w h -- <name> )
+: recreate-canvas  >r  r@ canvas.w 2@ 2i al_create_bitmap  r> image.bmp ! ;
+: resize-canvas  >r  r@ free-image  r@  canvas.w 2!  r> recreate-canvas ;
+: init-canvas  >r    ['] recreate-canvas r@ register  r@  canvas.w 2!  r> recreate-canvas ;
+: canvas  here >r  %image sizeof allotment init-canvas  r> ;
+: canvas:  create  canvas  drop  ;
 
 \ Sub-image stuff
 

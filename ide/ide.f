@@ -58,7 +58,7 @@ consolas chrh constant fh
 : store   cmdbuf count history place ;
 : typechar  cmdbuf count + c!  #1 cmdbuf c+! ;
 : rub       cmdbuf c@  #1 -  0 max  cmdbuf c! ;
-: paste     clipb@  #1 -  cmdbuf append ;
+: paste     clipb@  cmdbuf append ;
 : copy      cmdbuf count clipb! ;
 : keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
