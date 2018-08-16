@@ -25,7 +25,7 @@ require afkit/plat/win/clipb.f
 
 define ideing
 
-s" ramen/ide/data/consolab.ttf" 20 ALLEGRO_TTF_NO_KERNING font: consolas
+s" ramen/ide/data/consolab.ttf" 24 ALLEGRO_TTF_NO_KERNING font: consolas
 create cursor 6 cells /allot
 : colour 2 cells + ;
 variable scrolling  scrolling on
