@@ -25,7 +25,7 @@ require afkit/plat/win/clipb.f
 
 define ideing
 
-s" ramen/ide/data/consolab.ttf" #20 ALLEGRO_TTF_NO_KERNING font: consolas
+s" ramen/ide/data/consolas16.png" #20 ALLEGRO_TTF_NO_KERNING font: consolas
 create cursor 6 cells /allot
 : colour 2 cells + ;
 variable scrolling  scrolling on
@@ -205,27 +205,32 @@ create ide-personality
 
 : bottom  lm bm ;
 : .output   output @ blit ;
+
 : .cmdline
     output @ >r  display al_get_backbuffer output !
     get-xy 2>r  at@ cursor xy!  bar  scrolling off  .s2  cr  .cmdbuf  scrolling on   2r> at-xy
     r> output !
 ;
-: /cmdline
+
+: /ide
     /s
     /output
     1 1 1 1 cursor colour 4!
     /margins
-    ['] >display is >ide  \ >IDE is redefined to take us to the display
     interact on
+;
+: /repl
+    /ide
+    ['] >display is >ide  \ >IDE is redefined to take us to the display
     ide-personality open-personality
 ;
-: ide-system  idekeys ;
-
 : shade  black 0.3 alpha  0 0 at  displaywh rectf  white ;
+
+: ide-system  idekeys ;
 : ide-overlay  interact @ if  shade  0 0 at  .output  bottom at  .cmdline  then ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
-
-: ide  /cmdline  rasa  s" ld autoexec" ['] evaluate catch ?.catch  begin go again ;
+: autoexec s" ld autoexec" ['] evaluate catch ?.catch ;
+: ide  /repl  rasa  ( autoexec )  begin go again ;
 
 
 only forth definitions
