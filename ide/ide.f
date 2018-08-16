@@ -223,7 +223,7 @@ create ide-personality
     ['] >display is >ide  \ >IDE is redefined to take us to the display
     ide-personality open-personality
 ;
-: shade  black 0.3 alpha  0 0 at  displaywh rectf  white ;
+: shade  black 0.1 alpha  0 0 at  displaywh rectf  white ;
 
 : ide-system  idekeys ;
 : ide-overlay  interact @ -exit  shade  0 0 at  .output  bottom at  .cmdline ;
