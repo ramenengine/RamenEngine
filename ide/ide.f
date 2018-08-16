@@ -40,11 +40,12 @@ create attributes
   0 , 1 , 1 ,     1 ,  \ cyan
 variable output   \ output bitmap
 create margins  4 cells /allot   \ margins for the command history. (rectangle)
+0 value tempbmp
 
 \ --------------------------------------------------------------------------------------------------
 \ low-level stuff
-: fw  consolas chrw ;
-: fh  consolas chrh ;
+consolas chrw constant fw
+consolas chrh constant fh
 : cols  fw * ;
 : rows  fh * ;
 : rm  margins x2@  displayw min ;
@@ -64,7 +65,7 @@ create margins  4 cells /allot   \ margins for the command history. (rectangle)
 : ctrl?  evt ALLEGRO_KEYBOARD_EVENT.modifiers @ ALLEGRO_KEYMOD_CTRL and ;
 : alt?  evt ALLEGRO_KEYBOARD_EVENT.modifiers @ ALLEGRO_KEYMOD_ALT and ;
 : /margins  0 0 displaywh 3 rows - margins xywh! ;
-: /output  native 2@ al_create_bitmap output ! ;
+: /output  native 2@ al_create_bitmap output !  output @ al_clone_bitmap to tempbmp ;
 
 \ --------------------------------------------------------------------------------------------------
 \ Output words
@@ -76,7 +77,9 @@ create margins  4 cells /allot   \ margins for the command history. (rectangle)
 : outputh  bm tm - ;
 : ramen-get-size  ( -- cols rows )  outputw outputh fw fh 2/ 2i ;
 : scroll
-    write-rgba blend>  output @ onto>  0 -1 rows at  untinted  output @ blit
+    write-rgba blend>
+    tempbmp onto>  0 0 at  untinted  output @ blit
+    output @ onto>  0 -1 rows at  untinted  tempbmp blit
     -1 rows cursor y+!
 ;
 : ramen-cr
@@ -189,7 +192,13 @@ create ide-personality
 : +blinker interact @ -exit  #frames 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker print ;
 : bar      outputw  displayh bm -  black  output @ fill ;
-: .output  output @ blit ;
+: .output  2 2 +at  black 0.75 alpha  output @ blit  -2 -2 +at  white  output @ blit ;
+: bottom  lm bm ;
+: .cmdline
+    output @ >r  display al_get_backbuffer output !
+    get-xy 2>r  at@ cursor xy!  bar  scrolling off  .s2  cr  .cmdbuf  scrolling on   2r> at-xy
+    r> output !
+;
 
 
 \ --------------------------------------------------------------------------------------------------
@@ -202,14 +211,6 @@ create ide-personality
 \ --------------------------------------------------------------------------------------------------
 \ bring it all together
 
-: bottom  lm bm ;
-: .output   output @ blit ;
-
-: .cmdline
-    output @ >r  display al_get_backbuffer output !
-    get-xy 2>r  at@ cursor xy!  bar  scrolling off  .s2  cr  .cmdbuf  scrolling on   2r> at-xy
-    r> output !
-;
 
 : /ide
     /s
