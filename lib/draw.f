@@ -6,7 +6,7 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : rgba   alpha rgb ;
 
 \ Bitmaps, backbuffer
-: onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap al_set_target_bitmap  call  r> al_set_target_bitmap ;
+: onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap onto call  r> onto ;
 : movebmp  ( src sx sy w h )  write-rgba blend>  at@ 2af 0 al_draw_bitmap ;
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
