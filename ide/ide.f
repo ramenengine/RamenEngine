@@ -201,16 +201,9 @@ create ide-personality
 ;
 
 
-\ --------------------------------------------------------------------------------------------------
-\ redefined STEP> ... makes keyboard state be cleared every frame when interact is on.
-0 value 'idestep
-: ?clearkb  interact @ if clearkb then ;
-: step>  ( -- <code> )  r> to 'idestep  step>  ?clearkb  'idestep call ;
 
-\ --------------------------------------------------------------------------------------------------
 \ --------------------------------------------------------------------------------------------------
 \ bring it all together
-
 
 : /ide
     /s
