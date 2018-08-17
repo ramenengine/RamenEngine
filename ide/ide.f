@@ -189,7 +189,7 @@ create ide-personality
     ."  F: "
     0  DO  I' I - #1 - FPICK N.  #1 +LOOP
   THEN ;
-: +blinker interact @ -exit  #frames 16 and -exit  s[ [char] _ c+s ]s ;
+: +blinker interact @ -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker print ;
 : bar      outputw  displayh bm -  black  output @ fill ;
 : .output  2 2 +at  black 0.75 alpha  output @ blit  -2 -2 +at  white  output @ blit ;
