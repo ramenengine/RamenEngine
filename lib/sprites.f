@@ -2,6 +2,8 @@
 \ - Render subimages or image regions
 \ - Define animation data and animate sprites
 
+require ramen/lib/draw
+
 \ Region tables
 6 cells constant /region
     \ x , y , w , h , originx , originy , 
@@ -15,7 +17,7 @@
 redef on
     \ Transformation info; will be factored out into Ramen's core eventually
     var sx  var sy  var ang  var cx  var cy
-    color sizeof field tint
+    color sizeof field tint  \ NOTE: not automatically used.  
 
     \ animation state:
     var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
@@ -27,7 +29,7 @@ redef off
 \ Drawing
 : sprite ( srcx srcy w h flip )  \ pass a rectangle defining the region to draw
     locals| flip h w y x |
-    img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  at@  4af  sx 3@ 3af  flip
+    img @ >bmp  x y w h 4af  fore 4@  cx 2@  at@  4af  sx 3@ 3af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 : objsubimage  ( image n flip -- )  >r  over >subxywh  r> sprite ;
 

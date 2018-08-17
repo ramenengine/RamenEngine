@@ -71,13 +71,13 @@ consolas chrh constant fh
 \ Output words
 : ramen-get-xy  ( -- #col #row )  cursor xy@  lm tm 2-  fw fh 2/ 2i ;
 : ramen-at-xy   ( #col #row -- )  2p fw fh 2*  lm tm 2+  cursor xy! ;
-: fill  ( w h bitmap -- )  onto>  write-rgba blend>  rectf ;
+: fill  ( w h bitmap -- )  onto>  write-src blend>  rectf ;
 : clear  ( w h bitmap -- )  black 0 alpha  fill ;
 : outputw  rm lm - ;
 : outputh  bm tm - ;
 : ramen-get-size  ( -- cols rows )  outputw outputh fw fh 2/ 2i ;
 : scroll
-    write-rgba blend>
+    write-src blend>
     tempbmp onto>  0 0 at  untinted  output @ blit
     output @ onto>  0 -1 rows at  untinted  tempbmp blit
     -1 rows cursor y+!
@@ -95,8 +95,8 @@ consolas chrh constant fh
     cursor x@ rm >= if  ramen-cr  then
 ;
 decimal
-    : ramen-emit  output @ onto>  write-rgba blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
-    : ramen-type  output @ onto>  write-rgba blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
+    : ramen-emit  output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
+    : ramen-type  output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
     : ramen-?type  ?dup if type else 2drop then ;
 fixed
 : ramen-attribute  1p 4 cells * attributes +  cursor colour  4 imove ;

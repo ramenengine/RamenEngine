@@ -7,7 +7,7 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 
 \ Bitmaps, backbuffer
 : onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap onto call  r> onto ;
-: movebmp  ( src sx sy w h )  write-rgba blend>  at@ 2af 0 al_draw_bitmap ;
+: movebmp  ( src sx sy w h )  write-src BLEND>  at@ 2af 0 al_draw_bitmap ;
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
@@ -36,7 +36,7 @@ fixed
 
 : backdrop  fore 4@ al_clear_to_color  white ;
 : untinted  white ;
-
+: tint/  white ; 
 
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color for tinting.
@@ -124,4 +124,3 @@ viewwh ch ! cw !
     cx @ cy @ cw @ ch @ al_set_clipping_rectangle
     
     2r> 2r>  cch ! ccw ! ccy ! ccx ! ;
-
