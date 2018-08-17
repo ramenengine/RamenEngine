@@ -1,23 +1,16 @@
-# Ramen - the Really Accessible Multimedia ENgine
+# Ramen - the Readily Available Multimedia ENgine
 
-Ramen is a game engine written in standard Forth, based on the [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) framework.
-
-With Ramen you can rapidly create 2D, hardware-accelerated games on desktop OS's supported by standard Forth systems - Windows, Linux, Mac.  
-
-Ramen is originally being developed on SwiftForth for Windows and Linux.
-
-With Ramen and Forth, compilation of your game (and the engine itself) is near-instantaneous, like a scripting language, but runtime is  almost as fast as C.  Like interpretive languages, it's also interactive.  Update your code from within a running instance of your game, test functions, try out ideas, or change variables.  Like Assembly language, Forth also doesn't hold your hand when it comes to type-checking, but unlike Assembly you can test your functions deeply and thoroughly before putting them all together.
-
-Ramen is a "breakaway" engine.  It functions as a game engine but also as a framework; there is a standard configuration, but most of its parts are optional and mix-and-match.  You could even replace whole parts with your own.  I've strived to make the parts easy-to-understand and decoupled.
+Ramen is a game engine written in standard Forth, based on [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit).
 
 ## Features
 
 - [Tiled](https://www.mapeditor.org/) map support (partial)
 - Sprite animation
-- Display list
+- Multiple display list support
+- In-game interactive REPL
 - Fast rectangle collision detection
 - Roundrobin multitasking
-- Graphics
+- Graphics primitives (such as line, rectangle, blit...)
 - Publish
 - Z-sorted rendering
 - Basic sound support
@@ -47,15 +40,15 @@ I recommend having a one-project-per-instance workflow.  Clone it for each proje
 
 ## Help
 
-- [Documentation](http://rogerlevy.github.com/ramen) is hosted by Github Pages.
+- [Documentation](http://rogerlevy.github.com/ramen) is hosted by Github Pages. (in-progress)
 
 - I'm available to help one-on-one [on Facebook](https://www.facebook.com/inkajoo).  
 
 - The [Forth 21st Century Programming Facebook](https://www.facebook.com/groups/PROGRAMMINGFORTH/) group is a good place to ask questions or report problems, as is [ForthHub on Github](https://github.com/ForthHub/discussion/issues).
 
-## Future
+## Roadmap
 
-- [ ] Scaling, rotation, tint, and h/v flip for game objects
-- [ ] Isometric tilemap and object collision detection
+- [x] Scaling, rotation, tint, and h/v flip for game objects
+- [x] Isometric tilemap and object collision detection
 - [ ] Shader support
 - [ ] GUI framework
