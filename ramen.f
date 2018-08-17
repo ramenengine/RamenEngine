@@ -29,3 +29,4 @@ include ramen/publish.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
 
+: frmctr  frmctr 1p ;
