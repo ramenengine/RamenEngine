@@ -78,9 +78,9 @@ variable lmargin
 : +line  at@ pofs 2+ line ;
 : line+  2dup +line +at ;
 : pixel  at@ pofs  2af  fore 4@  al_draw_pixel ;
-: rect   ( w h )  at@ pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
+: rect   ( w h )  1 1 2-  at@ pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
 : rectf  ( w h )  at@ -pofs  2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
-: rrect  ( w h rx ry )  2>r at@ pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
+: rrect  ( w h rx ry )  2>r 1 1 2-  at@ pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
 : rrectf  ( w h rx ry )  2>r at@ -pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
 : ellipse  ( rx ry ) at@ pofs 2swap 4af fore 4@ hairline al_draw_ellipse ;
 : ellipsef ( rx ry ) at@ -pofs 2swap 4af fore 4@ al_draw_filled_ellipse ;
