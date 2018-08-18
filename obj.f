@@ -84,7 +84,9 @@ struct (objlist) \ objlist struct, also used for pools
     me ol ol.last !
     ;
 : each>  ( objlist/pool -- <code> )
-    r> swap  dup >first  { ol.count @ 0 do  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
+    r> swap  dup >first  { ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
+: each   ( objlist/pool xt -- )  
+    >code  swap  dup >first  { ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
 : all>  ( objlist/pool -- <code> )
     r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
 : enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
@@ -125,5 +127,17 @@ create (temp) object  \ internal: for natural setting of role var values and act
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
 
-
-
+\ Filtering tools
+0 value xt
+: #queued  ( addr -- addr n )  here over - cell/ 1p ;
+: eachcell  ( addr n xt -- )  ( addr -- )
+    xt >r  to xt
+        cells bounds do  i xt execute  cell +loop
+    r> to xt ;
+: eachcell>  ( addr n -- <code> )  ( addr -- )
+    r> code> eachcell ;
+: some  ( objlist filterxt xt -- )  ( addr n -- )
+    here >r  -rot  each  r@ #queued rot execute  r> reclaim ;
+: some>  ( objlist filterxt -- <code> )  ( addr n -- )
+    r> code> some ;
+    
