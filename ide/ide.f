@@ -55,7 +55,7 @@ consolas chrh constant fh
 : ?call  ?dup -exit call ;
 : ?.catch  ?dup -exit .catch  postpone [ ;
 : recall  history count cmdbuf place ;
-: store   cmdbuf count history place ;
+: store   cmdbuf count dup if  history place  else  2drop  then ;
 : typechar  cmdbuf count + c!  #1 cmdbuf c+! ;
 : rub       cmdbuf c@  #1 -  0 max  cmdbuf c! ;
 : paste     clipb@  cmdbuf append ;
@@ -86,7 +86,7 @@ consolas chrh constant fh
     lm cursor x!
     1 rows cursor y+!
     scrolling @ -exit
-    cursor y@ bm >= if  scroll  then
+    cursor y@ 1 rows + bm >= if  scroll  then
 ;
 : (emit)
     ch c!
