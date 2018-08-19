@@ -18,6 +18,6 @@
 
 \ find if 2 rectangles (x1,y1,x2,y2) and (x3,y3,x4,y4) overlap.
 : overlap? ( xyxy xyxy - flag )
-  2swap 2rot rot > -rot <= and >r rot >= -rot < and r> and ;
+  2swap 2rot rot > -rot < and >r rot > -rot < and r> and ;
 
 :noname noop ; constant ..

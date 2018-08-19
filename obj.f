@@ -84,11 +84,11 @@ struct (objlist) \ objlist struct, also used for pools
     me ol ol.last !
     ;
 : each>  ( objlist/pool -- <code> )
-    r> swap  dup >first  { ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
+    r>  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
 : each   ( objlist/pool xt -- )  
-    >code  swap  dup >first  { ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
+    >code  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
 : all>  ( objlist/pool -- <code> )
-    r> swap  dup >first  { ol.count @ 0 do  dup >r  call  r>   nxt  loop  drop } ;
+    r>  { swap dup >first  ol.count @ for  dup >r  call  r>   nxt  loop  drop } ;
 : enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
 : initme  at@ x 2!  defaults 4 cells +  en  [ maxsize 4 cells - ]# move ;
