@@ -8,6 +8,8 @@ Ramen is a game engine written in standard Forth, based on [AllegroForthKit](htt
 - Sprite animation
 - Multiple display list support
 - In-game interactive REPL
+- ColorForth-inspired, minimalist code featuring flat data design.
+- No OOP, few datatypes, and 90% of definitions are one-liners.
 - Fast rectangle collision detection
 - Roundrobin multitasking
 - Graphics primitives (such as line, rectangle, blit...)
@@ -32,7 +34,8 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
 
 1. Download or clone [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) into your project folder. See the README for supported platforms and installation instructions.
 1. Download or clone Ramen into your project folder (as a subfolder `ramen/`). `git clone https://github.com/RogerLevy/ramen.git` 
-1. Documentation is available at [Github Pages](http://rogerlevy.github.com/ramen).
+1. Download and install [SwiftForth](https://www.forth.com/download/) (currently required) and optionally [Komodo Edit](https://www.activestate.com/komodo-ide/downloads/edit).
+1. Documentation is hosted on [Github Pages](http://rogerlevy.github.com/ramen). (in-progress)
 1. Start your Forth system and check out the included examples in the ex/ folder.  (E.g. `sf include ramen/ex/exdepth` on SwiftForth.)
 1. There is also some stuff in the test/ directory.
 
