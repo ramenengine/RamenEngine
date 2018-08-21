@@ -23,6 +23,8 @@
 
 require afkit/plat/win/clipb.f
 
+variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
+
 define ideing
 
 s" ramen/ide/data/consolab.ttf" 24 ALLEGRO_TTF_NO_KERNING font: consolas
@@ -41,10 +43,7 @@ create attributes
 variable output   \ output bitmap
 create margins  4 cells /allot   \ margins for the command history. (rectangle)
 0 value tempbmp
-variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
-defer history?  :noname  0 ; is history?
-:is repl?  interact @ 0 1 within? not ;
-:is history?  interact @ 0<> ;
+:is repl?  interact @ ;
 
 \ --------------------------------------------------------------------------------------------------
 \ low-level stuff
@@ -160,7 +159,7 @@ create ide-personality
     etype ALLEGRO_EVENT_KEY_DOWN = if
         keycode dup #37 < if  drop exit  then
             case
-                <tab> of  interact @ 1 - pfloor 3 + 3 mod interact ! endof
+                <tab> of  interact toggle  endof
             endcase
     then
 
@@ -224,7 +223,7 @@ create ide-personality
 : shade  black 0.1 alpha  0 0 at  displaywh rectf  white ;
 
 : ide-system  idekeys ;
-: ide-overlay  history? -exit  shade  0 0 at  .output  bottom at  repl? -exit  .cmdline ;
+: ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 : autoexec s" ld autoexec" ['] evaluate catch ?.catch ; 
 
