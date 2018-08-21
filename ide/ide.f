@@ -41,6 +41,10 @@ create attributes
 variable output   \ output bitmap
 create margins  4 cells /allot   \ margins for the command history. (rectangle)
 0 value tempbmp
+variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
+defer history?  :noname  0 ; is history?
+:is repl?  interact @ 0 1 within? not ;
+:is history?  interact @ 0<> ;
 
 \ --------------------------------------------------------------------------------------------------
 \ low-level stuff
@@ -92,7 +96,7 @@ consolas chrh constant fh
     ch c!
     cursor xy@ at  ch #1 print
     fw cursor x+!
-    cursor x@ rm >= if  ramen-cr  then
+    cursor x@ 1 cols + rm >= if  ramen-cr  then
 ;
 decimal
     : ramen-emit  output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
@@ -156,12 +160,12 @@ create ide-personality
     etype ALLEGRO_EVENT_KEY_DOWN = if
         keycode dup #37 < if  drop exit  then
             case
-                <tab> of  interact toggle  endof
+                <tab> of  interact @ 1 - pfloor 3 + 3 mod interact ! endof
             endcase
     then
 
-    \ only when INTERACT is on:
-    interact @ -exit
+    \ only when REPL? is true:
+    repl? -exit
     etype ALLEGRO_EVENT_KEY_CHAR = if
         ctrl? if
             unichar special
@@ -189,7 +193,7 @@ create ide-personality
     ."  F: "
     0  DO  I' I - #1 - FPICK N.  #1 +LOOP
   THEN ;
-: +blinker interact @ -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
+: +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker print ;
 : bar      outputw  displayh bm -  black  output @ fill ;
 : .output  2 2 +at  black 0.75 alpha  output @ blit  -2 -2 +at  white  output @ blit ;
@@ -220,9 +224,9 @@ create ide-personality
 : shade  black 0.1 alpha  0 0 at  displaywh rectf  white ;
 
 : ide-system  idekeys ;
-: ide-overlay  interact @ -exit  shade  0 0 at  .output  bottom at  .cmdline ;
+: ide-overlay  history? -exit  shade  0 0 at  .output  bottom at  repl? -exit  .cmdline ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
-: autoexec s" ld autoexec" ['] evaluate catch ?.catch ;
+: autoexec s" ld autoexec" ['] evaluate catch ?.catch ; 
 
 
 only forth definitions also ideing

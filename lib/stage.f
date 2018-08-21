@@ -45,8 +45,7 @@ stage object: cam
 [section] go
 : think  stage each> act ;
 : physics  stage each>  vx x v+  y @ zdepth ! ;
-: pump-noop  pump>  noop ;
 : step-stage  step>  think  stage multi  physics ;
 : show-stage  show>  black backdrop  subject track  camtrans  stage drawzsorted ;
-:is warm  pump-noop  step-stage  show-stage ;
+:is warm  step-stage  show-stage ;
 
