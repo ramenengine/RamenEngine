@@ -61,13 +61,15 @@ variable fnt  default-font fnt !
 variable lmargin
 : chrw  >fnt z" A" al_get_text_width 1p ;
 : chrh  >fnt al_get_font_line_height 1p ;
-: print ( str count -- )
-    zstring >r  fnt @ >fnt fore 4@ at@ 2af ALLEGRO_ALIGN_LEFT r@ al_draw_text
-    fnt @ >fnt r> al_get_text_width 1p 0 +at ;
 : stringw  zstring fnt @ >fnt swap al_get_text_width 1p ;
 : stringwh  stringw fnt @ chrh ;
 : fontw  fnt @ chrw ;
 : fonth  fnt @ chrh ;
+: (print) ( str count alignment -- ) -rot  zstring >r  >r  fnt @ >fnt fore 4@ at@ 2af r> r> al_draw_text ;
+: print  ALLEGRO_ALIGN_LEFT (print)  ;
+: printr  ALLEGRO_ALIGN_RIGHT (print) ;
+: printc  ALLEGRO_ALIGN_CENTER (print) ;
+: print+  2dup print stringw 0 +at ;
 : newline  lmargin @ at@ nip fnt @ fonth + at ;
 
 \ Primitives
