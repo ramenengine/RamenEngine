@@ -195,7 +195,9 @@ create ide-personality
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker print ;
 : bar      outputw  displayh bm -  black  output @ fill ;
-: .output  2 2 +at  black 0.75 alpha  output @ blit  -2 -2 +at  white  output @ blit ;
+: ?trans   repl? if 1 alpha else 0.66 alpha then ;
+: ?shad    repl? if 0.75 alpha else 0.4 alpha then ;
+: .output  2 2 +at  black ?shad  output @ blit  -2 -2 +at  white ?trans  output @ blit ;
 : bottom  lm bm ;
 : .cmdline
     output @ >r  display al_get_backbuffer output !
