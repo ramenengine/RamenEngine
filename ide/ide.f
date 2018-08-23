@@ -21,6 +21,8 @@
 \   OUTPUT  ( -- variable )  variable that stores the bitmap to draw text output onto.
 \   /S  reset the Forth stack
 
+ide-loaded on
+
 require afkit/plat/win/clipb.f
 
 variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
@@ -147,7 +149,6 @@ create ide-personality
   case
     [char] v of  paste  endof
     [char] c of  copy   endof
-    [char] p of  pause toggle endof
   endcase ;
 
 : idekeys
