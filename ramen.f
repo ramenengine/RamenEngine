@@ -1,7 +1,9 @@
+include afkit/ans/version.f
+#1 0 0 [version]   
+\ always check the version
+
 [undefined] ramen [if] 
 true constant ramen
-include afkit/ans/version.f
-#1 0 0 [version]
 
 \ --------------------------------------------------------------------------------------------------
 
@@ -17,6 +19,10 @@ include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point li
 include ramen/stack.f
 include ramen/rect.f
 include ramen/res.f
+
+[then]
+\ The following always needs to be reloaded every time EMPTY is called:
+
 
 \ Assets
 include ramen/assets.f
@@ -38,6 +44,3 @@ redef off  \ from here on fields only defined if not previously defined
 ; execute  
 
 only forth definitions marker (empty)
-[else]
-    drop drop drop 
-[then]
