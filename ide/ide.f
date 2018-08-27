@@ -28,6 +28,8 @@ require afkit/plat/win/clipb.f
 variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
 
 define ideing
+include ramen/lib/draw.f
+include ramen/lib/v2d.f
 
 s" ramen/ide/data/consolab.ttf" 24 ALLEGRO_TTF_NO_KERNING font: consolas
 create cursor 6 cells /allot
@@ -43,9 +45,9 @@ create attributes
   1 , 1 , 0.3 ,   1 ,  \ light yellow
   0 , 1 , 1 ,     1 ,  \ cyan
 variable output   \ output bitmap
-create margins  4 cells /allot   \ margins for the command history. (rectangle)
 0 value tempbmp
 :is repl?  interact @ ;
+create margins 4 cells /allot
 
 \ --------------------------------------------------------------------------------------------------
 \ low-level stuff
@@ -54,7 +56,7 @@ consolas chrh constant fh
 : cols  fw * ;
 : rows  fh * ;
 : rm  margins x2@  displayw min ;
-: bm  margins y2@  displayh min ;
+: bm  margins y2@  displayh 3 rows -  min ;
 : lm  margins x@  displayw >= if  0  else  margins x@  then ;
 : tm  margins y@  displayh >= if  0  else  margins y@  then ;
 : ?call  ?dup -exit call ;
@@ -154,9 +156,8 @@ create ide-personality
 : idekeys
     \ always:
     etype ALLEGRO_EVENT_DISPLAY_RESIZE =
-    etype FULLSCREEN_EVENT = or if
-        /margins
-    then
+        etype FULLSCREEN_EVENT =  or if  /margins  then
+
     etype ALLEGRO_EVENT_KEY_DOWN = if
         keycode dup #37 < if  drop exit  then
             case
@@ -202,7 +203,7 @@ create ide-personality
 : bottom  lm bm ;
 : .cmdline
     output @ >r  display al_get_backbuffer output !
-    get-xy 2>r  at@ cursor xy!  bar  scrolling off  .s2  cr  .cmdbuf  scrolling on   2r> at-xy
+    get-xy 2>r  at@ cursor xy!  bar  scrolling off  .s2  space  .cmdbuf  scrolling on   2r> at-xy
     r> output !
 ;
 
@@ -236,3 +237,4 @@ only forth definitions also ideing
 : wipe  page ;
 : /s  S0 @ SP! ;
 only forth definitions
+marker (empty)

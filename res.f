@@ -8,7 +8,7 @@
 : displaywh  displayw displayh ;
 
 : globalscale  #globalscale 1p ;
-: viewwh  desired-res xy@ 2p ;
+: viewwh  res xy@ 2p ;
 : vieww  viewwh drop ;
 : viewh  viewwh nip ;
 

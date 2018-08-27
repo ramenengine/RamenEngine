@@ -4,13 +4,6 @@
 \ future ideas:
 \  - "V" registers with push and pop words.  all "vector" params implicit?
 
-vocabulary v2d
-only forth also v2d definitions
-: 2!  swap over cell+ ! ! ;
-: 2@  dup @ swap cell+ @ ;
-: 2+!  swap over cell+ +! +! ;
-only forth definitions also v2d
-
 : vector:  ( x y -- <name> )  create swap , , ;
 2 cells constant /vector
 : 2.  swap . . ;
@@ -49,4 +42,3 @@ only forth definitions also v2d
 : vlerp  ( vec1 vec2 n -- )
     locals| n v2 v1 |
     v1 x@ v2 x@ n lerp  v1 y@ v2 y@ n lerp  v2 2! ;
-only forth definitions

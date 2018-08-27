@@ -1,9 +1,11 @@
+[undefined] ramen [if] 
+true constant ramen
 include afkit/ans/version.f
 #1 0 0 [version]
+
 \ --------------------------------------------------------------------------------------------------
 
-\ AllegroForthKit
-#1 0 0 include afkit/afkit.f
+#1 0 0 include afkit/afkit.f  \ AllegroForthKit
 
 include ramen/variables.f
 include ramen/plat.f
@@ -30,3 +32,12 @@ include ramen/publish.f
 redef off  \ from here on fields only defined if not previously defined
 
 : frmctr  frmctr 1p ;
+
+:noname
+    show>      0e 0e 0.5e 1e 4sf al_clear_to_color
+; execute  
+
+only forth definitions marker (empty)
+[else]
+    drop drop drop 
+[then]
