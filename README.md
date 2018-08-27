@@ -7,18 +7,16 @@ Ramen is a game engine written in standard Forth, based on [AllegroForthKit](htt
 - [Tiled](https://www.mapeditor.org/) map support (partial)
 - Sprite animation
 - Multiple display list support
-- In-game interactive REPL
+- Interactive commandline console
 - ColorForth-inspired, minimalist code featuring flat data design.
 - No OOP, few datatypes, and 90% of definitions are one-liners.
 - Fast rectangle collision detection
 - Roundrobin multitasking
-- Graphics primitives (such as line, rectangle, blit...)
-- Publish
+- Graphics primitives such as line, rectangle, ellipse, blit, text, etc.
+- Publish facility
 - Z-sorted rendering
 - Basic sound support
-- Data structures: 2D arrays, stacks, node trees
-- Fixed-point numbers
-- 2D vectors
+- Data structure extensions - 2D arrays, stacks, node trees
 
 ## See Ramen in Action
 
