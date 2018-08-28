@@ -6,7 +6,7 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : rgba   alpha rgb ;
 
 \ Bitmaps, backbuffer
-: onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap onto call  r> onto ;
+: onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap onto  call  r> al_set_target_bitmap ;
 : movebmp  ( src sx sy w h )  write-src BLEND>  at@ 2af 0 al_draw_bitmap ;
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
@@ -54,6 +54,10 @@ fixed
     locals| flip ang sy sx bmp |  bmp ?exit
     bmp  fore 4@  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap ;
 : blit   ( bmp ) 0 blitf ;
+: blitrgnf  ( bmp x y w h flip )
+    locals| flip h w y x bmp |
+    bmp  fore 4@  x y w h 4af  at@ 2af  flip  al_draw_tinted_bitmap_region ;
+: blitrgn  0 blitrgnf ;
 
 
 \ Text; uses Ramen font assets
