@@ -48,6 +48,7 @@ variable output   \ output bitmap
 0 value tempbmp
 :is repl?  interact @ ;
 create margins 4 cells /allot
+0 value outbmp
 
 \ --------------------------------------------------------------------------------------------------
 \ low-level stuff
@@ -69,10 +70,8 @@ consolas chrh constant fh
 : copy      cmdbuf count clipb! ;
 : keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
-: ctrl?  evt ALLEGRO_KEYBOARD_EVENT.modifiers @ ALLEGRO_KEYMOD_CTRL and ;
-: alt?  evt ALLEGRO_KEYBOARD_EVENT.modifiers @ ALLEGRO_KEYMOD_ALT and ;
 : /margins  0 0 displaywh 3 rows - margins xywh! ;
-: /output  native 2@ al_create_bitmap output !  output @ al_clone_bitmap to tempbmp ;
+: /output  native 2@ al_create_bitmap dup to outbmp output !  outbmp al_clone_bitmap to tempbmp ;
 
 \ --------------------------------------------------------------------------------------------------
 \ Output words
@@ -102,9 +101,9 @@ consolas chrh constant fh
     cursor x@ 1 cols + rm >= if  ramen-cr  then
 ;
 decimal
-    : ramen-emit  output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
-    : ramen-type  output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
-    : ramen-?type  ?dup if type else 2drop then ;
+    : ramen-emit   output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
+    : ramen-type   output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
+    : ramen-?type  dup if type else 2drop then ;
 fixed
 : ramen-attribute  1p 4 cells * attributes +  cursor colour  4 imove ;
 
@@ -140,7 +139,7 @@ create ide-personality
 : cancel   cmdbuf off ;
 : echo     cursor colour 4@  #4 attribute  cr  cmdbuf count type space  cursor colour 4! ;
 : interp   echo  cmdbuf count evaluate ;
-: obey     store  ['] interp catch ?.catch  cancel  >display ;
+: obey     store  ['] interp catch ?.catch  cmdbuf off ;
 
 \ --------------------------------------------------------------------------------------------------
 \ Input handling
@@ -195,16 +194,20 @@ create ide-personality
     0  DO  I' I - #1 - FPICK N.  #1 +LOOP
   THEN ;
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
-: .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker print ;
+: .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      outputw  displayh bm -  black  output @ fill ;
 : ?trans   repl? if 1 alpha else 0.66 alpha then ;
 : ?shad    repl? if 0.75 alpha else 0.4 alpha then ;
-: .output  2 2 +at  black ?shad  output @ blit  -2 -2 +at  white ?trans  output @ blit ;
-: bottom  lm bm ;
+: .output  2 2 +at  black ?shad  outbmp blit  -2 -2 +at  white ?trans  outbmp blit ;
+: bottom   lm bm ;
 : .cmdline
-    output @ >r  display al_get_backbuffer output !
-    get-xy 2>r  at@ cursor xy!  bar  scrolling off  .s2  space  .cmdbuf  scrolling on   2r> at-xy
+    output @ >r
+    display output !
+    get-xy 2>r
+        at@ cursor xy!  bar  scrolling off  .s2  cr   .cmdbuf  scrolling on
+    2r> at-xy
     r> output !
+    output @ onto> noop  \ fixes the lag bug...  why though?
 ;
 
 
