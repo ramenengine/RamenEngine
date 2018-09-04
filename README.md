@@ -1,9 +1,10 @@
 # Ramen - the Readily Available Multimedia ENgine
 
-Ramen is a game engine written in standard Forth, based on [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit).
+Ramen is a game engine written in standard Forth.
 
 ## Features
 
+- Built with Allegro 5, using [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit).
 - [Tiled](https://www.mapeditor.org/) map support (partial)
 - Sprite animation
 - Multiple display list support
