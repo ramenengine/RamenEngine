@@ -39,6 +39,7 @@ include ramen/publish.f
 redef off  \ from here on fields only defined if not previously defined
 
 objlist stage  \ default object list
+: /stage  stage /objlist ;
 
 \ --------------------------------------------------------------------------------------------------
 \ some graphics tools for the default engine state
@@ -63,7 +64,7 @@ create (fc)  3 cells allot
 : hsv! ( h s v color -- )  >r  3af  (fc) dup cell+ dup cell+  al_color_hsv_to_rgb  r> !color ;    
 \ --------------------------------------------------------------------------------------------------
 
-\ default engine state
+\ default engine state; chill vibes
 create (c1)  0.0 , 0 , 0.1 , 1 ,
 create (c2)  0.25 , 0.1 , 0.4 , 1 , 
 : colorcycle
@@ -75,8 +76,7 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
 
 :noname
     show>
-        unmount  ramenbg 
-        mount    stage each> draw
+        unmount  ramenbg  stage each> draw
 ; execute
 
 : think  stage each> act ;

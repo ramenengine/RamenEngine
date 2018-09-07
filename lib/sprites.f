@@ -21,10 +21,13 @@ redef on
 
     \ animation state:
     var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
-    defaults >{
-        1 1 sx 2!  1 1 1 1 tint 4!  1 anmspd !
-    }
 redef off
+
+defaults >{
+    1 1 sx 2!
+    1 1 1 1 tint 4!
+    1 anmspd !
+}
 
 \ Drawing
 : sprite ( srcx srcy w h flip )  \ pass a rectangle defining the region to draw
