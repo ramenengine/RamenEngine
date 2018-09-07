@@ -12,9 +12,9 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
 
-\ Predefined Colors
-: 8>f  s>f 255e f/ ;
-: createcolor create rot 8>f sf, swap 8>f sf, 8>f sf, does> 3@ fore 3! 1 alpha ;
+\ Predefined Colors; stored in fixed-point so you can modify them with `['] <color> >BODY`
+: 8>p  s>f 255e f/ f>p ;
+: createcolor create rot 8>p , swap 8>p , 8>p , 1 , does> 3@ 3af fore 3! 1 alpha ;
 
 hex
 00 00 00 createcolor black 69 71 75 createcolor dgrey
