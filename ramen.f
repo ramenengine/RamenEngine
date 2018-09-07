@@ -18,6 +18,9 @@ include afkit/ans/version.f
     include ramen/stack.f
     include ramen/rect.f
     include ramen/res.f
+
+    : frmctr  frmctr 1p ;
+
 [then]
 
 \ The following needs to be reloaded every time EMPTY is called:
@@ -34,8 +37,6 @@ include ramen/obj.f
 include ramen/publish.f
 \ --------------------------------------------------------------------------------------------------
 redef off  \ from here on fields only defined if not previously defined
-
-: frmctr  frmctr 1p ;
 
 objlist stage  \ default object list
 
@@ -70,9 +71,11 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
     0.25 0.4 frmctr -20 / (c2) lch!
     (c1) (c2)
 ;
+: ramenbg  0 0 at  colorcycle displaywh vgradient ;
+
 :noname
     show>
-        unmount  0 0 at  colorcycle displaywh vgradient  
+        unmount  ramenbg 
         mount    stage each> draw
 ; execute
 
