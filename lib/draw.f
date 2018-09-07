@@ -90,8 +90,8 @@ variable lmargin
 : rrectf  ( w h rx ry )  2>r at@ -pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
 : oval  ( rx ry ) at@ pofs 2swap 4af fore 4@ hairline al_draw_ellipse ;
 : ovalf ( rx ry ) at@ -pofs 2swap 4af fore 4@ al_draw_filled_ellipse ;
-: circle  dup oval ;
-: circlef  dup ovalf ;
+: circ  dup oval ;
+: circf  dup ovalf ;
 
 
 create ftemp  2 cells allot
