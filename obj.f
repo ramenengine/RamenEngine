@@ -63,18 +63,20 @@ create defaults  maxsize /allot         \ default values are stored here
 defaults as  en on 
 
 \ objlists and pools
-struct (objlist) \ objlist struct, also used for pools
-    (objlist) int svar ol.first
-    (objlist) int svar ol.count
-    (objlist) int svar ol.#free
-    (objlist) int svar ol.last
+struct %objlist \ objlist struct, also used for pools
+    %objlist int svar ol.first
+    %objlist int svar ol.count
+    %objlist int svar ol.#free
+    %objlist int svar ol.last
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
 : free+!   ol.#free +! ;
 : >last   ol.last @ ;
 : object  {  here  maxsize /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
-: objlist   create defaults , 0 , 0 , defaults , ;
+create (ol)  defaults , 0 , 0 , defaults , 
+: objlist   create  (ol) %objlist sizeof move, ;
+: /objlist   (ol) swap %objlist sizeof move ;
 : ?first  dup ol.first @ defaults = -exit  here over ol.first ! ;
 : pool:  ( objlist n -- <name> )
     locals| n ol |
@@ -91,7 +93,7 @@ struct (objlist) \ objlist struct, also used for pools
     r>  { swap dup >first  ol.count @ for  dup >r  call  r>   nxt  loop  drop } ;
 : enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
-: initme  at@ x 2!  defaults 4 cells +  en  [ maxsize 4 cells - ]# move ;
+: initme  at@ x 2!  defaults 's en  en  [ maxsize 4 cells - ]# move ;
 : remove  ( object -- )  >{  en off  hidden on  1 ^pool @ free+!  } ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" ONE: A pool was exhausted. " ;
