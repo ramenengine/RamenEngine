@@ -28,6 +28,7 @@ require afkit/plat/win/clipb.f
 variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
 
 define ideing
+
 include ramen/lib/draw.f
 include ramen/lib/v2d.f
 
@@ -61,7 +62,6 @@ consolas chrh constant fh
 : lm  margins x@  displayw >= if  0  else  margins x@  then ;
 : tm  margins y@  displayh >= if  0  else  margins y@  then ;
 : ?call  ?dup -exit call ;
-: ?.catch  ?dup -exit .catch  postpone [ ;
 : recall  history count cmdbuf place ;
 : store   cmdbuf count dup if  history place  else  2drop  then ;
 : typechar  cmdbuf count + c!  #1 cmdbuf c+! ;
@@ -136,10 +136,12 @@ create ide-personality
 \ --------------------------------------------------------------------------------------------------
 \ Command management
 
-: cancel   cmdbuf off ;
+: cancel   0 cmdbuf ! ;
 : echo     cursor colour 4@  #4 attribute  cr  cmdbuf count type space  cursor colour 4! ;
-: interp   echo  cmdbuf count evaluate ;
-: obey     store  ['] interp catch ?.catch  cmdbuf off ;
+: interp   cmdbuf count (evaluate) ;
+' ERRORMSG is .catch
+: ?.catch  ?dup if  .catch  then ;
+: obey     store  echo  ['] interp catch ?.catch  0 cmdbuf ! ;
 
 \ --------------------------------------------------------------------------------------------------
 \ Input handling
