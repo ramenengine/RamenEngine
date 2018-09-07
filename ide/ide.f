@@ -25,7 +25,7 @@ ide-loaded on
 
 require afkit/plat/win/clipb.f
 
-variable interact   \ 2 = cmdline will receive keys.  <>0 = display history
+variable interact   \ <>0 = repl active/visible
 
 define ideing
 
@@ -139,7 +139,8 @@ create ide-personality
 : cancel   0 cmdbuf ! ;
 : echo     cursor colour 4@  #4 attribute  cr  cmdbuf count type space  cursor colour 4! ;
 : interp   cmdbuf count (evaluate) ;
-' ERRORMSG is .catch
+\ : ?errormsg  errormsg ; 
+\ ' ?errormsg is .catch
 : ?.catch  ?dup if  .catch  then ;
 : obey     store  echo  ['] interp catch ?.catch  0 cmdbuf ! ;
 
@@ -195,6 +196,11 @@ create ide-personality
     ."  F: "
     0  DO  I' I - #1 - FPICK N.  #1 +LOOP
   THEN ;
+  
+: ?.errs
+    showerr  if  ." SHOWERR "  then
+    steperr  if  ." STEPERR "  then ;
+
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      outputw  displayh bm -  black  output @ fill ;
@@ -206,7 +212,7 @@ create ide-personality
     output @ >r
     display output !
     get-xy 2>r
-        at@ cursor xy!  bar  scrolling off  .s2  cr   .cmdbuf  scrolling on
+        at@ cursor xy!  bar  scrolling off  ?.errs .s2  cr   .cmdbuf  scrolling on
     2r> at-xy
     r> output !
     output @ onto> noop  \ fixes the lag bug...  why though?
@@ -217,16 +223,11 @@ create ide-personality
 \ --------------------------------------------------------------------------------------------------
 \ bring it all together
 
-: /ide
-    /s
-    /output
-    1 1 1 1 cursor colour 4!
-    /margins
-    interact on
-;
+: /ide  /output  1 1 1 1 cursor colour 4!  /margins ;
 : /repl
-    /ide 
-    ['] >display is >ide  \ >IDE is redefined to take us to the display
+    /s   \ clear the stack
+    interact on
+    ['] >display is >ide               \ >IDE is redefined to take us to the display
     ide-personality open-personality
 ;
 : shade  black 0.1 alpha  0 0 at  displaywh rectf  white ;
@@ -238,7 +239,7 @@ create ide-personality
 
 
 only forth definitions also ideing
-: ide  /repl  rasa  ( autoexec )  begin go again ;
+: ide  /ide  /repl  rasa  ( autoexec )  begin go again ;
 : wipe  page ;
 : /s  S0 @ SP! ;
 only forth definitions
