@@ -86,5 +86,6 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
     step>  think  physics
 ; execute
 
+include ramen\cutlet.f
 
 only forth definitions marker (empty)

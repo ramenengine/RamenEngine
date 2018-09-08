@@ -223,11 +223,12 @@ create ide-personality
 \ --------------------------------------------------------------------------------------------------
 \ bring it all together
 
-: /ide  /output  1 1 1 1 cursor colour 4!  /margins ;
+: /ide  >ide  /output  1 1 1 1 cursor colour 4!  /margins ;  \ don't remove the >IDE; fixes a bug
 : /repl
     /s   \ clear the stack
     interact on
     ['] >display is >ide               \ >IDE is redefined to take us to the display
+    >ide
     ide-personality open-personality
 ;
 : shade  black 0.1 alpha  0 0 at  displaywh rectf  white ;

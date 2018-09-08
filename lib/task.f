@@ -53,6 +53,7 @@ create queue 1000 stack
 
 \ pulse the multitasker.
 : multi  ( objlist -- )
+    dup ol.count @ 0= if drop exit then
     {
         ol.first @ main 's lnk !
         dup

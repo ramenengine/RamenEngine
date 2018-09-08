@@ -1,7 +1,6 @@
-\ This loads Ramen plus kinda your "standard library set"
+\ Standard library set
 \ Very general purpose
 
-( M m R passed by includer ) include ramen/ramen.f
 require ramen/lib/rangetools.f
 require ramen/lib/zsort.f
 require ramen/lib/draw.f
@@ -12,10 +11,8 @@ require afkit/lib/kb.f
 require ramen/lib/audio1.f
 require ramen/lib/sprites.f
 
-: acts  each> act 
-: think  stage dup multi ;
+: acts  each> act ;
+: think  stage dup acts multi ;
 : physics  stage each>  vx 2@ x 2+! ;
 
-:noname
-    step>  think  physics
-; execute
+:now  step>  think  physics ;
