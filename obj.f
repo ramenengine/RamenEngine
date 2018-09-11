@@ -3,6 +3,8 @@
 \        (2/23 for now, just VARs, due to their size guarantee)
 \ [x] - but provide a way to "force" property definitions (REDEF flag)
 \ [ ] - prototypes???  putting it off.  
+\ [ ] - copy parent to already defined roles
+\ [ ] - add magic number to roles for checking if already defined
 
 \ for simplicity this will be used for more than just game objects.  possibilities:
 \   audio channels
@@ -119,15 +121,22 @@ create (ol)  defaults , 0 , 0 , defaults ,
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 var role
 variable meta
-create (temp) object  \ internal: for natural setting of role var values and action defaults
-: roledef:  me  create  here (temp) 's role !  (temp) as  /roledef /allot ;
-: ;roledef  as ;
-: derive:   ( src -- <name> )  roledef:  swap   last @ name> >body /roledef move ;
+create basis object  \ for setting default rolevar values
+create (basis) /roledef /allot  \ default rolevar and action values for all newly created roles
+(basis) basis 's role !
+create (proxy) object  \ internal: for natural setting of role var values and action defaults
+: basis{  basis postpone >{ ;       \ }
+: (define)  i{ (proxy) as  role ! ;
+: ?update  >in @  defined if  >body (define)  drop  r> drop exit then  drop >in ! ; 
+: roledef:  ?update  create  here  (basis) /roledef move,  (define) ;
+: ;roledef  i} ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
 : create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
+: +exec  + @ execute ;
+: ->  ( roledef -- <action> )  ' >body @ postpone literal postpone +exec ; immediate
 
 \ Filtering tools
 0 value xt
