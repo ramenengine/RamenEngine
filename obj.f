@@ -44,7 +44,7 @@ redef on  \ we'll keep this on while compiling RAMEN itself
 : create-field  create used @ , $76543210 , used +! ;
 : field   ?unique ?maxsize create-field does> @ me + ;
 : var  cell field ;
-: 's   ' >body @ ?lit s" +" evaluate ; immediate
+: 's   ' >body @ ?lit s" +" evaluate ; immediate  \ also works with rolevars
 : xfield  ?unique ?maxsize create-field does> @ + ;
 : xvar  cell xfield ;
 
@@ -121,15 +121,9 @@ create (ol)  defaults , 0 , 0 , defaults ,
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 var role
 variable meta
-create basis object  \ for setting default rolevar values
-create (basis) /roledef /allot  \ default rolevar and action values for all newly created roles
-(basis) basis 's role !
-create (proxy) object  \ internal: for natural setting of role var values and action defaults
-: basis{  basis postpone >{ ;       \ }
-: (define)  i{ (proxy) as  role ! ;
-: ?update  >in @  defined if  >body (define)  drop  r> drop exit then  drop >in ! ; 
-: roledef:  ?update  create  here  (basis) /roledef move,  (define) ;
-: ;roledef  i} ;
+create basis /roledef /allot  \ default rolevar and action values for all newly created roles
+: ?update  >in @  exists if  drop  r> drop exit then  >in ! ; 
+: roledef:  ?update  create  basis /roledef move,  ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
 : create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
