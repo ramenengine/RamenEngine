@@ -20,4 +20,7 @@
 : overlap? ( xyxy xyxy - flag )
   2swap 2rot rot > -rot < and >r rot > -rot < and r> and ;
 
+: inside?  ( xy xyxy - flag )  2>r 2>r 2dup 2r> 2r> overlap? ;
+
+
 :noname noop ; constant ..
