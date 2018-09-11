@@ -44,7 +44,6 @@ flist (assets)
     locals| c fn |
     fn c 2dup file-exists ?exit
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
-    s" src/" fn c strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
 cell #256 + constant /assetheader

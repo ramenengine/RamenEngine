@@ -1,1 +1,1 @@
-include src/main.f
+include main.f
