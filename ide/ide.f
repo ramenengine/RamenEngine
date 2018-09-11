@@ -32,7 +32,7 @@ define ideing
 include ramen/lib/draw.f
 include ramen/lib/v2d.f
 
-s" ramen/ide/data/consolab.ttf" 24 ALLEGRO_TTF_NO_KERNING font: consolas
+s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
 create cursor 6 cells /allot
 : colour 2 cells + ;
 variable scrolling  scrolling on
@@ -77,8 +77,8 @@ consolas chrh constant fh
 \ Output words
 : ramen-get-xy  ( -- #col #row )  cursor xy@  lm tm 2-  fw fh 2/ 2i ;
 : ramen-at-xy   ( #col #row -- )  2p fw fh 2*  lm tm 2+  cursor xy! ;
-: fill  ( w h bitmap -- )  onto>  write-src blend>  rectf ;
-: clear  ( w h bitmap -- )  black 0 alpha  fill ;
+: fill  ( w h -- )  write-src blend>  rectf ;
+: clear  ( w h bitmap -- )  black 0 alpha  onto>  fill ;
 : outputw  rm lm - ;
 : outputh  bm tm - ;
 : ramen-get-size  ( -- cols rows )  outputw outputh fw fh 2/ 2i ;
@@ -101,8 +101,9 @@ consolas chrh constant fh
     cursor x@ 1 cols + rm >= if  ramen-cr  then
 ;
 decimal
-    : ramen-emit   output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
-    : ramen-type   output @ onto>  write-src blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
+    : ?b  output @ display <> if write-src else interp-src then ;
+    : ramen-emit   output @ onto>  ?b blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
+    : ramen-type   output @ onto>  ?b blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
     : ramen-?type  dup if type else 2drop then ;
 fixed
 : ramen-attribute  1p 4 cells * attributes +  cursor colour  4 imove ;
@@ -203,17 +204,20 @@ create ide-personality
 
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
-: bar      outputw  displayh bm -  black  output @ fill ;
+: bar      outputw  displayh bm -  dblue  fill ;
 : ?trans   repl? if 1 alpha else 0.66 alpha then ;
-: ?shad    repl? if 0.75 alpha else 0.4 alpha then ;
+: ?shad    repl? if 0.9 alpha else 0.4 alpha then ;
 : .output  2 2 +at  black ?shad  outbmp blit  -2 -2 +at  white ?trans  outbmp blit ;
 : bottom   lm bm ;
 : .cmdline
-    output @ >r
-    display output !
-    get-xy 2>r
-        at@ cursor xy!  bar  scrolling off  ?.errs .s2  cr   .cmdbuf  scrolling on
-    2r> at-xy
+    bar  
+    output @ >r  display output !
+        get-xy 2>r
+            at@ cursor xy!  scrolling off
+            ?.errs  .s2  cr
+            .cmdbuf
+            scrolling on
+        2r> at-xy
     r> output !
     output @ onto> noop  \ fixes the lag bug...  why though?
 ;
@@ -231,7 +235,7 @@ create ide-personality
     >ide
     ide-personality open-personality
 ;
-: shade  black 0.1 alpha  0 0 at  displaywh rectf  white ;
+: shade  black 0.33 alpha  0 0 at  displaywh rectf  white ;
 
 : ide-system  idekeys ;
 : ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
