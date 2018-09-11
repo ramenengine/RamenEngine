@@ -62,7 +62,7 @@ fixed
     loop  drop  ;
 
 
-: scroll  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
+: scrollofs  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
     2over 2over 2mod 2negate +at   2/ 2pfloor ;
 
 \ Isometric support
