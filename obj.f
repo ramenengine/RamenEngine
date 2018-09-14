@@ -74,6 +74,7 @@ struct %objlist \ objlist struct, also used for pools
 : >first  ol.first @ as ;
 : (+free)   ^pool @ ol.#free +! ;
 : >last   ol.last @ ;
+: #objects  ol.count 2@ - ;
 : object  {  here  maxsize /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
 create (ol)  defaults , 0 , 0 , defaults , 

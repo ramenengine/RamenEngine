@@ -22,8 +22,7 @@ objlist stage  \ default object list
 used @ value baseline
 : -stage  stage -objlist ;
 : empty  -stage -assets baseline used ! empty ;
-only forth definitions marker (empty)
 
 include ramen/default.f
-
+only forth definitions marker (empty)
 only forth definitions

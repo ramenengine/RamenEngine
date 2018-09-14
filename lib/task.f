@@ -33,7 +33,7 @@ create main  object  \ proxy for the Forth data and return stacks
     sp @ sp!
     drop \ ensure TOS is in TOS register
 ;
-: end    remove pause ;
+: end    me remove pause ;
 : halt   begin pause again ;
 : pauses  for  pause  loop ;
 : secs   fps * pauses ;  \ not meant for precision timing

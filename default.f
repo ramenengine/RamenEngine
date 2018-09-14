@@ -31,14 +31,9 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
 ;
 : ramenbg  0 0 at  colorcycle displaywh vgradient ;
 
-:noname
-    show>
-        unmount  ramenbg  stage each> draw
-; execute
-
 : think  stage each> act ;
 : physics  stage each>  vx 2@ x 2+! ;
 
-:noname
-    step>  think  physics
-; execute
+: show-stage  show>  unmount  ramenbg  stage each> draw ;
+: stop  show-stage  step>  ;  stop
+:now  step>  think  physics ;
