@@ -71,8 +71,6 @@ define tmxing
     : #objects  ( objgroup -- n )  s" object" #elements ;
     : #images   ( tileset -- n )  s" image" #elements ;
 
-    include ramen/tiled/tmxz.f
-
     : tile>bmp  ( tile-nnn -- bitmap | 0 )  \ uses TSXPATH
         0 s" image" element dup -exit  source@ slashes tsxpath+  zstring al_load_bitmap ;
     : tileset>bmp  ( tileset-nnn -- bitmap )  tile>bmp ;  \ it's the same
@@ -82,9 +80,15 @@ define tmxing
 
 only forth definitions also xmling also tmxing
 
+include ramen/lib/tiled/tmxz.f
+
 0 value map
 0 value tmx
 :noname  0 to map  0 to tmx  ; loadtrig  \ initialize these on game load
+
+: >objpath  s" data/" search drop s" objects/" strjoin  slashes ;
+
+only forth definitions also xmling also tmxing
 
 : tmxtileset  ( n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
     map swap s" tileset" element
@@ -95,18 +99,18 @@ only forth definitions also xmling also tmxing
 : objgroup ( n -- objgroup ) map swap s" objectgroup" element ;
 : find-objgroup   ( name c -- dom-nnn | 0 )
     locals| c adr |
-    map #objgroups for
-        map objgroup
+    #objgroups for
+        i objgroup
             dup name@  adr c  compare 0= if  unloop  exit  then
             drop
     loop  0 ;
-
+    
 : #tmxlayers ( -- n )  map s" layer" #elements ;
 : tmxlayer ( n -- layer ) map swap s" layer" element ;
 : find-tmxlayer   ( name c -- layer | 0 )
     locals| c adr |
-    map #tmxlayers for
-        map i tmxlayer  dup
+    #tmxlayers for
+        i tmxlayer  dup
             name@  adr c  compare 0= if  unloop  exit  then
         drop
     loop  0 ;
@@ -120,8 +124,6 @@ only forth definitions also xmling also tmxing
         else  drop  then
     loop  false ;
 
-: >objpath  s" data/" search drop s" objects/" strjoin  slashes ;
-
 : open-tmx    ( path c -- )
     slashes findfile
     2dup -filename  2dup tmxpath place  2dup tsxpath place
@@ -130,4 +132,4 @@ only forth definitions also xmling also tmxing
 
 : close-tmx   tmx ?dom-free  0 to map ;
 
-only forth definitions
+only forth definitions 

@@ -10,6 +10,7 @@ require ramen/lib/task.f
 require afkit/lib/kb.f
 require ramen/lib/audio1.f
 require ramen/lib/sprites.f
+require ramen/lib/tiled.f
 
 : acts  each> act ;
 : think  stage dup acts multi ;

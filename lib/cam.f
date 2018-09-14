@@ -1,15 +1,9 @@
-\ A simple scrolling 2D game framework.
-\ Use as-is, or as a template to copy and customize.
-
 \ SUBJECT and CAM need to be set for scrolling to work.
 \ Note that you should put scrolling tilemaps in a different objlist, move them around to offset
 \ the global scrolling, and/or replace the renderer or they will scroll too fast and be clipped.
 
 0 value subject
-objlist stage
 stage object: cam
-
-
 
 \ -----------------------------------------------------------------------
 [section] camera
@@ -40,12 +34,3 @@ stage object: cam
   r> drop ;
 
 : flyby   cam as  act>  subject ?exit  vx udlrvec ;
-
-\ -----------------------------------------------------------------------
-[section] go
-: think  stage each> act ;
-: physics  stage each>  vx x v+  y @ zdepth ! ;
-: step-stage  step>  think  stage multi  physics ;
-: show-stage  show>  black backdrop  subject track  camtrans  stage drawzsorted ;
-:is warm  step-stage  show-stage ;
-

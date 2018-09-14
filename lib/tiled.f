@@ -45,7 +45,7 @@ defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )
 : >gid  ( tile -- gid )  $0000fffc and 10 << ;
 
 \ Tilemap collision
-include ramen/tiled/collision.f
+include ramen/lib/tiled/collision.f
 
 var onhitmap   \ XT ( tile -- )
 
@@ -71,8 +71,8 @@ var mbx  var mby  var mbw  var mbh
 \ -------------------------------------------------------------------------------------------------
 [section] tmx
 
-include ramen/tiled/tmx.f
-also xmling  also tmxing
+include ramen/lib/tiled/tmx.f
+also xmling also tmxing  
 
 var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
@@ -170,11 +170,11 @@ set-current set-order
             else
                 ?type if  (loadrecipe) drop  else  ( gid ) drop  then
             then ;
-: loadrecipes  ( map n -- )  (loadrecipes)  ?dom-free ;
+: load-recipes  ( map n -- )  (loadrecipes)  ?dom-free ;
 
 : ?tmxobj  dup if  tmxobj  else  2drop  then ;
 
-: loadobjects  ( objgroup -- )
+: load-objects  ( objgroup -- )
     eachelement> that's object
         dup xy@ at
         dup rectangle? if
@@ -197,6 +197,5 @@ set-current set-order
 
 : open-tilemap  ( path c -- )  \ doesn't delete any tiles; assumes static tileset
     close-tmx  -recipes  -bitmaps  open-tmx ;
-
 
 only forth definitions
