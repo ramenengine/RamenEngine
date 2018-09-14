@@ -72,13 +72,13 @@ struct %objlist \ objlist struct, also used for pools
     %objlist int svar ol.last
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
-: free+!   ol.#free +! ;
+: (+free)   ^pool @ ol.#free +! ;
 : >last   ol.last @ ;
 : object  {  here  maxsize /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
 create (ol)  defaults , 0 , 0 , defaults , 
 : objlist   create  (ol) %objlist sizeof move, ;
-: /objlist   (ol) swap %objlist sizeof move ;
+: -objlist   (ol) swap %objlist sizeof move ;
 : ?first  dup ol.first @ defaults = -exit  here over ol.first ! ;
 : pool:  ( objlist n -- <name> )
     locals| n ol |
@@ -96,11 +96,11 @@ create (ol)  defaults , 0 , 0 , defaults ,
 : enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
 : initme  at@ x 2!  defaults 's en  en  [ maxsize 4 cells - ]# move ;
-: remove  ( object -- )  >{  en off  hidden on  1 ^pool @ free+!  } ;
+: remove  ( object -- )  >{  en off  1 (+free)  } ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" ONE: A pool was exhausted. " ;
 : (slot)  ( pool -- me=obj )  ?noone  all>  en @ ?exit  enough ;
-: one ( pool -- me=obj )  dup (slot)  initme  dup ^pool !  -1 swap free+! ;
+: one ( pool -- me=obj )  dup (slot)  initme  ^pool !  -1 (+free) ;
 
 \ static object lists
 : (add)  ( objlist -- )  >r r@ >last as  r@ ?first drop  1 r@ count+!  1 objects  me r> ol.last !  initme ;

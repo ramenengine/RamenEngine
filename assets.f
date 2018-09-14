@@ -5,10 +5,10 @@
 \ forward-linked lists; only to be used in this file; temporary!!!
 \ TODO: factor out the list code from obj.f and put in utils.f
 
+create dmy 0 , 0 ,
+
 : flist  ( -- <name> )  \ declare a list
-  create    ( first ) 0 , ( last ) 0 , ( count ) 0 ,
-            here dup  dup 3 cells - 2!
-            ( next ) 0 , ( data ) 0 , ;
+  create    ( first ) dmy , ( last ) dmy , ( count ) 0 , ;
 
 : listlink   ( item list -- )  \ add an item to a list
   swap >r  dup cell+ @  here   0 , r> ,  locals| thislink lastlink list |
@@ -20,6 +20,8 @@
   @  r> locals| code |
   begin @ dup while dup >r  cell+ @ code call  r> repeat  drop ;
 
+: -flist  >r  dmy r@ !  dmy r@ cell+ !   0 r> cell+ cell+ ! ;
+
 \ ------------------------------------------------------------------------------
 \ Asset framework
 
@@ -27,6 +29,7 @@ defer initdata ( -- )
 
 flist (assets)
 : register  ( reloader-xt asset -- ) dup (assets) listlink  ( xt asset ) ! ;
+: -assets  (assets) -flist ;
 
 \ TODO: change TRAVERSE> to EACH> (or ALL>) after factoring out lists from obj.f
 : assets>  postpone (assets)  postpone traverse> ; immediate

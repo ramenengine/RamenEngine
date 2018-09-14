@@ -23,12 +23,10 @@
 
 ide-loaded on
 
-require afkit/plat/win/clipb.f
-
 variable interact   \ <>0 = repl active/visible
 
 define ideing
-
+include afkit/plat/win/clipb.f
 include ramen/lib/draw.f
 include ramen/lib/v2d.f
 
@@ -187,7 +185,7 @@ create ide-personality
     then
 ;
 
-\ ----------5----------------------------------------------------------------------------------------
+\ -----------------------------------------------------------------------------------
 \ Rendering
 : .S2 ( ? -- ? )
   #3 attribute
@@ -244,8 +242,10 @@ create ide-personality
 
 
 only forth definitions also ideing
-: ide  /ide  /repl  rasa  ( autoexec )  begin go again ;
+: go  /ide  /repl  rasa  ( autoexec )  begin go again ;
+: ide go ;
 : wipe  page ;
 : /s  S0 @ SP! ;
 only forth definitions
-marker (empty)
+
+marker (empty) 

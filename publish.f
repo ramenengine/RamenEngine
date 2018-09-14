@@ -31,7 +31,7 @@ defer warm  :is warm ;
 
 [defined] program [if]
     
-    :noname  0 ExitProcess ;  is bye
+    :is bye  0 ExitProcess ; 
     
     : publish ( -- <name> )
         cr ." Publishing to "  >in @  bl parse type >in !  ." .exe ... "
