@@ -11,6 +11,9 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
+: bmpw  al_get_bitmap_width 1p ;
+: bmph  al_get_bitmap_height 1p ;
+: bmpwh  dup bmpw swap bmph ;
 
 \ Predefined Colors; stored in fixed-point so you can modify them with `['] <color> >BODY`
 : 8>p  s>f 255e f/ f>p ;
@@ -48,11 +51,16 @@ fixed
 : blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  at@ 2af  r> al_draw_tinted_bitmap ;
 : >center  bmpwh 1 rshift  swap 1 rshift ;
 : sblitf  ( bmp dw dh flip )
-    locals| flip dh dw | ?dup ?exit
+    locals| flip dh dw | ?dup -exit
     ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  at@ dw dh 4af  flip  al_draw_tinted_scaled_bitmap ;
 : csrblitf ( bmp sx sy ang flip )
-    locals| flip ang sy sx bmp |  bmp ?exit
-    bmp  fore 4@  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap ;
+    locals| flip ang sy sx bmp |  bmp -exit
+    bmp  fore 4@  bmp >center at@  4af  sx sy ang 3af  flip
+    al_draw_tinted_scaled_rotated_bitmap ;
+: srblitf ( bmp sx sy ang flip )
+    locals| flip ang sy sx bmp |  bmp -exit
+    bmp  fore 4@  0 0 at@  4af  sx sy ang 3af  flip
+    al_draw_tinted_scaled_rotated_bitmap ;
 : blit   ( bmp ) 0 blitf ;
 : blitrgnf  ( bmp x y w h flip )
     locals| flip h w y x bmp |

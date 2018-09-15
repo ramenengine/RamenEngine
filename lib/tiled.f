@@ -9,7 +9,7 @@ require ramen/lib/array2d.f
 require ramen/lib/buffer2d.f
 require afkit/lib/stride2d.f
 
-[undefined] #MAXTILES [if] 10000 constant #MAXTILES [then]
+[undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]  \ keep this a power of 2
 include ramen/lib/tilemap.f
 
 1024 1024 buffer2d: tilebuf 
@@ -78,11 +78,11 @@ var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: (loadbitmaps)  ( n -- dom )
+: (load-bitmaps)  ( n -- dom )
     tmxtileset  locals| gid0 ts |
-    ts eachelement> that's tile  dup tile>bmp  tiles rot id@ gid0 + [] ! ;
-
-: load-bitmaps  ( n -- )  (loadbitmaps)  ?dom-free ;
+    ts eachelement> that's tile  dup tile>bmp tiles rot id@ gid0 + [] ! ;
+: load-bitmaps  ( n -- )
+    (load-bitmaps)  ?dom-free ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
 : load-tmxtileset  ( n -- ) \ load bitmap and split it up, adding it to the global tileset
@@ -92,7 +92,8 @@ var gid
     dom ?dom-free ;
 
 \ don't execute this frequently!
-: @tilesetwh  ( n -- tw th )  tmxtileset drop tilewh@ rot ?dom-free ;
+: @tilesetwh  ( n -- tw th )
+    tmxtileset drop tilewh@ rot ?dom-free ;
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
 : de-Tiled  ( n -- n )
@@ -168,7 +169,7 @@ set-current set-order
             0 s" image" element ?dup if
                 source@ -path -ext (loadrecipe) drop
             else
-                ?type if  (loadrecipe) drop  else  ( gid ) drop  then
+                obj?type if  (loadrecipe) drop  else  ( gid ) drop  then
             then ;
 : load-recipes  ( map n -- )  (loadrecipes)  ?dom-free ;
 
@@ -178,7 +179,7 @@ set-current set-order
     eachelement> that's object
         dup xy@ at
         dup rectangle? if
-            dup ?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  \ rectangles with types are treated as game objects.
+            dup obj?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  \ rectangles with types are treated as game objects.
                                                                          \ you can get the dimensions from the xml element if needed.
             dup wh@ ( nnn w h ) tmxrect
         else

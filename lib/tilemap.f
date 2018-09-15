@@ -10,7 +10,7 @@
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
 
-: tilebmp  ( n -- subbmp )  #MAXTILES 1 - and tiles [] @ ;
+: tilebmp  ( n -- bmp )  #MAXTILES 1 - and tiles nth @ ;
 
 : maketiles  ( bitmap tilew tileh firstid -- )
     locals| id th tw bmp |
