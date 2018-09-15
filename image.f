@@ -62,6 +62,6 @@ assetdef %image
     r@ imagewh  r@ image.subw 2@  2/ 2pfloor  2dup r@ image.subcols 2!
     *  r> image.subcount ! ;
 : >subxy  >r  pfloor  r@ image.subcols @  /mod  2pfloor  r> image.subw 2@ 2* ;
-: >subxywh  dup >subxy rot image.subw 2@ ;
+: >subxywh  dup >r  >subxy  r> image.subw 2@ ;
 : afsubimg  >r  r@ image.bmp @  swap r@ >subxy 2af  r> image.fsubw 2@ ;
 : imgsubbmp  dup image.bmp @ -rot  >subxywh 4i  al_create_sub_bitmap ;
