@@ -1,35 +1,166 @@
 # Objects
 
-In every game, you need some kind of data structure to represent all the objects on the screen that can move and interact with the player and each other, such as enemies and projectiles.  Commonly these are referred to as game objects, display objects, entities, nodes, or actors.
+In every video game, you need a data structure to represent all the things on the screen that move and interact with the player and each other - things such as enemies, NPC's, and projectiles.  Some common names for these are game objects, display objects, entities, nodes, actors, and so on.  In Ramen, the data structure we use is called Ramen Objects, or just "objects".  In Ramen, game objects aren't just for sprites and other things in the game but other things such as background tasks and GUI elements.
 
-In RAMEN, we call them ramen objects, or just objects.  Ramen objects are unified, polymorphic data structures used for multiple purposes, the primary of which is as game objects.  
-
-There are two levels to managing objects.
-
-## Object Lists
-
-Let's say you are making a very basic game, such as Pong, and you know how many objects are going to be on the screen.  Nothing is created or destroyed during gameplay - (at least not from the programmer's perspective.)  You'd like to just declare them and rely on them always being available.  This is what object lists provide.
-
-...
-
-## Pools
-
-In most games, the prevailing approach is that game objects are created and destroyed throughout the course of gameplay.  You don't know ahead of time the exact number or kinds of objects that will be in the game world at any given moment.
-
-For this RAMEN provides pools, which is a fast way of allocating things dynamically.  Pools are special lists containing objects that are inactive, but can be made active when you do what is called instantiating them, which is another way of saying creating them.  Pools are themselves children of normal lists such that when you create them, their objects are also part of the parent list's objects.  Pools have a maximum size of your choosing.  One good approach is to have a pool for your playfield objects and another for your heads up display elements such as health and score.  
-
-...
+Objects are very general-purpose in Ramen; there is little-to-no heirearchy of classes like you'd find in traditional OOP-based engines, so there is a notable element of fluidity to them.
 
 ## About object fields
 
-In RAMEN, you have two main kinds of data structures: normal data structures, and objects.  When you declare fields (properties) of normal data structures, you always create a new field, and it increases the size of the given structure.  With objects, there is one data structure that applies to _all_ instances and types, the maximum size is _fixed_ (by default to 256 cells) and if you declare a field that already exists, a new one will not be created.  Thus you ought to give your object fields generic names and general meanings (and standard practice is not to prefix them with the name of the struct) and treat them more like "extensions" rather than leaves within a heirearchy of data classes as you find in traditional OOP.  This is appropriate for RAMEN because it was designed to be only semi-modular - and the fact that object definitions cannot normally be moved into any project without thought follows the same philosophy.  This is a tradeoff of more freedom for the programmer in exchange for less modularity.  But Forth's ease when writing simple code somewhat bridges the gap, and we intend to encourage and promote the writing of simple code.
+All the properties of objects, or "fields" or "vars" as we also call them, are global to all objects.
 
-All objects are polymorphic or potentially so.  We can use the same words to manage other kinds of data structures, such as background tasks and GUI objects.
+To allow you to keep your field names simple and free of prefixes (encouraged), when you attempt to define a field that already exists, the definition is automatically skipped.  `redef` is the flag that disables this behavior should you want to "bury" an existing field with a new definition.  To do this say `redef on` and `redef off` to restore normal behavior.
 
-Objects also support a kind of multiple inheritance.  You can easily treat an object as being of several types, not just one.  For instance if you want any game object to also be a task, you can.  (And this is exactly how the multitasking module works.)  You can add features which apply to every object of your game, such as physics, or in the case of an RPG, properties of the elements (e.g. fire, ice, wind, earth, etc).  
+Fields are, as of this writing, typeless, like normal Forth variables.  
 
-**TECHNICAL NOTE:** None of this is incredibly original or groundbreaking - but this implementation of game objects works well in Forth and with the intended scope of RAMEN.  Some may call it wasteful of memory, but memory on the intended platform is plentiful, and besides, frequently the game objects of other engines are substantially larger than the default 1KB, due to many factors, not least of which is the monolithic design approach that is predominant.
+The most common field is the var which is one cell (32-bits) large.
 
+There is a limit to the total size of the object fields you can have in a game.  The default limit is 1 kilobyte (256 vars), but this can be configured if for any reason you want it to be bigger or smaller.
 
-## Actions
+Object fields are different from structs.  Instead of saying `<object> <field>`, you just say `<field>`.  We call this "implicit base addressing".  That is, the base address is implied.
 
+There is a "current" object at all times.  This is known as the object base address, and it's stored in a `value` called `me`.
+
+You can address an object on a stack like a struct by using a special operator, `'s`.
+
+## Current object (Base address) management words
+
+word | stack | description
+-|-|-
+as | ( obj -- ) | set `me` to a new address
+{ | ( -- ) | push the base address (can be used at the prompt).
+} | ( -- ) | pop the base address
+>{ | ( obj -- ) | push and set the current object
+'s | ( obj -- <field> field ) | address a field of an explicit object
+
+## Standard object fields
+
+These are the standard fields common to all Ramen objects, defined in `obj.f`.
+
+field | size | description 
+------|------|-------------
+en | cell | marks the object as active (i.e. existing, in the eyes of the engine)
+x | cell | x coordinate
+y | cell | y coordinate
+vx | cell | x velocity
+vy | cell | y velocity
+hidden | cell | when enabled the object will not be drawn
+role | cell | the object's role
+lnk | cell | _internal_
+^pool | cell | _internal_
+drw | cell | _internal_
+beha | cell | _internal_
+
+## Defining fields
+
+word | stack | description
+-|-|-
+field | ( size -- <name> | define field of a given size in integer bytes.  if a field is already defined it will be reused.
+var | ( -- <name> ) | same as `cell field`
+
+## Defaults
+
+`defaults` is an object you can use to define the default values of fields.  For example:
+
+```
+var r  var g  var b  \ red,green,blue, should be initialized to 1,1,1
+
+defaults >{
+    1 r !  1 g !  1 b !  \ we do that here
+}
+```
+
+There is an analogous object called `basis` for initializing Roles (See below) but its usage is a little different.  Don't get them confused.
+
+## Object Lists
+
+Used to group and process static objects and object pools.
+
+## Object Pools
+
+Pre-allocated groups of "disabled" objects.  You create objects at runtime using these.
+
+## Creating objects
+
+There are two kinds of objects, dynamic and static.  Dynamic objects can be created and destroyed at runtime and static ones can't.
+
+#### Creating Static objects
+
+Say something like this:  `stage object: <name>`, the stage being the default object list.
+
+The current object will be the newly created object.  You can refer to it by the name you gave it.
+
+#### Creating Dynamic objects
+
+Say something like this:  `stage one`, the stage being the default object list.
+
+The current object will be the newly created object.
+
+## Programming objects
+
+Like AFKit's piston, objects have phases that you program.  These phases are called Act and Draw.  There is an additional optional phase, Multitasking.
+
+Ramen has a default piston configuration that executes all of the stage's objects' phases as intended but note that as you extend the engine it will be your responsibility to process them appropriately.
+
+All of these words operate on the current object.
+
+`act>` programs the Act phase (like `does>`).  It is intended to be executed continually in the Step phase.
+`act` executes the Act phase.
+`-act`  sets the Act phase to noop.
+`draw>` programs the Draw phase.
+`draw` executes the Draw phase.  If `hidden` is on nothing happens.  The pen is automatically set to x,y.
+
+## Roles
+
+Roles are the means to have objects share static data and behavior without storing them in the objects themselves.  They are analogous to classes in OOP, but there is no inheritance.
+
+To define a role simply say `roledef: <name>`.  If a role is already defined it will be reused.  This enables live-updating of roles at runtime when you reload your object scripts.
+
+### Rolevars
+
+Rolevars are static variables for roles.  They are shared among all roles.  To define a rolevar simply say:
+
+`rolevar <name>`
+
+Note that no role is required.  You can do this at any time.
+
+To use a rolevar, you simply call its name, but you must make sure to set the object's `role` var beforehand or an error will be thrown.
+
+Rolevars work with `'s` so you can say `<role> 's <whatever>`.  They do not work on objects - you must say `<object> 's role @ 's <whatever>`.
+
+### Actions
+
+Actions are analogous to methods in OOP.  It lets different objects respond to the same set of commands differently.
+
+To define an action, here's the format:
+
+```
+action <name> ( stack -- diagram )
+```
+
+To execute the action simply call its name.  It will be executed on the current object, provided the `role` has been set.  You don't need to program the action - if you don't and you call one, nothing happens.  But note that if it was supposed to take some parameters these will be left on the stack.  You may want to use `basis` to initialize these actions to drop words to avoid that scenario. 
+
+To program an action of a particular role, do this:
+
+```
+<role> :to <action>  ( stack -- diagram )  ... ;
+```
+
+It's a good idea to define your stack diagrams not only with the declaration of the action but definitions too.
+
+### Basis
+
+Analogous to the `defaults` objects, use this for initializing rolevars and actions.
+
+To set rolevar and action initial values, use `basis 's <rolevar/action>` and the regular Forth store words.
+
+### Reusing actions
+
+You can create roles that behave like other roles.  The word `->` lets you call the action of some other role, a kind of multiple inheritance.  Simply say `<role> -> <action>`.  
+
+## Misc. words
+
+See obj.f for stack diagrams.
+
+`away ( obj x y -- )` convenient tool for spawning objects relative to other ones.
+`eachcell ( addr n xt -- )  ( addr -- )` and `eachcell> ( addr n -- <code> )  ( addr -- )` are tools for processing cell arrays.  
+`some ( objlist filterxt xt -- )  ( addr n -- )` and `some> ( objlist filterxt -- <code> )  ( addr n -- )`   are tools for creating temporary filtered arrays of objects.  the arrays are destroyed automatically.

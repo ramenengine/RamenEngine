@@ -2,7 +2,7 @@
 
 ## Structs[]() - struct.f
 
-RAMEN uses a simple data structure facility.  Provisions for type information are there but aren't currently being used.
+Ramen uses a simple data structure facility.  Provisions for type information are there but aren't currently being used.
 
 
 | word | stack diagram | description |
@@ -28,11 +28,11 @@ See [Fixed-Point Numbers](https://rogerlevy.github.io/afkit/fixedp.html) on Alle
 
 These are low-level words for working with fixed-point numbers.
 
-Fixed-point numbers in RAMEN have a 20-bit integer part and a 12-bit fractional part.  They're meant to enable sub-pixel motion of objects and rough geometrical calculations.  If you need more mathematical precision, use floats and convert, bit shifting, or fractions (e.g. `*/`.)
+Fixed-point numbers in Ramen have a 20-bit integer part and a 12-bit fractional part.  They're meant to enable sub-pixel motion of objects and rough geometrical calculations.  If you need more mathematical precision, use floats and convert, bit shifting, or fractions (e.g. `*/`.)
 
-The need to work with integers is infrequent, so many Forth words are redefined to use fixed-point numbers.  This, combined with fixed-point literal support, makes working with fixed-point in RAMEN almost transparent.  An easy way to remember if you need a fixed-point word or an integer word is if the number is a quantity of bytes or not.
+The need to work with integers is infrequent, so many Forth words are redefined to use fixed-point numbers.  This, combined with fixed-point literal support, makes working with fixed-point in Ramen almost transparent.  An easy way to remember if you need a fixed-point word or an integer word is if the number is a quantity of bytes or not.
 
-These words are really important for you to learn as they're used *everywhere* in RAMEN.
+These words are really important for you to learn as they're used *everywhere* in Ramen.
 
 ### Conversion
 
@@ -120,7 +120,7 @@ These words are really important for you to learn as they're used *everywhere* i
 
 ### Modes
 
-Generally you shouldn't be writing code that depends on the current base, but on occasion it's convenient, for instance when compiling  standard Forth code into a RAMEN project.
+Generally you shouldn't be writing code that depends on the current base, but on occasion it's convenient, for instance when compiling  standard Forth code into a Ramen project.
 
 | word | description |
 |-------|------|-------------|
@@ -131,13 +131,13 @@ Generally you shouldn't be writing code that depends on the current base, but on
 
 This file is actually packaged with AllegroForthKit.
 
-Fixed-point literal support is required by RAMEN.   At the moment Forth systems must have a mechanism for extending the interpreter for RAMEN to compile.
+Fixed-point literal support is required by Ramen.   At the moment Forth systems must have a mechanism for extending the interpreter for Ramen to compile.
 
 All numbers that aren't qualified by a base prefix such as `$` are interpreted as fixed point.  To force integer, prefix numbers with `#`.
 
 The theory behind this is that you can write literals naturally, with no requirement to use a decimal point, making fixed-point number use almost transparent.
 
-The quickest way to understand is to try it.  After loading RAMEN into Forth, type `1.5 3 + .` and press `<enter>`.   Notice that the decimal point is optional.
+The quickest way to understand is to try it.  After loading Ramen into Forth, type `1.5 3 + .` and press `<enter>`.   Notice that the decimal point is optional.
 
 ## Assets[]() - assets.f
 
@@ -240,7 +240,7 @@ All of the fields are public.
 
 ## Objects[]() - obj.f
 
-RAMEN's special data structure for game objects.  See [Objects](objects.md)
+Ramen's special data structure for game objects.  See [Objects](objects.md)
 
 ## Cellstacks []() - cellstack.f
 

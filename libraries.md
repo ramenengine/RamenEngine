@@ -33,7 +33,7 @@ A convenient wordset for drawing things on the screen.
 
 ## Nodes []() - node.f
 
-This module extends ramen objects with the ability to be arranged in a tree heirearchy, in line with what's conventional in many other game engines.  You can use this to arrange game objects or anything else that you'd like to put in a tree heirearchy, so long as they are ramen objects.
+This module extends Ramen objects with the ability to be arranged in a tree heirearchy, in line with what's conventional in many other game engines.  You can use this to arrange game objects or anything else that you'd like to put in a tree heirearchy, so long as they are Ramen objects.
 
 It is not used by the default configuration.
 
@@ -50,7 +50,7 @@ Generic data structure representing a rectangle.
 Fast radix sort routine.  The algorithm is specially tailored for sorting fixed point integers from 0 to 65535.  Used by `zsort.f`.
 
 ## Sprites []() - sprites.f
-
+w
 Robust animated sprite extension for game objects.
 
 ## Stage []() - stage.f
@@ -68,11 +68,11 @@ Note: When using tilemap scrolling, you need to compensate for the camera positi
 
 ## Round-robin Multitasking []() - task.f
 
-Extension that empowers you to easily program objects to perform complex behaviors over time.  (This is analogous to the "coroutine" functionality available in several general game engines, but more powerful.)
+In games you will often want to have your characters do different actions in sequence or in response to things.  Some examples of where this technique is indispensible is platforming games, cutscenes, enemy attack patterns, boss fights, and A.I.
 
-In games you will often want to have your characters do different actions in sequence or in response to things.  The approach often used to do this is classically referred to as a "state machine", which is what all of RAMEN's objects are.  Some examples of where this technique is indispensible is platforming games, cutscenes, enemy attack patterns, boss fights, and A.I.  Put simply if you want to make a game that's anything but the most basic thing, you need to be constantly changing the state of objects over time.
+Programming objects to do different things over time in conventional engines isn't trivial.  You have to use state machines, counters and state checks and flags or yield signals.
 
-In the days of yore, programming objects to do different things over time wasn't trivial.  You had to use counters and state checks and flags and the code would be difficult to write and end up fairly bloated.
+Ramen's approach makes it very easy, allowing you to use natural structured programming to define complex object behavior. 
 
 ...
 
