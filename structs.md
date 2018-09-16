@@ -5,6 +5,7 @@ A simple data structure mechanism.  Used for structs that are passed on the stac
 To declare a struct say  `struct <name>`
 
 `sfield ( struct bytes valtype -- <name> )  ( adr -- adr+n )`  defines a struct field.
+
 `svar  ( struct valtype -- <name> )` is short for `struct cell 0 sfield`.
 
 Valtype is obsolete and not used so you can set it to anything.

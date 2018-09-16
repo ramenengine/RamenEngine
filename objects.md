@@ -162,5 +162,7 @@ You can create roles that behave like other roles.  The word `->` lets you call 
 See obj.f for stack diagrams.
 
 `away ( obj x y -- )` convenient tool for spawning objects relative to other ones.
+
 `eachcell ( addr n xt -- )  ( addr -- )` and `eachcell> ( addr n -- <code> )  ( addr -- )` are tools for processing cell arrays.  
+
 `some ( objlist filterxt xt -- )  ( addr n -- )` and `some> ( objlist filterxt -- <code> )  ( addr n -- )`   are tools for creating temporary filtered arrays of objects.  the arrays are destroyed automatically.
