@@ -49,7 +49,7 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
 
 - [Beginner's Guide to Forth](http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm)
 - [Programming Forth by Stephen Pelc](http://www.mpeforth.com/arena/ProgramForth.pdf)
-- [Forth Programming 21st Century on Facebook](https://www.facebook.com/groups/PROGRAMMINGFORTH/) - The current active and growing forum on the web for modern desktop Forth programming (as opposed to on embedded or classic computers.)  Ask questions about Forth or AllegroForthKit and get quick answers!
+- [Forth Programming 21st Century on Facebook](https://www.facebook.com/groups/PROGRAMMINGFORTH/) - The current active and growing forum on the web for modern desktop Forth programming (as opposed to on embedded or classic computers.) 
 - [Allegro 5.2.3 Documentation](http://liballeg.org/a5docs/5.2.3/)
 - [Allegro.cc forum](https://www.allegro.cc/forums) - A very helpful and fairly active community.  And gladly, language-agnostic.
 - [The DPANS94 Forth Standard](http://dl.forth.com/sitedocs/dpans94.pdf)
