@@ -30,26 +30,19 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
 
 ## Getting Started
 
-1. Download or clone [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit) into your project folder. See the README for supported platforms and installation instructions.
-1. Download or clone Ramen into your project folder (as a subfolder `ramen/`). `git clone https://github.com/RogerLevy/ramen.git` 
-1. Download and install [SwiftForth](https://www.forth.com/download/) (currently required) and optionally [Komodo Edit](https://www.activestate.com/komodo-ide/downloads/edit).
-1. Documentation is hosted on [Github Pages](http://rogerlevy.github.com/ramen). (in-progress)
-1. Start your Forth system and check out the included examples in the ex/ folder.  (E.g. `sf include ramen/ex/exdepth` on SwiftForth.)
-1. There is also some stuff in the test/ directory.
-
-I recommend having a one-project-per-instance workflow.  Clone it for each project rather than housing multiple projects under a single installation so you won't have to deal with conflicts as much, and you can make deep modifications in your own branch.
+1. You'll need [SwiftForth](https://www.forth.com/swiftforth/), likely you'll want to grab the free eval version.  Full featured except no .EXE export on Windows.  After installing add the bin folder to your path.
+1. Download or clone [ramenExamples](https://github.com/RogerLevy/ramenExamples)
+1. Copy and rename `afkit/kitconfig.f_` and `afkit/allegro5.cfg_` to the project root, removing the underscores.  Edit them if needed.
+1. Optionally get [Komodo Edit](https://www.activestate.com/komodo-ide/downloads/edit) and loading the project file - just hit F5 and the IDE should start.
+1. Otherwise load up SwiftForth, navigate to the project directory with `cd` and `include session.f` - the IDE should start.  
+1. You can `ld` any of these: `depth` `flies` `rectland` `island` `stickerknight`
+1. Hit Tab to toggle between IDE and the running demo.  Only `rectland` has any controls.
 
 ## Help
 
-- [Documentation](http://rogerlevy.github.com/ramen) is hosted by Github Pages. (in-progress)
+- Submit [Issues](https://github.com/RogerLevy/ramen/issues)
 
-- I'm available to help one-on-one [on Facebook](https://www.facebook.com/inkajoo).  
+- [Documentation](http://rogerlevy.github.com/ramen) is hosted by Github Pages. (incomplete)
 
 - The [Forth 21st Century Programming Facebook](https://www.facebook.com/groups/PROGRAMMINGFORTH/) group is a good place to ask questions or report problems, as is [ForthHub on Github](https://github.com/ForthHub/discussion/issues).
 
-## Roadmap
-
-- [x] Scaling, rotation, tint, and h/v flip for game objects
-- [x] Isometric tilemap and object collision detection
-- [ ] Shader support
-- [ ] GUI framework

@@ -99,6 +99,5 @@ create b  12 7 array2d
 a count2d 5 ifill
 b count2d 10 ifill
 
-cr .( === ARRAY2D tests passed. === )
 dispose
 
