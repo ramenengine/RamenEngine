@@ -30,11 +30,12 @@ defaults >{
 }
 
 \ Drawing
-: sprite ( srcx srcy w h flip )  \ pass a rectangle defining the region to draw
+: sprite ( srcx srcy w h flip )
     locals| flip h w y x |
     img @ >bmp  x y w h 4af  fore 4@  cx 2@  at@  4af  sx 3@ 3af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
-: objsubimage  ( image n flip -- )  >r  over >subxywh  r> sprite ;
+
+: subsprite  ( n flip -- )  >r  img @ >subxywh  r> sprite ;  \ img must be subdivided
 
 \ Get current frame data
 : ?regorg  rgntbl @ ?dup -exit  frm @ @  /region * + 4 cells + 2@ 2negate +at ;
