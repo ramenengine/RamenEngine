@@ -1,26 +1,26 @@
 # Objects
 
-In every video game, you need a data structure to represent all the things on the screen that move and interact with the player and each other - things such as enemies, NPC's, and projectiles.  Some common names for these are game objects, display objects, entities, nodes, actors, and so on.  In Ramen, the data structure we use is called Ramen Objects, or just "objects".  In Ramen, game objects aren't just for sprites and other things in the game but other things such as background tasks and GUI elements.
-
-Objects are very general-purpose in Ramen; there is little-to-no heirearchy of classes like you'd find in traditional OOP-based engines, so there is a notable element of fluidity to them.
+In any video game there will be a data structure for all the things on the screen that move and interact with the player and each other, such as enemies, NPC's, and projectiles.  These are commonly called game objects, display objects, entities, nodes, actors, etc.  In Ramen, the data structure for that is called Ramen Objects (or just "objects" for short).  In Ramen, game objects aren't just for game objects but could be used for other things such as background tasks or GUI widgets.
 
 ## About object fields
 
-All the properties of objects, or "fields" or "vars" as we also call them, are global to all objects.
+All the properties of objects, or fields and vars as they're called, are global to all objects.
 
-To allow you to keep your field names simple and free of prefixes (encouraged), when you attempt to define a field that already exists, the definition is automatically skipped.  `redef` is the flag that disables this behavior should you want to "bury" an existing field with a new definition.  To do this say `redef on` and `redef off` to restore normal behavior.
+When you attempt to define a field that already exists, the definition is automatically skipped.
 
-Fields are, as of this writing, typeless, like normal Forth variables.  
+`redef` is a flag that disables this behavior should you want to bury any existing fields with new definitions.  Say `redef on` and `redef off`.
 
-The most common field is the var which is one cell (32-bits) large.
+There is a limit to the total size of objects.  The default limit is 1 kilobyte (256 vars), but this can be configured.  See `object-maxsize` in obj.f.
 
-There is a limit to the total size of the object fields you can have in a game.  The default limit is 1 kilobyte (256 vars), but this can be configured if for any reason you want it to be bigger or smaller.
+Object fields are different from structs.  Instead of saying `<object> <field>`, you just say `<field>`.  We call this "implicit addressing".  That is, the base address is implied.
 
-Object fields are different from structs.  Instead of saying `<object> <field>`, you just say `<field>`.  We call this "implicit base addressing".  That is, the base address is implied.
+There is a current object at all times.  This is called the object base address.  It's stored in a `value` called `me`.
 
-There is a "current" object at all times.  This is known as the object base address, and it's stored in a `value` called `me`.
+You can address the properties of an object that's on the stack (without changing the current object) with the word `'s`.  For example:
 
-You can address an object on a stack like a struct by using a special operator, `'s`.
+```
+<object> 's x 2@   \ fetch the x and y coordinates of <object>
+```
 
 ## Current object (Base address) management words
 
