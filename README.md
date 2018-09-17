@@ -37,8 +37,7 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
 1. Otherwise load up SwiftForth, navigate to the project directory with `cd` and `include session.f` - the IDE should start.  
 1. You can `ld` any of these: `depth` `flies` `rectland` `island` `stickerknight`
 1. Hit Tab to toggle between IDE and the running demo.  Only `rectland` has any controls.
-1. For a more advanced example check out [LinkGoesForth](https://github.com/RogerLevy/linkgoesforth)
-1. The in-game IDE can be toggled with the Tab key.  (The game doesn't receive input when the IDE is active.)  To clear the IDE output type `wipe`.
+1. For a more advanced example check out [LinkGoesForth](https://github.com/RogerLevy/linkgoesforth).  Note the IDE is active by default.  The game won't receive input until you toggle out of it.
 
 ## Help
 
