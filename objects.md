@@ -75,9 +75,15 @@ There is an analogous object called `basis` for initializing Roles (See below) b
 
 Used to group and process static objects and object pools.
 
+To create an object list, say `objlist <name>`.
+
+There is a "default" object list, called `stage`.
+
 ## Object Pools
 
 Pre-allocated groups of "disabled" objects.  You create objects at runtime using these.
+
+To create an object pool, say `<objlist> <n> pool: <name>`.  For example: `stage 200 pool: sprites` would create a pool attached to the `stage` called `sprites` that can hold a maximum of 200 objects.
 
 ## Creating objects
 
