@@ -54,8 +54,8 @@ beha | cell | _internal_
 
 word | stack | description
 -|-|-
-field | ( size -- <name> | define field of a given size in integer bytes.  if a field is already defined it will be reused.
-var | ( -- <name> ) | same as `cell field`
+field | ( size -- \<name\> | define field of a given size in integer bytes.  if a field is already defined it will be reused.
+var | ( -- \<name\> ) | same as `cell field`
 
 ## Defaults
 
@@ -110,10 +110,18 @@ Ramen has a default piston configuration that executes all of the stage's object
 All of these words operate on the current object.
 
 `act>` programs the Act phase (like `does>`).  It is intended to be executed continually in the Step phase.
+
 `act` executes the Act phase.
+
 `-act`  sets the Act phase to noop.
+
 `draw>` programs the Draw phase.
+
 `draw` executes the Draw phase.  If `hidden` is on nothing happens.  The pen is automatically set to x,y.
+
+`perform> ( n -- )` enables an object to process during the Multitasking phase.   You can pass a single value of any kind.  See [ramenExamples/files.f](https://github.com/RogerLevy/ramenExamples/blob/master/flies.f) for an example.
+
+`multi ( objlist/pool -- )` Processes the multitasking phase for an object list or pool. 
 
 ## Roles
 
@@ -163,6 +171,8 @@ To set rolevar and action initial values, use `basis 's <rolevar/action>` and th
 
 You can create roles that behave like other roles.  The word `->` lets you call the action of some other role, a kind of multiple inheritance.  Simply say `<role> -> <action>`.  
 
+[LinkGoesForth/actors/mc.f](https://github.com/RogerLevy/LinkGoesForth/blob/master/actors/mc.f) contains a great example of this, where `mc` calls the actions of `avatara`.
+
 ## Misc. words
 
 See obj.f for stack diagrams.
@@ -172,3 +182,5 @@ See obj.f for stack diagrams.
 `eachcell ( addr n xt -- )  ( addr -- )` and `eachcell> ( addr n -- <code> )  ( addr -- )` are tools for processing cell arrays.  
 
 `some ( objlist filterxt xt -- )  ( addr n -- )` and `some> ( objlist filterxt -- <code> )  ( addr n -- )`   are tools for creating temporary filtered arrays of objects.  the arrays are destroyed automatically.
+
+"filterxt"'s stack effect should be ( addr -- flag ) where if flag is true the object is kept.
