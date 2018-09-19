@@ -1,3 +1,4 @@
+exists empty [if] empty [then]
 include afkit/ans/version.f
 #1 0 0 [version]
 exists ramen [if] \\ [then]
@@ -24,5 +25,5 @@ used @ value baseline
 : empty  -stage -assets baseline used ! empty ;
 
 include ramen/default.f
-only forth definitions marker (empty)
+only forth definitions marker (empty)  \ gild point for empty
 only forth definitions
