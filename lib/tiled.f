@@ -24,9 +24,9 @@ defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )
 
 [section] tilemap
 
-    var scrollx  var scrolly  \ used to define starting column and row!
-    var w  var h              \ width & height in pixels
-    var tbi                   \ tile base index
+var scrollx  var scrolly  \ used to define starting column and row!
+var w  var h              \ width & height in pixels
+var tbi                   \ tile base index
 
 : /tilemap
     viewwh w 2!
