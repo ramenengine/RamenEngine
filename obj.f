@@ -1,17 +1,3 @@
-\ TODO
-\ [x] - check if properties are already defined and early out if so
-\        (2/23 for now, just VARs, due to their size guarantee)
-\ [x] - but provide a way to "force" property definitions (REDEF flag)
-\ [ ] - prototypes???  putting it off.  
-\ [ ] - copy parent to already defined roles
-\ [ ] - add magic number to roles for checking if already defined
-
-\ for simplicity this will be used for more than just game objects.  possibilities:
-\   audio channels
-\   disembodied tasks
-\   gui objects
-\   particles
-
 [defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
 \ ME is defined in afkit

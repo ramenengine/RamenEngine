@@ -8,11 +8,11 @@ require ramen/lib/draw
 6 cells constant /region
     \ x , y , w , h , originx , originy , 
 
-3 cells constant /frame
-    \ index+flip , ofsx , ofsy , 
-    \ hflip = $1
-    \ vflip = $2
-    \ index is fixed point
+cell constant /frame
+    \ index+flip , ...
+        \ hflip = $1
+        \ vflip = $2
+        \ index is fixed point
 
 redef on
     \ Transformation info; will be factored out into Ramen's core eventually
@@ -58,7 +58,6 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 
     frm @ 0= if  curframe  curflip sprite  exit  then 
     at@ 
-        frm @ cell+ 2@ +at  \ apply the frame offset
         ?regorg  \ apply the region origin
         img @ if  curframe  curflip sprite  then
         anmspd @ anmctr +!
@@ -77,7 +76,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 \ Define self-playing animations
 \ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
 : anim:  create  3,  here  does>  @+ rgntbl !  @+ img !  @+ anmspd !   animate ;
-: frames,  for  3dup 3, loop 3drop  ;
+: ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
 : animrange,  ( start len -- ) over + swap do  i , 0 , 0 ,  loop  ;
