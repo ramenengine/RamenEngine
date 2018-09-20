@@ -1,6 +1,6 @@
 exists empty [if] empty [then]
 include afkit/ans/version.f
-#1 0 0 [version]
+#1 #1 0 [version]
 include ramen/base.f
 [undefined] LIGHTWEIGHT [if]
     include ramen/default.f

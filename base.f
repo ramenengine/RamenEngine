@@ -1,6 +1,6 @@
 exists ramen [if] \\ [then]
 true constant ramen
-#1 0 0 include afkit/afkit.f  \ AllegroForthKit
+#1 #1 0 include afkit/afkit.f  \ AllegroForthKit
 
 \ Low-level
 include ramen/variables.f
