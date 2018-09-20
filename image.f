@@ -7,8 +7,6 @@ assetdef %image
     %image 0 svar image.bmp
     %image 0 svar image.subw
     %image 0 svar image.subh
-    %image 0 svar image.fsubw
-    %image 0 svar image.fsubh
     %image 0 svar image.subcols
     %image 0 svar image.subrows
     %image 0 svar image.subcount
@@ -55,13 +53,11 @@ assetdef %image
 \ subdivide  ( img tilew tileh -- )  calculate subimage parameters
 \ >subxy  ( n img -- x y )  locate a subimg by index
 \ >subxywh  ( n img -- x y w h )  get full rect of subimage
-\ afsubimg  ( n img -- ALLEGRO_BITMAP fx fy fw fh )  util to help with calling Allegro blit functions
 \ imgsubbmp  ( n img -- subbmp )  create a sub-bitmap from a subimage
 : subdivide  
-    rot >r  2dup r@ image.subw 2!  2af r@ image.fsubw 2!
-    r@ imagewh  r@ image.subw 2@  2/ 2pfloor  2dup r@ image.subcols 2!
+    rot >r  2dup r@ image.subw 2!  
+    r@ imagewh  r@ image.subw 2@  2/ 2pfloor  r@ image.subcols 2!
     *  r> image.subcount ! ;
 : >subxy  >r  pfloor  r@ image.subcols @  /mod  2pfloor  r> image.subw 2@ 2* ;
-: >subxywh  dup >r  >subxy  r> image.subw 2@ ;
-: afsubimg  >r  r@ image.bmp @  swap r@ >subxy 2af  r> image.fsubw 2@ ;
-: imgsubbmp  dup image.bmp @ -rot  >subxywh 4i  al_create_sub_bitmap ;
+: >subxywh  dup >r  >subxy r> image.subw 2@ ;
+: imgsubbmp  dup >bmp  -rot  >subxywh 4i  al_create_sub_bitmap ;
