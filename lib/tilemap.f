@@ -4,8 +4,8 @@
     require ramen/lib/draw.f
     require ramen/lib/array2d.f
 
-[undefined] #MAXTILES [if] 16384 constant #MAXTILES [else] #MAXTILES [then]
-    create tiles stack \ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
+[undefined] #MAXTILES [if] 16384 constant #MAXTILES [then] 
+create tiles #MAXTILES stack \ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
 
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
