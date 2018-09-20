@@ -90,14 +90,10 @@ fixed
 : table2d:  create table2d nip ;
 : ;table2d  here swap - cell/ 1p over array2d.cols @ / pceil swap array2d.rows ! ;
 
-
-
 \ test
 marker dispose
 create a  10 15 array2d
 create b  12 7 array2d
 a count2d 5 ifill
 b count2d 10 ifill
-
 dispose
-

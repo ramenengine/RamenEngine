@@ -239,12 +239,11 @@ create ide-personality
 : ide-system  idekeys ;
 : ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
-: autoexec s" ld autoexec" ['] evaluate catch ?.catch ; 
-
+: ?rest  [in-platform] sf [if]  begin refill while interpret repeat ; 
 
 only forth definitions also ideing
-: go  /ide  /repl  rasa  ( autoexec )  begin go again ;
-: ide go ;
+: go  /ide  /repl  rasa  ?rest  begin go again ;
+: ide  go ;
 : wipe  page ;
 : /s  S0 @ SP! ;
 only forth definitions
