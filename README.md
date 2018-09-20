@@ -32,6 +32,7 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
 
 1. You'll need [SwiftForth](https://www.forth.com/swiftforth/), likely you'll want to grab the free eval version.  Full featured except no .EXE export on Windows.  After installing add the bin folder to your path.
 1. Download or clone [ramenExamples](https://github.com/RogerLevy/ramenExamples)
+1. (If you download a release directly into your project, rename the folder to just `ramen`).
 1. Copy and rename `afkit/kitconfig.f_` and `afkit/allegro5.cfg_` to the project root, removing the underscores.  Edit them if needed.
 1. Optionally get [Komodo Edit](https://www.activestate.com/komodo-ide/downloads/edit) and loading the project file - just hit F5 and the IDE should start.
 1. Otherwise load up SwiftForth, navigate to the project directory with `cd` and `include session.f` - the IDE should start.  
