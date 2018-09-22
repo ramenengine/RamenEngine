@@ -21,8 +21,9 @@ require afkit/lib/xml
 
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 
-only forth definitions also xmling
+only forth definitions
 define tmxing
+    xmling also tmxing
 
     : source@   s" source" val ;
     : source?   s" source" attr? ;

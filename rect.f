@@ -1,9 +1,9 @@
 
-struct rect
-    rect 0 svar rect.x
-    rect 0 svar rect.y
-    rect 0 svar rect.w
-    rect 0 svar rect.h
+struct %rect
+    %rect 0 svar rect.x
+    %rect 0 svar rect.y
+    %rect 0 svar rect.w
+    %rect 0 svar rect.h
 
 : x@    @ ;                       : x!    ! ;
 : y@    cell+ @ ;                 : y!    cell+ ! ;
