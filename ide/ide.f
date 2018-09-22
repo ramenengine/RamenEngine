@@ -1,36 +1,17 @@
 \ SwiftForth only
 
-\ Simpler IDE, library-style.
-\  This is a semi-one-way street.
-\  (For now, we're using SwiftForth's PERSONALITY facility to save
-\       time.  Later, a complete replacement for all text output words will need to be implemented...)
-
-\ go> words:
-\   REPL  ( -- )  processes commandline events.
-\ show> words:
-\   .CMDLINE  ( -- )  displays the commandline at given pen position and font, including the stack
-\   .OUTPUT  ( -- )  displays commandline output
-\ misc words:
-\   GO  ( -- )  starts the default REPL interface, no game displayed.  calls RASA
-\   RASA  ( -- )  establishes the default REPL interface.  is called by GO
-\   CMDFONT  ( -- adr )  a VARIABLE containing the current font for the commandline
-\   /CMDLINE  ( -- )  initializes the commandline.  is called by GO
-\   MARGINS  ( -- rect )  dimensions for the command history.  defaults to the entire screen, minus 3 rows at the bottom
-\       you can redefine them by direct manipulation, just make sure to also do it at resize and fullscreen events.
-\   interact  ( -- variable )  variable, when set to ON, the commandline is active.
-\   OUTPUT  ( -- variable )  variable that stores the bitmap to draw text output onto.
-\   /S  reset the Forth stack
-
 ide-loaded on
 
 variable interact   \ <>0 = repl active/visible
+s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
+: keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
+: unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
 
 define ideing
 include afkit/plat/win/clipb.f
 include ramen/lib/draw.f
 include ramen/lib/v2d.f
 
-s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
 create cursor 6 cells /allot
 : colour 2 cells + ;
 variable scrolling  scrolling on
@@ -66,8 +47,6 @@ consolas chrh constant fh
 : rub       cmdbuf c@  #1 -  0 max  cmdbuf c! ;
 : paste     clipb@  cmdbuf append ;
 : copy      cmdbuf count clipb! ;
-: keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
-: unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
 : /margins  0 0 displaywh 3 rows - margins xywh! ;
 : /output  native 2@ al_create_bitmap dup to outbmp output !  outbmp al_clone_bitmap to tempbmp ;
 
@@ -160,10 +139,10 @@ create ide-personality
         etype FULLSCREEN_EVENT =  or if  /margins  then
 
     etype ALLEGRO_EVENT_KEY_DOWN = if
-        keycode dup #37 < if  drop exit  then
-            case
-                <tab> of  interact toggle  endof
-            endcase
+        keycode #37 < ?exit
+        keycode case
+            <tab> of  interact toggle  endof
+        endcase
     then
 
     \ only when REPL? is true:
@@ -172,7 +151,8 @@ create ide-personality
         ctrl? if
             unichar special
         else
-            unichar #32 >= unichar #126 <= and if
+            unichar #32 >= unichar #126 <= and
+                unichar [char] ` <> and if
                 unichar typechar  exit
             then
         then
@@ -188,9 +168,12 @@ create ide-personality
 
 \ -----------------------------------------------------------------------------------
 \ Rendering
+: ?...  dup 16 > if dup 16 - else 0 then ;
 : .S2 ( ? -- ? )
   #3 attribute
-  DEPTH 0> IF DEPTH 1p  0 ?DO S0 @ I 1 + CELLS - @ . LOOP THEN
+  ." ( " depth i. ." ) " 
+  DEPTH 0> IF DEPTH 1p ?... ?DO S0 @ I 1 + CELLS - @
+    base @ #16 = if h. else . then  LOOP THEN
   DEPTH 0< ABORT" Underflow"
   FDEPTH ?DUP IF
     ."  F: "
@@ -213,7 +196,8 @@ create ide-personality
     output @ >r  display output !
         get-xy 2>r
             at@ cursor xy!  scrolling off
-            ?.errs  .s2  cr
+            ?.errs  .s2
+            0 peny @ fonth + at
             .cmdbuf
             scrolling on
         2r> at-xy
@@ -235,13 +219,12 @@ create ide-personality
     ide-personality open-personality
 ;
 : shade  black 0.33 alpha  0 0 at  displaywh rectf  white ;
-
-: ide-system  idekeys ;
-: ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
-: rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 : ?rest  [in-platform] sf [if]  begin refill while interpret repeat ; 
 
 only forth definitions also ideing
+: ide-system  idekeys ;
+: ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
+: rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 : go  /ide  /repl  rasa  ?rest  begin go again ;
 : ide  go ;
 : wipe  page ;
