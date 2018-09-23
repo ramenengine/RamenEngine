@@ -16,4 +16,4 @@
 \ TABLE: ( -- <name> adr ) create an array you can comma data into
 \ ;TABLE ( adr -- ) call to terminate the definition
 : table:  create here 0 , ;
-: ;table  here over - cell/ swap ! ;
+: ;table  here over - cell/ 1p 1 - swap ! ;
