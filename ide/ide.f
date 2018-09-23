@@ -121,6 +121,7 @@ create ide-personality
 \ : ?errormsg  errormsg ; 
 \ ' ?errormsg is .catch
 : obey     store  echo  ['] interp catch ?.catch  0 cmdbuf ! ;
+: (rld)  ." Reload! " s" rld" evaluate ;
 
 \ --------------------------------------------------------------------------------------------------
 \ Input handling
@@ -161,7 +162,7 @@ create ide-personality
             <down> of  cancel  endof
             <enter> of  alt? ?exit  obey  endof
             <backspace> of  rub  endof
-            [defined] rld [if] <f5> of  ." Reload! " s" rld" evaluate  endof  [then]
+            [defined] rld [if] <f5> of  ['] (rld) catch ?.catch  endof  [then]
         endcase
     then
 ;
@@ -219,7 +220,9 @@ create ide-personality
     ide-personality open-personality
 ;
 : shade  black 0.33 alpha  0 0 at  displaywh rectf  white ;
-: ?rest  [in-platform] sf [if]  begin refill while interpret repeat  [then] ; 
+: ?rest
+    source-id close-file drop
+    [in-platform] sf [if]  begin refill while interpret repeat  [then] ; 
 
 only forth definitions also ideing
 : ide-system  idekeys ;

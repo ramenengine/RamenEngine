@@ -3,12 +3,12 @@
 create default-font
     /assetheader /allot  al-default-font , 8 , 0 , \ note: not a registered asset
 
-defer warm  :is warm ;
+defer cold  :is cold ;   \ cold boot: executed once at runtime
+defer warm  :is warm ;   \ warm boot: executed potentially multiple times 
 
 : boot
     false to allegro?
     false to display
-    false to dev
     #3 to #globalscale
     ALLEGRO_WINDOWED
     ALLEGRO_NOFRAME or
@@ -18,14 +18,7 @@ defer warm  :is warm ;
     initdata
     al-default-font default-font font.fnt !
 ;
-
-: runtime
-    boot
-    warm
-    go
-;
-
-
+: runtime  boot cold warm go ;
 : relify  srcfile dup count s" data/" search if  rot place  else 3drop then ;
 : gather  assets> relify ;
 
