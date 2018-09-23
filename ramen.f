@@ -5,6 +5,5 @@ include ramen/base.f
 ide-loaded @ not [if]
     [in-platform] sf [if]
         include ramen/ide/ide.f   \ gilded
-        s" test.f" file-exists [if]  ld test  [then]
     [then]
 [then]
