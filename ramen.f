@@ -1,5 +1,5 @@
 include afkit/ans/version.f
-#1 #3 #4 [version] [ramen]
+#1 #3 #5 [version] [ramen]
 include ramen/base.f
 ide-loaded @ not [if]
     [in-platform] sf [if]
