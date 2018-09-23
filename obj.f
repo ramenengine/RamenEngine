@@ -110,8 +110,7 @@ var role
 variable meta
 create basis /roledef /allot  \ default rolevar and action values for all newly created roles
 : ?update  >in @  exists if  drop  r> drop exit then  >in ! ; 
-: roledef:  ?update  create  basis /roledef move,  ;
-: roledef  roledef: ;  \ alias
+: defrole  ?update  create  basis /roledef move,  ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
 : create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
