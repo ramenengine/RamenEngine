@@ -5,7 +5,7 @@ require ramen/lib/rsort
 
 var zdepth
 
-: #queued  ( addr -- addr )  here swap - cell/ 1p ;
+: #queued  ( addr -- addr )  here swap - cell/ ;
 : zdepth@  's zdepth @ ;
 : zsort  ['] zdepth@ rsort ;
 : drawem  ( addr cells -- )  cells bounds do  i @ as  draw  cell +loop ;

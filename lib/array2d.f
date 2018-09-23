@@ -88,7 +88,7 @@ fixed
 
 : table2d   here swap 0 array2d-head, dup here ;
 : table2d:  create table2d nip ;
-: ;table2d  here swap - cell/ 1p over array2d.cols @ / pceil swap array2d.rows ! ;
+: ;table2d  here swap - cell/ over array2d.cols @ / pceil swap array2d.rows ! ;
 
 \ test
 marker dispose

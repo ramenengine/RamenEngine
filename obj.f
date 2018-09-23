@@ -121,7 +121,7 @@ create basis /roledef /allot  \ default rolevar and action values for all newly 
 
 \ Filtering tools
 0 value xt
-: #queued  ( addr -- addr n )  here over - cell/ 1p ;
+: #queued  ( addr -- addr n )  here over - cell/ ;
 : eachcell  ( addr n xt -- )  ( addr -- )
     xt >r  to xt
         cells bounds do  i xt execute  cell +loop
