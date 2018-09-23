@@ -161,7 +161,7 @@ create ide-personality
             <down> of  cancel  endof
             <enter> of  alt? ?exit  obey  endof
             <backspace> of  rub  endof
-            [defined] rld [if] <f5> of  s" rld" evaluate  endof  [then]
+            [defined] rld [if] <f5> of  ." Reload! " s" rld" evaluate  endof  [then]
         endcase
     then
 ;
