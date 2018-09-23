@@ -1,6 +1,4 @@
 \ Simple tilemap collision
-
-
 require ramen/lib/array2d.f
 
 \ what sides the object collided
@@ -21,25 +19,19 @@ defer map-collide   ' drop is map-collide  ( tilecell -- )
 value tile-bits
 
 define tilecding
-
     : cel? BIT_CEL and ; \ ' ceiling '
     : flr? BIT_FLR and ; \ ' floor '
     : wlt? BIT_WLT and ; \ ' wall left '
     : wrt? BIT_WLR and ; \ ' wall right '
-
     : vector   create 0 , here 0 , constant ;
     vector nx ny
     variable t
-
     16 value gap
-
     : px x @ mbx @ + ;
     : py y @ mby @ + ;
 
-    \ also forth definitions fixed
-        : xy>cr  ( x y tilesize -- ) dup  2/  2pfloor ;
-        : pt  gap xy>cr  map@ dup t !  tileprops@ ;          \ point
-    \ previous
+    : xy>cr  ( x y tilesize -- ) dup  2/  2pfloor ;
+    : pt  gap xy>cr  map@ dup t !  tileprops@ ;          \ point
 
     \ increment coordinates
     : ve+  swap gap +  mbw @ #1 - px +  min  swap ;

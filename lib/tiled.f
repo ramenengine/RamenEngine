@@ -42,7 +42,7 @@ var tbi                   \ tile base index
 
 : map@  ( col row -- tile )  tilebuf loc @ ;
 
-: >gid  ( tile -- gid )  $0000fffc and 10 << ;
+: >gid  ( tile -- gid )  $003fff000 and ;
 
 \ Tilemap collision
 include ramen/lib/tiled/collision.f
@@ -97,7 +97,7 @@ var gid
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
 : de-Tiled  ( n -- n )
-    dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
+    dup 1p  over $80000000 and if #1 or then  swap $40000000 and if #2 or then ;
 
 : load-tmxlayer  ( layer destarray2d destcol destrow -- )
     rot locals| tilebuf |

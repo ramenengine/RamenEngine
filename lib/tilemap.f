@@ -4,8 +4,10 @@
     require ramen/lib/draw.f
     require ramen/lib/array2d.f
 
-[undefined] #MAXTILES [if] 16384 constant #MAXTILES [then] 
-create tiles #MAXTILES stack \ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
+[undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
+
+\ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
+create tiles #MAXTILES stack 
 
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
@@ -46,8 +48,10 @@ create tiles #MAXTILES stack \ note even though we use TRUNCATE and PUSH in this
 : tsize  tba cell+ @ bmpwh ;
 
 decimal \ for speed
-: tile  ( stridex stridey index -- )
-    ?dup if  dup >r  $0000fffc and tba + @  at@ 2af  r> #28 >>  al_draw_bitmap  then  +at ;
+: tile  ( tiledat -- )
+    ?dup -exit
+    dup >r  $03fff000 and #10 >> tba + @  at@ 2af  r> #28 >>  al_draw_bitmap ;
+: tile+  ( stridex stridey tiledat -- )  tile +at ;
 fixed
 
 : tilemap  ( addr /pitch -- )
@@ -55,7 +59,7 @@ fixed
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
-                tw 0 i @ tile
+                tw 0 i @ tile+
             cell +loop
         th + at   ( addr )  pitch +
     loop  drop  ;
@@ -73,7 +77,8 @@ fixed
     rows for
         at@  ( addr x y )
             third  cols for
-                tw th third @ tile  cell+
+                tw th third @ tile+  cell+
             loop  drop
         tw negate th 2+ at   ( addr )  pitch +
     loop  drop  ;
+
