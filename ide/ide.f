@@ -6,6 +6,8 @@ variable interact   \ <>0 = repl active/visible
 s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
 : keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
+create margins 4 cells /allot
+: ?.catch  ?dup if  .catch  then ;
 
 define ideing
 include afkit/plat/win/clipb.f
@@ -27,7 +29,6 @@ create attributes
 variable output   \ output bitmap
 0 value tempbmp
 :is repl?  interact @ ;
-create margins 4 cells /allot
 0 value outbmp
 
 \ --------------------------------------------------------------------------------------------------
@@ -119,7 +120,6 @@ create ide-personality
 : interp   cmdbuf count (evaluate) ;
 \ : ?errormsg  errormsg ; 
 \ ' ?errormsg is .catch
-: ?.catch  ?dup if  .catch  then ;
 : obey     store  echo  ['] interp catch ?.catch  0 cmdbuf ! ;
 
 \ --------------------------------------------------------------------------------------------------
@@ -187,7 +187,7 @@ create ide-personality
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      outputw  displayh bm -  dblue  fill ;
-: ?trans   repl? if 1 alpha else 0.66 alpha then ;
+: ?trans   repl? if 1 alpha else 0.5 alpha then ;
 : ?shad    repl? if 0.9 alpha else 0.4 alpha then ;
 : .output  2 2 +at  black ?shad  outbmp blit  -2 -2 +at  white ?trans  outbmp blit ;
 : bottom   lm bm ;
