@@ -33,5 +33,10 @@ redef off  \ from here on fields only defined if not previously defined
 objlist stage  \ default object list
 used @ value baseline
 : -stage  stage -objlist ;
-: empty  -stage -assets baseline used ! empty ;
+
+[undefined] LIGHTWEIGHT [if]
+    include ramen/default.f
+[THEN]
+
+: empty   -stage -assets baseline used ! stop empty ;
 only forth definitions marker (empty)
