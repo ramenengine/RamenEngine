@@ -33,8 +33,6 @@ create main  object  \ proxy for the Forth data and return stacks
     sp @ sp!
     drop \ ensure TOS is in TOS register
 ;
-: end    me remove pause ;
-: halt   begin pause again ;
 : pauses  for  pause  loop ;
 : secs   fps * pauses ;  \ not meant for precision timing
 
@@ -69,25 +67,31 @@ create queue 1000 stack
 ;
 
 : self?  sp@ ds >=  sp@ rs <= and ;
+: (halt)    begin pause again ;
 
 decimal
     : perform> ( n -- <code> )
         self? if    ds 28 cells + sp!  r>  rs 58 cells + rp!  >r  exit
               else  ds 28 cells + !  ds 27 cells + sp !  r> rs 58 cells + !  rs 58 cells + rp !
-                    ['] halt >code rs 59 cells + !
+                    ['] (halt) >code rs 59 cells + !
               then ;
 
     : perform  ( xt n obj -- )
-        { as
+        >{
         ds 28 cells + !
         ds 27 cells + sp !
         >code rs 58 cells + !
-        ['] halt >code rs 59 cells + !
+        ['] (halt) >code rs 59 cells + !
         rs 58 cells + rp !
         }
     ;
 fixed
 
+: end    0 perform> me remove pause ;
+: halt   0 perform> begin pause again ;
+
+
 \ cmdline only:
 : direct  ( obj -- <word> )  '  0  rot  perform ;
 : direct:  ( obj -- ... code ... ; )  :noname  [char] ; parse evaluate  0  rot  perform ;
+
