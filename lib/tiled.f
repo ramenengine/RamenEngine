@@ -78,21 +78,21 @@ var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: (load-bitmaps)  ( n -- dom )
+: (load-bitmaps)  ( tileset# -- dom )
     tmxtileset  locals| gid0 ts |
     ts eachelement> that's tile  dup tile>bmp tiles rot id@ gid0 + [] ! ;
-: load-bitmaps  ( n -- )
+: load-bitmaps  ( tileset# -- )
     (load-bitmaps)  ?dom-free ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
-: load-tmxtileset  ( n -- ) \ load bitmap and split it up, adding it to the global tileset
+: load-tmxtileset  ( tileset# -- ) \ load bitmap and split it up, adding it to the global tileset
     tmxtileset over tileset>bmp locals| bmp firstgid ts dom |
     bmp bitmaps push
     bmp  ts tilewh@  firstgid maketiles
     dom ?dom-free ;
 
 \ don't execute this frequently!
-: @tilesetwh  ( n -- tw th )
+: @tilesetwh  ( tileset# -- tw th )
     tmxtileset drop tilewh@ rot ?dom-free ;
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
@@ -131,35 +131,30 @@ defer tmximage ( object-nnn gid -- )
 \ Define a TMX recipe.  TMXING is in the search order while compiling.
 \ All TMX recipe definitions are kept in the TMXING vocabulary.
 get-order get-current
-    define (;)   : ;   previous previous definitions  postpone ;   ; immediate
+define (;)   : ;   previous previous definitions  postpone ;   ; immediate
 set-current set-order
+rolevar recipe
+0 value (role) \ used when loading objects
+: :recipe  ( role -- )  ( object-nnn -- )  \ note the role's name must match the filename
+    also (;)  to (role) :noname (role) 's recipe !  ;
 
-
-0 value (rcp)
-: :TMX  ( -- <name> )  ( object-nnn -- )  \ name must match the filename
-    also (;)  also tmxing definitions
-    >in @
-    defined rot >in !  not if  drop create here to (rcp) 0 ,
-                           else  >body to (rcp) then
-    :noname (rcp) ! ;
-
-\ LOADRECIPES
-\ Conditionally load recipes that aren't defined and then stores them in RECIPES
+\ LOAD-RECIPES
+\ Conditionally load recipes that aren't defined and then stores them in RECIPES wordlist
 \ Tile image source paths are important!  They correspond to the object script filenames!
-\ When a tile does not have an image, it will load a recipe if the tile
+\ When an object does not have an image, it will load a recipe if the tile
 \ has its TYPE set to something.
 
 : uncount  drop #1 - ;
 : (saveorder)  get-order  r> call  >r  set-order  r> ;
 : >recipe  ( name c -- recipe|0 )
-    \ cr 2dup type
-    locals| c name |
-    (saveorder)
-    only tmxing  name c uncount  find  ( xt|a flag )  ?exit
-    drop  objpath count s[  name c +s  s" .f" +s  ]s
+    locals| c name | (saveorder) only tmxing
+    \ see if the recipe's role is already defined
+    name c uncount  find  ( xt|a flag )  if  >body exit then   drop  
+    \ load the script if it's in the obj/ folder
+    objpath count s[  name c +s  s" .f" +s  ]s
         2dup file-exists 0= if  2drop 0 exit  then
         only forth definitions
-        included  (rcp) ;
+        included  (role) ;
 
 : (loadrecipe)  ( gid name c -- recipe|0 )  >recipe  dup rot recipes nth ! ;
 
@@ -171,7 +166,7 @@ set-current set-order
             else
                 obj?type if  (loadrecipe) drop  else  ( gid ) drop  then
             then ;
-: load-recipes  ( map n -- )  (loadrecipes)  ?dom-free ;
+: load-recipes  ( tileset# -- )  (loadrecipes)  ?dom-free ;
 
 : ?tmxobj  dup if  tmxobj  else  2drop  then ;
 
@@ -179,8 +174,7 @@ set-current set-order
     eachelement> that's object
         dup xy@ at
         dup rectangle? if
-            dup obj?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  \ rectangles with types are treated as game objects.
-                                                                         \ you can get the dimensions from the xml element if needed.
+            dup obj?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  
             dup wh@ ( nnn w h ) tmxrect
         else
             dup gid@ dup  recipes nth @ ?dup if

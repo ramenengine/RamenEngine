@@ -32,11 +32,11 @@ How scripted game object instantiation works:
 
   Here's an example:
   : *myobjectmaker   ( ??? -- )  ( objlist )  ONE  ( initialization ) ;
-  [defined] :tmx [if]
-      :tmx <myobjectname>  ( object-node -- )  ... *myobjectmaker ... ;
+  [defined] :recipe [if]
+      :recipe <myobjectname>  ( object-node -- )  ... *myobjectmaker ... ;
   [then]
 
-  The body of the :TMX object loader would call your actual recipe.
+  The body of the :recipe object loader would call your actual recipe.
 
   .TMX files *MUST* be kept in a folder called data/.  They can be in any subfolder of that.
   Keep your object scripts in data/objects/.
@@ -45,7 +45,7 @@ How scripted game object instantiation works:
 
 
 Updating scripts in-game
-  You can INCLUDE the script you want to update.  If you use the Role system and :TMX , the object's
+  You can INCLUDE the script you want to update.  If you use the Role system and :recipe , the object's
   behavior and loader will be immediately altered, respectively.
 
   Because your Forth's license might not permit on-the-fly compilation, you will be able to pre-compile all your
