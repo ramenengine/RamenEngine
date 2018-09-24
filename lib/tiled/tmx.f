@@ -88,7 +88,8 @@ include ramen/lib/tiled/tmxz.f
 0 value tmx
 :noname  0 to map  0 to tmx  ; loadtrig  \ initialize these on game load
 
-: >objpath  s" data/" search drop s" objects/" strjoin  slashes ;
+: strip  2over 2swap search if drop nip over - else 2drop then ;
+: >objpath  s" data" strip s" obj/" strjoin  slashes ;
 
 only forth definitions also xmling also tmxing
 
