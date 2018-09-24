@@ -228,8 +228,7 @@ only forth definitions also ideing
 : ide-system  idekeys ;
 : ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
-: go  /ide  /repl  rasa  ['] ?rest catch ?.catch  begin go again ;
-: ide  go ;
+: ide  /ide  /repl  rasa  ['] ?rest catch ?.catch  begin go again ;
 : wipe  page ;
 : /s  S0 @ SP! ;
 only forth definitions
