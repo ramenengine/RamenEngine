@@ -7,7 +7,7 @@ s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
 : keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
 create margins 4 cells /allot
-: ?.catch  ?dup if  .catch  then ;
+: ?.catch  ?dup if  postpone [  .catch  then ;
 
 define ideing
 include afkit/plat/win/clipb.f
@@ -80,8 +80,9 @@ consolas chrh constant fh
 ;
 decimal
     : ?b  output @ display <> if write-src else interp-src then ;
-    : ramen-emit   output @ onto>  ?b blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
-    : ramen-type   output @ onto>  ?b blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
+    : at>  r>  at@ 2>r  call  2r> at ;
+    : ramen-emit   at>  output @ onto>  ?b blend>  consolas fnt !  cursor colour 4@ rgba  (emit) ;
+    : ramen-type   at>  output @ onto>  ?b blend>  consolas fnt !  cursor colour 4@ rgba  bounds  do  i c@ (emit)  loop ;
     : ramen-?type  dup if type else 2drop then ;
 fixed
 : ramen-attribute  1p 4 cells * attributes +  cursor colour  4 imove ;

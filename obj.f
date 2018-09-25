@@ -107,10 +107,11 @@ create (ol)  defaults , 0 , 0 , defaults ,
 \ Note that role vars are global and not tied to any specific role.
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 var role
+variable lastrole \ used by map loaders (when loading objects scripts)
 variable meta
 create basis /roledef /allot  \ default rolevar and action values for all newly created roles
 : ?update  >in @  exists if  drop  r> drop exit then  >in ! ; 
-: defrole  ?update  create  basis /roledef move,  ;
+: defrole  ?update  create  here lastrole !  basis /roledef move,  ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
 : create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;

@@ -13,7 +13,7 @@ require afkit/lib/stride2d.f
 include ramen/lib/tilemap.f
 
 1024 1024 buffer2d: tilebuf 
-create recipes #MAXTILES stack
+create roles #MAXTILES stack
 create bitmaps 100 stack         \ single-image tileset's bitmaps
 defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )  
 
@@ -107,78 +107,78 @@ var gid
             i @ de-Tiled i !
         cell +loop ;
 
-\ Load object recipes from tileset ----------------------------------------------------------------
+\ Load object roles from tileset ----------------------------------------------------------------
 \ No images are loaded in this use case.
-\ Instead we load any object recipes that aren't loaded.
+\ Instead we load any scripts that aren't loaded.
 
 \ Load object groups ------------------------------------------------------------------------------
 \ This supports 3 kinds of objects that can be stored in TMX files.
-\ 1) Regular scripted game objects where the tile gid points to a recipe XT in a table.
+\ 1) Regular scripted game objects where the tile gid points to a role in a table.
 \ 2) Rectangular objects with no associated tile
 \ 3) Background (image) objects where the gid points to a bitmap in the global tileset
 
 \ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
 \ They all can expect the pen has already been set to the XY position.
 
-defer tmxobj   ( object-nnn XT -- )   \ XT is the TMX recipe for the object loaded from the script
+defer tmxobj   ( object-nnn role -- )
 defer tmxrect  ( object-nnn w h -- )
 defer tmximage ( object-nnn gid -- )
 
-: -recipes  ( -- )  recipes 0 [] #MAXTILES cells erase ;
+: /roles  ( -- )  roles 0 [] #MAXTILES cells erase ;
 
 \ : reload-recipes ;
 
-\ Define a TMX recipe.  TMXING is in the search order while compiling.
-\ All TMX recipe definitions are kept in the TMXING vocabulary.
-get-order get-current
-define (;)   : ;   previous previous definitions  postpone ;   ; immediate
-set-current set-order
 rolevar recipe
-0 value (role) \ used when loading objects
-: :recipe  ( role -- )  ( object-nnn -- )  \ note the role's name must match the filename
-    also (;)  to (role) :noname (role) 's recipe !  ;
+\ You don't have to define a recipe.  The last defined role will be used.
+\ note the role's name must match the filename
+: :recipe  ( role -- )  :noname swap 's recipe !  ;
 
-\ LOAD-RECIPES
-\ Conditionally load recipes that aren't defined and then stores them in RECIPES wordlist
+\ LOAD-SCRIPTS
+\ Conditionally load the scripts associated with any roles that aren't defined.
 \ Tile image source paths are important!  They correspond to the object script filenames!
-\ When an object does not have an image, it will load a recipe if the tile
-\ has its TYPE set to something.
+\ When an object does not have an image, it will load a script if it
+\ has its "Type" set to something.
 
-: uncount  drop #1 - ;
+create $$$ #256 allot
+: uncount  $$$ place $$$ ;
 : (saveorder)  get-order  r> call  >r  set-order  r> ;
-: >recipe  ( name c -- recipe|0 )
-    locals| c name | (saveorder) only tmxing
-    \ see if the recipe's role is already defined
-    name c uncount  find  ( xt|a flag )  if  >body exit then   drop  
-    \ load the script if it's in the obj/ folder
-    objpath count s[  name c +s  s" .f" +s  ]s
-        2dup file-exists 0= if  2drop 0 exit  then
-        only forth definitions
-        included  (role) ;
+: >script  objpath count s[  +s  s" .f" +s  ]s ;
+: load-script  ( name c -- role|0 )
+    locals| c name | 
+    \ see if the role is already defined
+    name c uncount  find  ( xt|a flag ) if  >body exit then   drop  
+    \ load the script if it's in the obj/ folder and return the last defined role 
+    name c >script 
+    cr ." Loading script: " 2dup type
+    2dup file-exists    0= if  2drop 0 exit  then
+        included  lastrole @ ;
 
-: (loadrecipe)  ( gid name c -- recipe|0 )  >recipe  dup rot recipes nth ! ;
-
-: (loadrecipes)  tmxtileset  locals| firstgid |
-    ( tileset ) eachelement> that's tile
-        dup  id@ firstgid +  swap
-            0 s" image" element ?dup if
-                source@ -path -ext (loadrecipe) drop
-            else
-                obj?type if  (loadrecipe) drop  else  ( gid ) drop  then
-            then ;
-: load-recipes  ( tileset# -- )  (loadrecipes)  ?dom-free ;
-
-: ?tmxobj  dup if  tmxobj  else  2drop  then ;
+\ : script!  roles nth ! ;
+\ 
+\ : (load-scripts)  tmxtileset ( dom tileset gid )  locals| firstgid |
+\     ( tileset ) eachelement> that's tile
+\         dup id@ firstgid +  swap  ( gid nnn )
+\             dup 0 s" image" element ?dup if
+\                 nip source@ -path -ext load-script swap script!  drop
+\             else
+\                 obj?type if  load-script swap script!  else  ( gid ) drop  then
+\             then ;
+\ 
+\ \ You can load all of the current map's scripts ahead of time
+\ \ (but you don't have to.)
+\ : load-scripts  ( tileset# -- )  (load-scripts)  ?dom-free ;
+ 
+: ?tmxobj  dup if tmxobj else 2drop then ;
 
 : load-objects  ( objgroup -- )
-    eachelement> that's object
+    eachelement> that's object        
         dup xy@ at
         dup rectangle? if
-            dup obj?type if  (loadrecipe) @ ( nnn xt )  ?tmxobj  exit then  
+            dup obj?type if  load-script ( nnn role|0 ) ?tmxobj  exit then  
             dup wh@ ( nnn w h ) tmxrect
         else
-            dup gid@ dup  recipes nth @ ?dup if
-                ( nnn gid recipe ) nip  @ ( nnn xt ) ?tmxobj
+            dup gid@ dup  roles nth @ ?dup if
+                ( nnn gid role|0 ) nip ( nnn role|0 ) ?tmxobj
             else
                 ( nnn gid ) tmximage
             then
@@ -188,9 +188,9 @@ rolevar recipe
 : -bitmaps  bitmaps #pushed for  bitmaps pop -bmp  loop ;
 
 : open-map  ( path c -- )
-    close-tmx  -recipes  -tiles  -bitmaps  open-tmx ;
+    close-tmx  /roles  -tiles  -bitmaps  open-tmx ;
 
 : open-tilemap  ( path c -- )  \ doesn't delete any tiles; assumes static tileset
-    close-tmx  -recipes  -bitmaps  open-tmx ;
+    close-tmx  /roles  -bitmaps  open-tmx ;
 
 only forth definitions
