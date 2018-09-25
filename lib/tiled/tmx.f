@@ -36,7 +36,7 @@ define tmxing
     : x@        s" x" pval ;
     : y@        s" y" pval ;
     : xy@       dup x@ swap y@ ;
-    : obj?type  dup s" type" attr? if  s" type" val  true  else  drop  false then ;
+    : el?type  dup s" type" attr? if  s" type" val  true  else  drop  false then ;
     : firstgid@ s" firstgid" pval ;
     : gid@      s" gid" pval ;
     : id@       s" id" pval ;
@@ -55,8 +55,6 @@ define tmxing
     : spacing@  s" spacing" pval ;
     : margin@   s" margin" pval ;
     : >data     0 s" data" element ;
-
-    : #tilesets  ( map -- n )  s" tileset" #elements ;
 
     create tmxpath  #256 allot
     create tsxpath  #256 allot
@@ -93,36 +91,43 @@ include ramen/lib/tiled/tmxz.f
 
 only forth definitions also xmling also tmxing
 
-: tmxtileset  ( n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
+: tileset  ( n -- dom|0 tileset gid )  \ side-effect: TSXPATH is set or cleared
     map swap s" tileset" element
         dup source? if   dup tileset>source  rot firstgid@
                     else  0 swap dup firstgid@  tmxpath count tsxpath place then ;
+: #tilesets  ( -- n )  map s" tileset" #elements ;
+: find-tileset#   ( filename c -- n )  \ find a tileset by filename (source attribute)
+    locals| c adr |
+    #tilesets for
+        map i s" tileset" element
+            source@ adr c $= if i unloop exit then
+    loop  -1 abort" Tileset not found." ;
 
 : #objgroups ( -- n )  map s" objectgroup" #elements ;
 : objgroup ( n -- objgroup ) map swap s" objectgroup" element ;
-: find-objgroup   ( name c -- dom-nnn | 0 )
+: find-objgroup   ( name c -- dom-nnn )
     locals| c adr |
     #objgroups for
-        i objgroup
-            dup name@  adr c  compare 0= if  unloop  exit  then
+        i objgroup dup 
+            name@ adr c $= if unloop exit then
             drop
-    loop  0 ;
+    loop  -1 abort" Object group not found." ;
     
 : #tmxlayers ( -- n )  map s" layer" #elements ;
 : tmxlayer ( n -- layer ) map swap s" layer" element ;
-: find-tmxlayer   ( name c -- layer | 0 )
+: find-tmxlayer   ( name c -- layer )
     locals| c adr |
     #tmxlayers for
-        i tmxlayer  dup
-            name@  adr c  compare 0= if  unloop  exit  then
+        i tmxlayer dup
+            name@ adr c $= if unloop exit then
         drop
-    loop  0 ;
+    loop  -1 abort" Tilemap layer not found." ;
 
 : property  ( element str c -- adr c true | false )
     0 locals| props c str el |
     el 0 s" properties" element dup -exit  to props
     props s" property" #elements for
-        props i s" property" element  dup  name@ str c compare 0= if
+        props i s" property" element  dup  name@ str c $= if
             value@  true  unloop exit
         else  drop  then
     loop  false ;

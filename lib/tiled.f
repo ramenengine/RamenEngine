@@ -61,7 +61,6 @@ var mbx  var mby  var mbw  var mbh
     each>   mbw 2@ or -exit
             onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
 
-
 : (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
 : counttiles  ( x y w h bitmask tilesize -- count )
     swap  to (bm)  0 to (count)  locals| ts h w y x |
@@ -79,21 +78,15 @@ var gid
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
 : (load-bitmaps)  ( tileset# -- dom )
-    tmxtileset  locals| gid0 ts |
-    ts eachelement> that's tile  dup tile>bmp tiles rot id@ gid0 + [] ! ;
+    tileset locals| gid0 ts |
+    ts eachel> that's tile
+        dup tile>bmp swap id@ gid0 + tiles nth ! ;
 : load-bitmaps  ( tileset# -- )
     (load-bitmaps)  ?dom-free ;
 
-\ Load a single-image tileset ---------------------------------------------------------------------
-: load-tmxtileset  ( tileset# -- ) \ load bitmap and split it up, adding it to the global tileset
-    tmxtileset over tileset>bmp locals| bmp firstgid ts dom |
-    bmp bitmaps push
-    bmp  ts tilewh@  firstgid maketiles
-    dom ?dom-free ;
-
 \ don't execute this frequently!
 : @tilesetwh  ( tileset# -- tw th )
-    tmxtileset drop tilewh@ rot ?dom-free ;
+    tileset drop tilewh@ rot ?dom-free ;
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
 : de-Tiled  ( n -- n )
@@ -153,15 +146,15 @@ create $$$ #256 allot
     2dup file-exists    0= if  2drop 0 exit  then
         included  lastrole @ ;
 
-\ : script!  roles nth ! ;
+: script!  ( role n )  roles nth ! ;
 \ 
-\ : (load-scripts)  tmxtileset ( dom tileset gid )  locals| firstgid |
-\     ( tileset ) eachelement> that's tile
+\ : (load-scripts)  tileset ( dom tileset gid )  locals| firstgid |
+\     ( tileset ) eachel> that's tile
 \         dup id@ firstgid +  swap  ( gid nnn )
 \             dup 0 s" image" element ?dup if
 \                 nip source@ -path -ext load-script swap script!  drop
 \             else
-\                 obj?type if  load-script swap script!  else  ( gid ) drop  then
+\                 el?type if  load-script swap script!  else  ( gid ) drop  then
 \             then ;
 \ 
 \ \ You can load all of the current map's scripts ahead of time
@@ -171,10 +164,10 @@ create $$$ #256 allot
 : ?tmxobj  dup if tmxobj else 2drop then ;
 
 : load-objects  ( objgroup -- )
-    eachelement> that's object        
+    eachel> that's object 
         dup xy@ at
         dup rectangle? if
-            dup obj?type if  load-script ( nnn role|0 ) ?tmxobj  exit then  
+            dup el?type if  load-script ( nnn role|0 ) ?tmxobj  exit then  
             dup wh@ ( nnn w h ) tmxrect
         else
             dup gid@ dup  roles nth @ ?dup if
@@ -184,6 +177,18 @@ create $$$ #256 allot
             then
         then
 ;
+
+\ Load a single-image tileset ---------------------------------------------------------------------
+: load-tileset  ( tileset# -- ) \ load bitmap and split it up, adding it to the global tileset
+    tileset over tileset>bmp locals| bmp firstgid ts dom |
+    bmp bitmaps push
+    bmp ts tilewh@ firstgid maketiles
+    dom ['] ?dom-free >code >r
+    \ load any scripts (tiles that have a Type property)
+    ts eachel> that's tile  
+        dup el?type if load-script firstgid rot id@ + script!
+        else drop then
+    ; 
 
 : -bitmaps  bitmaps #pushed for  bitmaps pop -bmp  loop ;
 
