@@ -48,7 +48,7 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/
 
 ## Links and Resources
 
-- [Forth: The Hacker's Language](https://hackaday.com/2017/01/27/forth-the-hackers-language/)
+- [Forth: The Hacker's Language on HACKADAY](https://hackaday.com/2017/01/27/forth-the-hackers-language/)
 - [Programming Forth by Stephen Pelc](http://www.mpeforth.com/arena/ProgramForth.pdf)
 - [Forth Programming 21st Century on Facebook](https://www.facebook.com/groups/PROGRAMMINGFORTH/) - The current active and growing forum on the web for modern desktop Forth programming (as opposed to on embedded or classic computers.) 
 - [Allegro 5.2.3 Documentation](http://liballeg.org/a5docs/5.2.3/)
