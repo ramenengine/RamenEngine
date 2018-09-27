@@ -1,5 +1,7 @@
 \ Basic graphics option
 
+: destxy  penx 2@ [undefined] HD [if] 2pfloor [then] ;
+
 create fore 1e sf, 1e sf, 1e sf, 1e sf, 
 : rgb  ( r g b )  3af fore 3! ;
 : alpha  ( a )  1af fore 3 cells + ! ;
@@ -7,7 +9,7 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 
 \ Bitmaps, backbuffer
 : onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap onto  call  r> al_set_target_bitmap ;
-: movebmp  ( src sx sy w h )  write-src BLEND>  at@ 2af 0 al_draw_bitmap ;
+: movebmp  ( src sx sy w h )  write-src BLEND>  destxy 2af 0 al_draw_bitmap ;
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
@@ -48,23 +50,23 @@ fixed
 \  or use sub bitmaps (see SUBBMP).
 \  The anchor for rotation with CSRBLITF is the center of the passed bitmap.
 
-: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  at@ 2af  r> al_draw_tinted_bitmap ;
+: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  destxy 2af  r> al_draw_tinted_bitmap ;
 : >center  bmpwh 1 rshift  swap 1 rshift ;
 : sblitf  ( bmp dw dh flip )
     locals| flip dh dw | ?dup -exit
-    ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  at@ dw dh 4af  flip  al_draw_tinted_scaled_bitmap ;
+    ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  destxy dw dh 4af  flip  al_draw_tinted_scaled_bitmap ;
 : csrblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |  bmp -exit
-    bmp  fore 4@  bmp >center at@  4af  sx sy ang 3af  flip
+    bmp  fore 4@  bmp >center destxy  4af  sx sy ang 3af  flip
     al_draw_tinted_scaled_rotated_bitmap ;
 : srblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |  bmp -exit
-    bmp  fore 4@  0 0 at@  4af  sx sy ang 3af  flip
+    bmp  fore 4@  0 0 destxy  4af  sx sy ang 3af  flip
     al_draw_tinted_scaled_rotated_bitmap ;
 : blit   ( bmp ) 0 blitf ;
 : blitrgnf  ( bmp x y w h flip )
     locals| flip h w y x bmp |
-    bmp  fore 4@  x y w h 4af  at@ 2af  flip  al_draw_tinted_bitmap_region ;
+    bmp  fore 4@  x y w h 4af  destxy 2af  flip  al_draw_tinted_bitmap_region ;
 : blitrgn  0 blitrgnf ;
 
 
@@ -78,27 +80,27 @@ variable lmargin
 : fontw  fnt @ chrw ;
 : fonth  fnt @ chrh ;
 : (print) ( str count alignment -- )
-    -rot  zstring >r  >r  fnt @ >fnt fore 4@ at@ 2af r> r> al_draw_text ;
+    -rot  zstring >r  >r  fnt @ >fnt fore 4@ destxy 2af r> r> al_draw_text ;
 : print  ALLEGRO_ALIGN_LEFT (print)  ;
 : printr  ALLEGRO_ALIGN_RIGHT (print) ;
 : printc  ALLEGRO_ALIGN_CENTER (print) ;
 : print+  2dup print strw 0 +at ;
-: newline  lmargin @ at@ nip fnt @ fonth + at ;
+: newline  lmargin @ destxy nip fnt @ fonth + at ;
 
 \ Primitives
 1e fnegate 1sf constant hairline
 : pofs  0.625 0.625 2+ ;
 : -pofs  -0.375 -0.375 2+ ;
-: line   at@ pofs  2swap 4af fore 4@ hairline al_draw_line ;
-: +line  at@ pofs 2+ line ;
+: line   destxy pofs  2swap 4af fore 4@ hairline al_draw_line ;
+: +line  destxy pofs 2+ line ;
 : line+  2dup +line +at ;
-: pixel  at@ pofs  2af  fore 4@  al_draw_pixel ;
-: rect   ( w h )  1 1 2-  at@ pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
-: rectf  ( w h )  at@ -pofs  2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
-: rrect  ( w h rx ry )  2>r 1 1 2-  at@ pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
-: rrectf  ( w h rx ry )  2>r at@ -pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
-: oval  ( rx ry ) at@ 2swap 4af fore 4@ hairline al_draw_ellipse ;
-: ovalf ( rx ry ) at@ 2swap 4af fore 4@ al_draw_filled_ellipse ;
+: pixel  destxy pofs  2af  fore 4@  al_draw_pixel ;
+: rect   ( w h )  1 1 2-  destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
+: rectf  ( w h )  destxy -pofs  2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
+: rrect  ( w h rx ry )  2>r 1 1 2-  destxy pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
+: rrectf  ( w h rx ry )  2>r destxy -pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
+: oval  ( rx ry ) destxy 2swap 4af fore 4@ hairline al_draw_ellipse ;
+: ovalf ( rx ry ) destxy 2swap 4af fore 4@ al_draw_filled_ellipse ;
 : circ  dup oval ;
 : circf  dup ovalf ;
 

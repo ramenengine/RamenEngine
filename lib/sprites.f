@@ -32,7 +32,7 @@ defaults >{
 \ Drawing
 : sprite ( srcx srcy w h flip )
     locals| flip h w y x |
-    img @ >bmp  x y w h 4af  fore 4@  cx 2@  at@  4af  sx 3@ 3af  flip
+    img @ >bmp  x y w h 4af  fore 4@  cx 2@  destxy  4af  sx 3@ 3af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
 : subsprite  ( n flip -- )  >r  img @ >subxywh  r> sprite ;  \ img must be subdivided
