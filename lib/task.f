@@ -12,22 +12,27 @@ redef on
     var sp  var rp  30 cells field ds  60 cells field rs
 redef off
 
-create main  object  \ proxy for the Forth data and return stacks
+create main  /object /allot  \ proxy for the Forth data and return stacks
 
 \ RAMEN version:
 \  Uses NXTEN to go to next object.
-\  To avoid using the tiny return stack of the tasks, we don't use objlists' counts, and instead rely on ME being 0 to break.
+\  We don't use objlists' counts and instead check ME for 0 to know when to break.
 \  Therefore you cannot call MULTI on a pool, only a plain objlist.
+
+\ variable tasks  \ todo: use this instead of checking me
 
 \ important internal note: this word must not CALL anything or use the return stack. (why?)
 : nxten  begin  nxt  me -exit  en @ until ;
+
+variable (lnk)
 : pause
     \ save state
     dup \ ensure TOS is on stack
     sp@ sp !
     rp@ rp !
     \ look for next task.  rp=0 means no task.  end of list = jump to main task and resume that
-    begin  nxten  me  if  rp @  else  main as  true  then  until
+    begin  nxten  me if  rp @  else  main as  true  then  until
+    lnk @ (lnk) !
     \ restore state
     rp @ rp!
     sp @ sp!
@@ -49,23 +54,7 @@ create queue 1000 stack
         queue 0 truncate
     } ;
 
-\ pulse the multitasker.
-: multi  ( objlist -- )
-    dup ol.count @ 0= if drop exit then
-    {
-        ol.first @ main 's lnk !
-        dup
-        sp@ main 's sp !
-        rp@ main 's rp !
-        main as  ['] pause catch
-        ?dup if
-            main as  rp @ rp! sp @ sp!  throw
-        then
-        drop
-    } 
-    arbitrate
-;
-
+0 value caught
 : self?  sp@ ds >=  sp@ rs <= and ;
 : (halt)    begin pause again ;
 
@@ -90,6 +79,21 @@ fixed
 : end    0 perform> me remove pause ;
 : halt   0 perform> begin pause again ;
 
+\ pulse the multitasker.
+: multi  ( objlist -- )
+    dup ol.count @ 0= if drop exit then
+    {
+        ol.first @ main 's lnk !
+        dup
+        sp@ main 's sp !
+        rp@ main 's rp !
+        main as  ['] pause catch if
+            cr ." A task crashed; stopping. "  empty exit
+        then
+        drop
+    } 
+    arbitrate
+;
 
 \ cmdline only:
 : direct  ( obj -- <word> )  '  0  rot  perform ;

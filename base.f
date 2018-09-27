@@ -39,5 +39,7 @@ used @ value baseline
     include ramen/default.f
 [THEN]
 
-: empty   -stage -assets baseline used ! stop empty ;
+: empty
+    cr ." Empty!"
+    -stage -assets baseline used ! stop empty ;
 only forth definitions marker (empty)

@@ -1,5 +1,7 @@
 [defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
+maxsize constant /object
+
 \ ME is defined in afkit
 : as  s" to me" evaluate ; immediate
 create mestk  0 , 16 cells allot
@@ -7,7 +9,6 @@ create mestk  0 , 16 cells allot
 : i} mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ to me ; 
 : {  state @ if s" me >r" evaluate else  i{  then ; immediate
 : }  state @ if s" r> as" evaluate else  i}  then ; immediate
-: nxt  me @ to me ;
 : >{   s" { as " evaluate ; immediate
 
 variable used
@@ -61,7 +62,7 @@ struct %objlist \ objlist struct, also used for pools
 : (+free)   ^pool @ ol.#free +! ;
 : >last   ol.last @ ;
 : #objects  ol.count 2@ - ;
-: object  {  here  maxsize /allot  }  dup lnk !  as  ;
+: object  {  here  /object /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
 create (ol)  defaults , 0 , 0 , defaults , 
 : objlist   create  (ol) %objlist sizeof move, ;
@@ -74,6 +75,7 @@ create (ol)  defaults , 0 , 0 , defaults ,
         create  ( 1st ) , n , n , me ,
     me ol ol.last !
     ;
+: nxt  lnk @ to me ;
 : each>  ( objlist/pool -- <code> )
     r>  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
 : each   ( objlist/pool xt -- )  

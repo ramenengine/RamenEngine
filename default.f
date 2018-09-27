@@ -35,6 +35,6 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
 : physics  stage each>  vx 2@ x 2+! ;
 
 : show-stage  show>  unmount  ramenbg  stage each> draw ;
-: stop  show-stage  step>  ;  stop
+: stop  show-stage  step>  noop ;  stop
 : default-step  step>  think  physics ;
 default-step
