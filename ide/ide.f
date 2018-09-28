@@ -2,7 +2,7 @@
 
 ide-loaded on
 
-variable interact   \ <>0 = repl active/visible
+variable repl   \ <>0 = repl active/visible
 s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
 : keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
@@ -28,7 +28,7 @@ create attributes
   0 , 1 , 1 ,     1 ,  \ cyan
 variable output   \ output bitmap
 0 value tempbmp
-:is repl?  interact @ ;
+:is repl?  repl @ ;
 0 value outbmp
 
 \ --------------------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ create ide-personality
     etype ALLEGRO_EVENT_KEY_DOWN = if
         keycode #37 < ?exit
         keycode case
-            <tab> of  interact toggle  endof
+            <tab> of  repl toggle  endof
         endcase
     then
 
@@ -215,7 +215,7 @@ create ide-personality
 : /ide  >ide  /output  1 1 1 1 cursor colour 4!  /margins ;  \ don't remove the >IDE; fixes a bug
 : /repl
     /s   \ clear the stack
-    interact on
+    repl on
     ['] >display is >ide               \ >IDE is redefined to take us to the display
     >ide
     ide-personality open-personality
