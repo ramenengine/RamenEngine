@@ -49,17 +49,13 @@ include ramen/lib/tiled/collision.f
 
 var onhitmap   \ XT ( tile -- )
 
-\ map hitbox; exclusively for colliding with the TILEBUF; expressed in relative coords
-var mbx  var mby  var mbw  var mbh
-
 : onhitmap>  ( -- <code> ) r> code> onhitmap ! ;  ( tilecell -- )
 
 : ?'drop  ?dup ?exit  ['] drop ;
 
 : collide-objects-map  ( objlist tilesize -- )
     locals| tilesize |
-    each>   mbw 2@ or -exit
-            onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
+    each>   onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
 
 : (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
 : counttiles  ( x y w h bitmask tilesize -- count )

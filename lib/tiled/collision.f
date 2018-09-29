@@ -7,7 +7,7 @@ require ramen/lib/array2d.f
 0 value floor?
 0 value ceiling?
 
-var mbx  var mby  var mbw  var mbh  \ map box 
+var mbw  var mbh  \ map box width,height
 
 defer map-collide   ' drop is map-collide  ( tilecell -- )
 
@@ -27,8 +27,8 @@ define tilecding
     vector nx ny
     variable t
     16 value gap
-    : px x @ mbx @ + ;
-    : py y @ mby @ + ;
+    : px x @ ;
+    : py y @ ;
 
     : xy>cr  ( x y tilesize -- ) dup  2/  2pfloor ;
     : pt  gap xy>cr  map@ dup t !  tileprops@ ;          \ point
