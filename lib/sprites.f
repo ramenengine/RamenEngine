@@ -71,7 +71,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 \ Play an animation.
 \ ?/st      ( -- )  first time call initializes scale and tint
 \ animate   ( anim -- )  play animation from beginning
-: animate   frm !  0 anmctr !  frm @ -exit  draw> sprite+ ;
+: animate   frm !  0 anmctr !  frm @ -exit ;
     
 \ Define self-playing animations
 \ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
