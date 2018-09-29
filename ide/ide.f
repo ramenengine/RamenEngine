@@ -62,8 +62,8 @@ consolas chrh constant fh
 : ramen-get-size  ( -- cols rows )  outputw outputh fw fh 2/ 2i ;
 : scroll
     write-src blend>
-    tempbmp onto>  0 0 at  untinted  output @ blit
-    output @ onto>  0 -1 rows at  untinted  tempbmp blit
+    tempbmp onto>  0 0 at  output @ blit
+    output @ onto>  0 -1 rows at  tempbmp blit
     -1 rows cursor y+!
 ;
 : ramen-cr
@@ -191,7 +191,7 @@ create ide-personality
 : bar      outputw  displayh bm -  dblue  fill ;
 : ?trans   repl? if 1 alpha else 0.5 alpha then ;
 : ?shad    repl? if 0.9 alpha else 0.4 alpha then ;
-: .output  2 2 +at  black ?shad  outbmp blit  -2 -2 +at  white ?trans  outbmp blit ;
+: .output  2 2 +at  black ?shad  outbmp tblit  -2 -2 +at  white ?trans  outbmp tblit ;
 : bottom   lm bm ;
 : .cmdline
     bar  

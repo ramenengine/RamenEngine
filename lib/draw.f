@@ -40,8 +40,6 @@ da 42 00 createcolor orange
 fixed
 
 : backdrop  fore 4@ al_clear_to_color  white ;
-: untinted  white ;
-: tint/  white ; 
 
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color for tinting.
@@ -50,23 +48,25 @@ fixed
 \  or use sub bitmaps (see SUBBMP).
 \  The anchor for rotation with CSRBLITF is the center of the passed bitmap.
 
-: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  destxy 2af  r> al_draw_tinted_bitmap ;
+: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  destxy 2af  r> al_draw_bitmap ;
+: tblitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  destxy 2af  r> al_draw_tinted_bitmap ;
 : >center  bmpwh 1 rshift  swap 1 rshift ;
 : sblitf  ( bmp dw dh flip )
     locals| flip dh dw | ?dup -exit
-    ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  destxy dw dh 4af  flip  al_draw_tinted_scaled_bitmap ;
+    ( bmp )  dup >r  0 0 r> bmpwh 4af  destxy dw dh 4af  flip  al_draw_scaled_bitmap ;
 : csrblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |  bmp -exit
-    bmp  fore 4@  bmp >center destxy  4af  sx sy ang 3af  flip
-    al_draw_tinted_scaled_rotated_bitmap ;
+    bmp dup >center destxy  4af  sx sy ang 3af  flip
+    al_draw_scaled_rotated_bitmap ;
 : srblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |  bmp -exit
-    bmp  fore 4@  0 0 destxy  4af  sx sy ang 3af  flip
-    al_draw_tinted_scaled_rotated_bitmap ;
+    bmp  0 0 destxy  4af  sx sy ang 3af  flip
+    al_draw_scaled_rotated_bitmap ;
 : blit   ( bmp ) 0 blitf ;
+: tblit  ( bmp ) 0 tblitf ;
 : blitrgnf  ( bmp x y w h flip )
     locals| flip h w y x bmp |
-    bmp  fore 4@  x y w h 4af  destxy 2af  flip  al_draw_tinted_bitmap_region ;
+    bmp  x y w h 4af  destxy 2af  flip  al_draw_bitmap_region ;
 : blitrgn  0 blitrgnf ;
 
 
@@ -90,12 +90,12 @@ variable lmargin
 \ Primitives
 1e fnegate 1sf constant hairline
 : pofs  0.625 0.625 2+ ;
-: -pofs  -0.375 -0.375 2+ ;
+: -pofs  ; \ -0.375 -0.375 2+ ;
 : line   destxy pofs  2swap 4af fore 4@ hairline al_draw_line ;
 : +line  destxy pofs 2+ line ;
 : line+  2dup +line +at ;
 : pixel  destxy pofs  2af  fore 4@  al_draw_pixel ;
-: rect   ( w h )  1 1 2-  destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
+: rect   ( w h )  destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
 : rectf  ( w h )  destxy -pofs  2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
 : rrect  ( w h rx ry )  2>r 1 1 2-  destxy pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
 : rrectf  ( w h rx ry )  2>r destxy -pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
