@@ -33,12 +33,12 @@ var tbi                   \ tile base index
     draw>
         tbi @ tilebase!
         at@ w 2@ clip>
-            scrollx 2@  tsize scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+            scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap
     draw>
         tbi @ tilebase!
-        scrollx 2@  tsize scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
+        scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
 : map@  ( col row -- tile )  tilebuf loc @ ;
 

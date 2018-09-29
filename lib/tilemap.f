@@ -43,17 +43,17 @@ create tiles #MAXTILES stack
 
 0 value tba  \ tileset base address
 : tilebase!  ( tile# -- )  tiles nth to tba ;  0 tilebase!
-: tsize  tba cell+ @ bmpwh ;
 
 decimal \ for speed
 : tile>bmp  ( tiledata -- bitmap )  $03fff000 and #10 >> tba + @ ;
+: tsize  ( tildata -- w h )  tile>bmp bmpwh ;
 : draw-bitmap  over 0= if 2drop exit then  >r  at@ 2af  r> al_draw_bitmap ;
 : tile  ( tiledat -- )  ?dup -exit  dup tile>bmp swap #28 >> draw-bitmap ;
 : tile+  ( stridex stridey tiledat -- )  tile +at ;
 fixed
 
 : tilemap  ( addr /pitch -- )
-    hold>  tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch | 
+    hold>  1 tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch | 
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
@@ -71,7 +71,7 @@ fixed
 : >car  2dup 2 / swap 2 / + >r   -   r> ;
 
 : isotilemap  ( addr /pitch cols rows -- )
-    hold>  tsize locals| th tw rows cols pitch |
+    hold>  1 tsize locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
             third  cols for

@@ -22,9 +22,24 @@ require afkit/lib/xml
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 
 only forth definitions
+also xmling
+: el?type  dup s" type" attr? if  s" type" val  true  else  drop  false then ;
+: id@       s" id" pval ;
+: gid@      s" gid" pval ;
+: rotation@ s" rotation" pval ;
+: visible@  s" visible" pval ;
+: hflip@    s" gid" ival $80000000 and ;
+: vflip@    s" gid" ival $40000000 and ;
+: flip@  dup hflip@ 0<> #1 and swap vflip@ 0<> #2 and or ;
+: orientation@  s" orientation" val ;
+: backgroundcolor?  s" backgroundcolor" attr? ;
+: backgroundcolor@  s" backgroundcolor" val [char] $ third c! evaluate ;
+: tilew@  s" tilewidth" pval ;
+: tileh@  s" tileheight" pval ;
+: tilewh@  dup tilew@ swap tileh@ ;
+: tilecount@  s" tilecount" pval ;
 define tmxing
     xmling also tmxing
-
     : source@   s" source" val ;
     : source?   s" source" attr? ;
     : name@     s" name" val ;
@@ -36,22 +51,7 @@ define tmxing
     : x@        s" x" pval ;
     : y@        s" y" pval ;
     : xy@       dup x@ swap y@ ;
-    : el?type  dup s" type" attr? if  s" type" val  true  else  drop  false then ;
     : firstgid@ s" firstgid" pval ;
-    : gid@      s" gid" pval ;
-    : id@       s" id" pval ;
-    : rotation@ s" rotation" pval ;
-    : visible@  s" visible" pval ;
-    : hflip@    s" gid" ival $80000000 and ;
-    : vflip@    s" gid" ival $40000000 and ;
-    : flip@  dup hflip@ 0<> #1 and swap vflip@ 0<> #2 and or ;
-    : orientation@  s" orientation" val ;
-    : backgroundcolor?  s" backgroundcolor" attr? ;
-    : backgroundcolor@  s" backgroundcolor" val [char] $ third c! evaluate ;
-    : tilew@  s" tilewidth" pval ;
-    : tileh@  s" tileheight" pval ;
-    : tilewh@  dup tilew@ swap tileh@ ;
-    : tilecount@  s" tilecount" pval ;
     : spacing@  s" spacing" pval ;
     : margin@   s" margin" pval ;
     : >data     0 s" data" element ;
@@ -102,6 +102,7 @@ only forth definitions also xmling also tmxing
         map i s" tileset" element
             source@ adr c $= if i unloop exit then
     loop  -1 abort" Tileset not found." ;
+: tileset-gid   ( n -- gid )  tileset -rot drop ?dom-free ;
 
 : #objgroups ( -- n )  map s" objectgroup" #elements ;
 : objgroup ( n -- objgroup ) map swap s" objectgroup" element ;
