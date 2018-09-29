@@ -89,16 +89,16 @@ variable lmargin
 
 \ Primitives
 1e fnegate 1sf constant hairline
-: pofs  0.625 0.625 2+ ;
-: -pofs  ; \ -0.375 -0.375 2+ ;
+: pofs   0.625 globalscale / dup 2+ ;
+: -pofs  -1 globalscale / dup 2+ ;
 : line   destxy pofs  2swap 4af fore 4@ hairline al_draw_line ;
 : +line  destxy pofs 2+ line ;
 : line+  2dup +line +at ;
 : pixel  destxy pofs  2af  fore 4@  al_draw_pixel ;
-: rect   ( w h )  destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
-: rectf  ( w h )  destxy -pofs  2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
-: rrect  ( w h rx ry )  2>r 1 1 2-  destxy pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
-: rrectf  ( w h rx ry )  2>r destxy -pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
+: rect   ( w h )  -pofs destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
+: rectf  ( w h )  destxy 2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
+: rrect  ( w h rx ry )  2>r -pofs destxy pofs 2swap 2over 2+ 4af 2r> 2af fore 4@ hairline al_draw_rounded_rectangle ;
+: rrectf  ( w h rx ry )  2>r destxy 2swap 2over 2+ 4af 2r> 2af fore 4@ al_draw_filled_rounded_rectangle ;
 : oval  ( rx ry ) destxy 2swap 4af fore 4@ hairline al_draw_ellipse ;
 : ovalf ( rx ry ) destxy 2swap 4af fore 4@ al_draw_filled_ellipse ;
 : circ  dup oval ;
