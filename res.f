@@ -1,3 +1,6 @@
+: bmpw  dup -exit  al_get_bitmap_width 1p ;
+: bmph  dup -exit  al_get_bitmap_height 1p ;
+: bmpwh  dup bmpw swap bmph ;
 
 : resolution  ( w h -- ) 2i resolution ;
 

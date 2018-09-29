@@ -13,9 +13,6 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
-: bmpw  al_get_bitmap_width 1p ;
-: bmph  al_get_bitmap_height 1p ;
-: bmpwh  dup bmpw swap bmph ;
 
 \ Predefined Colors; stored in fixed-point so you can modify them with `['] <color> >BODY`
 : 8>p  s>f 255e f/ f>p ;

@@ -1,7 +1,3 @@
-\ first let's make these words work in fixed point!
-: bmpw  al_get_bitmap_width 1p ;
-: bmph  al_get_bitmap_height 1p ;
-: bmpwh  dup bmpw swap bmph ;
 
 assetdef %image
     %image 0 svar image.bmp
