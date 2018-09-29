@@ -82,7 +82,7 @@ variable lmargin
 : printr  ALLEGRO_ALIGN_RIGHT (print) ;
 : printc  ALLEGRO_ALIGN_CENTER (print) ;
 : print+  2dup print strw 0 +at ;
-: newline  lmargin @ destxy nip fnt @ fonth + at ;
+: newline  lmargin @ destxy nip fonth + at ;
 
 \ Primitives
 1e fnegate 1sf constant hairline
