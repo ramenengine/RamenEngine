@@ -190,7 +190,7 @@ create ide-personality
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      outputw  displayh bm -  dblue  fill ;
-: ?trans   repl? if 1 alpha else 0.5 alpha then ;
+: ?trans   repl? if 1 alpha else 0.4 alpha then ;
 : ?shad    repl? if 0.9 alpha else 0.4 alpha then ;
 : .output  2 2 +at  black ?shad  outbmp tblit  -2 -2 +at  white ?trans  outbmp tblit ;
 : bottom   lm bm ;
@@ -228,7 +228,7 @@ create ide-personality
 
 only forth definitions also ideing
 : ide-system  idekeys ;
-: ide-overlay  repl? if shade then  0 0 at  .output  bottom at  repl? if .cmdline then ;
+: ide-overlay  repl? -exit  shade  0 0 at  .output  bottom at  .cmdline ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 /ide  /repl  rasa
 : ide  ['] ?rest catch ?.catch  begin go again ;
