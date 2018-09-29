@@ -1,8 +1,8 @@
 \ Tilemap rendering
 \  Loading tiles, tile and tilemap display and collision routines
 
-    require ramen/lib/draw.f
-    require ramen/lib/array2d.f
+require ramen/lib/draw.f
+require ramen/lib/array2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 
@@ -42,15 +42,13 @@ create tiles #MAXTILES stack
 \ -------------------------------------------------------------------------------------------------
 
 0 value tba  \ tileset base address
-
 : tilebase!  ( tile# -- )  tiles nth to tba ;  0 tilebase!
-
 : tsize  tba cell+ @ bmpwh ;
 
 decimal \ for speed
-: tile  ( tiledat -- )
-    ?dup -exit
-    dup >r  $03fff000 and #10 >> tba + @  at@ 2af  r> #28 >>  al_draw_bitmap ;
+: tile>bmp  ( tiledata -- bitmap )  $03fff000 and #10 >> tba + @ ;
+: draw-bitmap  over 0= if 2drop exit then  >r  at@ 2af  r> al_draw_bitmap ;
+: tile  ( tiledat -- )  ?dup -exit  dup tile>bmp swap #28 >> draw-bitmap ;
 : tile+  ( stridex stridey tiledat -- )  tile +at ;
 fixed
 
