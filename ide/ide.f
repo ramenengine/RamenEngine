@@ -153,6 +153,7 @@ create ide-personality
         ctrl? if
             unichar special
         else
+            alt? ?exit
             unichar #32 >= unichar #126 <= and
                 unichar [char] ` <> and if
                 unichar typechar  exit
