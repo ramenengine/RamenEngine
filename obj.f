@@ -112,7 +112,7 @@ var role
 variable lastrole \ used by map loaders (when loading objects scripts)
 variable meta
 create basis /roledef /allot  \ default rolevar and action values for all newly created roles
-: ?update  >in @  exists if  drop  r> drop exit then  >in ! ; 
+: ?update  >in @  defined if  >body lastrole !  drop r> drop exit then  drop >in ! ; 
 : defrole  ?update  create  here lastrole !  basis /roledef move,  ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
 : create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
