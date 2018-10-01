@@ -1,10 +1,13 @@
 \ TODO: support for other systems
-
+    
 create default-font
     /assetheader /allot  al-default-font , 8 , 0 , \ note: not a registered asset
 
 defer cold  :is cold ;   \ cold boot: executed once at runtime
 defer warm  :is warm ;   \ warm boot: executed potentially multiple times 
+
+\ :is alert
+\    zstring 
 
 : boot
     false to allegro?
@@ -15,7 +18,7 @@ defer warm  :is warm ;   \ warm boot: executed potentially multiple times
         to allegro-display-flags
     +display
     initaudio
-    initdata
+    ['] initdata catch if s" An asset failed to load." alert then
     al-default-font default-font font.fnt !
 ;
 : runtime  boot cold warm go ;
@@ -29,10 +32,8 @@ defer warm  :is warm ;   \ warm boot: executed potentially multiple times
     : publish ( -- <name> )
         cr ." Publishing to "  >in @  bl parse type >in !  ." .exe ... "
         gather
-        'main @ >r
-            ['] runtime 'main !
-            program
-        r> 'main ! ;
+        ['] runtime 'main !
+        program ;
 [else]
     cr .( PROGRAM not defined; PUBLISH disabled )
 [then]
