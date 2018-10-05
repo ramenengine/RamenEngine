@@ -1,4 +1,4 @@
-assetdef sample
+defasset sample
     sample int svar sample.smp
     sample int svar sample.loop
 

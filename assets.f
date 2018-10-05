@@ -51,7 +51,7 @@ flist (assets)
 
 cell #256 + constant /assetheader
 
-: assetdef  ( -- <name> )  create /assetheader , ;
+: defasset  ( -- <name> )  create /assetheader , ;
 
 : .asset  srcfile count dup if  type  else  2drop  then ;
 : .assets  assets> cr .asset ;

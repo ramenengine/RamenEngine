@@ -1,5 +1,5 @@
 
-assetdef %image
+defasset %image
     %image 0 svar image.bmp
     %image 0 svar image.subw
     %image 0 svar image.subh
