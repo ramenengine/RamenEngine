@@ -29,12 +29,12 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
     0.25 0.4 frmctr -20 / (c2) lch!
     (c1) (c2)
 ;
-: ramenbg  0 0 at  colorcycle displaywh vgradient ;
+: ramenbg  0 0 at  unmount  colorcycle displaywh vgradient  mount ;
 
 : think  stage each> act ;
 : physics  stage each>  vx 2@ x 2+! ;
 
-: show-stage  show>  unmount  ramenbg  stage each> draw ;
+: show-stage  show>  ramenbg  unmount stage each> draw ;
 : stop  show-stage  step>  noop ;  stop
 : default-step  step>  think  physics ;
 default-step

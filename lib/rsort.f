@@ -79,9 +79,7 @@ fixed
 marker dispose
 create sortable  4123 , 9 , 5 , 1 , 401 , 234 , 100 , 5 , 99 , 4123 , 23 , 3 , 400 , 50 ,
 : test  <> abort" rsort.f: unit test failed!" ;
-\ hex sortable 14 cells idump fix
 sortable 14 ' noop rsort
-\ hex sortable 14 cells idump fix
 sortable
 @+ 1 test
 @+ 3 test

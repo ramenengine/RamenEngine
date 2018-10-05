@@ -88,9 +88,9 @@ variable lmargin
 1e fnegate 1sf constant hairline
 : pofs   0.625 globalscale / dup 2+ ;
 : -pofs  -1 globalscale / dup 2+ ;
-: line   destxy pofs  2swap 4af fore 4@ hairline al_draw_line ;
-: +line  destxy pofs 2+ line ;
-: line+  2dup +line +at ;
+: line   ( dx dy ) destxy pofs  2swap 4af fore 4@ hairline al_draw_line ;
+: +line  ( ox oy ) destxy pofs 2+ line ;
+: line+  ( ox oy ) 2dup +line +at ;
 : pixel  destxy pofs  2af  fore 4@  al_draw_pixel ;
 : rect   ( w h )  -pofs destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;
 : rectf  ( w h )  destxy 2swap 2over 2+ 4af fore 4@ al_draw_filled_rectangle ;
