@@ -2,11 +2,13 @@
 
 Ramen is built on AllegroForthKit. For documentation go [here](https://rogerlevy.github.io/AllegroForthKit).
 
-Download [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit/) and [Ramen](https://github.com/RogerLevy/ramen/). Place the kit in a folder called `afkit/` and Ramen into a folder called `ramen/` either by cloning them or downloading them into your project folder.  Using submodules is recommended.
+The easiest way to get started is to download the examples project.  This serves as a great project template.
 
-Copy and rename `kitconfig.f_` and `allegro.cfg_`, removing the underscores.  They must be in the root of your project. Edit them as needed.
+The long way: Create a folder to hold your project and download [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit/) and [Ramen](https://github.com/RogerLevy/ramen/). In the project folder, place the kit in a subfolder called `afkit/` and Ramen into another subfolder called `ramen/` either by cloning or download.  \(If using Git clone, adding them as submodules to your project is a good idea.\) 
 
-Ramen comes with a standard out-of-the-box configuration called the Cutlet. You'll need to load it if you want to use most of the major features. The file `cutlet.f` loads the following modules.
+If not already done, copy and rename `kitconfig.f_` and `allegro.cfg_`, removing the underscores.  Place them in the root of your project. Edit them as needed.
+
+Ramen comes with a standard out-of-the-box configuration called the Standard Packet \(aka stdpack\). You'll need to load it if you want to use most of the major features. The file `stdpack.f` loads these modules:
 
 * [Tiled](http://mapeditor.org) support
 * Z-sorting
@@ -22,14 +24,14 @@ Ramen comes with a standard out-of-the-box configuration called the Cutlet. You'
 In your root create a file called `main.f` and place this at the top:
 
 ```text
-#1 #0 #0                     \ version numbers for Ramen
 include ramen/ramen.f
-include ramen/cutlet.f
+#1 #5 #0 [ramen] [checkver] \ optional
+include ramen/stdpack.f
 ```
 
-A useful script called session.f is included in the ramen/ directory. It loads Ramen \(without Cutlet\) and the included IDE. It also loads a file called tes**t**.f if it is present. Copy session.f to your project root, that way you can customize it.
+A useful script called session.f is included in the ramen/ directory. It loads Ramen \(without stdpack\) and the included IDE. It also loads a file called tes**t**.f if it is present. Copy session.f to your project root, that way you can customize it.
 
-From SwiftForth, load session.f or main.f. If the IDE is loaded you'll see a colored background and a black bar with a flashing cursor.
+INCLUDE session.f or main.f. If the IDE is loaded you'll see a colored background and a black bar with a flashing cursor.
 
 You can play with the engine interactively from the Forth prompt. On SwiftForth, if the IDE is not loaded, if you press ENTER at the prompt without entering any commands, the graphics window will get focus and the piston will kick off \(to quit hit `<f12>`\). This lets you more fluidly try things out.
 
