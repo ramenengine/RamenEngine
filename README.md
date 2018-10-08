@@ -30,7 +30,7 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/%20
 
 ## Getting Started
 
-1. You'll need [SwiftForth](https://www.forth.com/swiftforth/), likely you'll want to grab the free eval version.  Full featured except no .EXE export on Windows.  After installing add the bin folder to your path.
+1. Download [SwiftForth](https://www.forth.com/swiftforth/). After installing add the bin folder to your path.
 2. Download or clone [ramenExamples](https://github.com/RogerLevy/ramenExamples)
 3. \(If you download a release directly into your project, rename the folder to just `ramen`\).
 4. Copy and rename `afkit/kitconfig.f_` and `afkit/allegro5.cfg_` to the project root, removing the underscores.  Edit them if needed.
