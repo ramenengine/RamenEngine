@@ -2,7 +2,7 @@
 \ - Render subimages or image regions
 \ - Define animation data and animate sprites
 
-require ramen/lib/draw
+depend ramen/lib/draw
 
 \ Region tables
 6 cells constant /region

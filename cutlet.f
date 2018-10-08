@@ -1,16 +1,16 @@
 \ Standard library set
 \ Very general purpose
 
-require ramen/lib/rangetools.f
-require ramen/lib/zsort.f
-require ramen/lib/draw.f
-require ramen/lib/v2d.f
-require ramen/lib/cgrid.f
-require ramen/lib/task.f
-require afkit/lib/kb.f
-require ramen/lib/audio1.f
-require ramen/lib/sprites.f
-require ramen/lib/tiled.f
+depend ramen/lib/rangetools.f
+depend ramen/lib/zsort.f
+depend ramen/lib/draw.f
+depend ramen/lib/v2d.f
+depend ramen/lib/cgrid.f
+depend ramen/lib/task.f
+depend afkit/lib/kb.f
+depend ramen/lib/audio1.f
+depend ramen/lib/sprites.f
+depend ramen/lib/tiled.f
 
 : acts  each> act ;
 : think  stage dup acts multi ;

@@ -7,7 +7,7 @@ true constant ramen
     include afkit/afkit.f  \ AllegroForthKit
 [then]
 
-#1 #4 #2 [afkit] [checkver]
+#1 #5 #0 [afkit] [checkver]
 
 \ Low-level
 include ramen/variables.f

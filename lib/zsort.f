@@ -1,7 +1,7 @@
 
 \ Z-sorted game objects
 
-require ramen/lib/rsort
+depend ramen/lib/rsort
 
 var zdepth
 
