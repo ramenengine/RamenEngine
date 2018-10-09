@@ -1,7 +1,6 @@
 # Table of contents
 
-* [README](README.md)
-* [Introduction](index.md)
+* [Introduction](README.md)
 * [Running the Examples](examples.md)
 * [Getting Started](basic-usage.md)
 * [Data Structures](structs.md)
