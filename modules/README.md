@@ -1,4 +1,4 @@
-# Module References
+# Module Reference
 
 ## Structs - struct.f
 
@@ -242,9 +242,9 @@ Ramen's special data structure for game objects. See [Objects](objects.md)
 
 ## Publish - publish.f
 
-See [Publishing](publish.md)
+See [Publishing](../publish.md)
 
 ## Tiled - tiled.f
 
-See [Tiled](tiled.md)
+See [Tiled](../libraries/tiled.md)
 

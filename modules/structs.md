@@ -1,6 +1,6 @@
 # Data Structures
 
-A simple data structure mechanism. Used for structs that are passed on the stack. \(Objects don't use these words.\)
+Ramen makes use of a simple "struct" facility. Used for structs that are passed on the stack. \(Objects don't use these words.\)
 
 To declare a struct say `struct <name>`
 
