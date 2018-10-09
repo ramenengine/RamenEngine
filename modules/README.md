@@ -6,9 +6,9 @@ Ramen uses a simple data structure facility. Provisions for type information are
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
-| struct | \( --  \) | Declare a struct |
-| sfield | \( struct bytes valtype --  \)  \( adr -- adr+n \) | Declare a struct field |
-| svar | \( struct valtype -- \ | Short for `cell <type> sfield <name>` |
+| struct | \( -- &lt;name&gt;\) \) | Declare a struct |
+| sfield | \( struct bytes valtype -- &lt;name&gt; \)  \( adr -- adr+n \) | Declare a struct field |
+| svar | \( struct valtype -- &lt;name&gt; \) | Short for `cell <type> sfield <name>` |
 
 The naming convention for fields is `<struct>.<fieldname>`. This will help with readability and avoiding name collisions. It will be good to give your structs short and simple names.
 
@@ -146,15 +146,15 @@ All assets have the following fields:
 | field | type | description |
 | :--- | :--- | :--- |
 | srcfile | cstring | Path of source file |
-| \ | xt | "Reloader" XT |
+| &lt;reloader&gt; | xt | "Reloader" XT |
 
-The reloader is a unnamed field. You can, however, directly `reload ( asset -- )` an asset.
+The reloader is a unnamed field. You can, however, directly `reload ( asset -- )`
 
 Additional asset-related words:
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
-| assets&gt; | \( --  \) \( asset -- \) | Execute remainder of colon definition on each asset in the order they were declared. |
+| assets&gt; | \( --  \)  \( asset -- \) | Run code body on each asset in the order they were declared. |
 | \#assets | \( -- n \) | Total number of declared assets. |
 | .asset | \( asset -- \) | Print some info about an asset |
 | .assets | \( -- \) | List all assets |
@@ -177,10 +177,24 @@ See the asset definition source files for examples.
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
-| assetdef | \( --  \) | Define an asset type \(or "asset definition"\) |
+| defasset | \( --  \) | Define an asset type \(or "asset definition"\) |
 | register | \( reloader-xt asset -- \) | Add asset to the preload list and assign its reloader. |
 
+### Load triggers
+
+Load triggers are assets that don't have a file associated with them.
+
+`loadtrig` \( xt -- \) Add a load trigger.
+
 ### The preloader
+
+Ramen has a modifiable preloader that runs when published games start.
+
+`defer initdata` \( -- \) Runs the preloader
+
+The standard preloader loads all assets synchronously.  When your game starts, it will display a blank screen while the assets load.  The more assets you have declared, the longer the preload takes.  
+
+Redefine `initdata` with `:is` or `is`.
 
 ## Images - image.f
 
