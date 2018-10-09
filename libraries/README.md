@@ -1,6 +1,6 @@
 # Library Reference
 
-These are the optional modules \(some of which make up the standard configuration.\) They are located in `lib/`.
+These are the optional modules \(some of which make up the Standard Packet.\) They are located in `lib/`.  Some libraries depend on other libraries.
 
 ## 2D Arrays  - array2d.f
 

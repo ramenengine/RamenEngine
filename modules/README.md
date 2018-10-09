@@ -10,7 +10,7 @@ Ramen uses a simple data structure facility. Provisions for type information are
 | sfield | \( struct bytes valtype -- &lt;name&gt; \)  \( adr -- adr+n \) | Declare a struct field |
 | svar | \( struct valtype -- &lt;name&gt; \) | Short for `cell <type> sfield <name>` |
 
-The naming convention for fields is `<struct>.<fieldname>`. This will help with readability and avoiding name collisions. It will be good to give your structs short and simple names.
+The naming convention for fields is `<struct>.<fieldname>`. This will help with readability and avoid name collisions. It's a good idea to give your structs short, simple names.
 
 Example:
 

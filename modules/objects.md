@@ -54,8 +54,8 @@ These are the standard fields common to all Ramen objects, defined in `obj.f`.
 
 | word | stack | description |
 | :--- | :--- | :--- |
-| field | \( size -- \ | define field of a given size in integer bytes.  if a field is already defined it will be reused. |
-| var | \( --  \) | same as `cell field` |
+| field | \( size -- &lt;name&gt; \) | define field of a given size in integer bytes.  if a field is already defined it will be reused. |
+| var | \( -- &lt;name&gt;  \) | same as `cell field` |
 
 ## Defaults
 
@@ -109,7 +109,7 @@ Ramen has a default piston configuration that executes all of the stage's object
 
 All of these words operate on the current object.
 
-`act>` programs the Act phase \(like `does>`\). It is intended to be executed continually in the Step phase.
+`act>` programs the Act phase \(like `step>` in AFKit\). It is intended to be executed continually in the Step phase.
 
 `act` executes the Act phase.
 
