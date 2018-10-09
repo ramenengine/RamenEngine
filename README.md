@@ -44,7 +44,6 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/%20
 
 * Submit [Issues](https://github.com/RogerLevy/ramen/issues)
 * Tweet [@RamenEngine](https://twitter.com/RamenEngine) 
-* [Documentation](https://rogerlevy.gitbook.io/ramen/v/gh-pages/) on GitBook
 
 ## Links and Resources
 
