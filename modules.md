@@ -1,6 +1,6 @@
 # Module Reference
 
-## Structs - struct.f
+## Structs \(struct.f\)
 
 Ramen uses a simple data structure facility. Provisions for type information are there but aren't currently being used.
 
@@ -22,7 +22,7 @@ struct color
     color 0 svar color.a
 ```
 
-## Fixed-point operators - fixops.f
+## Fixed-point operators \(fixops.f\)
 
 See [Fixed-Point Numbers](https://rogerlevy.github.io/afkit/fixedp.html) on AllegroForthKit's documentation for more info.
 
@@ -125,7 +125,7 @@ Generally you shouldn't be writing code that depends on the current base, but on
 | fixed | Switch to fixed point mode. |
 | decimal | Switch to decimal mode. |
 
-## Fixed-point literals - fixedp.f
+## Fixed-point literals \(fixedp.f\)
 
 This file is actually packaged with AllegroForthKit.
 
@@ -137,7 +137,7 @@ The theory behind this is that you can write literals naturally, with no require
 
 The quickest way to understand is to try it. After loading Ramen into Forth, type `1.5 3 + .` and press `<enter>`. Notice that the decimal point is optional.
 
-## Assets - assets.f
+## Assets \(assets.f\)
 
 The asset system lets you declare assets in your code which will get automatically loaded when your game starts. The assets are loaded immediately at compile-time when declared.  
 
@@ -197,7 +197,7 @@ The standard preloader loads all assets synchronously.  When your game starts, i
 
 Redefine `initdata` with `:is` or `is`.
 
-## Images - image.f
+## Images \(image.f\)
 
 Asset that stores info about an Allegro bitmap, as well as information necessary to address "subimages" in the bitmap - that is, to treat it as an image strip, commonly used in games.
 
@@ -241,7 +241,7 @@ All of the fields are public.
 | afsubimg | \( n image -- ALLEGRO\_BITMAP fx fy fw fh \) | Get the bitmap and the rectangle values as floats of a subimage.  \(Useful for passing to the Allegro library.\) |
 | imgsubbmp | \( n image -- subbitmap \) | Create an ALLEGRO\_SUBBITMAP that stores info about a subimage. |
 
-## Fonts - font.f
+## Fonts \(font.f\)
 
 Font assets.  See the source for details.  All font formats supported by Allegro 5 are supported.
 
@@ -253,7 +253,7 @@ s" data/path/to/font.ttf" #12 font: myfont.font
 
 See the source for more.  
 
-## Buffers - buffer.f
+## Buffers \(buffer.f\)
 
 Buffers are memory allocated from the OS heap at game start.  This frees the programmer from the confines of the dictionary, which is typically a small and static size.  
 
@@ -265,7 +265,7 @@ Buffer declaration example:
 
 See the source for more.  
 
-## Samples - sample.f
+## Samples \(sample.f\)
 
 Sample assets for playing sound effects.
 
@@ -283,7 +283,7 @@ mysample play
 
 See the source for more.  
 
-## Color - color.f
+## Colors \(color.f\)
 
 A simple color struct.  Just a barebones struct for now.
 
@@ -295,11 +295,11 @@ struct color
     color 0 svar color.a
 ```
 
-## Objects - obj.f
+## Objects \(obj.f\)
 
 Ramen's special data structure for game objects. See [Objects](objects.md)
 
-## Stacks  - stack.f
+## Stacks  \(stack.f\)
 
 Stacks are arrays of a predetermined size that you can push and pop values to and from.  You can address the items by index.  All items are one cell wide.
 
@@ -321,9 +321,9 @@ table: ( -- <name> adr ) create an array you can comma data into
 
 ```
 
-## Publish - publish.f
+## Publish \(publish.f\)
 
-See [Publishing](../publish.md)
+See [Publishing](publish.md)
 
 
 

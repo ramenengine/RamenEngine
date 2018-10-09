@@ -1,6 +1,6 @@
 # Objects
 
-In any video game there will be a data structure for all the things on the screen that move and interact with the player and each other, such as enemies, NPC's, and projectiles. These are commonly called game objects, display objects, entities, nodes, actors, etc. In Ramen, the data structure for that is called Ramen Objects \(or just "objects" for short\). In Ramen, game objects aren't just for game objects but could be used for other things such as background tasks or GUI widgets.
+In any video game there will be things that move and interact with the player and each other, such as enemies, NPC's, and projectiles. These are commonly called game objects, display objects, entities, nodes, actors, etc. In Ramen, the data structure for that is called Ramen Objects \(or just "objects" for short\). 
 
 ## About object fields
 
