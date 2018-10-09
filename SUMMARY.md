@@ -1,9 +1,9 @@
 # Table of contents
 
 * [README](README.md)
-* [Home](index.md)
+* [Introduction](index.md)
 * [Running the Examples](examples.md)
-* [Basic Usage](basic-usage.md)
+* [Getting Started](basic-usage.md)
 * [Data Structures](structs.md)
 * [Library Reference](libraries.md)
 * [Objects](objects.md)
