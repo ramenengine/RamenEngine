@@ -55,7 +55,7 @@ These are the standard fields common to all Ramen objects, defined in `obj.f`.
 | word | stack | description |
 | :--- | :--- | :--- |
 | field | \( size -- \ | define field of a given size in integer bytes.  if a field is already defined it will be reused. |
-| var | \( -- \ \) | same as `cell field` |
+| var | \( --  \) | same as `cell field` |
 
 ## Defaults
 

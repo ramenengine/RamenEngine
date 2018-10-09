@@ -1,4 +1,4 @@
 # README
 
-Ramen Docs \(Github Pages\)
+Ramen Docs
 

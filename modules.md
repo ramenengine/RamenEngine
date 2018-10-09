@@ -6,8 +6,8 @@ Ramen uses a simple data structure facility. Provisions for type information are
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
-| struct | \( -- \ \) | Declare a struct |
-| sfield | \( struct bytes valtype -- \ \)  \( adr -- adr+n \) | Declare a struct field |
+| struct | \( --  \) | Declare a struct |
+| sfield | \( struct bytes valtype --  \)  \( adr -- adr+n \) | Declare a struct field |
 | svar | \( struct valtype -- \ | Short for `cell <type> sfield <name>` |
 
 The naming convention for fields is `<struct>.<fieldname>`. This will help with readability and avoiding name collisions. It will be good to give your structs short and simple names.
@@ -154,7 +154,7 @@ Additional asset-related words:
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
-| assets&gt; | \( -- \ \) \( asset -- \) | Execute remainder of colon definition on each asset in the order they were declared. |
+| assets&gt; | \( --  \) \( asset -- \) | Execute remainder of colon definition on each asset in the order they were declared. |
 | \#assets | \( -- n \) | Total number of declared assets. |
 | .asset | \( asset -- \) | Print some info about an asset |
 | .assets | \( -- \) | List all assets |
@@ -177,7 +177,7 @@ See the asset definition source files for examples.
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
-| assetdef | \( -- \ \) | Define an asset type \(or "asset definition"\) |
+| assetdef | \( --  \) | Define an asset type \(or "asset definition"\) |
 | register | \( reloader-xt asset -- \) | Add asset to the preload list and assign its reloader. |
 
 ### The preloader
@@ -211,7 +211,7 @@ All of the fields are public.
 | /origin | \( -- \) | Set image's origin to its center. |
 | reload-image | \( image -- \) | Load bitmap from its stored path and initialize the origin. |
 | init-image | \( path c image -- \) | Initialize image \(calling `reload-image`.\) |
-| image: | \( path count -- \ \) | Declare an image, loading it at compile-time. |
+| image: | \( path count --  \) | Declare an image, loading it at compile-time. |
 | &gt;bmp | \( image -- bitmap \) | Get Allegro bitmap |
 | load-image | \( path count image -- \) | Load a new bitmap into an image and change its path.  The old bitmap is not destroyed. |
 | free-image | \( image -- \) | The bitmap is destroyed. Note that the pointer is not cleared. |
