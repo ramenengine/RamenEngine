@@ -1,6 +1,6 @@
 # README
 
-Ramen is a game engine written in standard Forth.
+Ramen is a 2D game engine written in standard Forth.
 
 [Documentation on Gitbook](https://rogerlevy.gitbook.io/ramen/v/docs/)
 
