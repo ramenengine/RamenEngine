@@ -1,4 +1,4 @@
-# Ramen - the Readily Available Multimedia ENgine
+# README
 
 Ramen is a game engine written in standard Forth.
 
