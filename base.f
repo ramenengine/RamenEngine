@@ -42,4 +42,10 @@ used @ value baseline
 : empty
     cr ." Empty!"
     -stage -assets baseline used ! stop empty ;
+
+create ldr 64 allot
+: rld  ldr count included ;
+: ld   bl parse ldr place  s" .f" ldr append  rld ;
+
 only forth definitions marker (empty)
+
