@@ -139,18 +139,11 @@ The quickest way to understand is to try it. After loading Ramen into Forth, typ
 
 ## Assets - assets.f
 
-The asset system lets you declare assets in your code which will get automatically loaded when your game starts. It also lets you add new asset types which know how to load themselves on initial game executable start.
+The asset system lets you declare assets in your code which will get automatically loaded when your game starts. The assets are loaded immediately at compile-time when declared.  
 
-All assets have the following fields:
+In order for the publish facility to find your assets, you should place your assets in a subfolder of your project root called `data/`. \(You can organize files within this folder however you like.\)
 
-| field | type | description |
-| :--- | :--- | :--- |
-| srcfile | cstring | Path of source file |
-| &lt;reloader&gt; | xt | "Reloader" XT |
-
-The reloader is a unnamed field. You can, however, directly `reload ( asset -- )`
-
-Additional asset-related words:
+Miscellaneous asset-related words:
 
 | word | stack diagram | description |
 | :--- | :--- | :--- |
@@ -161,15 +154,23 @@ Additional asset-related words:
 
 `findfile ( path c -- path c )` Search for an asset's file first in these locations, in this order:
 
-* Relative to the current working directory
+* Relative to the current working directory \(project root\)
 * Relative to the current source file being compiled.
-* Relative to `<project folder>/src/`.
 
-  If not found, abort and throw an error message.
+If an asset isn't found, it aborts and throws an error message.
 
 ### Defining an asset type
 
-An asset type is a struct that extends the header described above. Defining an asset type is largely the same as defining a struct.
+You can add new asset types.  An asset type is a struct that extends the header described above. Defining an asset type is largely the same as defining a struct.
+
+All assets have the following fields:
+
+| field | type | description |
+| :--- | :--- | :--- |
+| srcfile | cstring | Path of source file |
+| &lt;reloader&gt; | xt | "Reloader" XT |
+
+The reloader is a unnamed field. You can, however, directly `reload ( asset -- )`
 
 You will also need to define the asset loader and asset declaration word.
 
@@ -182,7 +183,7 @@ See the asset definition source files for examples.
 
 ### Load triggers
 
-Load triggers are assets that don't have a file associated with them.
+Load triggers are executed by the preloader in addition to assets.  They are just XT's without any associated files.
 
 `loadtrig` \( xt -- \) Add a load trigger.
 
@@ -242,23 +243,87 @@ All of the fields are public.
 
 ## Fonts - font.f
 
+Font assets.  See the source for details.  All font formats supported by Allegro 5 are supported.
+
+Font declaration example:
+
+```text
+s" data/path/to/font.ttf" #12 font: myfont.font
+```
+
+See the source for more.  
+
 ## Buffers - buffer.f
+
+Buffers are memory allocated from the OS heap at game start.  This frees the programmer from the confines of the dictionary, which is typically a small and static size.  
+
+Buffer declaration example:
+
+```text
+64 megs buffer: mybuffer
+```
+
+See the source for more.  
 
 ## Samples - sample.f
 
+Sample assets for playing sound effects.
+
+Sample declaration example:
+
+```text
+s" data/path/to/sample.wav" sample: mysample
+```
+
+Playing a sample:  \(Standard Packet\)
+
+```text
+mysample play 
+```
+
+See the source for more.  
+
 ## Color - color.f
+
+A simple color struct.  Just a barebones struct for now.
+
+```text
+struct color
+    color 0 svar color.r
+    color 0 svar color.g
+    color 0 svar color.b
+    color 0 svar color.a
+```
 
 ## Objects - obj.f
 
 Ramen's special data structure for game objects. See [Objects](objects.md)
 
-## Cellstacks  - cellstack.f
+## Stacks  - stack.f
+
+Stacks are arrays of a predetermined size that you can push and pop values to and from.  You can address the items by index.  All items are one cell wide.
+
+```text
+: stack  ( n -- ) create a stack
+: #pushed  ( stack -- n ) get # of pushed items
+: truncate  ( stk newsize -- ) set the stack size
+: pop  ( stk -- val )
+: push  ( val stk -- )  
+: pushes  ( ... stk n -- )  push multiple items
+: pops    ( stk n -- ... )  pop multiple items
+: scount  ( stk -- addr count )  
+: sbounds  ( stk -- end start ) utility for do/loop
+: []  ( stk n -- addr )  get item by index
+: nth ( n stk -- addr )  get item by index
+
+table: ( -- <name> adr ) create an array you can comma data into
+;table ( adr -- ) call to terminate the definition
+
+```
 
 ## Publish - publish.f
 
 See [Publishing](../publish.md)
 
-## Tiled - tiled.f
 
-See [Tiled](../libraries/tiled.md)
 
