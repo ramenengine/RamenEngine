@@ -55,16 +55,11 @@ fixed
     locals| flip ang sy sx bmp |  bmp -exit
     bmp dup >center destxy  4af  sx sy ang 3af  flip
     al_draw_scaled_rotated_bitmap ;
-: srblitf ( bmp sx sy ang flip )
-    locals| flip ang sy sx bmp |  bmp -exit
-    bmp  0 0 destxy  4af  sx sy ang 3af  flip
-    al_draw_scaled_rotated_bitmap ;
 : blit   ( bmp ) 0 blitf ;
 : tblit  ( bmp ) 0 tblitf ;
 : blitrgnf  ( bmp x y w h flip )
     locals| flip h w y x bmp |
     bmp  x y w h 4af  destxy 2af  flip  al_draw_bitmap_region ;
-: blitrgn  0 blitrgnf ;
 
 
 \ Text; uses Ramen font assets
