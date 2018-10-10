@@ -6,15 +6,3 @@ Ramen is built on [AllegroForthKit](https://rogerlevy.github.io/afkit/) and cons
 
 There is a standard collection of libraries, called the Standard Packet. It includes Tiled support and animated sprite support and will be suited to most 2D games.
 
-## Documentation
-
-* [Basic Usage](basic-usage.md)
-* [Running the Examples](examples.md)
-* [Fixed-Point Numbers](https://rogerlevy.github.io/afkit/fixedp.html)
-* [Data Structures](structs.md)
-* [Objects](objects.md)
-* [Publishing Games](publish.md)
-* [Module Reference](modules.md)
-* [Library Reference](libraries.md)
-* [Tiled Support](tiled.md)
-
