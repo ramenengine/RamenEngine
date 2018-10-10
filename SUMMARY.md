@@ -9,4 +9,5 @@
 * [Objects](objects.md)
 * [Tiled Support](tiled.md)
 * [Publishing](publish.md)
+* [Drawing](drawing.md)
 

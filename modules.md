@@ -241,18 +241,6 @@ All of the fields are public.
 | afsubimg | \( n image -- ALLEGRO\_BITMAP fx fy fw fh \) | Get the bitmap and the rectangle values as floats of a subimage.  \(Useful for passing to the Allegro library.\) |
 | imgsubbmp | \( n image -- subbitmap \) | Create an ALLEGRO\_SUBBITMAP that stores info about a subimage. |
 
-## Fonts \(font.f\)
-
-Font assets.  See the source for details.  All font formats supported by Allegro 5 are supported.
-
-Font declaration example:
-
-```text
-s" data/path/to/font.ttf" #12 font: myfont.font
-```
-
-See the source for more.  
-
 ## Buffers \(buffer.f\)
 
 Buffers are memory allocated from the OS heap at game start.  This frees the programmer from the confines of the dictionary, which is typically a small and static size.  
@@ -261,6 +249,18 @@ Buffer declaration example:
 
 ```text
 64 megs buffer: mybuffer
+```
+
+See the source for more.  
+
+## Fonts \(font.f\)
+
+Font assets.  See the source for details.  All font formats supported by Allegro 5 are supported.
+
+Font declaration example:
+
+```text
+s" data/path/to/font.ttf" #12 font: myfont.font
 ```
 
 See the source for more.  
