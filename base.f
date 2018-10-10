@@ -16,6 +16,7 @@ include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point li
 include ramen/stack.f
 include ramen/rect.f
 include ramen/res.f
+include ramen/batch.f
 
 \ Assets
 include ramen/assets.f

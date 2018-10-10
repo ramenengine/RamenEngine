@@ -107,7 +107,6 @@ only forth definitions also cgriding
   ( topleft off topright off btmleft off ) ;
 
 \ perform collision checks.  assumes box has already been added to the cgrid.
-\   this avoids unnecessary work for the CPU.
 : checkcgrid  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
   to cgrid  is collide
   locals| cbox |

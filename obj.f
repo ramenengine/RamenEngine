@@ -123,14 +123,7 @@ create basis /roledef /allot  \ default rolevar and action values for all newly 
 : ->  ( roledef -- <action> )  ' >body @ postpone literal postpone +exec ; immediate
 
 \ Filtering tools
-0 value xt
-: #queued  ( addr -- addr n )  here over - cell/ ;
-: eachcell  ( addr n xt -- )  ( addr -- )
-    xt >r  to xt
-        cells bounds do  i xt execute  cell +loop
-    r> to xt ;
-: eachcell>  ( addr n -- <code> )  ( addr -- )
-    r> code> eachcell ;
+: #queued  ( addr -- addr cells )  here over - cell/ ;
 : some  ( objlist filterxt xt -- )  ( addr n -- )
     here >r  -rot  each  r@ #queued rot execute  r> reclaim ;
 : some>  ( objlist filterxt -- <code> )  ( addr n -- )
