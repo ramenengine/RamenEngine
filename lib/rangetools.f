@@ -1,7 +1,6 @@
 : area  ( x y w h -- x1 y1 x2 y2 )  2over 2+ ;
 : lowerupper  ( n n -- lower higher )  2dup > if  swap  then ;
 : between  ( n n -- n )  lowerupper  over -  #1 +  rnd + ;
-: 1clamp  ( n -- n )  0.0 1.0 clamp ;
 : vary  ( n rnd -- n )  dup 0.5 *  -rot rnd +  swap - ;
 : 2vary  ( n n rnd rnd -- n n )  rot swap vary >r vary r> ;
 : either  ( a b - a | b )  2 rnd if  drop  else  nip  then ;
@@ -22,5 +21,3 @@
 
 : inside?  ( xy xyxy - flag )  2>r 2>r 2dup 2r> 2r> overlap? ;
 
-
-:noname noop ; constant ..
