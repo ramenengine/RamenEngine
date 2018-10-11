@@ -1,12 +1,12 @@
 # Library Reference
 
-These are the optional modules \(some of which make up the Standard Packet.\) They are located in `lib/`.  Some libraries depend on other libraries.
+These are the optional modules, some of which make up the Standard Packet.  They are located in `lib/`.  Some libraries depend on other libraries.
 
 ## 2D Arrays  \(array2d.f\)
 
 2D Arrays are either statically allocated, or, exist as "header" information about an arbitrary block of memory.
 
-You could use a 2D array header to perform operations on a section of a static 2d array, or allocate a 2d array dynamically, which is what `buffer2d.f` does.
+You could use a 2D array header to perform operations on a section of a static 2d array, or allocate a 2d array from the OS heap, which is what's done in `buffer2d.f` .
 
 ```text
 struct %array2d
@@ -29,6 +29,8 @@ struct %array2d
 `some2d>` \( col row \#cols \#rows array2d --  \) \( addr \#cells -- \) iterate  
 `fill2d` \( val col row \#cols \#rows array2d -- \) fill each cell of 2d array with value  
 
+
+_Warning: As of 1.7, the following words in array2d.f are untested.  They were tested and working before they were brought into Ramen from a previous engine, but it's possible that some may be broken due to API changes.  2MOVE CLIP BATCH WRITE2D_
 
 ## 2D Buffers  \(buffer2d.f\)
 
@@ -89,13 +91,13 @@ See [Drawing](drawing.md).
 
 Tools for working with 1D and 2D ranges.
 
-
-
 ## Rectangles  \(rect.f\)
 
 Generic data structure representing a rectangle.
 
 ## Radix Sort  \(rsort.f\)
+
+
 
 Fast radix sort routine. The algorithm is specially tailored for sorting fixed point integers from 0 to 65535. Used by `zsort.f`.
 
