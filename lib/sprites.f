@@ -90,7 +90,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
-: animrange,  ( start len -- ) over + swap do  i , 0 , 0 ,  loop  ;
+: range,  ( start len -- ) over + swap do  i , 0 , 0 ,  loop  ;
 
 \ +anim:  ( stack -- stack loopaddr )  animation table helper
 : +anim:  here over push here ;
