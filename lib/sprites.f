@@ -42,9 +42,9 @@ defaults >{
 \ Get current frame data
 : ?regorg
     rgntbl @ ?dup -exit
-    frm @ @  /region * + 4 cells + 2@ 2negate +at ;
+    frm @ @  /region * + 4 cells + 2@ cx 2! ;
 
-: >framexywh  ( n rgntbl -- srcx srcy w h )
+: framexywh  ( n rgntbl -- srcx srcy w h )
     swap /region * +  4@ ;
 
 : curframe  ( -- srcx srcy w h )
@@ -56,7 +56,7 @@ defaults >{
         then
     exit then 
     rgntbl @ if
-        frm @ @  rgntbl @  >framexywh
+        frm @ @  rgntbl @  framexywh
     else
         frm @ @  img @  subxywh
     then ;
