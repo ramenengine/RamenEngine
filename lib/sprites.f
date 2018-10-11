@@ -2,7 +2,7 @@
 \ - Render subimages or image regions
 \ - Define animation data and animate sprites
 
-require ramen/lib/draw
+depend ramen/lib/draw.f
 
 \ Region tables
 6 cells constant /region
@@ -32,25 +32,36 @@ defaults >{
 \ Drawing
 : sprite ( srcx srcy w h flip )
     locals| flip h w y x |
-    img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 3@ 3af  flip
+    img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 2@ 2af
+    ang @ >rad 1af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
-: subsprite  ( n flip -- )  >r  img @ >subxywh  r> sprite ;  \ img must be subdivided
+: subsprite  ( n flip -- )  >r  img @ subxywh  r> sprite ;  
+    \ img must be subdivided
 
 \ Get current frame data
-: ?regorg  rgntbl @ ?dup -exit  frm @ @  /region * + 4 cells + 2@ 2negate +at ;
+: ?regorg
+    rgntbl @ ?dup -exit
+    frm @ @  /region * + 4 cells + 2@ 2negate +at ;
 
 : >framexywh  ( n rgntbl -- srcx srcy w h )
     swap /region * +  4@ ;
 
 : curframe  ( -- srcx srcy w h )
-    frm @ 0= if  0 0 img @ imagewh  exit then 
+    frm @ 0= if
+        img @ image.subcount @ if
+            0 img @ subxywh
+        else
+            0 0 img @ imagewh
+        then
+    exit then 
     rgntbl @ if
         frm @ @  rgntbl @  >framexywh
     else
-        frm @ @  img @  >subxywh
+        frm @ @  img @  subxywh
     then ;
-: curflip  frm @ @ #3 and ;
+
+: curflip  frm @ if frm @ @ #3 and exit then  0 ;
 
 \ Draw + animate
 defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
@@ -71,7 +82,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 \ Play an animation.
 \ ?/st      ( -- )  first time call initializes scale and tint
 \ animate   ( anim -- )  play animation from beginning
-: animate   frm !  0 anmctr !  frm @ -exit ;
+: animate   frm !  0 anmctr ! ;
     
 \ Define self-playing animations
 \ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation

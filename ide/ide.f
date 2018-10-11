@@ -221,7 +221,7 @@ create ide-personality
     >ide
     ide-personality open-personality
 ;
-: shade  black 0.33 alpha  0 0 at  displaywh rectf  white ;
+: shade  black 0.15 alpha  0 0 at  displaywh rectf  white ;
 : ?rest
     source-id close-file drop
     [in-platform] sf [if]  begin refill while interpret repeat  [then] ; 

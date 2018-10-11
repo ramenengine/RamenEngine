@@ -1,8 +1,8 @@
 \ Tilemap rendering
 \  Loading tiles, tile and tilemap display and collision routines
 
-require ramen/lib/draw.f
-require ramen/lib/array2d.f
+depend ramen/lib/draw.f
+depend ramen/lib/array2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 

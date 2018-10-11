@@ -1,4 +1,4 @@
-require ramen/lib/array2d.f
+depend ramen/lib/array2d.f
 
 decimal
 : init-buffer2d  ( array2d -- )

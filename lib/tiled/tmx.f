@@ -17,7 +17,7 @@
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 
-require afkit/lib/xml
+depend afkit/lib/xml.f
 
 : base64  ( base64-src count -- str )   str-new >r  r@ b64-decode 2drop  r> ;
 
