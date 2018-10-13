@@ -231,7 +231,8 @@ only forth definitions also ideing
 : ide-overlay  repl? -exit  shade  0 0 at  .output  bottom at  .cmdline ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 /ide  rasa
-: ide  /repl  ['] ?rest catch ?.catch  begin go again ;
+: -ide  close-personality  HWND btf ;
+: ide  /repl  ['] ?rest catch ?.catch  go  -ide ;
 : wipe  page ;
 : /s  S0 @ SP! ;
 only forth definitions
