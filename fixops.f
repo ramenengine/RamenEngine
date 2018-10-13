@@ -94,6 +94,7 @@ previous definitions
 : anglerp  ( src dest factor -- )
   >r  over -  360 mod  540 +  360 mod  180 -  r> * + ;
 : sqrt  ( n -- n )  1pf fsqrt f>p ;
+: tan   ( rad -- n )  1pf ftan f>p ;
 : atan  ( n -- n )  1pf fatan f>p ;
 : atan2 ( n n -- n )  2pf fatan2 f>p ;
 : log2  ( n -- n )  1e 1pf y*log2(x) f>p ;  \ binary logarithm (for fixed-point)
