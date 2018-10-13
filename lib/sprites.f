@@ -2,8 +2,6 @@
 \ - Render subimages or image regions
 \ - Define animation data and animate sprites
 
-depend ramen/lib/draw.f
-
 \ Region tables
 6 cells constant /region
     \ x , y , w , h , originx , originy , 
@@ -17,7 +15,7 @@ cell constant /frame
 redef on
     \ Transformation info; will be factored out into Ramen's core eventually
     var sx  var sy  var ang  var cx  var cy
-    color sizeof field tint  \ NOTE: not automatically used.  
+    %color sizeof field tint
 
     \ animation state:
     var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
@@ -90,7 +88,7 @@ defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
-: range,  ( start len -- ) over + swap do  i , 0 , 0 ,  loop  ;
+: range,  ( start len -- ) bounds do i , loop ;
 
 \ +anim:  ( stack -- stack loopaddr )  animation table helper
 : +anim:  here over push here ;
