@@ -1,3 +1,5 @@
+: destxy  penx 2@ [undefined] HD [if] 2pfloor [then] ;
+
 : bmpw  dup -exit  al_get_bitmap_width 1p ;
 : bmph  dup -exit  al_get_bitmap_height 1p ;
 : bmpwh  dup bmpw swap bmph ;

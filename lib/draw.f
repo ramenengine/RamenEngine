@@ -1,7 +1,5 @@
 \ Basic graphics option
 
-: destxy  penx 2@ [undefined] HD [if] 2pfloor [then] ;
-
 create fore 1e sf, 1e sf, 1e sf, 1e sf, 
 : rgb  ( r g b )  3af fore 3! ;
 : alpha  ( a )  1af fore 3 cells + ! ;
@@ -32,7 +30,6 @@ bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
 31 a2 f2 createcolor lblue 93 73 eb createcolor purple
 96 4b a8 createcolor dpurple cb 5c cf createcolor magenta
 80 00 80 createcolor dmagenta ff ff 80 createcolor lyellow
-e0 e0 80 createcolor tan  
 da 42 00 createcolor orange
 fixed
 
