@@ -53,15 +53,15 @@ defaults as  en on
 
 \ objlists and pools
 struct %objlist \ objlist struct, also used for pools
-    %objlist int svar ol.first
-    %objlist int svar ol.count
-    %objlist int svar ol.#free
-    %objlist int svar ol.last
+    %objlist 0 svar ol.first
+    %objlist 0 svar ol.count
+    %objlist 0 svar ol.#free
+    %objlist 0 svar ol.last
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
 : (+free)   ^pool @ ol.#free +! ;
 : >last   ol.last @ ;
-: #objects  ol.count 2@ - ;
+: #objects  dup ol.count @ swap ol.#free @ - ;
 : object  {  here  /object /allot  }  dup lnk !  as  ;
 : objects  for  object  loop ;
 create (ol)  defaults , 0 , 0 , defaults , 
