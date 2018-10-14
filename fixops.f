@@ -90,9 +90,11 @@ previous definitions
 : sin  ( deg -- n )   1pf sin f>p ;
 : asin  ( n -- deg )  1pf fasin r>d f>p ;
 : acos  ( n -- deg )  1pf facos r>d f>p ;
+fixed
 : lerp  ( src dest factor -- )  >r over - r> * + ;
 : anglerp  ( src dest factor -- )
   >r  over -  360 mod  540 +  360 mod  180 -  r> * + ;
+
 : sqrt  ( n -- n )  1pf fsqrt f>p ;
 : tan   ( rad -- n )  1pf ftan f>p ;
 : atan  ( n -- n )  1pf fatan f>p ;
