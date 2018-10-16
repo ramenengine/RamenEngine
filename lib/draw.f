@@ -6,7 +6,10 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : rgba   alpha rgb ;
 
 \ Bitmaps, backbuffer
-: onto>  ( bmp -- <code> )  r>  al_get_target_bitmap >r  swap onto  call  r> al_set_target_bitmap ;
+: onto>  ( bmp -- <code> )
+    r>  al_get_target_bitmap >r  at@ 2>r
+        swap  onto call
+    2r> at  r> al_set_target_bitmap ;
 : movebmp  ( src sx sy w h )  write-src BLEND>  destxy 2af 0 al_draw_bitmap ;
 : *bmp   ( w h -- bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
@@ -33,7 +36,7 @@ bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
 da 42 00 createcolor orange
 fixed
 
-: backdrop  fore 4@ al_clear_to_color  white ;
+: backdrop  fore 4@ al_clear_to_color  white  0 0 at ;
 
 \ Bitmap drawing utilities - f stands for flipped
 \  All of these words use the current color for tinting.

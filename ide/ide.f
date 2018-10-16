@@ -228,7 +228,7 @@ create ide-personality
 
 only forth definitions also ideing
 : ide-system  idekeys ;
-: ide-overlay  repl? -exit  shade  0 0 at  .output  bottom at  .cmdline ;
+: ide-overlay  repl? -exit  0 0 at  unmount  shade  .output  bottom at  .cmdline ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 /ide  rasa
 : -ide  close-personality  HWND btf ;
