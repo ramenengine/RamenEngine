@@ -235,6 +235,7 @@ only forth definitions also ideing
 : ide  /repl  ['] ?rest catch ?.catch  go  -ide ;
 : wipe  page ;
 : /s  S0 @ SP! ;
+: quit  -ide cr quit ;
 only forth definitions
 
 marker (empty) 
