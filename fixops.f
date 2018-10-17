@@ -65,7 +65,7 @@ wordlist constant fixpointing
 fixed definitions
     : *  ( n n -- n )  1pf s>f f* f>s ;
     : /  ( n n -- n )  swap s>f 1pf f/ f>s ;
-    : /mod  ( n n -- r q ) 2dup mod -rot / ;
+    : /mod  ( n n -- r q ) 2dup mod -rot / pfloor ;
     : loop  s" 1.0 +loop" evaluate ; immediate
 previous definitions
 
