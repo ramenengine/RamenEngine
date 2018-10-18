@@ -85,6 +85,7 @@ These words are really important for you to learn as they're used _everywhere_ i
 | sqrt | \( n -- n \) | Square root |
 | atan | \( n -- n \) | Arctangent |
 | atan2 | \( n n -- n \) |  |
+| tan | \( n -- n \) | Tangent |
 | log2 | \( n -- n \) | Logarithm |
 | &gt;rad | \( n -- n \) | Convert degrees to radians |
 | rescale | \( n min1 max1 min2 max2 -- n \) | Rescale a number proportionally from one range to another |
@@ -236,8 +237,8 @@ All of the fields are public.
 | word | stack diagram | description |
 | :--- | :--- | :--- |
 | subdivide | \( tilew tileh image -- \) | Initialize the subimage fields. |
-| &gt;subxy | \( n image -- x y \) | Get the coordinates of the top left of a subimage. |
-| &gt;subxywh | \( n image -- x y w h \) | Get the top-left coordinates, and the dimensions of a subimage. |
+| subxy | \( n image -- x y \) | Get the coordinates of the top left of a subimage. |
+| subxywh | \( n image -- x y w h \) | Get the top-left coordinates, and the dimensions of a subimage. |
 | afsubimg | \( n image -- ALLEGRO\_BITMAP fx fy fw fh \) | Get the bitmap and the rectangle values as floats of a subimage.  \(Useful for passing to the Allegro library.\) |
 | imgsubbmp | \( n image -- subbitmap \) | Create an ALLEGRO\_SUBBITMAP that stores info about a subimage. |
 
@@ -288,11 +289,11 @@ See the source for more.
 A simple color struct.  Just a barebones struct for now.
 
 ```text
-struct color
-    color 0 svar color.r
-    color 0 svar color.g
-    color 0 svar color.b
-    color 0 svar color.a
+struct %color
+    %color 0 svar color.r
+    %color 0 svar color.g
+    %color 0 svar color.b
+    %color 0 svar color.a
 ```
 
 ## Objects \(obj.f\)
