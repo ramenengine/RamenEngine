@@ -54,3 +54,9 @@ Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/%20
 * [Allegro.cc forum](https://www.allegro.cc/forums) - A very helpful and fairly active community.  And gladly, language-agnostic.
 * [The DPANS94 Forth Standard](http://dl.forth.com/sitedocs/dpans94.pdf)
 
+## Projects
+
+* [Zelda clone](https://github.com/RogerLevy/linkgoesforth)
+* [Starfox-like Dogfighting game](https://github.com/RogerLevy/triplestrength)
+* [3D Packet](https://github.com/RogerLevy/3dpack)
+* [Bento 2D Physics Packet](https://github.com/RogerLevy/bento)
