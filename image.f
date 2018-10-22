@@ -38,7 +38,7 @@ defasset %image
 \ init-canvas  ( w h image -- )
 \ canvas  ( w h -- image )
 \ canvas:  ( w h -- <name> )
-: recreate-canvas  >r  r@ canvas.w 2@ 2i al_create_bitmap  r> image.bmp ! ;
+: recreate-canvas  #24 al_set_new_bitmap_depth  >r  r@ canvas.w 2@ 2i al_create_bitmap  r> image.bmp ! ;
 : ?samesize  >r  2dup r@ canvas.w 2@ d= if  2drop  r> r> 2drop  exit then  r> ;
 : resize-canvas  ?samesize  >r r@ free-image  r@  canvas.w 2!  r> recreate-canvas ;
 : init-canvas  >r    ['] recreate-canvas r@ register  r@  canvas.w 2!  r> recreate-canvas ;
