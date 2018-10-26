@@ -7,8 +7,11 @@
 * [Data Structures](structs.md)
 * [Module Reference](modules.md)
 * [Library Reference](libraries.md)
-* [Drawing](drawing.md)
 * [Objects](objects.md)
+* [Drawing](drawing.md)
+* [Sprites](sprites.md)
 * [Tiled Support](tiled.md)
 * [Publishing](publish.md)
+* [Glossary of Terms](glossary-of-terms.md)
+* [Naming Conventions](https://docs.google.com/spreadsheets/d/1TDGwB0WVFC9nuAOQ2-o6ifNpvb8OILJtZK2zFm6ONxc/edit?usp=sharing)
 

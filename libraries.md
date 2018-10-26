@@ -97,13 +97,63 @@ Generic data structure representing a rectangle.
 
 ## Radix Sort  \(rsort.f\)
 
+```text
+struct %rect
+    %rect 0 svar rect.x
+    %rect 0 svar rect.y
+    %rect 0 svar rect.w
+    %rect 0 svar rect.h
+```
 
+Here is a list of the operations for working with rectangles.  Their stack effects are self-explanatory.  
 
-Fast radix sort routine. The algorithm is specially tailored for sorting fixed point integers from 0 to 65535. Used by `zsort.f`.
+_Note: The following words also work with vectors - `x@ y@ x! y!`_
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:left">
+        <p><code>x@<br />y@<br />w@<br />h@<br />xy@<br />wh@</code>
+        </p>
+        <p><code>rect.</code>
+        </p>
+        <p><code>xywh@ <br />x2@<br />y2@<br />xy2@</code>
+        </p>
+      </th>
+      <th style="text-align:left">
+        <p><code>x!<br />y!<br />w!<br />h!<br />xy!<br />wh!</code>
+        </p>
+        <p><code>xywh! <br />x2!<br />y2!<br />xy2!</code>
+        </p>
+      </th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>Fast radix sort routine. The algorithm is specially tailored for sorting fixed point integers from 0 to 65535. Used by `zsort.f`.
 
 ## Sprites  \(sprites.f\)
 
-Robust animated sprite extension for game objects.
+`rsort` \( addr n xt - \) \( addr -- n \) destructively sort an array of values.  
+
+_Note: Any decimal portions will be ignored, and values above 65535 will be sorted incorrectly._
+
+`area` \( x y w h - x1 y1 x2 y2 \)   
+`lowerupper` \( n n - lower higher \)  
+`between` \( n n - n \) pick random value between 2 values.  \(inclusive\)  
+`vary` \( n rnd - n \) randomize a value N by range RND  
+`2vary` \( n n rnd rnd - n n \)  
+`either` \( a b - a \| b \) randomly return one of two values  
+`2ratio` \( x y w h xfactor yfactor - x y \) find a point within a rectangle, proportionally.  
+`middle` \( x y w h - x y \) get center of rectangle  
+`2halve` \( x y - x/2 y/2 \)  
+`center` \( w1 h1 x y w2 h2 - x y \) center a rectangle \(1\) in the middle of another one \(2\). returns x/y of top-left corner of centered rectangle.  
+`2rnd` \( x y - x y \)  
+`somewhere` \( x y w h - x y \) find a random point in a rectangle  
+`overlap?` \( x1 y1 x2 y2 x3 y3 x4 y4 - flag \) check if two areas overlap  
+`inside?` \( x y x1 y1 x2 y2 - flag \) check if a point is in an area  
+
+
+See Sprites.
 
 ## Stage  \(stage.f\)
 
