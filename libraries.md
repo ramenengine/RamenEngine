@@ -64,6 +64,8 @@ To use it, you first create a collision grid.  Then at some point you "bin" the 
 
 An object can be binned into only one cgrid at a time.
 
+Before you bin an object, you have to set `ahb` , a struct that describes the object's rectangle.  \(structure: x1,y1,x2,y2\)
+
 _Note: By default, the size of rectangles can't be bigger than 512x512 pixels. To get around this limitation you can break up larger rectangles using  `break2d`, found in stride2d.f_
 
 Collision grid declaration example:
