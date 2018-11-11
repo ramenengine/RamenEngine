@@ -16,17 +16,21 @@ include ramen/lib/tilemap.f
 create roles #MAXTILES stack
 create bitmaps 100 stack         \ single-image tileset's bitmaps
 defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )  
+defer tmxobj   ( object-nnn role -- )
+defer tmxrect  ( object-nnn w h -- )
+defer tmximage ( object-nnn gid -- )
+
+var scrollx  var scrolly  \ used to define starting column and row!
+var w  var h              \ width & height in pixels
+var tbi                   \ tile base index
+var onhitmap   \ XT ( tile -- )
+var gid
+rolevar recipe
 
 \ -------------------------------------------------------------------------------------------------
 \ Tilemap objects
 \ They don't allocate any buffers for map data.
 \ A part of the singular buffer TILEBUF is located using the scrollx/scrolly values.
-
-[section] tilemap
-
-var scrollx  var scrolly  \ used to define starting column and row!
-var w  var h              \ width & height in pixels
-var tbi                   \ tile base index
 
 : /tilemap
     viewwh w 2!
@@ -47,8 +51,6 @@ var tbi                   \ tile base index
 \ Tilemap collision
 include ramen/lib/tiled/collision.f
 
-var onhitmap   \ XT ( tile -- )
-
 : onhitmap>  ( -- <code> ) r> code> onhitmap ! ;  ( tilecell -- )
 
 : ?'drop  ?dup ?exit  ['] drop ;
@@ -63,22 +65,17 @@ var onhitmap   \ XT ( tile -- )
     ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
     (count) ; 
 
-\ -------------------------------------------------------------------------------------------------
-[section] tmx
-
 include ramen/lib/tiled/tmx.f
 also xmling also tmxing  
 
-var gid
 : @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: (load-bitmaps)  ( tileset# -- dom )
+: load-bitmaps  ( tileset# -- dom )
     tileset locals| gid0 ts |
     ts eachel> that's tile
-        dup tile>bmp swap id@ gid0 + tiles nth ! ;
-: load-bitmaps  ( tileset# -- )
-    (load-bitmaps)  ?dom-free ;
+        dup tile>bmp swap id@ gid0 + tiles nth !
+        ?dom-free ;
 
 \ don't execute this frequently!
 : @tilesetwh  ( tileset# -- tw th )
@@ -109,15 +106,10 @@ var gid
 \ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
 \ They all can expect the pen has already been set to the XY position.
 
-defer tmxobj   ( object-nnn role -- )
-defer tmxrect  ( object-nnn w h -- )
-defer tmximage ( object-nnn gid -- )
-
 : /roles  ( -- )  roles 0 [] #MAXTILES cells erase ;
 
 \ : reload-recipes ;
 
-rolevar recipe
 \ You don't have to define a recipe.  The last defined role will be used.
 \ note the role's name must match the filename
 : :recipe  ( role -- )  :noname swap 's recipe !  ;

@@ -1,13 +1,13 @@
 
 defasset %image
-    %image 0 svar image.bmp
-    %image 0 svar image.subw
-    %image 0 svar image.subh
-    %image 0 svar image.subcols
-    %image 0 svar image.subrows
-    %image 0 svar image.subcount
-    %image 0 svar canvas.w
-    %image 0 svar canvas.h
+    %image svar image.bmp
+    %image svar image.subw
+    %image svar image.subh
+    %image svar image.subcols
+    %image svar image.subrows
+    %image svar image.subcount
+    %image svar canvas.w
+    %image svar canvas.h
     
 
 \ get dimensions, fixed point

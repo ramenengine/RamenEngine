@@ -1,5 +1,10 @@
 fixed
-
+struct %array2d
+    %array2d svar array2d.cols
+    %array2d svar array2d.rows
+    %array2d svar array2d.pitch
+    %array2d svar array2d.data
+    
 : 2move  ( src /pitch dest /pitch #rows /bytes -- )
   locals| #bytes #rows destpitch dest srcpitch src |
   #rows for
@@ -9,12 +14,6 @@ fixed
 
 : clip  ( col row #cols #rows #destcols #destrows -- col row #cols #rows )
     2>r  2over 2+  0 0 2r@ 2clamp  2swap  0 0 2r> 2clamp  2swap 2over 2- ;
-
-struct %array2d
-    %array2d int svar array2d.cols
-    %array2d int svar array2d.rows
-    %array2d int svar array2d.pitch
-    %array2d int svar array2d.data
     
 : array2d-head,  ( cols rows -- )
     udup  2pfloor 2,  cells ,  here cell+ , ;

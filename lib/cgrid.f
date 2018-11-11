@@ -7,10 +7,10 @@
 struct cbox
 
 define cgriding
-    cbox int svar x1    cbox int svar y1
-    cbox int svar x2    cbox int svar y2
-    cbox int svar s1    cbox int svar s2  \ sectors 1-4
-    cbox int svar s3    cbox int svar s4
+    cbox svar x1    cbox svar y1
+    cbox svar x2    cbox svar y2
+    cbox svar s1    cbox svar s2  \ sectors 1-4
+    cbox svar s3    cbox svar s4
 
     #8 #12 + constant #bitshift
 
@@ -28,11 +28,11 @@ define cgriding
     : cgrid-var  sfield  does> @ cgrid + ;
 
     struct %cgrid
-    %cgrid cell int cgrid-var cols
-    %cgrid cell int cgrid-var rows
-    %cgrid cell int cgrid-var sectors         \ link to array of sectors
-    %cgrid cell int cgrid-var links           \
-    %cgrid cell int cgrid-var i.link          \ points to structure in links:  link to next ( i.link , box , )
+    %cgrid cell cgrid-var cols
+    %cgrid cell cgrid-var rows
+    %cgrid cell cgrid-var sectors         \ link to array of sectors
+    %cgrid cell cgrid-var links           \
+    %cgrid cell cgrid-var i.link          \ points to structure in links:  link to next ( i.link , box , )
 
     256 constant sectw
     256 constant secth

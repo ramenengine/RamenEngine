@@ -6,13 +6,14 @@ depend ramen/lib/array2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 
-\ note even though we use TRUNCATE and PUSH in this code it's not really a stack.
 create tiles #MAXTILES stack 
+0 value tba  \ tileset base address
 
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
 
-: tilebmp  ( n -- bmp )  #MAXTILES 1 - and tiles nth @ ;
+: tilebmp  ( n -- bmp )
+    #MAXTILES 1 - and tiles nth @ ;
 
 : maketiles  ( bitmap tilew tileh firstid -- )
     locals| id th tw bmp |
@@ -24,7 +25,8 @@ create tiles #MAXTILES stack
     th +loop
 ;
 
-: -tiles  #MAXTILES for  tiles i [] dup @ -bmp  off  loop ;
+: -tiles  ( -- )
+    #MAXTILES for  tiles i [] dup @ -bmp  off  loop ;
 
 \ -------------------------------------------------------------------------------------------------
 \ Render a tilemap
@@ -41,8 +43,10 @@ create tiles #MAXTILES stack
 
 \ -------------------------------------------------------------------------------------------------
 
-0 value tba  \ tileset base address
-: tilebase!  ( tile# -- )  tiles nth to tba ;  0 tilebase!
+: tilebase!  ( tile# -- )
+    tiles nth to tba ;
+
+0 tilebase!
 
 decimal \ for speed
 : tile>bmp  ( tiledata -- bitmap )  $03fff000 and #10 >> tba + @ ;
@@ -67,8 +71,8 @@ fixed
     2over 2over 2mod 2negate +at   2/ 2pfloor ;
 
 \ Isometric support
-: >iso  2dup swap 1 >> - >r  +  r> ;
-: >car  2dup 2 / swap 2 / + >r   -   r> ;
+: >iso  ( x y -- x y )  2dup swap 1 >> - >r + r> ;
+: >car  ( x y -- x y )  2dup 2 / swap 2 / + >r - r> ;
 
 : isotilemap  ( addr /pitch cols rows -- )
     hold>  1 tsize locals| th tw rows cols pitch |

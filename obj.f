@@ -1,6 +1,10 @@
 [defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
 
 maxsize constant /object
+[defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
+variable lastrole \ used by map loaders (when loading objects scripts)
+variable meta
+create basis /roledef /allot  \ default rolevar and action values for all newly created roles
 
 \ ME is defined in afkit
 : as  s" to me" evaluate ; immediate
@@ -9,7 +13,7 @@ create mestk  0 , 16 cells allot
 : i} mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ to me ; 
 : {  state @ if s" me >r" evaluate else  i{  then ; immediate
 : }  state @ if s" r> as" evaluate else  i}  then ; immediate
-: >{   s" { as " evaluate ; immediate
+: >{   s" { as " evaluate ; immediate    \ }
 
 variable used
 variable redef  \ should you want to bury anything
@@ -45,18 +49,16 @@ var lnk  var ^pool
 var x  var y  var en  var vx  var vy
 var hidden  var drw  var beha
 
-
-
 create defaults  maxsize /allot         \ default values are stored here
                                         \ they are copied to new instances by INITME
 defaults as  en on 
 
 \ objlists and pools
 struct %objlist \ objlist struct, also used for pools
-    %objlist 0 svar ol.first
-    %objlist 0 svar ol.count
-    %objlist 0 svar ol.#free
-    %objlist 0 svar ol.last
+    %objlist svar ol.first
+    %objlist svar ol.count
+    %objlist svar ol.#free
+    %objlist svar ol.last
 : count+!  ol.count +! ;
 : >first  ol.first @ as ;
 : (+free)   ^pool @ ol.#free +! ;
@@ -107,11 +109,7 @@ create (ol)  defaults , 0 , 0 , defaults ,
 
 \ Roles
 \ Note that role vars are global and not tied to any specific role.
-[defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 var role
-variable lastrole \ used by map loaders (when loading objects scripts)
-variable meta
-create basis /roledef /allot  \ default rolevar and action values for all newly created roles
 : ?update  >in @  defined if  >body lastrole !  drop r> drop exit then  drop >in ! ; 
 : defrole  ?update  create  here lastrole !  basis /roledef move,  ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
@@ -123,7 +121,8 @@ create basis /roledef /allot  \ default rolevar and action values for all newly 
 : ->  ( roledef -- <action> )  ' >body @ postpone literal postpone +exec ; immediate
 
 \ Filtering tools
-: #queued  ( addr -- addr cells )  here over - cell/ ;
+: #queued  ( addr -- addr cells )
+    here over - cell/ ;
 : some  ( objlist filterxt xt -- )  ( addr n -- )
     here >r  -rot  each  r@ #queued rot execute  r> reclaim ;
 : some>  ( objlist filterxt -- <code> )  ( addr n -- )

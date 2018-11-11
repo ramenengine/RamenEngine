@@ -1,6 +1,6 @@
 defasset %buffer
-    %buffer int svar buffer.data
-    %buffer int svar buffer.size
+    %buffer svar buffer.data
+    %buffer svar buffer.size
 
 : recreate-buffer  ( buffer -- )
     >r  r@ buffer.size @ allocate throw  r> buffer.data ! ;
@@ -9,7 +9,8 @@ defasset %buffer
     >r  dup r@ buffer.size !  allocate throw  r@ buffer.data !
     ['] recreate-buffer r> register ;
 
-: buffer  ( size -- )  %buffer sizeof allotment  init-buffer ;
+: buffer  ( size -- )
+    %buffer sizeof allotment  init-buffer ;
 
 : buffer:   ( size -- <name> )
     create  buffer  does>  buffer.data @ ; 

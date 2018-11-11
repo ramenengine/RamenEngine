@@ -1,9 +1,21 @@
+: sfield  ( struct bytes -- <name> )  ( adr -- adr+n )
+    create over @ ,  swap +!  does> @ + ;
+: svar  cell sfield ;
+: struct  variable ;
+: sizeof  @ ;
+
+struct %color
+    %color svar color.r
+    %color svar color.g
+    %color svar color.b
+    %color svar color.a
+
 
 struct %rect
-    %rect 0 svar rect.x
-    %rect 0 svar rect.y
-    %rect 0 svar rect.w
-    %rect 0 svar rect.h
+    %rect svar rect.x
+    %rect svar rect.y
+    %rect svar rect.w
+    %rect svar rect.h
 
 : x@    @ ;                       : x!    ! ;
 : y@    cell+ @ ;                 : y!    cell+ ! ;
@@ -18,3 +30,4 @@ struct %rect
 : x2@   dup x@ swap w@ + ;        : x2!   >r r@ x@ - r> w! ;
 : y2@   dup y@ swap h@ + ;        : y2!   >r r@ y@ - r> h! ;
 : xy2@  dup 2@ rot wh@ 2+ ;       : xy2!  >r r@ xy@ 2- r> wh! ;
+

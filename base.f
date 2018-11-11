@@ -4,17 +4,17 @@ include afkit/afkit.f  \ AllegroForthKit
 #1 #5 #8 [afkit] [checkver]
 
 \ Low-level
-include ramen/variables.f
+0 value (count)
+0 value (ts)
+0 value (bm)
 include ramen/plat.f
 [undefined] LIGHTWEIGHT [if]
 include afkit/dep/zlib/zlib.f
 [then]
-include ramen/struct.f
-include ramen/color.f
+include ramen/structs.f
 include ramen/fixops.f
 include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
 include ramen/stack.f
-include ramen/rect.f
 include ramen/res.f
 include ramen/batch.f
 

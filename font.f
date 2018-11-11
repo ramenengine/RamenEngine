@@ -1,8 +1,7 @@
 defasset font
-    font int svar font.fnt
-    font int svar font.size
-    font int svar font.flags
-
+    font svar font.fnt
+    font svar font.size
+    font svar font.flags
 : >fnt  font.fnt @ ;
 
 : reload-font  ( font -- )

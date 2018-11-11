@@ -14,6 +14,5 @@ depend ramen/lib/tiled.f
 
 : acts  each> act ;
 : think  stage dup acts multi ;
-: physics  stage each>  vx 2@ x 2+! ;
-
-:now  step>  think  physics ;
+: physics  stage each> vx 2@ x 2+! ;
+:now  step> think physics ;

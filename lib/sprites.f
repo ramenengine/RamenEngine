@@ -2,6 +2,8 @@
 \ - Render subimages or image regions
 \ - Define animation data and animate sprites
 
+defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
+
 \ Region tables
 6 cells constant /region
     \ x , y , w , h , originx , originy , 
@@ -34,13 +36,10 @@ defaults >{
     ang @ >rad 1af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
-: subsprite  ( n flip -- )  >r  img @ subxywh  r> sprite ;  
-    \ img must be subdivided
+: subsprite  ( n flip -- )   \ note: IMG must be subdivided
+    >r  img @ subxywh  r> sprite ;      
 
 \ Get current frame data
-: ?regorg
-    rgntbl @ ?dup -exit
-    frm @ @  /region * + 4 cells + 2@ cx 2! ;
 
 : framexywh  ( n rgntbl -- srcx srcy w h )
     swap /region * +  4@ ;
@@ -62,39 +61,45 @@ defaults >{
 : curflip  frm @ if frm @ @ #3 and exit then  0 ;
 
 \ Draw + animate
-defer animlooped ( -- )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
+define spriteing
+    : ?regorg  ( -- )  \ apply the region origin
+        rgntbl @ ?dup -exit
+        frm @ @  /region * + 4 cells + 2@ cx 2! ;
+using spriteing
 : sprite+  ( -- )
-
     frm @ 0= if  curframe  curflip sprite  exit  then 
     at@ 
-        ?regorg  \ apply the region origin
-        img @ if  curframe  curflip sprite  then
+        ?regorg  
+        img @ if curframe curflip sprite then
         anmspd @ anmctr +!
+        \ looping
         begin  anmctr @ 1 >= while
             anmctr --  /frame frm +!
             frm @ @ $deadbeef = if  frm @ cell+ @ frm +!  animlooped  then
         repeat
-    at  \ restore pen
+    at  
 ;
+previous
 
 \ Play an animation.
-\ ?/st      ( -- )  first time call initializes scale and tint
-\ animate   ( anim -- )  play animation from beginning
-: animate   frm !  0 anmctr ! ;
+\ animate   play animation from beginning
+: animate   ( anim -- )  frm !  0 anmctr ! ;
     
 \ Define self-playing animations
-\ anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  create self-playing animation
-: anim:  create  3,  here  does>  @+ rgntbl !  @+ img !  @+ anmspd !   animate ;
+\ anim:  create self-playing animation
+: anim:  ( regiontable|0 image speed -- loopaddr )  ( -- )  
+    create  3,  here
+    does>  @+ rgntbl ! @+ img ! @+ anmspd ! animate ;
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr -- )  here -  $deadbeef ,  , ;
 : range,  ( start len -- ) bounds do i , loop ;
 
-\ +anim:  ( stack -- stack loopaddr )  animation table helper
-: +anim:  here over push here ;
+\ +anim:  animation table helper
+\ frames  Helper for doing unnamed images + region tables
 
-\ frames  ( str c -- regiontable image )  Helper for doing unnamed images + region tables
-: frames  image  here  swap ;
+: +anim:  ( stack -- stack loopaddr )     here over push here ;
+: frames  ( str c -- regiontable image )  image  here  swap ;
 
 \ flipped frame utilities
 : h,  #1 or , ;

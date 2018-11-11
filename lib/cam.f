@@ -5,9 +5,6 @@
 0 value subject
 stage object: cam
 
-\ -----------------------------------------------------------------------
-[section] camera
-
 : track
     ?dup -exit
     cam 0= if drop exit then
@@ -24,7 +21,7 @@ stage object: cam
 : up?  ( -- flag )    <up> kstate  <pad_8> kstate or    ; \ 0 0 joy y -0.25 <= or ;
 : down?  ( -- flag )  <down> kstate  <pad_2> kstate or  ; \ 0 0 joy y 0.25 >= or ;
 
-: udlrvec  ( 2vec -- )
+:slang udlrvec  ( 2vec -- )
   >r
   0 0 r@ 2!
   left? if  -4 r@ x! then
