@@ -10,7 +10,6 @@ variable mtime  \ last modified time
     exit then  drop ;
 : updgfx   ?modified  art al_destroy_bitmap  art$ loadbitmap to art ;
 
-[section] Updater
 0 value updater   \ allegro timer
 
 : +updater

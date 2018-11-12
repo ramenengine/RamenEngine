@@ -5,13 +5,8 @@
         i swap dup >r call  r>  cell +loop
     drop ;
 
-: batch>  ( addr n -- <code> )  ( addr -- )
-    r> code> batch ;
-
-: ?batch  ( ... addr xt -- ... )  ( ... addr -- ... )  \ -1 is terminator
+\ addr should be a list of cells terminated with -1
+: ?batch  ( ... addr xt -- ... )  ( ... addr -- ... )  
     >code begin  over @ 0 >=  while
         2dup 2>r  call  r> r> cell+ swap
     repeat  2drop ;
-
-: ?batch>  ( addr -- <code> )  ( addr -- )
-    r> code> ?batch ;

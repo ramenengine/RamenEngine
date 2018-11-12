@@ -1,9 +1,4 @@
-[section] preamble
 \ Tiled module for RAMEN
-
-\ -------------------------------------------------------------------------------------------------
-[section] preamble
-
 depend ramen/lib/draw.f
 depend ramen/lib/array2d.f
 depend ramen/lib/buffer2d.f

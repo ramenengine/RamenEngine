@@ -1,5 +1,7 @@
 \ Asset manager, "toolbox" version; includes standard synchronous loader
 
+cell #256 + constant /assetheader
+defer initdata ( -- )
 
 \ ------------------------------------------------------------------------------
 \ forward-linked lists; only to be used in this file; temporary!!!
@@ -7,7 +9,7 @@
 
 create dmy 0 , 0 ,
 
-: flist  ( -- <name> )  \ declare a list
+:slang flist  ( -- <name> )  \ declare a list
   create    ( first ) dmy , ( last ) dmy , ( count ) 0 , ;
 
 : listlink   ( item list -- )  \ add an item to a list
@@ -25,20 +27,14 @@ create dmy 0 , 0 ,
 \ ------------------------------------------------------------------------------
 \ Asset framework
 
-defer initdata ( -- )
-
 flist (assets)
 : register  ( reloader-xt asset -- ) dup (assets) listlink  ( xt asset ) ! ;
 : -assets  (assets) -flist ;
-
-\ TODO: change TRAVERSE> to EACH> (or ALL>) after factoring out lists from obj.f
 : assets>  postpone (assets)  postpone traverse> ; immediate
-
 : srcfile  cell+ ;
 
-\ As a convention, the first cell in every asset is a reloader XT.
+\ The first cell in every asset is a reloader XT.
 : reload  ( asset -- )  ( asset -- )  dup @ execute ;
-
 : #assets  (assets) listlen ;
 
 \ Note: Don't worry that the paths during development are absolute;
@@ -49,13 +45,9 @@ flist (assets)
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
-cell #256 + constant /assetheader
-
 : defasset  ( -- <name> )  create /assetheader , ;
-
 : .asset  srcfile count dup if  type  else  2drop  then ;
 : .assets  assets> cr .asset ;
-
 : loadtrig  ( xt -- )  here   swap ,   (assets) listlink ;
 
 \ ------------------------------------------------------------------------------
