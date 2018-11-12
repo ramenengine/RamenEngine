@@ -1,11 +1,10 @@
 \ Tiled module for RAMEN
-depend ramen/lib/draw.f
 depend ramen/lib/array2d.f
 depend ramen/lib/buffer2d.f
 depend ramen/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]  \ keep this a power of 2
-include ramen/lib/tilemap.f
+depend ramen/lib/std/tilemap.f
 
 1024 1024 buffer2d: tilebuf 
 create roles #MAXTILES stack

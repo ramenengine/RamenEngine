@@ -28,6 +28,7 @@ include ramen/sample.f
 \ Higher level facilities
 include ramen/obj.f
 include ramen/publish.f
+include ramen/draw.f
 
 redef off  \ from here on fields only defined if not previously defined
 

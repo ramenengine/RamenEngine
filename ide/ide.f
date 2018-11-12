@@ -11,8 +11,7 @@ create margins 4 cells /allot
 
 define ideing
 include afkit/plat/win/clipb.f
-include ramen/lib/draw.f
-include ramen/lib/v2d.f
+include ramen/ide/v2d.f
 
 create cursor 6 cells /allot
 : colour 2 cells + ;

@@ -13,7 +13,7 @@
 \  [ ] - Animations (<tile><animation><frame>)
 \  [ ] - Other shapes besides rectangles (<ellipse>, <path>, <polyline>, <point>)
 \  [ ] - Text (<text>)
-\  [ ] - Compressed layers (with zlib... it's simple)
+\  [x] - Compressed layers (with zlib... it's simple)
 \  [ ] - Image layers (<imagelayer>)
 \  [ ] - Group layers (<group>)
 

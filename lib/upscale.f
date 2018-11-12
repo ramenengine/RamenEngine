@@ -1,6 +1,6 @@
 \ fat pixels and subscreens
 
-depend ramen/lib/draw.f
+depend ramen/draw.f
 nativewh canvas: canv
 
 : (size)  viewwh canv resize-canvas ;
