@@ -7,7 +7,7 @@ depend ramen/lib/draw.f
 depend ramen/lib/v2d.f
 depend ramen/lib/cgrid.f
 depend ramen/lib/task.f
-depend afkit/lib/kb.f
+depend ramen/lib/kb.f
 depend ramen/lib/audio1.f
 depend ramen/lib/sprites.f
 depend ramen/lib/tiled.f
