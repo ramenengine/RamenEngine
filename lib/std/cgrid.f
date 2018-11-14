@@ -86,7 +86,7 @@ define cgriding
       \ lastsector @ lastsector2 !
       \ dup  lastsector ! ;
 
-only forth definitions also cgriding
+using cgriding
 
 : cbox!  ( x y w h cbox -- )  >r  2over 2+  #1 #1 2-  r@ x2 2!  r> x1 2! ;
 : cbox@  ( cbox -- x y w h ) dup >r x1 2@ r> x2 2@  2over 2-  #1 #1 2+ ;
@@ -137,3 +137,5 @@ only forth definitions also cgriding
   to cgrid  cols 2@  sectw secth 2* ;
 
 cbox sizeof field ahb
+
+previous

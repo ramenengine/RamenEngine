@@ -61,11 +61,11 @@ defaults >{
 : curflip  frm @ if frm @ @ #3 and exit then  0 ;
 
 \ Draw + animate
-define spriteing
+define internal
     : ?regorg  ( -- )  \ apply the region origin
         rgntbl @ ?dup -exit
         frm @ @  /region * + 4 cells + 2@ cx 2! ;
-using spriteing
+using internal
 : sprite+  ( -- )
     frm @ 0= if  curframe  curflip sprite  exit  then 
     at@ 

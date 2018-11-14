@@ -1,9 +1,11 @@
 \ --------------------------------------------------------------------------------------------------
 \ some graphics tools for the default engine state
 
-\ draw a rectangular vertical gradient 
-create gv  4 /ALLEGRO_VERTEX * /allot
-create gi  0 , #1 , #2 , #3 , 
+\ draw a rectangular vertical gradient
+define internal
+    create gv  4 /ALLEGRO_VERTEX * /allot
+    create gi  0 , #1 , #2 , #3 , 
+using internal
 : v!  ( x y a n ) /ALLEGRO_VERTEX *  + >r  2af  r> 2! ;
 : color! ( color a n )  /ALLEGRO_VERTEX *  + >r  4@ 4af  r> ALLEGRO_VERTEX.r 4! ;
 : vgradient  ( color1 color2 w h -- )
@@ -11,6 +13,7 @@ create gi  0 , #1 , #2 , #3 ,
     x y gv 0 v!   x2 y gv 1 v!  x2 y2 gv 2 v!  x y2 gv 3 v!
     c1 gv 2dup 0 color! 1 color!  c2 gv 2dup 2 color! 3 color!
     gv 0 0 gi #4 ALLEGRO_PRIM_TRIANGLE_FAN al_draw_indexed_prim ;
+previous
 
 \ convert lch, hsl, hsv to rgb
 \ hue is in degrees
@@ -30,8 +33,8 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
     (c1) (c2)
 ;
 : ramenbg  0 0 at unmount colorcycle displaywh vgradient mount ;
-: think  stage each> act ;
-: physics  stage each>  vx 2@ x 2+! ;
+:slang think  stage each> act ;
+:slang physics  stage each>  vx 2@ x 2+! ;
 : show-stage  show> ramenbg unmount stage each> draw ;
 : stop  show-stage step> noop ; stop
 : default-step  step> think physics ;

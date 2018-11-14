@@ -16,13 +16,13 @@ create dmy 0 , 0 ,
   swap >r  dup cell+ @  here   0 , r> ,  locals| thislink lastlink list |
   thislink lastlink !  thislink list cell+ !   1 list cell+ cell+ +! ;
 
-: listlen  ( list -- count )    cell+ cell+ @ ;
+:slang listlen  ( list -- count )    cell+ cell+ @ ;
 
-: traverse>  ( xt list -- )  ( item -- )
+:slang traverse>  ( xt list -- )  ( item -- )
   @  r> locals| code |
   begin @ dup while dup >r  cell+ @ code call  r> repeat  drop ;
 
-: -flist  >r  dmy r@ !  dmy r@ cell+ !   0 r> cell+ cell+ ! ;
+:slang -flist  >r  dmy r@ !  dmy r@ cell+ !   0 r> cell+ cell+ ! ;
 
 \ ------------------------------------------------------------------------------
 \ Asset framework

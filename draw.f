@@ -96,7 +96,6 @@ variable lmargin
 : circ  dup oval ;
 : circf  dup ovalf ;
 
-
 create ftemp  2 cells allot
 : 2transform  ( x y transform -- x y )  \ transform coordinates
     >r 2pf 2sf ftemp 2!
@@ -106,8 +105,10 @@ create ftemp  2 cells allot
 : 2screen  ( x y -- x y )  al_get_current_transform 2transform ;  \ convert coordinates into screen space
 
 \ Clipping rectangle
-variable cx variable cy variable cw variable ch      \ old clip
-variable ccx variable ccy variable ccw variable cch  \ current clip
+define internal
+    variable cx variable cy variable cw variable ch      \ old clip
+    variable ccx variable ccy variable ccw variable cch  \ current clip
+using internal 
 viewwh ch ! cw !
 : clipxy  ccx @ ccy @ ;
 : clipwh  ccw @ cch @ ;
@@ -133,3 +134,4 @@ viewwh ch ! cw !
     cx @ cy @ cw @ ch @ al_set_clipping_rectangle
     
     2r> 2r>  cch ! ccw ! ccy ! ccx ! ;
+previous
