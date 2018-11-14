@@ -31,9 +31,9 @@ How scripted game object instantiation works:
   portability between projects - which could potentially be made with different map editors (or none at all!!!)
 
   Here's an example:
-  : *myobjectmaker   ( ??? -- )  ( objlist )  ONE  ( initialization ) ;
+  : *myobjectmaker   ( ??? - )  ( objlist )  ONE  ( initialization ) ;
   [defined] :recipe [if]
-      :recipe <myobjectname>  ( object-node -- )  ... *myobjectmaker ... ;
+      :recipe <myobjectname>  ( object-node - )  ... *myobjectmaker ... ;
   [then]
 
   The body of the :recipe object loader would call your actual recipe.

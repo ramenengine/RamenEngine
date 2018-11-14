@@ -47,7 +47,7 @@ variable (lnk)
 \ on the stack.
 
 create queue 1000 stack 
-: later  ( val xt -- )  swap queue push queue push ;
+: later  ( val xt - )  swap queue push queue push ;
 : arbitrate
     {
         queue sbounds do  sp@  i  swap >r  2@ execute  r> sp!  2 cells +loop
@@ -59,13 +59,13 @@ create queue 1000 stack
 : (halt)    begin pause again ;
 
 decimal
-    : perform> ( n -- <code> )
+    : perform> ( n - <code> )
         self? if    ds 28 cells + sp!  r>  rs 58 cells + rp!  >r  exit
               else  ds 28 cells + !  ds 27 cells + sp !  r> rs 58 cells + !  rs 58 cells + rp !
                     ['] (halt) >code rs 59 cells + !
               then ;
 
-    : perform  ( xt n obj -- )
+    : perform  ( xt n obj - )
         >{
         ds 28 cells + !
         ds 27 cells + sp !
@@ -80,7 +80,7 @@ fixed
 : halt   0 perform> begin pause again ;
 
 \ pulse the multitasker.
-: multi  ( objlist -- )
+: multi  ( objlist - )
     dup ol.count @ 0= if drop exit then
     {
         ol.first @ main 's lnk !
@@ -96,6 +96,6 @@ fixed
 ;
 
 \ cmdline only:
-: direct  ( obj -- <word> )  '  0  rot  perform ;
-: direct:  ( obj -- ... code ... ; )  :noname  [char] ; parse evaluate  0  rot  perform ;
+: direct  ( obj - <word> )  '  0  rot  perform ;
+: direct:  ( obj - ... code ... ; )  :noname  [char] ; parse evaluate  0  rot  perform ;
 

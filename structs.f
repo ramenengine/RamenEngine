@@ -1,4 +1,4 @@
-: sfield  ( struct bytes -- <name> )  ( adr -- adr+n )
+: sfield  ( struct bytes - <name> )  ( adr - adr+n )
     create over @ ,  swap +!  does> @ + ;
 : svar  cell sfield ;
 : struct  variable ;

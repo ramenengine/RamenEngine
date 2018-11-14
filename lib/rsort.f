@@ -38,7 +38,7 @@ define rsorting
   15 constant bucketShift
   8192 constant #max  \ actual max is #MAX - 1, one cell is reserved for bucket count
 
-  defer @key  ( item -- key )
+  defer @key  ( item - key )
 
   create table0  #max cells 16 * allot
   create table1  #max cells 16 * allot
@@ -46,27 +46,27 @@ define rsorting
 
   : other  table table0 = if  table1  else  table0  then  to table ;
   : radix++  radix 4 << to radix  4 +to radixShift ;
-  : bucket  ( bucket# -- bucket )  bucketShift <<  table + ;
-  : !bucket  ( n bucket# -- )  bucket 1 over +! dup @ cells + ! ;
-  : /buckets  ( -- )  16 0 do  0 i bucket !  loop ;
+  : bucket  ( bucket# - bucket )  bucketShift <<  table + ;
+  : !bucket  ( n bucket# - )  bucket 1 over +! dup @ cells + ! ;
+  : /buckets  ( - )  16 0 do  0 i bucket !  loop ;
 
-  : irpass  ( first-item count -- )
+  : irpass  ( first-item count - )
     cells bounds ?do  i @ dup @key  radix and  radixShift >>  !bucket  cell +loop ;
 
-  : tablepass  ( -- )
+  : tablepass  ( - )
     other /buckets  16 0 do  other i bucket @+ other irpass  loop  radix++ ;
 
-  : irinit  ( xt -- )
+  : irinit  ( xt - )
     is @key
     pass1shift to radixShift  nyb0 to radix
     table0 to table  /buckets  other  /buckets  other ;
 
-  : !result  ( -- )
+  : !result  ( - )
     16 0 do  i bucket @+ cells dup >r  dest swap move  r> +to dest  loop ;
 
 only forth definitions also rsorting
 fixed
-: rsort  ( addr cells xt -- )  \ destructive, XT is @KEY  ( addr -- key )
+: rsort  ( addr cells xt - )  \ destructive, XT is @KEY  ( addr - key )
     swap 1i swap
     over 0= if 2drop drop exit then
     irinit  over src!  irpass  radix++

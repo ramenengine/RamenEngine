@@ -20,7 +20,7 @@ define cgriding
     variable lastsector
     variable lastsector2
 
-    defer collide  ( ... true cbox1 cbox2 -- ... keepgoing? )
+    defer collide  ( ... true cbox1 cbox2 - ... keepgoing? )
 
     \ defer cfilter  ( cbox1 cbox2 ... cbox1 cbox2 flag )  ' true is cfilter
 
@@ -38,28 +38,28 @@ define cgriding
     256 constant secth
 
     decimal
-    : sector  ( x y -- addr )
+    : sector  ( x y - addr )
       ( y ) #bitshift >> cols @ p* swap ( x ) #bitshift >> + cells sectors @ + ;
     fixed
 
     \ find if 2 rectangles (x1,y1,x2,y2) and (x3,y3,x4,y4) overlap.
-    : overlap? ( xyxy xyxy -- flag )
+    : overlap? ( xyxy xyxy - flag )
         2swap 2rot rot > -rot <= and >r rot >= -rot < and r> and ;
 
-    : link  ( box sector -- )
+    : link  ( box sector - )
       >r
       i.link @ cell+ !  \ 1. link box
       r@ @ i.link @ !  \ 2. link the i.link to address in sector
       i.link @ r> !   \ 3. store current link in sector
       2 cells i.link +! ;  \ 4. and increment current link
 
-    : box>box?  ( box1 box2 -- box1 box2 flag )
+    : box>box?  ( box1 box2 - box1 box2 flag )
       2dup = if  false  exit  then           \ boxes can't collide with themselves!
       \ cfilter not if  false exit  then
       2dup >r  4@  r> 4@   overlap? ;
 
     0 value cnt
-    : check-sector  ( cbox1 sector -- flag )
+    : check-sector  ( cbox1 sector - flag )
       0 to cnt
       swap true locals| flag cbox1 |
       begin ( sector ) @ ( link|0 ) dup flag and while
@@ -75,10 +75,10 @@ define cgriding
       flag
     ;
 
-    : ?check-sector  ( cbox1 sector|0 -- flag )  \ check a cbox against a sector
+    : ?check-sector  ( cbox1 sector|0 - flag )  \ check a cbox against a sector
       dup if  check-sector  else  nip  then ;
 
-    : ?corner  ( x y -- 0 | sector )  \ see what sector the given coords are in & cull already checked corners
+    : ?corner  ( x y - 0 | sector )  \ see what sector the given coords are in & cull already checked corners
       sector
       ;
       \ dup lastsector @ = if  drop 0  exit  then
@@ -88,15 +88,15 @@ define cgriding
 
 using cgriding
 
-: cbox!  ( x y w h cbox -- )  >r  2over 2+  #1 #1 2-  r@ x2 2!  r> x1 2! ;
-: cbox@  ( cbox -- x y w h ) dup >r x1 2@ r> x2 2@  2over 2-  #1 #1 2+ ;
+: cbox!  ( x y w h cbox - )  >r  2over 2+  #1 #1 2-  r@ x2 2!  r> x1 2! ;
+: cbox@  ( cbox - x y w h ) dup >r x1 2@ r> x2 2@  2over 2-  #1 #1 2+ ;
 
-: resetcgrid ( cgrid -- )
+: resetcgrid ( cgrid - )
   to cgrid
   sectors @ cols 2@ * cells erase
   links @ i.link ! ;
 
-: addcbox  ( cbox cgrid -- )
+: addcbox  ( cbox cgrid - )
   to cgrid
   ( box ) >r  lastsector off  lastsector2 off
   r@ x1 2@         ?corner ?dup if  dup r@ s1 !  r@ swap link  else  r@ s1 off  then
@@ -107,7 +107,7 @@ using cgriding
   ( topleft off topright off btmleft off ) ;
 
 \ perform collision checks.  assumes box has already been added to the cgrid.
-: checkcgrid  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
+: checkcgrid  ( cbox1 xt cgrid - )  \ xt is the response; see COLLIDE
   to cgrid  is collide
   locals| cbox |
   cbox dup s1 @ ?check-sector -exit
@@ -116,7 +116,7 @@ using cgriding
   cbox dup s4 @ ?check-sector drop ;
 
 \ this doesn't require the box to be added to the cgrid
-: checkcbox  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
+: checkcbox  ( cbox1 xt cgrid - )  \ xt is the response; see COLLIDE
   to cgrid  is collide
   locals| cbox |
   lastsector off lastsector2 off
@@ -127,13 +127,13 @@ using cgriding
 
 : >#sectors  sectw 1 - secth 1 - 2+  sectw secth 2/  2pfloor ;
 
-: cgrid:  ( maxboxes width height -- <name> )  \ give width and height in regular units
+: cgrid:  ( maxboxes width height - <name> )  \ give width and height in regular units
   create  %cgrid sizeof allotment  to cgrid
   >#sectors
   2dup cols 2!  here sectors !  ( cols rows ) * cells /allot
                 here links !    ( maxboxes )  4 * 2 cells * /allot ;
 
-: cgrid-size  ( cgrid -- w h )
+: cgrid-size  ( cgrid - w h )
   to cgrid  cols 2@  sectw secth 2* ;
 
 cbox sizeof field ahb

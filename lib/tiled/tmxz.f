@@ -1,9 +1,9 @@
 \ zlib compression support for Tiled files
 \ only zlib is supported, if it's neither uncompressed or zlib an error will be thrown
 
-: layersize ( layer -- #size )  wh@ swap cells * ;
+: layersize ( layer - #size )  wh@ swap cells * ;
 
-: compressed?  ( layer -- flag )
+: compressed?  ( layer - flag )
     >data
     dup s" compression" attr? not if  drop  false  exit then
     s" compression" val s" zlib" $= ?dup ?exit
@@ -11,7 +11,7 @@
 
 : buf  layersize allocate throw ;
 
-: read-tmxlayer  ( layer dest pitch -- )  \ read out tilemap data. (GID'S)
+: read-tmxlayer  ( layer dest pitch - )  \ read out tilemap data. (GID'S)
     third wh@ 0 locals| str h w pitch dest layer |
     layer >data text base64 to str
     layer compressed? if

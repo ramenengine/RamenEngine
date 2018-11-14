@@ -9,15 +9,15 @@ depend ramen/lib/std/tilemap.f
 1024 1024 buffer2d: tilebuf 
 create roles #MAXTILES stack
 create bitmaps 100 stack         \ single-image tileset's bitmaps
-defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell -- bitmask )  
-defer tmxobj   ( object-nnn role -- )
-defer tmxrect  ( object-nnn w h -- )
-defer tmximage ( object-nnn gid -- )
+defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
+defer tmxobj   ( object-nnn role - )
+defer tmxrect  ( object-nnn w h - )
+defer tmximage ( object-nnn gid - )
 
 var scrollx  var scrolly  \ used to define starting column and row!
 var w  var h              \ width & height in pixels
 var tbi                   \ tile base index
-var onhitmap   \ XT ( tile -- )
+var onhitmap   \ XT ( tile - )
 var gid
 rolevar recipe
 
@@ -38,23 +38,23 @@ rolevar recipe
         tbi @ tilebase!
         scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
-: map@  ( col row -- tile )  tilebuf loc @ ;
+: map@  ( col row - tile )  tilebuf loc @ ;
 
-: >gid  ( tile -- gid )  $003fff000 and ;
+: >gid  ( tile - gid )  $003fff000 and ;
 
 \ Tilemap collision
 include ramen/lib/tiled/collision.f
 
-: onhitmap>  ( -- <code> ) r> code> onhitmap ! ;  ( tilecell -- )
+: onhitmap>  ( - <code> ) r> code> onhitmap ! ;  ( tilecell - )
 
 : ?'drop  ?dup ?exit  ['] drop ;
 
-: collide-objects-map  ( objlist tilesize -- )
+: collide-objects-map  ( objlist tilesize - )
     locals| tilesize |
     each>   onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
 
 : (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
-: counttiles  ( x y w h bitmask tilesize -- count )
+: counttiles  ( x y w h bitmask tilesize - count )
     swap  to (bm)  0 to (count)  locals| ts h w y x |
     ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
     (count) ; 
@@ -62,24 +62,24 @@ include ramen/lib/tiled/collision.f
 include ramen/lib/tiled/tmx.f
 also xmling also tmxing  
 
-: @gidbmp  ( -- bitmap )  tiles gid @ [] @ ;
+: @gidbmp  ( - bitmap )  tiles gid @ [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
-: load-bitmaps  ( tileset# -- dom )
+: load-bitmaps  ( tileset# - dom )
     tileset locals| gid0 ts |
     ts eachel> that's tile
         dup tile>bmp swap id@ gid0 + tiles nth !
         ?dom-free ;
 
 \ don't execute this frequently!
-: @tilesetwh  ( tileset# -- tw th )
+: @tilesetwh  ( tileset# - tw th )
     tileset drop tilewh@ rot ?dom-free ;
 
 \ Load a normal tilemap and convert it for RAMEN to be able to use --------------------------------
-: de-Tiled  ( n -- n )
+: de-Tiled  ( n - n )
     dup 1p  over $80000000 and if #1 or then  swap $40000000 and if #2 or then ;
 
-: load-tmxlayer  ( layer destarray2d destcol destrow -- )
+: load-tmxlayer  ( layer destarray2d destcol destrow - )
     rot locals| tilebuf |
     3dup
         tilebuf loc  tilebuf pitch@ read-tmxlayer
@@ -100,13 +100,13 @@ also xmling also tmxing
 \ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
 \ They all can expect the pen has already been set to the XY position.
 
-: /roles  ( -- )  roles 0 [] #MAXTILES cells erase ;
+: /roles  ( - )  roles 0 [] #MAXTILES cells erase ;
 
 \ : reload-recipes ;
 
 \ You don't have to define a recipe.  The last defined role will be used.
 \ note the role's name must match the filename
-: :recipe  ( role -- )  :noname swap 's recipe !  ;
+: :recipe  ( role - )  :noname swap 's recipe !  ;
 
 \ LOAD-SCRIPTS
 \ Conditionally load the scripts associated with any roles that aren't defined.
@@ -118,7 +118,7 @@ create $$$ #256 allot
 : uncount  $$$ place $$$ ;
 : (saveorder)  get-order  r> call  >r  set-order  r> ;
 : >script  objpath count s[  +s  s" .f" +s  ]s ;
-: load-script  ( name c -- role|0 )
+: load-script  ( name c - role|0 )
     locals| c name | 
     \ see if the role is already defined
     name c uncount  find  ( xt|a flag ) if  >body exit then   drop  
@@ -141,11 +141,11 @@ create $$$ #256 allot
 \ 
 \ \ You can load all of the current map's scripts ahead of time
 \ \ (but you don't have to.)
-\ : load-scripts  ( tileset# -- )  (load-scripts)  ?dom-free ;
+\ : load-scripts  ( tileset# - )  (load-scripts)  ?dom-free ;
  
 : ?tmxobj  dup if tmxobj else 2drop then ;
 
-: load-objects  ( objgroup -- )
+: load-objects  ( objgroup - )
     eachel> that's object 
         dup xy@ at
         dup rectangle? if
@@ -161,7 +161,7 @@ create $$$ #256 allot
 ;
 
 \ Load a single-image tileset ---------------------------------------------------------------------
-: load-tileset  ( tileset# -- ) \ load bitmap and split it up, adding it to the global tileset
+: load-tileset  ( tileset# - ) \ load bitmap and split it up, adding it to the global tileset
     tileset over tileset>bmp locals| bmp firstgid ts dom |
     bmp bitmaps push
     bmp ts tilewh@ firstgid maketiles
@@ -174,10 +174,10 @@ create $$$ #256 allot
 
 : -bitmaps  bitmaps #pushed for  bitmaps pop -bmp  loop ;
 
-: open-map  ( path c -- )
+: open-map  ( path c - )
     close-tmx  /roles  -tiles  -bitmaps  open-tmx ;
 
-: open-tilemap  ( path c -- )  \ doesn't delete any tiles; assumes static tileset
+: open-tilemap  ( path c - )  \ doesn't delete any tiles; assumes static tileset
     close-tmx  /roles  -bitmaps  open-tmx ;
 
 only forth definitions

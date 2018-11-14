@@ -1,7 +1,7 @@
 \ Asset manager, "toolbox" version; includes standard synchronous loader
 
 cell #256 + constant /assetheader
-defer initdata ( -- )
+defer initdata ( - )
 
 \ ------------------------------------------------------------------------------
 \ forward-linked lists; only to be used in this file; temporary!!!
@@ -9,16 +9,16 @@ defer initdata ( -- )
 
 create dmy 0 , 0 ,
 
-:slang flist  ( -- <name> )  \ declare a list
+:slang flist  ( - <name> )  \ declare a list
   create    ( first ) dmy , ( last ) dmy , ( count ) 0 , ;
 
-: listlink   ( item list -- )  \ add an item to a list
+: listlink   ( item list - )  \ add an item to a list
   swap >r  dup cell+ @  here   0 , r> ,  locals| thislink lastlink list |
   thislink lastlink !  thislink list cell+ !   1 list cell+ cell+ +! ;
 
-:slang listlen  ( list -- count )    cell+ cell+ @ ;
+:slang listlen  ( list - count )    cell+ cell+ @ ;
 
-:slang traverse>  ( xt list -- )  ( item -- )
+:slang traverse>  ( xt list - )  ( item - )
   @  r> locals| code |
   begin @ dup while dup >r  cell+ @ code call  r> repeat  drop ;
 
@@ -28,13 +28,13 @@ create dmy 0 , 0 ,
 \ Asset framework
 
 flist (assets)
-: register  ( reloader-xt asset -- ) dup (assets) listlink  ( xt asset ) ! ;
+: register  ( reloader-xt asset - ) dup (assets) listlink  ( xt asset ) ! ;
 : -assets  (assets) -flist ;
 : assets>  postpone (assets)  postpone traverse> ; immediate
 : srcfile  cell+ ;
 
 \ The first cell in every asset is a reloader XT.
-: reload  ( asset -- )  ( asset -- )  dup @ execute ;
+: reload  ( asset - )  ( asset - )  dup @ execute ;
 : #assets  (assets) listlen ;
 
 \ Note: Don't worry that the paths during development are absolute;
@@ -45,10 +45,10 @@ flist (assets)
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
-: defasset  ( -- <name> )  create /assetheader , ;
+: defasset  ( - <name> )  create /assetheader , ;
 : .asset  srcfile count dup if  type  else  2drop  then ;
 : .assets  assets> cr .asset ;
-: loadtrig  ( xt -- )  here   swap ,   (assets) listlink ;
+: loadtrig  ( xt - )  here   swap ,   (assets) listlink ;
 
 \ ------------------------------------------------------------------------------
 \ Standard synchronous loader

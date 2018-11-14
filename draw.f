@@ -6,12 +6,12 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : rgba   alpha rgb ;
 
 \ Bitmaps, backbuffer
-: onto>  ( bmp -- <code> )
+: onto>  ( bmp - <code> )
     r>  al_get_target_bitmap >r  at@ 2>r
         swap  onto call
     2r> at  r> al_set_target_bitmap ;
 : movebmp  ( src sx sy w h )  write-src BLEND>  destxy 2af 0 al_draw_bitmap ;
-: *bmp   ( w h -- bmp )  2i al_create_bitmap ;
+: *bmp   ( w h - bmp )  2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
 
@@ -71,7 +71,7 @@ variable lmargin
 : strwh   strw fnt @ chrh ;
 : fontw   fnt @ chrw ;
 : fonth   fnt @ chrh ;
-: (print) ( str count alignment -- )
+: (print) ( str count alignment - )
     -rot  zstring >r  >r  fnt @ >fnt fore 4@ destxy 2af r> r> al_draw_text ;
 : print   ALLEGRO_ALIGN_LEFT (print)  ;
 : printr  ALLEGRO_ALIGN_RIGHT (print) ;
@@ -97,12 +97,12 @@ variable lmargin
 : circf  dup ovalf ;
 
 create ftemp  2 cells allot
-: 2transform  ( x y transform -- x y )  \ transform coordinates
+: 2transform  ( x y transform - x y )  \ transform coordinates
     >r 2pf 2sf ftemp 2!
     r> ftemp dup cell+ al_transform_coordinates
     ftemp sf@ f>p  ftemp cell+ sf@ f>p ;
 
-: 2screen  ( x y -- x y )  al_get_current_transform 2transform ;  \ convert coordinates into screen space
+: 2screen  ( x y - x y )  al_get_current_transform 2transform ;  \ convert coordinates into screen space
 
 \ Clipping rectangle
 define internal
@@ -114,7 +114,7 @@ viewwh ch ! cw !
 : clipwh  ccw @ cch @ ;
 0 value (code)
 
-: clip>  ( x y w h -- <code> )  \ note this won't work properly for rotated transforms.
+: clip>  ( x y w h - <code> )  \ note this won't work properly for rotated transforms.
                                 \ TODO: implement our own clipping box using the alpha channel or something
     r> to (code)
 

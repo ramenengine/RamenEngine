@@ -52,13 +52,13 @@ consolas chrh constant fh
 
 \ --------------------------------------------------------------------------------------------------
 \ Output words
-: ramen-get-xy  ( -- #col #row )  cursor xy@  lm tm 2-  fw fh 2/ 2i ;
-: ramen-at-xy   ( #col #row -- )  2p fw fh 2*  lm tm 2+  cursor xy! ;
-: fill  ( w h -- )  write-src blend>  rectf ;
-: clear  ( w h bitmap -- )  black 0 alpha  onto>  fill ;
+: ramen-get-xy  ( - #col #row )  cursor xy@  lm tm 2-  fw fh 2/ 2i ;
+: ramen-at-xy   ( #col #row - )  2p fw fh 2*  lm tm 2+  cursor xy! ;
+: fill  ( w h - )  write-src blend>  rectf ;
+: clear  ( w h bitmap - )  black 0 alpha  onto>  fill ;
 : outputw  rm lm - ;
 : outputh  bm tm - ;
-: ramen-get-size  ( -- cols rows )  outputw outputh fw fh 2/ 2i ;
+: ramen-get-size  ( - cols rows )  outputw outputh fw fh 2/ 2i ;
 : scroll
     write-src blend>
     tempbmp onto>  0 0 at  output @ blit
@@ -92,25 +92,25 @@ fixed
 
 create ide-personality
   4 cells , #19 , 0 , 0 ,
-  ' noop , \ INVOKE    ( -- )
-  ' noop , \ REVOKE    ( -- )
-  ' noop , \ /INPUT    ( -- )
-  ' ramen-emit , \ EMIT      ( char -- )
-  ' ramen-type , \ TYPE      ( addr len -- )
-  ' ramen-?type , \ ?TYPE     ( addr len -- )
-  ' ramen-cr , \ CR        ( -- )
-  ' wipe , \ PAGE      ( -- )
-  ' ramen-attribute , \ ATTRIBUTE ( n -- )
-  ' zero , \ KEY       ( -- char )  \ not yet supported
-  ' zero , \ KEY?      ( -- flag )  \ not yet supported
-  ' zero , \ EKEY      ( -- echar ) \ not yet supported
-  ' zero , \ EKEY?     ( -- flag )  \ not yet supported
-  ' zero , \ AKEY      ( -- char )  \ not yet supported
-  ' 2drop , \ PUSHTEXT  ( addr len -- )  \ not yet supported
-  ' ramen-at-xy ,  \ AT-XY     ( x y -- )
-  ' ramen-get-xy , \ GET-XY    ( -- x y )
-  ' ramen-get-size , \ GET-SIZE  ( -- x y )
-  ' drop , \ ACCEPT    ( addr u1 -- u2)  \ not yet supported
+  ' noop , \ INVOKE    ( - )
+  ' noop , \ REVOKE    ( - )
+  ' noop , \ /INPUT    ( - )
+  ' ramen-emit , \ EMIT      ( char - )
+  ' ramen-type , \ TYPE      ( addr len - )
+  ' ramen-?type , \ ?TYPE     ( addr len - )
+  ' ramen-cr , \ CR        ( - )
+  ' wipe , \ PAGE      ( - )
+  ' ramen-attribute , \ ATTRIBUTE ( n - )
+  ' zero , \ KEY       ( - char )  \ not yet supported
+  ' zero , \ KEY?      ( - flag )  \ not yet supported
+  ' zero , \ EKEY      ( - echar ) \ not yet supported
+  ' zero , \ EKEY?     ( - flag )  \ not yet supported
+  ' zero , \ AKEY      ( - char )  \ not yet supported
+  ' 2drop , \ PUSHTEXT  ( addr len - )  \ not yet supported
+  ' ramen-at-xy ,  \ AT-XY     ( x y - )
+  ' ramen-get-xy , \ GET-XY    ( - x y )
+  ' ramen-get-size , \ GET-SIZE  ( - x y )
+  ' drop , \ ACCEPT    ( addr u1 - u2)  \ not yet supported
 
 \ --------------------------------------------------------------------------------------------------
 \ Command management
@@ -128,7 +128,7 @@ create ide-personality
 
 : toggle  dup @ not swap ! ;
 
-: special  ( n -- )
+: special  ( n - )
   case
     [char] v of  paste  endof
     [char] c of  copy   endof
@@ -171,7 +171,7 @@ create ide-personality
 \ -----------------------------------------------------------------------------------
 \ Rendering
 : ?...  dup 16 > if dup 16 - else 0 then ;
-: .S2 ( ? -- ? )
+: .S2 ( ? - ? )
   #3 attribute
   ." ( " depth i. ." ) " 
   DEPTH 0> IF DEPTH 1p ?... ?DO S0 @ I 1 + CELLS - @

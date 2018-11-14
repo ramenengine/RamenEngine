@@ -16,12 +16,12 @@ stage object: cam
     m1 cam 's x 2@ 2pfloor  gscale  2negate 2af  al_translate_transform
     m1 al_use_transform ;
 
-: left?  ( -- flag )  <left> kstate  <pad_4> kstate or  ; \ 0 0 joy x -0.25 <= or ;
-: right?  ( -- flag ) <right> kstate  <pad_6> kstate or ; \ 0 0 joy x 0.25 >= or ;
-: up?  ( -- flag )    <up> kstate  <pad_8> kstate or    ; \ 0 0 joy y -0.25 <= or ;
-: down?  ( -- flag )  <down> kstate  <pad_2> kstate or  ; \ 0 0 joy y 0.25 >= or ;
+: left?  ( - flag )  <left> kstate  <pad_4> kstate or  ; \ 0 0 joy x -0.25 <= or ;
+: right?  ( - flag ) <right> kstate  <pad_6> kstate or ; \ 0 0 joy x 0.25 >= or ;
+: up?  ( - flag )    <up> kstate  <pad_8> kstate or    ; \ 0 0 joy y -0.25 <= or ;
+: down?  ( - flag )  <down> kstate  <pad_2> kstate or  ; \ 0 0 joy y 0.25 >= or ;
 
-:slang udlrvec  ( 2vec -- )
+:slang udlrvec  ( 2vec - )
   >r
   0 0 r@ 2!
   left? if  -4 r@ x! then

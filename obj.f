@@ -19,7 +19,7 @@ variable used
 variable redef  \ should you want to bury anything
 redef on  \ we'll keep this on while compiling RAMEN itself
 
-: ?unique  ( size -- size | <cancel caller> )
+: ?unique  ( size - size | <cancel caller> )
     redef @ ?exit
     >in @
         bl word find  if
@@ -70,7 +70,7 @@ create (ol)  defaults , 0 , 0 , defaults ,
 : objlist   create  (ol) %objlist sizeof move, ;
 : -objlist   (ol) swap %objlist sizeof move ;
 : ?first  dup ol.first @ defaults = -exit  here over ol.first ! ;
-: pool:  ( objlist n -- <name> )
+: pool:  ( objlist n - <name> )
     locals| n ol |
     ol ?first drop
     ol >last as  n ol count+!  here  ( 1st )  n objects
@@ -78,25 +78,25 @@ create (ol)  defaults , 0 , 0 , defaults ,
     me ol ol.last !
     ;
 : nxt  lnk @ to me ;
-: each>  ( objlist/pool -- <code> )
+: each>  ( objlist/pool - <code> )
     r>  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
-: each   ( objlist/pool xt -- )  
+: each   ( objlist/pool xt - )  
     >code  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
-: all>  ( objlist/pool -- <code> )
+: all>  ( objlist/pool - <code> )
     r>  { swap dup >first  ol.count @ for  dup >r  call  r>   nxt  loop  drop } ;
 : enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
 : any?  dup ol.#free @ 0= ;
 : initme  at@ x 2!  defaults 's en  en  [ maxsize 4 cells - ]# move ;
-: remove  ( object -- )  >{  en off  1 (+free)  } ;
+: remove  ( object - )  >{  en off  1 (+free)  } ;
 : hidden?  hidden @ ;
 : ?noone  any? abort" ONE: A pool was exhausted. " ;
-: (slot)  ( pool -- me=obj )  ?noone  all>  en @ ?exit  enough ;
-: one ( pool -- me=obj )  dup (slot)  initme  ^pool !  -1 (+free) ;
+: (slot)  ( pool - me=obj )  ?noone  all>  en @ ?exit  enough ;
+: one ( pool - me=obj )  dup (slot)  initme  ^pool !  -1 (+free) ;
 
 \ static object lists
-: (add)  ( objlist -- )  >r r@ >last as  r@ ?first drop  1 r@ count+!  1 objects  me r> ol.last !  initme ;
-: add  ( objlist n -- )  for dup (add) loop drop ; 
-: object:  ( objlist -- <name> )  create 1 add ;
+: (add)  ( objlist - )  >r r@ >last as  r@ ?first drop  1 r@ count+!  1 objects  me r> ol.last !  initme ;
+: add  ( objlist n - )  for dup (add) loop drop ; 
+: object:  ( objlist - <name> )  create 1 add ;
 
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;
@@ -104,7 +104,7 @@ create (ol)  defaults , 0 , 0 , defaults ,
 : act   beha @ ?call ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
-: away  ( obj x y -- ) rot 's x 2@ 2+ at ;
+: away  ( obj x y - ) rot 's x 2@ 2+ at ;
 : -act  act> noop ;
 
 \ Roles
@@ -116,15 +116,15 @@ var role
 : create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
-: :to   ( roledef -- <name> ... )  ' >body @ + :noname swap ! ;
+: :to   ( roledef - <name> ... )  ' >body @ + :noname swap ! ;
 : +exec  + @ execute ;
-: ->  ( roledef -- <action> )  ' >body @ postpone literal postpone +exec ; immediate
+: ->  ( roledef - <action> )  ' >body @ postpone literal postpone +exec ; immediate
 
 \ Filtering tools
-: #queued  ( addr -- addr cells )
+: #queued  ( addr - addr cells )
     here over - cell/ ;
-: some  ( objlist filterxt xt -- )  ( addr n -- )
+: some  ( objlist filterxt xt - )  ( addr n - )
     here >r  -rot  each  r@ #queued rot execute  r> reclaim ;
-: some>  ( objlist filterxt -- <code> )  ( addr n -- )
+: some>  ( objlist filterxt - <code> )  ( addr n - )
     r> code> some ;
     

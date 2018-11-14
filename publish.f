@@ -29,7 +29,7 @@ defer warm  :is warm ;   \ warm boot: executed potentially multiple times
     
     :is bye  0 ExitProcess ; 
     
-    : publish ( -- <name> )
+    : publish ( - <name> )
         cr ." Publishing to "  >in @  bl parse type >in !  ." .exe ... "
         gather
         ['] runtime 'main !

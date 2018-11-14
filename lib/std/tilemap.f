@@ -11,10 +11,10 @@ create tiles #MAXTILES stack
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
 
-: tilebmp  ( n -- bmp )
+: tilebmp  ( n - bmp )
     #MAXTILES 1 - and tiles nth @ ;
 
-: maketiles  ( bitmap tilew tileh firstid -- )
+: maketiles  ( bitmap tilew tileh firstid - )
     locals| id th tw bmp |
     bmp bmph dup th mod - 0 do
         bmp bmpw dup tw mod - 0 do
@@ -24,7 +24,7 @@ create tiles #MAXTILES stack
     th +loop
 ;
 
-: -tiles  ( -- )
+: -tiles  ( - )
     #MAXTILES for  tiles i [] dup @ -bmp  off  loop ;
 
 \ -------------------------------------------------------------------------------------------------
@@ -42,20 +42,20 @@ create tiles #MAXTILES stack
 
 \ -------------------------------------------------------------------------------------------------
 
-: tilebase!  ( tile# -- )
+: tilebase!  ( tile# - )
     tiles nth to tba ;
 
 0 tilebase!
 
 decimal \ for speed
-: tile>bmp  ( tiledata -- bitmap )  $03fff000 and #10 >> tba + @ ;
-: tsize  ( tildata -- w h )  tile>bmp bmpwh ;
+: tile>bmp  ( tiledata - bitmap )  $03fff000 and #10 >> tba + @ ;
+: tsize  ( tildata - w h )  tile>bmp bmpwh ;
 : draw-bitmap  over 0= if 2drop exit then  >r  at@ 2af  r> al_draw_bitmap ;
-: tile  ( tiledat -- )  ?dup -exit  dup tile>bmp swap #28 >> draw-bitmap ;
-: tile+  ( stridex stridey tiledat -- )  tile +at ;
+: tile  ( tiledat - )  ?dup -exit  dup tile>bmp swap #28 >> draw-bitmap ;
+: tile+  ( stridex stridey tiledat - )  tile +at ;
 fixed
 
-: tilemap  ( addr /pitch -- )
+: tilemap  ( addr /pitch - )
     hold>  1 tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch | 
     rows for
         at@  ( addr x y )
@@ -66,14 +66,14 @@ fixed
     loop  drop  ;
 
 
-: scrollofs  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
+: scrollofs  ( scrollx scrolly tilew tileh pen=xy - col row pen=offsetted )
     2over 2over 2mod 2negate +at   2/ 2pfloor ;
 
 \ Isometric support
-: >iso  ( x y -- x y )  2dup swap 1 >> - >r + r> ;
-: >car  ( x y -- x y )  2dup 2 / swap 2 / + >r - r> ;
+: >iso  ( x y - x y )  2dup swap 1 >> - >r + r> ;
+: >car  ( x y - x y )  2dup 2 / swap 2 / + >r - r> ;
 
-: isotilemap  ( addr /pitch cols rows -- )
+: isotilemap  ( addr /pitch cols rows - )
     hold>  1 tsize locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )

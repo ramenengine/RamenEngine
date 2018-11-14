@@ -9,7 +9,7 @@ depend ramen/lib/array2d.f
 
 var mbw  var mbh  \ map box width,height
 
-defer map-collide   ' drop is map-collide  ( tilecell -- )
+defer map-collide   ' drop is map-collide  ( tilecell - )
 
 #1
     bit BIT_CEL
@@ -30,7 +30,7 @@ define tilecding
     : px x @ ;
     : py y @ ;
 
-    : xy>cr  ( x y tilesize -- ) dup  2/  2pfloor ;
+    : xy>cr  ( x y tilesize - ) dup  2/  2pfloor ;
     : pt  gap xy>cr  map@ dup t !  tileprops@ ;          \ point
 
     \ increment coordinates
@@ -72,10 +72,10 @@ define tilecding
 only forth definitions fixed
 also tilecding
 
-: collide-map ( tilesize -- ) init ud lr ;
+: collide-map ( tilesize - ) init ud lr ;
 
 \ 0 value (code)
-\ : tiles>   ( w h tilesize -- <code> )  ( gid -- )
+\ : tiles>   ( w h tilesize - <code> )  ( gid - )
 \     to gap  locals| h w |
 \     r> to (code)
 \     x 2@ at

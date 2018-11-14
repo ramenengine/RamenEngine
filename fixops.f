@@ -12,8 +12,8 @@
 \   1pf 2pf 3pf 4pf  --- fixed to float
 
 \ words should take fixed unless otherwise noted:
-\   ( n -- )  <-- fixed
-\   ( n# -- )  < -- integer  ( #n ) means # of n's, in fixed point.  ( #n# -- ) means # of n's, in integer.
+\   ( n - )  <-- fixed
+\   ( n# - )  < - integer  ( #n ) means # of n's, in fixed point.  ( #n# - ) means # of n's, in integer.
 
 12 constant /FRAC
 $FFFFF000 constant INT_MASK
@@ -30,7 +30,7 @@ $1000 constant 1.0
 
 
 [in-platform] sf [if]
-    icode arshift ( x1 n -- x2 ) 
+    icode arshift ( x1 n - x2 ) 
        ebx ecx mov                      \ shift count in ecx 
        pop(ebx)                         \ get new tos 
        ebx cl sar                       \ and shift bits right 
@@ -63,9 +63,9 @@ wordlist constant fixpointing
 
 \ NTS: keep these as one-liners, I might make them macros...
 fixed definitions
-    : *  ( n n -- n )  1pf s>f f* f>s ;
-    : /  ( n n -- n )  swap s>f 1pf f/ f>s ;
-    : /mod  ( n n -- r q ) 2dup mod -rot / pfloor ;
+    : *  ( n n - n )  1pf s>f f* f>s ;
+    : /  ( n n - n )  swap s>f 1pf f/ f>s ;
+    : /mod  ( n n - r q ) 2dup mod -rot / pfloor ;
     : loop  s" 1.0 +loop" evaluate ; immediate
 previous definitions
 
@@ -86,21 +86,21 @@ previous definitions
 : 4af  1pf 1pf 1pf 1pf 1sf 1sf 1sf 1sf ;
 
 \ advanced fixed point math
-: cos  ( deg -- n )   1pf cos f>p ;
-: sin  ( deg -- n )   1pf sin f>p ;
-: asin  ( n -- deg )  1pf fasin r>d f>p ;
-: acos  ( n -- deg )  1pf facos r>d f>p ;
+: cos  ( deg - n )   1pf cos f>p ;
+: sin  ( deg - n )   1pf sin f>p ;
+: asin  ( n - deg )  1pf fasin r>d f>p ;
+: acos  ( n - deg )  1pf facos r>d f>p ;
 fixed
-: lerp  ( src dest factor -- )  >r over - r> * + ;
-: anglerp  ( src dest factor -- )
+: lerp  ( src dest factor - )  >r over - r> * + ;
+: anglerp  ( src dest factor - )
   >r  over -  360 mod  540 +  360 mod  180 -  r> * + ;
 
-: sqrt  ( n -- n )  1pf fsqrt f>p ;
-: tan   ( rad -- n )  1pf ftan f>p ;
-: atan  ( n -- n )  1pf fatan f>p ;
-: atan2 ( n n -- n )  2pf fatan2 f>p ;
-: log2  ( n -- n )  1e 1pf y*log2(x) f>p ;  \ binary logarithm (for fixed-point)
-: rescale  ( n min1 max1 min2 max2 -- n )  \ transform a number from one range to another.
+: sqrt  ( n - n )  1pf fsqrt f>p ;
+: tan   ( rad - n )  1pf ftan f>p ;
+: atan  ( n - n )  1pf fatan f>p ;
+: atan2 ( n n - n )  2pf fatan2 f>p ;
+: log2  ( n - n )  1e 1pf y*log2(x) f>p ;  \ binary logarithm (for fixed-point)
+: rescale  ( n min1 max1 min2 max2 - n )  \ transform a number from one range to another.
   locals| max2 min2 max1 min1 n |
   n min1 -  max1 min1 -  /  max2 min2 -  *  min2 + ;
 : >rad  1pf  d>r  f>p ;
@@ -111,8 +111,8 @@ fixed
 : byt  dup $ff and c>p swap 8 >> ;
 : 4reverse   swap 2swap swap ;
 : 3reverse   swap rot ;
-: >rgba  ( val -- r g b a ) byt byt byt byt drop >r 3reverse r> ;
-: >rgb   ( val -- r g b )  byt byt byt drop 3reverse ;
+: >rgba  ( val - r g b a ) byt byt byt byt drop >r 3reverse r> ;
+: >rgb   ( val - r g b )  byt byt byt drop 3reverse ;
 
 \ on-stack vector stuff (fixed point specific)
 : 2*  rot * >r * r> ;

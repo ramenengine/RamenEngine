@@ -4,7 +4,7 @@
 : bmph  dup -exit  al_get_bitmap_height 1p ;
 : bmpwh  dup bmpw swap bmph ;
 
-: resolution  ( w h -- ) 2i resolution ;
+: resolution  ( w h - ) 2i resolution ;
 
 : nativewh  native 2@ 2p ;
 
@@ -17,7 +17,7 @@
 : vieww  viewwh drop ;
 : viewh  viewwh nip ;
 
-: transform:  ( x y sx sy ang -- <name> )
+: transform:  ( x y sx sy ang - <name> )
     >r >r >r >r >r
     create here  /transform allot
     r> r> r> r> 4af r> >rad 1af al_build_transform ;

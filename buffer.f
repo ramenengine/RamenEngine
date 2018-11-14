@@ -2,15 +2,15 @@ defasset %buffer
     %buffer svar buffer.data
     %buffer svar buffer.size
 
-: recreate-buffer  ( buffer -- )
+: recreate-buffer  ( buffer - )
     >r  r@ buffer.size @ allocate throw  r> buffer.data ! ;
 
-: init-buffer  ( size buffer -- )
+: init-buffer  ( size buffer - )
     >r  dup r@ buffer.size !  allocate throw  r@ buffer.data !
     ['] recreate-buffer r> register ;
 
-: buffer  ( size -- )
+: buffer  ( size - )
     %buffer sizeof allotment  init-buffer ;
 
-: buffer:   ( size -- <name> )
+: buffer:   ( size - <name> )
     create  buffer  does>  buffer.data @ ; 

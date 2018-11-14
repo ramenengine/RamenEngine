@@ -3,12 +3,12 @@ redef on
     xvar length  xvar first  xvar tail  \ container
 redef off
 
-: (unlink)  ( node -- )
+: (unlink)  ( node - )
   dup prev @ if  dup next @  over prev @ next !  then
   dup next @ if  dup prev @  over next @ prev !  then
   dup prev off  next off ;
 
-: removenode  ( node -- )
+: removenode  ( node - )
   ?dup -exit
   dup parent @ 0= if  drop exit  then  \ not already in any container
   dup parent @ >r
@@ -21,7 +21,7 @@ redef off
   then
   r> ( container ) drop  ( node ) dup parent off  (unlink) ;
 
-: pushnode  ( node container -- )
+: pushnode  ( node container - )
   dup 0= if  2drop exit  then
   over parent @ if
     over parent @ over = if  2drop exit  then  \ already in given container
@@ -41,22 +41,22 @@ redef off
 
 0 value cxt
 0 value c
-: thru>  ( ... client-xt first-item -- <advance-code> ... )  ( ... item -- ... next-item|0 )  ( ... item -- ... )
+: thru>  ( ... client-xt first-item - <advance-code> ... )  ( ... item - ... next-item|0 )  ( ... item - ... )
   r>  cxt >r  c >r   to c  swap to cxt
   begin  dup while  dup c call >r  cxt execute  r> repeat
   drop
   r> to c  r> to cxt ;
 
-: itterate  ( ... xt container -- ... )   ( ... obj -- ... )
+: itterate  ( ... xt container - ... )   ( ... obj - ... )
   dup length @ 0= if 2drop exit then
   first @  thru>  next @ ;
-: <itterate  ( ... xt container -- ... )   ( ... obj -- ... )
+: <itterate  ( ... xt container - ... )   ( ... obj - ... )
   dup length @ 0= if 2drop exit then
   tail @  thru>  prev @ ;
 
-:noname  ( container node -- list )  over swap parent ! ; ( xt )
+:noname  ( container node - list )  over swap parent ! ; ( xt )
 
-: graft  ( container1 container2 -- )  \ move the contents of container2 to container1
+: graft  ( container1 container2 - )  \ move the contents of container2 to container1
   locals| b a |
   b length @  ?dup -exit  a length +!  b length off
   a tail @ b first @ prev !

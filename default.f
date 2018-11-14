@@ -8,7 +8,7 @@ define internal
 using internal
 : v!  ( x y a n ) /ALLEGRO_VERTEX *  + >r  2af  r> 2! ;
 : color! ( color a n )  /ALLEGRO_VERTEX *  + >r  4@ 4af  r> ALLEGRO_VERTEX.r 4! ;
-: vgradient  ( color1 color2 w h -- )
+: vgradient  ( color1 color2 w h - )
     at@ 2+ at@ locals| y x y2 x2 c2 c1 |
     x y gv 0 v!   x2 y gv 1 v!  x2 y2 gv 2 v!  x y2 gv 3 v!
     c1 gv 2dup 0 color! 1 color!  c2 gv 2dup 2 color! 3 color!
@@ -19,9 +19,9 @@ previous
 \ hue is in degrees
 create (fc)  3 cells allot
 : !color  >r  (fc) color.r sf@ f>p  (fc) color.g sf@ f>p  (fc) color.b sf@ f>p  r> 3! ;
-: lch! ( l c h color -- )  >r  >rad  3af  (fc) dup cell+ dup cell+  al_color_lch_to_rgb  r> !color ;
-: hsl! ( h s l color -- )  >r  3af  (fc) dup cell+ dup cell+  al_color_hsl_to_rgb  r> !color ;
-: hsv! ( h s v color -- )  >r  3af  (fc) dup cell+ dup cell+  al_color_hsv_to_rgb  r> !color ;    
+: lch! ( l c h color - )  >r  >rad  3af  (fc) dup cell+ dup cell+  al_color_lch_to_rgb  r> !color ;
+: hsl! ( h s l color - )  >r  3af  (fc) dup cell+ dup cell+  al_color_hsl_to_rgb  r> !color ;
+: hsv! ( h s v color - )  >r  3af  (fc) dup cell+ dup cell+  al_color_hsv_to_rgb  r> !color ;    
 \ --------------------------------------------------------------------------------------------------
 
 \ default engine state; chill vibes
