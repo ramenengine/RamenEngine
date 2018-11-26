@@ -12,7 +12,6 @@ depend ramen/lib/std/sprites.f
 depend ramen/lib/std/tilemap.f
 depend ramen/lib/tiled/tiled.f
 
-: acts  each> act ;
 : think  stage dup acts multi ;
-: physics  stage each> vx 2@ x 2+! ;
+: physics  stage each> as vx 2@ x 2+! ;
 :now  step> think physics ;

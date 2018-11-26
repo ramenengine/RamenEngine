@@ -33,9 +33,9 @@ create (c2)  0.25 , 0.1 , 0.4 , 1 ,
     (c1) (c2)
 ;
 : ramenbg  0 0 at unmount colorcycle displaywh vgradient mount ;
-:slang think  stage each> act ;
-:slang physics  stage each>  vx 2@ x 2+! ;
-: show-stage  show> ramenbg unmount stage each> draw ;
+:slang think  stage each> as act ;
+:slang physics  stage each> as vx 2@ x 2+! ;
+: show-stage  show> ramenbg unmount stage each> as draw ;
 : stop  show-stage step> noop ; stop
 : default-step  step> think physics ;
 default-step

@@ -7,16 +7,15 @@ include afkit/afkit.f  \ AllegroForthKit
 0 value (count)
 0 value (ts)
 0 value (bm)
-include ramen/plat.f
+\ include ramen/plat.f
 [undefined] LIGHTWEIGHT [if]
 include afkit/dep/zlib/zlib.f
 [then]
 include ramen/structs.f
 include ramen/fixops.f
 include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
-include ramen/stack.f
 include ramen/res.f
-include ramen/batch.f
+include ramen/venery/venery.f
 
 \ Assets
 include ramen/assets.f
@@ -34,8 +33,9 @@ redef off  \ from here on fields only defined if not previously defined
 
 : frmctr  frmctr 1p ;
 objlist stage  \ default object list
+
 used @ value baseline
-: -stage  stage -objlist ;
+: -stage  stage vacate ;
 
 [undefined] LIGHTWEIGHT [if]
     include ramen/default.f
@@ -50,4 +50,3 @@ create ldr 64 allot
 : ld   bl parse ldr place  s" .f" ldr append  rld ;
 
 only forth definitions marker (empty)
-

@@ -44,87 +44,63 @@ redef on  \ we'll keep this on while compiling RAMEN itself
 \  you can create "pools" which can dynamically allocate objects
 \  you can itterate over objlists as a whole, or just over a pool at a time
 
-
-var lnk  var ^pool
+%node sizeof used !
+var #free
+used @ constant /objhead
 var x  var y  var en  var vx  var vy
 var hidden  var drw  var beha
 
-create defaults  maxsize /allot         \ default values are stored here
+: object,  /object allotment /node ;
+
+create defaults  object,                \ default values are stored here
                                         \ they are copied to new instances by INITME
 defaults as  en on 
 
-\ objlists and pools
-struct %objlist \ objlist struct, also used for pools
-    %objlist svar ol.first
-    %objlist svar ol.count
-    %objlist svar ol.#free
-    %objlist svar ol.last
-: count+!  ol.count +! ;
-: >first  ol.first @ as ;
-: (+free)   ^pool @ ol.#free +! ;
-: >last   ol.last @ ;
-: #objects  dup ol.count @ swap ol.#free @ - ;
-: object  {  here  /object /allot  }  dup lnk !  as  ;
-: objects  for  object  loop ;
-create (ol)  defaults , 0 , 0 , defaults , 
-: objlist   create  (ol) %objlist sizeof move, ;
-: -objlist   (ol) swap %objlist sizeof move ;
-: ?first  dup ol.first @ defaults = -exit  here over ol.first ! ;
-: pool:  ( objlist n - <name> )
-    locals| n ol |
-    ol ?first drop
-    ol >last as  n ol count+!  here  ( 1st )  n objects
-        create  ( 1st ) , n , n , me ,
-    me ol ol.last !
-    ;
-: nxt  lnk @ to me ;
-: each>  ( objlist/pool - <code> )
-    r>  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
-: each   ( objlist/pool xt - )  
-    >code  { swap dup >first  ol.count @ for  en @ if  dup >r  call  r>   then  nxt  loop  drop } ;
-: all>  ( objlist/pool - <code> )
-    r>  { swap dup >first  ol.count @ for  dup >r  call  r>   nxt  loop  drop } ;
-: enough  s" r> drop r> drop unloop r> drop " evaluate ; immediate
-: any?  dup ol.#free @ 0= ;
-: initme  at@ x 2!  defaults 's en  en  [ maxsize 4 cells - ]# move ;
-: remove  ( object - )  >{  en off  1 (+free)  } ;
-: hidden?  hidden @ ;
-: ?noone  any? abort" ONE: A pool was exhausted. " ;
-: (slot)  ( pool - me=obj )  ?noone  all>  en @ ?exit  enough ;
-: one ( pool - me=obj )  dup (slot)  initme  ^pool !  -1 (+free) ;
+create pool  object,                    \ where we cache free objects
+create root  object,
 
-\ static object lists
-: (add)  ( objlist - )  >r r@ >last as  r@ ?first drop  1 r@ count+!  1 objects  me r> ol.last !  initme ;
-: add  ( objlist n - )  for dup (add) loop drop ; 
-: object:  ( objlist - <name> )  create 1 add ;
+: >first  node.first @ ;
+: >last   node.last @ ;
+: >parent  node.parent @ ;
+: initme  at@ x 2!  defaults 's en en [ maxsize /objhead - ]# move ;
+: ?object  pool length 0= if here object, else pool pop then ;
+: one ( parent - me=obj ) new-node as initme me swap push ;
+: objects  ( parent n - ) for dup one loop drop ;
+: ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
+:noname ?object ; is new-node
+:noname dup ?remove pool push ; is free-node
+: dismiss  free-node ;
+
+\ static objects
+: object:  ( objlist - <name> )  create here as object, initme me swap push ;
 
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;
-: draw   hidden? ?exit  x 2@ at  drw @ ?call ;
-: act   beha @ ?call ;
+: draw   en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
+: draws each> as draw ;
+: act   en @ -exit  beha @ ?call ;
+: acts  each> as act ;
 : draw>  r> drw ! hidden off ;
 : act>   r> beha ! ;
 : away  ( obj x y - ) rot 's x 2@ 2+ at ;
 : -act  act> noop ;
+: objlist-draw  draw> me draws ;
+: objlist-act   act> me acts ;
+: objlist  ( - <name> )
+    create here object, dup as root push
+    initme objlist-draw objlist-act ;
+
+
 
 \ Roles
 \ Note that role vars are global and not tied to any specific role.
 var role
 : ?update  >in @  defined if  >body lastrole !  drop r> drop exit then  drop >in ! ; 
-: defrole  ?update  create  here lastrole !  basis /roledef move,  ;
+: defrole  ?update  create  here lastrole !  basis /roledef move, ;
 : role@  role @ dup 0= abort" Error: Role is null." ;
-: create-rolevar  create  meta @ ,  $76543210 ,   cell meta +!  ;
+: create-rolevar  create  meta @ ,  $76543210 ,  cell meta +! ;
 : rolevar  0 ?unique drop  create-rolevar  does>  @ role@ + ;
 : action   0 ?unique drop  create-rolevar  does>  @ role@ + @ execute ;
 : :to   ( roledef - <name> ... )  ' >body @ + :noname swap ! ;
 : +exec  + @ execute ;
 : ->  ( roledef - <action> )  ' >body @ postpone literal postpone +exec ; immediate
-
-\ Filtering tools
-: #queued  ( addr - addr cells )
-    here over - cell/ ;
-: some  ( objlist filterxt xt - )  ( addr n - )
-    here >r  -rot  each  r@ #queued rot execute  r> reclaim ;
-: some>  ( objlist filterxt - <code> )  ( addr n - )
-    r> code> some ;
-    

@@ -23,7 +23,6 @@ defer warm  :is warm ;   \ warm boot: executed potentially multiple times
 ;
 : runtime  boot cold warm go ;
 : relify  srcfile dup count s" data/" search if  rot place  else 3drop then ;
-: gather  assets> relify ;
 
 [defined] program [if]
     
@@ -31,7 +30,7 @@ defer warm  :is warm ;   \ warm boot: executed potentially multiple times
     
     : publish ( - <name> )
         cr ." Publishing to "  >in @  bl parse type >in !  ." .exe ... "
-        gather
+        ['] relify assets each
         ['] runtime 'main !
         program ;
 [else]
