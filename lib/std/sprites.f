@@ -20,7 +20,7 @@ redef on
     %color sizeof field tint
 
     \ animation state:
-    var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
+    var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is IMG.
 redef off
 
 defaults >{
