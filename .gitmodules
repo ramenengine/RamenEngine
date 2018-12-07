@@ -1,0 +1,9 @@
+[submodule "venery"]
+	path = venery
+	url = https://github.com/RogerLevy/venery.git
+[submodule "afkit"]
+	path = afkit
+	url = https://github.com/RogerLevy/afkit.git
+[submodule "ramen"]
+	path = ramen
+	url = https://github.com/RogerLevy/ramen.git
