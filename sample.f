@@ -12,7 +12,7 @@ defasset sample
 
 \ sample  create unnamed sample.  (redefining SAMPLE is a nice way of "sealing" the struct.)
 \ sample:  create named sample
-: sample   ( path c - image )
+: sample   ( path c - sample )
     here >r  sample sizeof allotment init-sample  r> ; 
 : sample:  ( loopmode adr c - <name> )
     create  sample  drop ;

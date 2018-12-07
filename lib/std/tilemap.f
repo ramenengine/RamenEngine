@@ -5,27 +5,27 @@ depend ramen/lib/array2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 
-create tiles #MAXTILES stack 
+create tiles #MAXTILES array,
 0 value tba  \ tileset base address
 
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles
 
 : tilebmp  ( n - bmp )
-    #MAXTILES 1 - and tiles nth @ ;
+    #MAXTILES 1 - and tiles [] @ ;
 
 : maketiles  ( bitmap tilew tileh firstid - )
     locals| id th tw bmp |
     bmp bmph dup th mod - 0 do
         bmp bmpw dup tw mod - 0 do
-            bmp i j 2i tw th 2i al_create_sub_bitmap  tiles id [] !
+            bmp i j 2i tw th 2i al_create_sub_bitmap  id tiles [] !
             1 +to id
         tw +loop
     th +loop
 ;
 
 : -tiles  ( - )
-    #MAXTILES for  tiles i [] dup @ -bmp  off  loop ;
+    tiles capacity for  i tiles [] dup @ -bmp  off  loop ;
 
 \ -------------------------------------------------------------------------------------------------
 \ Render a tilemap
@@ -43,7 +43,7 @@ create tiles #MAXTILES stack
 \ -------------------------------------------------------------------------------------------------
 
 : tilebase!  ( tile# - )
-    tiles nth to tba ;
+    tiles [] to tba ;
 
 0 tilebase!
 

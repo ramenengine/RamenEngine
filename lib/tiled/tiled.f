@@ -7,9 +7,12 @@ depend ramen/lib/stride2d.f
 depend ramen/lib/std/tilemap.f
 
 1024 1024 buffer2d: tilebuf 
-create roles #MAXTILES stack
-create bitmaps 100 stack         \ single-image tileset's bitmaps
+create roles #MAXTILES stack,
+create bitmaps 100 stack,         \ single-image tileset's bitmaps
 defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
+
+\ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
+\ They all can expect the pen has already been set to the XY position.
 defer tmxobj   ( object-nnn role - )
 defer tmxrect  ( object-nnn w h - )
 defer tmximage ( object-nnn gid - )
@@ -62,13 +65,13 @@ include ramen/lib/tiled/collision.f
 include ramen/lib/tiled/tmx.f
 also xmling also tmxing  
 
-: @gidbmp  ( - bitmap )  tiles gid @ [] @ ;
+: @gidbmp  ( - bitmap )  gid @ tiles [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
 : load-bitmaps  ( tileset# - dom )
     tileset locals| gid0 ts |
     ts eachel> that's tile
-        dup tile>bmp swap id@ gid0 + tiles nth !
+        dup tile>bmp swap id@ gid0 + tiles [] !
         ?dom-free ;
 
 \ don't execute this frequently!
@@ -95,12 +98,9 @@ also xmling also tmxing
 \ This supports 3 kinds of objects that can be stored in TMX files.
 \ 1) Regular scripted game objects where the tile gid points to a role in a table.
 \ 2) Rectangular objects with no associated tile
-\ 3) Background (image) objects where the gid points to a bitmap in the global tileset
+\ 3) Environment (image) objects where the gid points to a bitmap in the global tileset
 
-\ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
-\ They all can expect the pen has already been set to the XY position.
-
-: /roles  ( - )  roles 0 [] #MAXTILES cells erase ;
+: /roles  ( - )  0 roles [] #MAXTILES cells erase ;
 
 \ : reload-recipes ;
 
@@ -110,9 +110,11 @@ also xmling also tmxing
 
 \ LOAD-SCRIPTS
 \ Conditionally load the scripts associated with any roles that aren't defined.
+
 \ Tile image source paths are important!  They correspond to the object script filenames!
-\ When an object does not have an image, it will load a script if it
-\ has its "Type" set to something.
+
+\ If an object does not have an associated image, this loads a script corresponding
+\ to its Type attribute if it has one.
 
 create $$$ #256 allot
 : uncount  $$$ place $$$ ;
@@ -128,7 +130,7 @@ create $$$ #256 allot
     2dup file-exists    0= if  2drop 0 exit  then
         included  lastrole @ ;
 
-: script!  ( role n )  roles nth ! ;
+: script!  ( role n )  roles [] ! ;
 \ 
 \ : (load-scripts)  tileset ( dom tileset gid )  locals| firstgid |
 \     ( tileset ) eachel> that's tile
@@ -152,7 +154,7 @@ create $$$ #256 allot
             dup el?type if  load-script ( nnn role|0 ) ?tmxobj  exit then  
             dup wh@ ( nnn w h ) tmxrect
         else
-            dup gid@ dup  roles nth @ ?dup if
+            dup gid@ dup  roles [] @ ?dup if
                 ( nnn gid role|0 ) nip ( nnn role|0 ) ?tmxobj
             else
                 ( nnn gid ) tmximage
@@ -172,7 +174,7 @@ create $$$ #256 allot
         else drop then
     ; 
 
-: -bitmaps  bitmaps #pushed for  bitmaps pop -bmp  loop ;
+: -bitmaps  bitmaps length for  bitmaps pop -bmp  loop ;
 
 : open-map  ( path c - )
     close-tmx  /roles  -tiles  -bitmaps  open-tmx ;
