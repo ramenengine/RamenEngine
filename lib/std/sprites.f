@@ -16,11 +16,17 @@ cell constant /frame
 
 redef on
     \ Transformation info; will be factored out into Ramen's core eventually
-    var sx  var sy  var ang  var cx  var cy
+    var sx  var sy              \ scale
+    var ang                     \ rotation
+    var cx  var cy              \ center
     %color sizeof field tint
 
-    \ animation state:
-    var img  var frm  var rgntbl  var anmspd  var anmctr    \ all can be modified freely.  only required value is ANM.
+    \ animation state; all can be modified freely.  only required value is IMG.
+    var img       \ image asset
+    var frm       \ frame pointer
+    var rgntbl    \ region table
+    var anmspd    \ animation speed (1.0 = normal, 0.5 = half, 2.0 = double ...)
+    var anmctr    \ animation counter
 redef off
 
 defaults >{
