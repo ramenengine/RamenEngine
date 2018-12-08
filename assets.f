@@ -23,7 +23,7 @@ create assets 1000 *stack drop
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
-: defasset  ( - <name> )  create /assetheader , ;
+: defasset  ( - <name> )  struct  /assetheader lastbody struct.size ! ;
 : .asset  srcfile count dup if  type  else  2drop  then ;
 : .assets  assets each> cr .asset ;
 : loadtrig  ( xt - )  here swap , assets push ;

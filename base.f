@@ -11,11 +11,21 @@ include afkit/afkit.f  \ AllegroForthKit
 [undefined] LIGHTWEIGHT [if]
 include afkit/dep/zlib/zlib.f
 [then]
-include ramen/structs.f cr .( Loaded structs lex... ) \ "
 include ramen/fixops.f
-include afkit/plat/sf/fixedp.f \ must come after fixops.  we need fixed-point literals ... it's unavoidable
+include afkit/plat/sf/fixedp.f   \ must come after fixops.  
 include ramen/res.f     cr .( Loaded fixed-point... ) \ "
 include venery/venery.f cr .( Loaded Venery... ) \ "
+include ramen/structs.f cr .( Loaded structs... ) \ "
+
+: <decimal is> bounds ?do i @ i. cell +loop ;
+: <int     is> bounds ?do i @ 1i i. cell +loop ;
+: <bin     is> dump ;
+: <skip    is> 2drop ." ..." space ;
+: <fixed   is> bounds ?do i @ dup if p. else i. then cell +loop ;
+: sfield  sfield <fixed ;
+: svar    svar   <fixed ;
+: create-field  create-field <fixed ;
+include ramen/types.f   cr .( Loaded essential datatypes... ) \ "
 
 \ Assets
 include ramen/assets.f  cr .( Loaded assets framework... ) \ "

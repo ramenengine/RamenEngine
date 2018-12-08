@@ -9,7 +9,8 @@
 \  (See below for a workaround mechanism)
 
 redef on
-    var sp  var rp  30 cells field ds  60 cells field rs
+    var sp <adr  30 cells field ds <skip
+    var rp <adr  60 cells field rs <skip
 redef off
 
 root object: main  \ proxy for the Forth data and return stacks

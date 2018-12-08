@@ -22,9 +22,9 @@ redef on
     %color sizeof field tint
 
     \ animation state; all can be modified freely.  only required value is IMG.
-    var img       \ image asset
-    var frm       \ frame pointer
-    var rgntbl    \ region table
+    var img <adr  \ image asset
+    var frm <int  \ frame pointer
+    var rgntbl <adr \ region table
     var anmspd    \ animation speed (1.0 = normal, 0.5 = half, 2.0 = double ...)
     var anmctr    \ animation counter
 redef off

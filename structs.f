@@ -1,33 +1,65 @@
+also venery
+    
+    struct %struct
+        %struct %node sembed struct.node
+        %struct svar struct.size
+
+    struct %field
+        %field %node sembed field.node
+        %field svar field.offset
+        %field svar field.size
+        %field svar field.inspector
+
+    : struct  create %struct *struct /node ;
+    
+    : (.field)  ( adr size - )
+        bounds ?do i @ . cell +loop ;
+        
+    : create-field  ( struct bytes - <name> )  ( - field )
+        swap  >r
+        create  %field *struct dup /node  dup r@ push
+            r@ struct.size @ over field.offset !
+            ['] (.field) over field.inspector !  \ initialize the inspector
+            udup field.size !
+                r> struct.size +! ;
+
+previous
+
+            
 : sfield  ( struct bytes - <name> )  ( adr - adr+n )
-    create over @ ,  swap +!  does> @ + ;
-: svar  cell sfield ;
-: struct  variable ;
-: sizeof  @ ;
+    create-field
+        does> field.offset @ + ;
+        
+: svar  ( struct - <name> )
+    cell sfield ;
 
-struct %color
-    %color svar color.r
-    %color svar color.g
-    %color svar color.b
-    %color svar color.a
+: sizeof  ( struct - size )
+    struct.size @ ;
+    
+: *struct  ( struct - adr )
+    here swap sizeof /allot ;
 
+: is>  ( - <code> )  ( adr size - )
+    r> code> lastbody field.inspector ! ;
 
-struct %rect
-    %rect svar rect.x
-    %rect svar rect.y
-    %rect svar rect.w
-    %rect svar rect.h
+: (.fields)
+    each> ( adr field )
+        normal         
+        dup body> >name count type space
+        bright
+        2dup dup field.size @ swap field.inspector @ execute
+        field.size @ +   \ go to next field in the passed instance
+;
 
-: x@    @ ;                       : x!    ! ;
-: y@    cell+ @ ;                 : y!    cell+ ! ;
-: w@    rect.w @ ;                : w!    rect.w ! ;
-: h@    rect.h @ ;                : h!    rect.h ! ;
-: xy@   2@ ;                      : xy!   2! ;
-: wh@   rect.w 2@ ;               : wh!   rect.w 2! ;
+: .fields ( adr struct - )
+    dup node.first @ field.offset @ u+  (.fields) drop ;
 
-: rect.  dup xy@ 2. rot wh@ 2. ;
-
-: xywh@  4@ ;                     : xywh! 4! ;
-: x2@   dup x@ swap w@ + ;        : x2!   >r r@ x@ - r> w! ;
-: y2@   dup y@ swap h@ + ;        : y2!   >r r@ y@ - r> h! ;
-: xy2@  dup 2@ rot wh@ 2+ ;       : xy2!  >r r@ xy@ 2- r> wh! ;
-
+[defined] h. [if]
+    : <hex  is> drop @ dup 0= if #5 attribute then ." $" h. normal ;
+    : <adr  <hex ;
+[else]
+    : <adr  ;
+[then]
+[defined] f. [if] : <float is> drop sf@ f. ." e" ; [then]
+: <cstring  is> drop count type ;
+: <flag  is> drop @ if ." true " else ." false " then ;

@@ -20,11 +20,12 @@ create cmdbuf #256 /allot
 create history  #256 /allot
 create ch  0 c, 0 c,
 create attributes
-  1 , 1 , 1 , 1 ,      \ white
-  0 , 0 , 0 ,     1 ,  \ black
-  0.3 , 1 , 0.3 , 1 ,  \ green
-  1 , 1 , 0.3 ,   1 ,  \ light yellow
-  0 , 1 , 1 ,     1 ,  \ cyan
+  1 , 1 , 1 , 1 ,      \ 0 white
+  0 , 0 , 0 ,     1 ,  \ 1 black
+  0.3 , 1 , 0.3 , 1 ,  \ 2 green
+  1 , 1 , 0.3 ,   1 ,  \ 3 light yellow
+  0 , 1 , 1 ,     1 ,  \ 4 cyan
+  1.0 , 0 , 0.5 ,     1 ,  \ 5 purple
 variable output   \ output bitmap
 0 value tempbmp
 :is repl?  repl @ ;

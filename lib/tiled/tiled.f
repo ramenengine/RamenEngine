@@ -19,10 +19,10 @@ defer tmximage ( object-nnn gid - )
 
 var scrollx  var scrolly  \ used to define starting column and row!
 var w  var h              \ width & height in pixels
-var tbi                   \ tile base index
-var onhitmap   \ XT ( tile - )
-var gid
-rolevar recipe
+var tbi <int              \ tile base index
+var onhitmap <adr  \ XT ( tile - )
+var gid <int
+rolevar recipe <adr  \ XT  
 
 \ -------------------------------------------------------------------------------------------------
 \ Tilemap objects
