@@ -70,7 +70,8 @@ create root  object,                    \ catch-all destination
 : dismiss  free-node ;
 
 \ static objects
-: object:  ( objlist - <name> )  create here as object, init me swap push ;
+: object   here as object, init ;
+: object:  ( objlist - <name> )  create object me swap push ;
 
 \ making stuff move and displaying them
 : ?call  ?dup -exit call ;

@@ -38,64 +38,63 @@ defaults >{
 \ Drawing
 : sprite ( srcx srcy w h flip )
     locals| flip h w y x |
+    img @ -exit
     img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 2@ 2af
     ang @ >rad 1af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
-: subsprite  ( n flip - )   \ note: IMG must be subdivided
-    >r  img @ subxywh  r> sprite ;      
-
-\ Get current frame data
-
 : framexywh  ( n rgntbl - srcx srcy w h )
-    swap /region * +  4@ ;
+    swap /region * + 4@ ;
 
-: curframe  ( - srcx srcy w h )
+: >region  ( n - srcx srcy w h )
+    img @ 0= if 0 0 0 0 ;then
     frm @ 0= if
         img @ image.subcount @ if
-            0 img @ subxywh
+            img @ subxywh
         else
-            0 0 img @ imagewh
+            drop 0 0 img @ imagewh
         then
-    exit then 
+    ;then 
     rgntbl @ if
-        frm @ @  rgntbl @  framexywh
+        rgntbl @ framexywh
     else
-        frm @ @  img @  subxywh
+        img @ subxywh
     then ;
 
-: curflip  frm @ if frm @ @ #3 and exit then  0 ;
+: curflip  frm @ if frm @ @ #3 and ;then  0 ;
+
+:slang ?regorg  ( - )  \ apply the region origin
+    rgntbl @ frm @ and -exit
+    rgntbl @  frm @ @  /region * + 4 cells + 2@ cx 2! ;
+
+: nsprite  ( n - )   \ note: IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
+    ?regorg >region curflip sprite ;
 
 \ Draw + animate
-define internal
-    : ?regorg  ( - )  \ apply the region origin
-        rgntbl @ ?dup -exit
-        frm @ @  /region * + 4 cells + 2@ cx 2! ;
-using internal
-: sprite+  ( - )
-    frm @ 0= if  curframe  curflip sprite  exit  then 
-    at@ 
-        ?regorg  
-        img @ if curframe curflip sprite then
-        anmspd @ anmctr +!
-        \ looping
-        begin  anmctr @ 1 >= while
-            anmctr -  /frame frm +!
-            frm @ @ $deadbeef = if  frm @ cell+ @ frm +!  animlooped  then
-        repeat
-    at  
+: animate  ( - )
+    frm @ anmspd @ and -exit
+    anmspd @ anmctr +!
+    \ looping
+    begin  anmctr @ 1 >= while
+        -1 anmctr +!  /frame frm +!
+        frm @ @ $deadbeef = if  frm @ cell+ @ frm +!  animlooped  then
+    repeat
 ;
-previous
+ 
+: frame@  ( - n | 0 )  \ 0 if FRM is null
+    frm @ dup if @ then ;
 
-\ Play an animation.
-\ animate   play animation from beginning
-: animate   ( anim - )  frm !  0 anmctr ! ;
+: sprite+  ( - )  \ draw and advance the animation
+    frame@ nsprite animate ;
+
+\ Play an animation from the beginning
+: portray  ( anim - )  frm !  0 anmctr ! ;
     
 \ Define self-playing animations
 \ anim:  create self-playing animation
 : anim:  ( regiontable|0 image speed - loopaddr )  ( - )  
     create  3,  here
-    does>  @+ rgntbl ! @+ img ! @+ anmspd ! animate ;
+        does>  @+ rgntbl ! @+ img ! @+ anmspd !  portray ;
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr - )  here -  $deadbeef ,  , ;
@@ -105,7 +104,7 @@ previous
 \ frames  Helper for doing unnamed images + region tables
 
 : +anim:  ( stack - stack loopaddr )     here over push here ;
-: frames  ( str c - regiontable image )  image  here  swap ;
+: frames:  ( str c - regiontable image )  image  here  swap ;
 
 \ flipped frame utilities
 : h,  #1 or , ;

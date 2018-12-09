@@ -9,7 +9,7 @@ create tiles #MAXTILES array,
 0 value tba  \ tileset base address
 
 \ -------------------------------------------------------------------------------------------------
-\ Break up a bitmap into tiles
+\ Break up a bitmap into tiles that can be used by the Tiled module
 
 : tilebmp  ( n - bmp )
     #MAXTILES 1 - and tiles [] @ ;
@@ -33,7 +33,7 @@ create tiles #MAXTILES array,
 \  Given a starting address, a pitch, and a tileset base, render tiles to fill the current
 \  clip rectangle of the current destination bitmap.
 
-\  The tilemap format is in cells and in the following format:
+\  The tilemap is arranged in 32-bit cells, here's the format:
 \  00vh 0000 0000 0000 tttt tttt tttt tt00  ( t=tile # 0-16383, v=vflip, h=hflip)
 
 \  TILEMAP draws within the clip rectangle + (1,1) pixels
