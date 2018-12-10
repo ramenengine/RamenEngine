@@ -83,3 +83,54 @@ fixed
         tw negate th 2+ at   ( addr )  pitch +
     loop  drop  ;
 
+
+\ -------------------------------------------------------------------------------------------------
+\ Tilemap objects
+\ They don't allocate any buffers for map data.
+\ A part of the singular buffer TILEBUF is located using the scrollx/scrolly values.
+
+[undefined] tilebuf [if] 1024 1024 buffer2d: tilebuf [then]
+defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
+var scrollx  var scrolly  \ used to define starting column and row!
+var w  var h              \ width & height in pixels
+var tbi                   \ tile base index
+var onhitmap   \ XT ( tile - )
+
+
+: /tilemap
+    viewwh w 2!
+    draw>
+        tbi @ tilebase!
+        at@ w 2@ clip>
+            scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+
+: /isotilemap
+    draw>
+        tbi @ tilebase!
+        scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
+
+: map@  ( col row - tile )  tilebuf loc @ ;
+
+: >gid  ( tile - gid )  $003fff000 and ;
+
+\ Tilemap collision
+include ramen/lib/tiled/collision.f
+
+: onhitmap>  ( - <code> ) r> code> onhitmap ! ;  ( tilecell - )
+
+: ?'drop  ?dup ?exit  ['] drop ;
+
+: collide-objects-map  ( objlist tilesize - )
+    locals| tilesize |
+    each>   onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
+
+: (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
+: counttiles  ( x y w h bitmask tilesize - count )
+    swap  to (bm)  0 to (count)  locals| ts h w y x |
+    ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
+    (count) ; 
+
+include ramen/lib/tiled/tmx.f
+also xmling also tmxing  
+
+: @gidbmp  ( - bitmap )  gid @ tiles [] @ ;

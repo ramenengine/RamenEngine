@@ -6,66 +6,15 @@ depend ramen/lib/stride2d.f
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]  \ keep this a power of 2
 depend ramen/lib/std/tilemap.f
 
-1024 1024 buffer2d: tilebuf 
 create roles #MAXTILES stack,
 create bitmaps 100 stack,         \ single-image tileset's bitmaps
-defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
-
-\ You are responsible for assigning these DEFERs before calling LOAD-OBJECTS
-\ They all can expect the pen has already been set to the XY position.
 defer tmxobj   ( object-nnn role - )
 defer tmxrect  ( object-nnn w h - )
 defer tmximage ( object-nnn gid - )
 
-var scrollx  var scrolly  \ used to define starting column and row!
-var w  var h              \ width & height in pixels
-var tbi <int              \ tile base index
-var onhitmap <adr  \ XT ( tile - )
-var gid <int
-rolevar recipe <adr  \ XT  
+var gid
+rolevar recipe
 
-\ -------------------------------------------------------------------------------------------------
-\ Tilemap objects
-\ They don't allocate any buffers for map data.
-\ A part of the singular buffer TILEBUF is located using the scrollx/scrolly values.
-
-: /tilemap
-    viewwh w 2!
-    draw>
-        tbi @ tilebase!
-        at@ w 2@ clip>
-            scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
-
-: /isotilemap
-    draw>
-        tbi @ tilebase!
-        scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
-
-: map@  ( col row - tile )  tilebuf loc @ ;
-
-: >gid  ( tile - gid )  $003fff000 and ;
-
-\ Tilemap collision
-include ramen/lib/tiled/collision.f
-
-: onhitmap>  ( - <code> ) r> code> onhitmap ! ;  ( tilecell - )
-
-: ?'drop  ?dup ?exit  ['] drop ;
-
-: collide-objects-map  ( objlist tilesize - )
-    locals| tilesize |
-    each>   onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
-
-: (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
-: counttiles  ( x y w h bitmask tilesize - count )
-    swap  to (bm)  0 to (count)  locals| ts h w y x |
-    ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
-    (count) ; 
-
-include ramen/lib/tiled/tmx.f
-also xmling also tmxing  
-
-: @gidbmp  ( - bitmap )  gid @ tiles [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
 : load-bitmaps  ( tileset# - dom )
@@ -99,6 +48,8 @@ also xmling also tmxing
 \ 1) Regular scripted game objects where the tile gid points to a role in a table.
 \ 2) Rectangular objects with no associated tile
 \ 3) Environment (image) objects where the gid points to a bitmap in the global tileset
+
+: /roles  ( - )  0 roles [] #MAXTILES cells erase ;
 
 : /roles  ( - )  0 roles [] #MAXTILES cells erase ;
 
