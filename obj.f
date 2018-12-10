@@ -7,20 +7,20 @@ struct %obj
 create basis /roledef /allot  \ default rolevar and action values for all newly created roles
 
 \ ME is defined in afkit
-: as  s" to me" evaluate ; immediate
+: as ( object - ) s" to me" evaluate ; immediate
 create mestk  0 , 16 cells allot
-: i{ me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpretive version, uses a sw stack
-: i} mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ to me ; 
-: {  state @ if s" me >r" evaluate else  i{  then ; immediate
-: }  state @ if s" r> as" evaluate else  i}  then ; immediate
-: >{   s" { as " evaluate ; immediate    \ }
+: i{ ( - ) me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpretive version, uses a sw stack
+: i} ( - ) mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ to me ; 
+: {  ( - ) state @ if s" me >r" evaluate else  i{  then ; immediate
+: }  ( - ) state @ if s" r> as" evaluate else  i}  then ; immediate
+: >{ ( object - )  s" { as " evaluate ; immediate    \ }
 
-: used  %obj struct.size ;
+: used  ( - adr ) %obj struct.size ;
 
 variable redef  \ should you want to bury anything
 redef on  \ we'll keep this on while compiling RAMEN itself
 
-: >magic  %field @ + @ ;
+: >magic  ( adr - n ) %field @ + @ ;
 : ?unique  ( size - size | <cancel caller> )
     redef @ ?exit
     >in @
@@ -33,10 +33,10 @@ redef on  \ we'll keep this on while compiling RAMEN itself
         then
     >in ! ;
 
-: ?maxsize  used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
-: field   ?unique ?maxsize %obj swap create-field $76543210 , does> field.offset @ me + ;
-: var  cell field ;
-: 's   ' >body field.offset @ ?lit s" +" evaluate ; immediate  \ also works with rolevars
+: ?maxsize  ( - ) used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
+: field ( size - <name> )  ?unique ?maxsize %obj swap create-field $76543210 , does> field.offset @ me + ;
+: var ( - <name> ) cell field ;
+: 's  ( object - <field> adr ) ' >body field.offset @ ?lit s" +" evaluate ; immediate  \ also works with rolevars
 
 \ objects are organized into objlists, which are forward-linked lists of objects
 \  you can continually add (statically allocate and link) objects to these lists
@@ -49,7 +49,7 @@ var en <flag  var hidden <flag
 var x  var y  var vx  var vy
 var drw <adr  var beha <adr
 
-: object,  /object allotment /node ;
+: object,  ( - ) /object allotment /node ;
 
 create defaults  object,                \ default values are stored here
                                         \ they are copied to new instances by INIT
@@ -58,48 +58,48 @@ defaults as  en on
 create pool  object,                    \ where we cache free objects
 create root  object,                    \ catch-all destination
 
-: >first  node.first @ ;
-: >last   node.last @ ;
-: >parent  node.parent @ ;
-: init  at@ x 2!  defaults 's en en [ maxsize /objhead - ]# move ;
+: >first  ( node - node|0 ) node.first @ ;
+: >last   ( node - node|0 ) node.last @ ;
+: >parent  ( node - node|0 ) node.parent @ ;
+: init  ( - ) at@ x 2!  defaults 's en en [ maxsize /objhead - ]# move ;
 : one ( parent - me=obj ) new-node as init me swap push ;
 : objects  ( parent n - ) for dup one loop drop ;
 : ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
 :noname pool length 0= if here object, else pool pop then ; is new-node
 :noname dup ?remove pool push ; is free-node
-: dismiss  free-node ;
+: dismiss ( obj - ) free-node ;
 
 \ static objects
-: object   here as object, init ;
+: object   ( - ) here as object, init ;
 : object:  ( objlist - <name> )  create object me swap push ;
 
 \ making stuff move and displaying them
-: ?call  ?dup -exit call ;
-: draw   en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
-: draws each> as draw ;
-: act   en @ -exit  beha @ ?call ;
-: acts  each> as act ;
-: draw>  r> drw ! hidden off ;
-: act>   r> beha ! ;
+: ?call  ( adr - ) ?dup -exit call ;
+: draw   ( - ) en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
+: draws  ( objlist ) each> as draw ;
+: act   ( - ) en @ -exit  beha @ ?call ;
+: acts  ( objlist ) each> as act ;
+: draw>  ( - <code> ) r> drw ! hidden off ;
+: act>   ( - <code> ) r> beha ! ;
 : away  ( obj x y - ) rot 's x 2@ 2+ at ;
-: -act  act> noop ;
+: -act  ( - ) act> noop ;
 : objlist  ( - <name> )  create here as object, init ;
 
 
 \ Roles
 \ Note that role vars are global and not tied to any specific role.
 var role <adr
-: ?update  >in @  defined if  >body lastrole !  drop r> drop exit then  drop >in ! ; 
-: defrole  ?update  create  here lastrole !  basis /roledef move, ;
-: role@  role @ dup 0= abort" Error: Role is null." ;
-: create-rolevar  %role cell create-field $76543210 , ;
-: rolevar  0 ?unique drop  create-rolevar  does> field.offset @ role@ + ;
-: action   0 ?unique drop  create-rolevar <adr does> field.offset @ role@ + @ execute ;
+: ?update  ( - <name> )  >in @  defined if  >body lastrole !  drop r> drop exit then  drop >in ! ; 
+: defrole  ( - <name> ) ?update  create  here lastrole !  basis /roledef move, ;
+: role@  ( - role ) role @ dup 0= abort" Error: Role is null." ;
+: create-rolevar  ( - <name> ) %role cell create-field $76543210 , ;
+: rolevar  ( - <name> ) 0 ?unique drop  create-rolevar  does> field.offset @ role@ + ;
+: action   ( - <name> ) 0 ?unique drop  create-rolevar <adr does> field.offset @ role@ + @ execute ;
 : :to   ( roledef - <name> ... )  ' >body field.offset @ + :noname swap ! ;
 : +exec  + @ execute ;
 : ->  ( roledef - <action> )  ' >body field.offset @ postpone literal postpone +exec ; immediate
 
 \ Inspection
-: o.   %obj .fields ;
-: .me  me o. ;
+: o.   ( obj - ) %obj .fields ;
+: .me  ( - ) me o. ;
 : .role  ( obj - )  's role @ ?dup if %role .fields else ." No role" then ;
