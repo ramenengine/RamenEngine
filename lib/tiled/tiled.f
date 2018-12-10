@@ -1,7 +1,6 @@
 \ Tiled module for RAMEN
 depend ramen/lib/array2d.f
 depend ramen/lib/buffer2d.f
-depend ramen/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]  \ keep this a power of 2
 depend ramen/lib/std/tilemap.f
@@ -15,6 +14,9 @@ defer tmximage ( object-nnn gid - )
 var gid
 rolevar recipe
 
+include ramen/lib/tiled/tmx.f
+also xmling also tmxing  
+: @gidbmp  ( - bitmap )  gid @ tiles [] @ ;
 
 \ Image (background) object support (multi-image tileset) -----------------------------------------
 : load-bitmaps  ( tileset# - dom )

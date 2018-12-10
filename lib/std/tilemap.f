@@ -2,6 +2,8 @@
 \  Loading tiles, tile and tilemap display and collision routines
 
 depend ramen/lib/array2d.f
+depend ramen/lib/buffer2d.f
+depend ramen/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 
@@ -123,14 +125,3 @@ include ramen/lib/tiled/collision.f
 : collide-objects-map  ( objlist tilesize - )
     locals| tilesize |
     each>   onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
-
-: (counttiles)    map@ tileprops@ (bm) and -exit  1 +to (count) ;
-: counttiles  ( x y w h bitmask tilesize - count )
-    swap  to (bm)  0 to (count)  locals| ts h w y x |
-    ['] (counttiles)  x ts / y ts /  w ts / 1 max h ts / 1 max  1 1 stride2d
-    (count) ; 
-
-include ramen/lib/tiled/tmx.f
-also xmling also tmxing  
-
-: @gidbmp  ( - bitmap )  gid @ tiles [] @ ;
