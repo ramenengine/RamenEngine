@@ -99,7 +99,7 @@ var role <adr
 : +exec  + @ execute ;
 : ->  ( roledef - <action> )  ' >body field.offset @ postpone literal postpone +exec ; immediate
 
-
+\ Inspection
 : o.   %obj .fields ;
 : .me  me o. ;
 : .role  ( obj - )  's role @ ?dup if %role .fields else ." No role" then ;

@@ -23,7 +23,7 @@ redef on
 
     \ animation state; all can be modified freely.  only required value is IMG.
     var img <adr  \ image asset
-    var frm <int  \ frame pointer
+    var frmptr <adr  \ frame pointer
     var rgntbl <adr \ region table
     var anmspd    \ animation speed (1.0 = normal, 0.5 = half, 2.0 = double ...)
     var anmctr    \ animation counter
@@ -48,7 +48,7 @@ defaults >{
 
 : >region  ( n - srcx srcy w h )
     img @ 0= if 0 0 0 0 ;then
-    frm @ 0= if
+    frmptr @ 0= if
         img @ image.subcount @ if
             img @ subxywh
         else
@@ -61,34 +61,34 @@ defaults >{
         img @ subxywh
     then ;
 
-: curflip  frm @ if frm @ @ #3 and ;then  0 ;
+: curflip  frmptr @ if frmptr @ @ #3 and ;then  0 ;
 
 :slang ?regorg  ( - )  \ apply the region origin
-    rgntbl @ frm @ and -exit
-    rgntbl @  frm @ @  /region * + 4 cells + 2@ cx 2! ;
+    rgntbl @ -exit frmptr @ -exit
+    rgntbl @  frmptr @ @  /region * + 4 cells + 2@ cx 2! ;
 
 : nsprite  ( n - )   \ note: IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
     ?regorg >region curflip sprite ;
 
 \ Draw + animate
 : animate  ( - )
-    frm @ anmspd @ and -exit
+    frmptr @ -exit anmspd @ -exit
     anmspd @ anmctr +!
     \ looping
     begin  anmctr @ 1 >= while
-        -1 anmctr +!  /frame frm +!
-        frm @ @ $deadbeef = if  frm @ cell+ @ frm +!  animlooped  then
+        -1 anmctr +!  /frame frmptr +!
+        frmptr @ @ $deadbeef = if  frmptr @ cell+ @ frmptr +!  animlooped  then
     repeat
 ;
  
-: frame@  ( - n | 0 )  \ 0 if FRM is null
-    frm @ dup if @ then ;
+: frame@  ( - n | 0 )  \ 0 if frmptr is null
+    frmptr @ dup if @ then ;
 
 : sprite+  ( - )  \ draw and advance the animation
     frame@ nsprite animate ;
 
 \ Play an animation from the beginning
-: portray  ( anim - )  frm !  0 anmctr ! ;
+: portray  ( anim - )  frmptr !  0 anmctr ! ;
     
 \ Define self-playing animations
 \ anim:  create self-playing animation
