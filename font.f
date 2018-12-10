@@ -2,7 +2,7 @@ defasset font
     font svar font.fnt
     font svar font.size
     font svar font.flags
-: >fnt  font.fnt @ ;
+: >fnt ( font - ALLEGRO_FONT ) font.fnt @ ;
 
 : reload-font  ( font - )
     >r  r@ srcfile count findfile zstring  r@ font.size @ 1i  r@ font.flags @  al_load_font  r> font.fnt ! ;
