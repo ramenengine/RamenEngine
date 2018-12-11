@@ -6,9 +6,18 @@ depend ramen/lib/buffer2d.f
 depend ramen/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
-
 create tiles #MAXTILES array,
 0 value tba  \ tileset base address
+[undefined] tilebuf [if] 1024 1024 buffer2d: tilebuf [then]
+defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
+
+\ tilemap vars
+var scrollx  var scrolly  \ used to define starting column and row!
+var w  var h              \ width & height in pixels
+var tbi                   \ tile base index
+
+\ general vars
+var onhitmap              \ XT ( tile - )
 
 \ -------------------------------------------------------------------------------------------------
 \ Break up a bitmap into tiles that can be used by the Tiled module
@@ -51,14 +60,16 @@ create tiles #MAXTILES array,
 
 decimal \ for speed
 : tile>bmp  ( tiledata - bitmap )  $03fff000 and #10 >> tba + @ ;
-: tsize  ( tildata - w h )  tile>bmp bmpwh ;
+: tilesize  ( tiledata - w h )  tile>bmp bmpwh ;
 : draw-bitmap  over 0= if 2drop exit then  >r  at@ 2af  r> al_draw_bitmap ;
 : tile  ( tiledat - )  ?dup -exit  dup tile>bmp swap #28 >> draw-bitmap ;
 : tile+  ( stridex stridey tiledat - )  tile +at ;
 fixed
 
+create tstep 16 , 16 ,
+
 : tilemap  ( addr /pitch - )
-    hold>  1 tsize  clipwh  2over 2/  2 1 2+ locals| rows cols th tw pitch | 
+    hold>  tstep 2@  clipwh  2over 2/ 2 1 2+  locals| rows cols th tw pitch | 
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
@@ -76,7 +87,7 @@ fixed
 : >car  ( x y - x y )  2dup 2 / swap 2 / + >r - r> ;
 
 : isotilemap  ( addr /pitch cols rows - )
-    hold>  1 tsize locals| th tw rows cols pitch |
+    hold>  tstep 2@  locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
             third  cols for
@@ -91,25 +102,17 @@ fixed
 \ They don't allocate any buffers for map data.
 \ A part of the singular buffer TILEBUF is located using the scrollx/scrolly values.
 
-[undefined] tilebuf [if] 1024 1024 buffer2d: tilebuf [then]
-defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
-var scrollx  var scrolly  \ used to define starting column and row!
-var w  var h              \ width & height in pixels
-var tbi                   \ tile base index
-var onhitmap   \ XT ( tile - )
-
-
 : /tilemap
     viewwh w 2!
     draw>
         tbi @ tilebase!
         at@ w 2@ clip>
-            scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+            scrollx 2@  tstep 2@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap
     draw>
         tbi @ tilebase!
-        scrollx 2@  1 tsize scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
+        scrollx 2@  tstep 2@ scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
 : map@  ( col row - tile )  tilebuf loc @ ;
 

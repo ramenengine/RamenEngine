@@ -17,9 +17,9 @@
     layer compressed? if
         layer buf >r
             str str-get  r@  layer layersize  decompress drop
-            r@  w cells  dest  pitch  h  w cells  2move
+            r@  w cells  dest  pitch  w cells  h  2move
         r> free throw
     else
-        str str-get drop  w cells  dest  pitch  h  w cells  2move
+        str str-get drop  w cells  dest  pitch  w cells  h  2move
     then
     str str-free ;

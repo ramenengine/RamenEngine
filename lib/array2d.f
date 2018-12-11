@@ -5,13 +5,14 @@ struct %array2d
     %array2d svar array2d.pitch
     %array2d svar array2d.data
     
-: 2move  ( src /pitch dest /pitch #rows /bytes - )
-  locals| #bytes #rows destpitch dest srcpitch src |
+: 2move  ( src /pitch dest /pitch /bytes #rows - )
+  locals| #rows #bytes destpitch dest srcpitch src |
   #rows for
     src dest #bytes move
     srcpitch +to src  destpitch +to dest
   loop ;
 
+\ incomplete ... need to adjust address for negative clip
 : clip  ( col row #cols #rows #destcols #destrows - col row #cols #rows )
     2>r  2over 2+  0 0 2r@ 2clamp  2swap  0 0 2r> 2clamp  2swap 2over 2- ;
     
@@ -20,37 +21,38 @@ struct %array2d
 
 decimal
 \ by default the data field is set to the adjacent dictionary space
-: array2d  ( numcols numrows - )
+: array2d,  ( numcols numrows - )
     2dup  array2d-head,  2i * cells /allot ;
+
+: array2d:  ( numcols numrows - <name> )
+    create array2d, ;
 
 : count2d ( array2d - data #cells )
     dup array2d.data @ swap array2d.cols 2@ 2i * ;
 fixed
 
-: dims@  ( array2d - numcols numrows )
+: dims  ( array2d - numcols numrows )
     array2d.cols 2@ ;
+
+: cols dims drop ;
+: rows dims nip ;
+
 
 : (clamp)  ( col row array2d - col row array2d  )
     >r  2pfloor  0 0 r@ array2d.cols 2@ 2clamp  r> ;
 
-\ TODO: this is incomplete!
-\      if dest col/row are negative, we need to adjust the source start address!!
-
-: (clip)   ( col row #cols #rows array2d - col row #cols #rows array2d  )
-    dims@ 1 1 2- clip ;
-
-: loc  ( col row array2d - addr )
+: loc  ( col row array2d - adr )
     (clamp) >r  r@ array2d.pitch @ * swap cells +  r> array2d.data @ + ;
 
 : pitch@  ( array2d - pitch )  array2d.pitch @ ;
 
 \ itteration
-: addr-pitch  ( col row array2d - addr /pitch )
-    dup >r loc r> array2d.pitch @ ;
+: adr-pitch  ( col row array2d - adr /pitch )
+    dup >r loc r> pitch@ ;
 
-: some2d  ( ... col row #cols #rows array2d XT - ... )  ( ... addr #cells - ... )
-    >r >r  r@ (clip)   2swap r> addr-pitch
-    r> locals| xt pitch src #rows #cols |
+: some2d  ( ... col row #cols #rows array2d XT - ... )  ( ... adr #cells - ... )
+    >r >r  r@ dims clip   2swap r> adr-pitch
+    r>  locals| xt pitch src #rows #cols |
     #rows 0 do  src #cols xt execute  pitch +to src  loop ;
     
 : some2d>  r> code> some2d ;
@@ -58,8 +60,10 @@ fixed
 :noname  third ifill ;
 : fill2d  ( val col row #cols #rows array2d - )  literal some2d  drop ;
 
+: clear2d  >r 0 0 0 r@ dims r> fill2d ;
+
 :noname  cr  cells bounds do  i @ h.  cell +loop ;
-: 2d.  >r 0 0 r@ dims@ 16 16 2min  r> literal some2d  ;
+: 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
 
 
 \ TABLE2D: ( cols - <name> array2d adr ) 
@@ -72,8 +76,8 @@ fixed
 
 \ test
 marker dispose
-create a  10 15 array2d
-create b  12 7 array2d
+create a  10 15 array2d,
+create b  12 7 array2d,
 a count2d 5 ifill
 b count2d 10 ifill
 dispose
