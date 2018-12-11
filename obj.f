@@ -66,12 +66,12 @@ create root  object,                    \ catch-all destination
 : objects  ( parent n - ) for dup one loop drop ;
 : ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
 :noname pool length 0= if here object, else pool pop then ; is new-node
-:noname dup ?remove pool push ; is free-node
+:noname dup ?remove >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
 : dismiss ( obj - ) free-node ;
 
 \ static objects
 : object   ( - ) here as object, init ;
-: object:  ( objlist - <name> )  create object me swap push ;
+: object:  ( objlist - <name> )  create object me swap push  $fffffffe en ! ;
 
 \ making stuff move and displaying them
 : ?call  ( adr - ) ?dup -exit call ;
