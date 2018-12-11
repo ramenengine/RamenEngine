@@ -43,7 +43,6 @@ redef off  \ from here on fields only defined if not previously defined
 
 : frmctr  frmctr 1p ;
 objlist stage  \ default object list
-
 used @ value baseline
 : -stage  stage vacate ;
 
@@ -53,7 +52,9 @@ used @ value baseline
 
 : empty
     cr ." Empty!"
-    -stage -assets baseline used ! stop empty ;
+    -stage -assets baseline used ! default-step empty
+    only forth definitions
+;
 
 create ldr 64 allot
 : rld  ldr count included ;
