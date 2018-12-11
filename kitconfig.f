@@ -1,6 +1,6 @@
 512 cells constant object-maxsize
 
-: initial-res  320 240 ;
+: initial-res  320 236 ;
 : initial-scale 4 ;
 : initial-pos  100 0 ;
 

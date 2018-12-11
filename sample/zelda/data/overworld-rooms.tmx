@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="256" height="256" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="roomgrid.tsx"/>
+ <tileset firstgid="2" source="overworld-tiles.tsx"/>
+ <layer id="1" name="testrooms1" width="256" height="256">
+  <data encoding="base64" compression="zlib">
+   eJzt3E1u00AYgGEv2PQMlThBYc+G+i7chROw4iKcgVtBpFoyw4w947/PMM8jfaoUPEmE/DpO4vZ1GIbXt3mXzGsH8ymZ9P8gnXT7o2fv47eup2/zFvSvf/pS6v9ldvv7t5/j7/k8lFsah/X9r7R+bd3asWnr+tZ1d5na3teGvpUaWmor1/CYbPM0+/lUsV7/+ud6Uwdfh3JfH4e/95up4aj9X//6Z7/a9/6lhkr71dLrv/71zz2c1f/Zo3/9s1/pHL/mc7219wileRmO61f/+me7UkPT+/txyO83uYZrjgG5dfrXPzFa+i21W3sfNeuPnNKxYj7R379HX39A39IePixMa3drr9n61z+xtjQ9v/1LMlc3frf+o6f1+dO3mo7GQf/653+05TOj+fV7S/2Pme3T40nu/KJmls5PWtbXdrPW09b1UY+rfx627j9T06X+x7ftnoc/exuT+9G//omzdz8s9T/fZvrcf8ys39rvUccP/dOzln3mOXNbTf+Pc4WxcJ/61z9xWq7by01N/7lJrwXQv/653qOBLceAqd+t/R/1/l3/+me7qYPcMeBl4fa1z/9brwPUv/653lJD0+1L1wEuff+39zrCK+bo7/+j17cOfavpf2nufP2P/vXPsr3nobmmjtj26vPoqP6OntbnT9/0r3/6pf+6bo5ef9Tj7n18+hbdX/Ton55F9xc9+qdn0f1Fj/7pWXR/0aN/ehbdX/Ton57t7cfn//rn36X/2O/fo4e+6V//9Ev/95rW5/tz59A3/d9r9M+Vruw//TvAd+r/X3v8tP9vjaN/Hs7o//E7/kt//2N+HND/ef1/n43+yTmj/2mWjgH61z/xzuy/5rMA/Tv/J87V/T8l6/Svf+Kc2f9YsU7/+ifOGf3ntnsqrNO//olzVf+ldXfp/y7T+nynjn9kZmo992/650H/95qt/ecmfa13/Q8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADE+gX361l+
+  </data>
+ </layer>
+ <layer id="3" name="Tile Layer 2" width="256" height="256" opacity="0.5">
+  <data encoding="base64" compression="zlib">
+   eJzt2kERwDAAw7COP+nC8GWV/mbgcwAAAAAAAAAAAIA1n16vf7YHAAAAAAAAAAAA9tT/oV6v73oAAAAAAAAAAABgT/0f6vX6rgcAAAAAAAAAAAD21P+hXq/vegAAAAAAAAAAAGBP/R/q9fquBwAAAAAAAAAAAPbU/6Fer+96AAAAAAAAAAAAYE/9H+r1+q4HAAAAAAAAAAAA9tT/oV6v73oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+JMLKH4AgQ==
+  </data>
+ </layer>
+</map>
