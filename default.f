@@ -25,17 +25,17 @@ create (fc)  3 cells allot
 \ --------------------------------------------------------------------------------------------------
 
 \ default engine state; chill vibes
-create (c1)  0.0 , 0 , 0.1 , 1 ,
-create (c2)  0.25 , 0.1 , 0.4 , 1 , 
-: colorcycle ( - )
-    0 0.1 frmctr -20 / (c1) lch!
-    0.25 0.4 frmctr -20 / (c2) lch!
-    (c1) (c2)
+create c1  0 , 0 , 0 , 1 , 
+create c2  0 , 0 , 0 , 1 ,
+: colorcycle
+    0.4 0.4 frmctr -20 / 75 + c1 lch!
+    0.4 0.4 frmctr -20 / c2 lch!
+    c1 c2
 ;
-: ramenbg ( - ) 0 0 at unmount colorcycle displaywh vgradient mount ;
-:slang think ( - ) stage each> as act ;
+: ramenbg  ( - ) 0 0 at unmount colorcycle displaywh vgradient ;
+:slang think  ( - ) stage acts ;
 :slang physics ( - ) stage each> as vx 2@ x 2+! ;
-: show-stage ( - ) show> ramenbg unmount stage each> as draw ;
+: show-stage  ( - ) show> ramenbg mount stage draws ;
 : stop ( - ) show-stage step> noop ; stop
 : default-step ( - ) step> think physics ;
 default-step
