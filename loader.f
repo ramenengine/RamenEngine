@@ -9,6 +9,6 @@ include ramen/ramen.f
 fs on
 ide
 include ramen/stdpack.f
-only forth definitions marker (empty)
+gild
 
 ld main
