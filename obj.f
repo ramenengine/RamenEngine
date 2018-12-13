@@ -69,10 +69,6 @@ create root  object,                    \ catch-all destination
 :noname dup ?remove >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
 : dismiss ( obj - ) free-node ;
 
-\ static objects
-: object   ( - ) here as object, init ;
-: object:  ( objlist - <name> )  create object me swap push  $fffffffe en ! ;
-
 \ making stuff move and displaying them
 : ?call  ( adr - ) ?dup -exit call ;
 : draw   ( - ) en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
@@ -85,6 +81,12 @@ create root  object,                    \ catch-all destination
 : -act  ( - ) act> noop ;
 : objlist  ( - <name> )  create here as object, init ;
 
+\ stage
+objlist stage  \ default object list
+: -stage  stage vacate ;
+
+\ static objects
+: object   ( - ) here as object, me stage push init $fffffffe en ! ;
 
 \ Roles
 \ Note that role vars are global and not tied to any specific role.

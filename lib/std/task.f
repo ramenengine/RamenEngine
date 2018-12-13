@@ -13,7 +13,7 @@ redef on
     var rp <adr  60 cells field rs <skip
 redef off
 
-root object: main  \ proxy for the Forth data and return stacks
+create main object  \ proxy for the Forth data and return stacks
 
 : nxten  begin  me node.next @ as  me -exit  en @ until ;
 : pause

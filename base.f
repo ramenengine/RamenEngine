@@ -42,22 +42,26 @@ include ramen/draw.f    cr .( Loaded draw module... ) \ "
 redef off  \ from here on fields only defined if not previously defined
 
 : frmctr  frmctr 1p ;
-objlist stage  \ default object list
 used @ value baseline
-: -stage  stage vacate ;
 
 [undefined] LIGHTWEIGHT [if]
     include ramen/default.f
 [THEN]
 
 : empty
-    cr ." Empty!"
+    ." [Empty]" cr
     -stage -assets baseline used ! default-step empty
     only forth definitions
+;
+
+: gild
+    used @ to baseline     
+    only forth definitions
+    s" marker (empty)" evaluate 
 ;
 
 create ldr 64 allot
 : rld  ldr count included ;
 : ld   bl parse ldr place  s" .f" ldr append  rld ;
 
-only forth definitions marker (empty)
+gild

@@ -19,17 +19,19 @@ struct %array2d
 : array2d-head,  ( cols rows - )
     udup  2pfloor 2,  cells ,  here cell+ , ;
 
-decimal
 \ by default the data field is set to the adjacent dictionary space
 : array2d,  ( numcols numrows - )
-    2dup  array2d-head,  2i * cells /allot ;
+    2dup  array2d-head,  * cells /allot ;
 
 : array2d:  ( numcols numrows - <name> )
     create array2d, ;
 
+: /array2d  ( numcols numrows pitch data array2d -- )
+    4! ;
+
+
 : count2d ( array2d - data #cells )
-    dup array2d.data @ swap array2d.cols 2@ 2i * ;
-fixed
+    dup array2d.data @ swap array2d.cols 2@ * ;
 
 : dims  ( array2d - numcols numrows )
     array2d.cols 2@ ;

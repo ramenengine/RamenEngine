@@ -122,7 +122,7 @@ create ide-personality
 \ : ?errormsg  errormsg ; 
 \ ' ?errormsg is .catch
 : obey     store  echo  ['] interp catch ?.catch  0 cmdbuf ! ;
-: (rld)  ." Reload! " s" rld" evaluate ;
+: (rld)  ." Reloading... " s" rld" evaluate ;
 
 \ --------------------------------------------------------------------------------------------------
 \ Input handling
