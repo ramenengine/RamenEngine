@@ -39,6 +39,9 @@ previous
 : *struct  ( struct - adr )
     here swap sizeof /allot ;
 
+: struct,  ( struct - )
+    *struct drop ;
+
 : is>  ( - <code> )  ( adr size - )
     r> code> lastbody field.inspector ! ;
 
