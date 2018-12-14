@@ -8,7 +8,5 @@ nativewh canvas: canv
 : upscaled  ( xt - bmp )  >code  (size)  (upscale)  canv >bmp ;
 : upscale   ( xt - )  upscaled mount blit ;
 : upscale>  ( - <code> )  r> code> upscale ;
-: subscreen  ( xt w h - )
-    res 2@ 2>r 2i res 2!   upscaled   2r> res 2!  mount blit ;
-: subscreen>  ( w h - )
-    r> code> -rot subscreen ;
+: subscreen  ( xt w h - ) res 2@ 2>r 2i res 2! upscaled 2r> res 2! mount blit ;
+: subscreen>  ( w h - )  r> code> -rot subscreen ;
