@@ -13,7 +13,7 @@ redef on
     var rp <adr  60 cells field rs <skip
 redef off
 
-create main object  \ proxy for the Forth data and return stacks
+create main object,  \ proxy for the Forth data and return stacks
 
 : nxten  begin  me node.next @ as  me -exit  en @ until ;
 : pause
@@ -22,7 +22,7 @@ create main object  \ proxy for the Forth data and return stacks
     sp@ sp !
     rp@ rp !
     \ look for next task.  rp=0 means no task.  end of list = jump to main task and resume that
-    begin  nxten  me if  rp @  else  main as  true  then  until
+    begin  nxten  me if  rp @  else  main dup as  then  until
     \ restore state
     rp @ rp!
     sp @ sp!
@@ -36,11 +36,11 @@ create main object  \ proxy for the Forth data and return stacks
 \ NOTE: you don't have to consume the parameter, and as a bonus, you can leave as much as you want
 \ on the stack.
 
-create queue 1000 *stack drop
+create queue 1000 stack,
 : later  ( val xt - )  swap queue push queue push ;
 : arbitrate
     {
-        queue length for  sp@  i queue []@  swap >r  2@ execute  r> sp!  2 cells +loop
+        queue length for  sp@  i 2 * queue []  swap >r  2@ execute  r> sp!  loop
         queue vacate
     } ;
 
@@ -73,7 +73,7 @@ fixed
 : multi  ( objlist - )
     dup length 0= if drop exit then
     {
-        >first main 's node.next !
+        >first main node.next !
         dup
         sp@ main 's sp !
         rp@ main 's rp !
