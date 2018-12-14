@@ -2,7 +2,6 @@
 
 ide-loaded on
 
-variable repl   \ <>0 = repl active/visible
 s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
 : keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
@@ -208,8 +207,6 @@ create ide-personality
     output @ onto> noop  \ fixes the lag bug...  why though?
 ;
 
-
-
 \ --------------------------------------------------------------------------------------------------
 \ bring it all together
 
@@ -228,7 +225,7 @@ create ide-personality
 
 only forth definitions also ideing
 : ide-system  idekeys ;
-: ide-overlay  repl? -exit  0 0 at  unmount  shade  .output  bottom at  .cmdline ;
+: ide-overlay  0 0 at  unmount  shade  .output  repl @ if bottom at .cmdline then ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 /ide  rasa
 : -ide  close-personality  HWND btf ;
