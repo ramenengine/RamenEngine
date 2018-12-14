@@ -100,12 +100,6 @@ defaults >{
 : ;anim  ( loopaddr - )  here -  $deadbeef ,  , ;
 : range,  ( start len - ) bounds do i , loop ;
 
-\ +anim:  animation table helper
-\ frames  Helper for doing unnamed images + region tables
-
-: +anim:  ( stack - stack loopaddr )     here over push here ;
-: frames:  ( str c - regiontable image )  image  here  swap ;
-
 \ flipped frame utilities
 : h,  #1 or , ;
 : v,  #2 or , ;
