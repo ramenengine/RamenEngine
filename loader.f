@@ -9,6 +9,8 @@ include ramen/ramen.f
 fs on
 ide
 include ramen/stdpack.f
+include ramen/lib/upscale.f
+:now show> ramenbg upscale> stage draws ;
 gild
 
 ld main

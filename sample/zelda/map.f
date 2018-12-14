@@ -38,7 +38,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 \ : shiftwait  begin pause scrshift @ 0= until
 \     x @ 1 + dup 8 mod - x !  y @ 1 + dup 8 mod - y !  idle ;
 \ : scroll  fakeload  godir  shiftwait ;
-: ?edge ;
+
 \     dirkeys? -exit
 \     x @ camx @ -  0 <=  left? and             if  0 scroll  then
 \     x @ camx @ -  320 mbw @ -  >=  right? and if  1 scroll  then

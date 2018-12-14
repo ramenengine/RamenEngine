@@ -17,27 +17,39 @@ defrole link-role
 var olddir
 \ rolevar walkanims
 var spd  
+var ctr
 action idle
 action walk  
 action start
-
-: walk_snap  8 spd @ / ;
-: ?face
-    dir @ olddir @ = ?exit
-    dir @ olddir !  dir @ 90 / cells link-walk-anims + @ execute ;
-: !walkv   dir @ spd @ vec vx 2! ;
-: ?walk    dirkeys? -exit  walk ;
-: ?turnstop  dirkeys? 0= if  idle  exit then  ?face !walkv ;
-: ?udlr4  dirkeysup? if  !dir  else  !pdir  then  ;
-: nearest  dup >r  2 / + dup  r> mod - ;
-: csnap  dup @ 8 nearest swap ! ;
-: snap  x csnap y csnap ;
-: 1pace  walk_snap for  pause  ?udlr4  loop  snap ;
+        
+\ todo: make the animation part dynamic, make this code reusable...
+: !face  dir @ olddir !  dir @ 90 / cells link-walk-anims + @ execute ; 
+: downward  270 dir ! !face ;
+: upward    90 dir !  !face ;
+: leftward  180 dir ! !face ;
+: rightward 0 dir !   !face ;
+: ?face  dir @ olddir @ = ?exit !face ;    
+: !walkv  dir @ spd @ vec vx 2! ;
+: snap
+    x @ 4 + dup 8 mod - x !
+    y @ 4 + dup 8 mod - y !
+;
+: turn    lastkeydir @ dir ! !walkv ?face ;
+: ?180    pkeydir dir @ - abs 180 = if turn then ;
+: ?walk   dirkeys? -exit  ?180 walk ;
+: ?stop   dirkeys? ?exit  idle ; 
+: ?edge ; 
+: ?turn
+    dirkeys? -exit lastkeydir @ dir @ = ?exit
+    near-grid? if snap turn ;then
+;
 
 link-role :to walk
-    0.15 anmspd !  !walkv  ?face
-    0 perform>  begin  ?edge  1pace  ?turnstop  again ;
-link-role :to idle   -vel ?face 0 anmspd ! 0 perform> begin !dir ?walk pause again ;
-link-role :to start  -9999 olddir !  270 dir !  idle ;
+    0.15 anmspd !
+        0 perform> !walkv begin ?stop ?edge ?180 ?turn pause again ;
+link-role :to idle
+    -vel 0 anmspd !
+    0 perform> begin ?walk pause again ;
+link-role :to start  -9999 olddir ! downward idle  act> !dirkey ;
 
-: /link  link as  link.ts img ! /sprite  link-role role !  1.5 spd !  start ;
+: /link  link as  link.ts img ! /sprite  link-role role !  1.25 spd !  start ;
