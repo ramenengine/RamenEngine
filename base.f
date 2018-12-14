@@ -50,7 +50,7 @@ used @ value baseline
 
 : empty
     ." [Empty]" cr
-    -stage -assets baseline used ! default-step empty
+    -stage -assets baseline used ! s" default-step" evaluate empty
     only forth definitions
 ;
 

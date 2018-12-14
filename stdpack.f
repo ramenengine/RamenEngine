@@ -12,6 +12,6 @@ depend ramen/lib/std/sprites.f     cr .( Loaded sprites module. ) \ "
 depend ramen/lib/std/tilemap.f     cr .( Loaded tilemap module. ) \ "
 depend ramen/lib/tiled/tiled.f     cr .( Loaded Tiled support. ) \ "
 
-: think  stage dup acts multi ;
-: physics  stage each> as vx 2@ x 2+! ;
-:now  step> think physics ;
+:slang think  stage dup acts multi ;
+:slang physics  stage each> as vx 2@ x 2+! ;
+: default-step  step> think physics ;
