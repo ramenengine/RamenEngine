@@ -61,11 +61,11 @@ create root  object,                    \ catch-all destination
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;
 : >parent  ( node - node|0 ) node.parent @ ;
-: init  ( - ) at@ x 2!  defaults 's en en [ maxsize /objhead - ]# move ;
-: one ( parent - me=obj ) new-node as init me swap push ;
+: init  ( - ) defaults 's en en [ maxsize /objhead - ]# move ;
+: one ( parent - me=obj ) new-node as init me swap push at@ x 2! ;
 : objects  ( parent n - ) for dup one loop drop ;
 : ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
-:noname pool length 0= if here object, else pool pop then ; is new-node
+:noname  pool length 0= if here object, else pool pop then ; is new-node
 :noname dup ?remove >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
 : dismiss ( obj - ) free-node ;
 
