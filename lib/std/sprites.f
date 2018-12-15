@@ -70,8 +70,7 @@ defaults >{
 : nsprite  ( n - )   \ note: IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
     ?regorg >region curflip sprite ;
 
-\ Draw + animate
-: animate  ( - )
+: animate  ( - )  \ Advance the animation
     frmptr @ -exit anmspd @ -exit
     anmspd @ anmctr +!
     \ looping
@@ -92,9 +91,9 @@ defaults >{
     
 \ Define self-playing animations
 \ anim:  create self-playing animation
-: anim:  ( regiontable|0 image speed - loopaddr )  ( - )  
-    create  3,  here
-        does>  @+ rgntbl ! @+ img ! @+ anmspd !  portray ;
+: anim:  create  3,  here ;
+: autoanim:  ( regiontable|0 image speed - loopaddr )  ( - )  
+    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  portray ;
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr - )  here -  $deadbeef ,  , ;
