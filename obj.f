@@ -83,7 +83,7 @@ create root  object,                    \ catch-all destination
 
 \ stage
 objlist stage  \ default object list
-: -stage  stage vacate ;
+: -stage  stage vacate  pool vacate ;
 
 \ static objects
 : object   ( - ) here as object, me stage push init $fffffffe en ! ;
