@@ -91,7 +91,7 @@ create args 8 stack,
 : fetcheach  each> noop ;
 
 : (dispatch)  ( event c xt - event c )
-    2dup 2>r { execute } 2r> ;
+    -rot 2dup 2>r rot { execute } 2r> ;
 
 : occur ( ... #params event c - )
     2>r args vacate args pushes 2r> ['] (dispatch) listeners each 2drop ;
