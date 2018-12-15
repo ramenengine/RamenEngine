@@ -1,16 +1,28 @@
 ( Data )
 16 16 s" link-tiles-sheet.png" >data tileset: link.ts
 
-0 link.ts 1 6 / autoanim: link-anim-walku 2 , 2 h, ;anim
-0 link.ts 1 6 / autoanim: link-anim-walkd 0 , 1 , ;anim
-0 link.ts 1 6 / autoanim: link-anim-walkl 3 h, 4 h, ;anim
-0 link.ts 1 6 / autoanim: link-anim-walkr 3 , 4 , ;anim
+0 link.ts 1 6 / autoanim: anim-link-walku 2 , 2 h, ;anim
+0 link.ts 1 6 / autoanim: anim-link-walkd 0 , 1 , ;anim
+0 link.ts 1 6 / autoanim: anim-link-walkl 3 h, 4 h, ;anim
+0 link.ts 1 6 / autoanim: anim-link-walkr 3 , 4 , ;anim
 
-create link-walk-anims
-    ' link-anim-walkr ,
-    ' link-anim-walku ,
-    ' link-anim-walkl ,
-    ' link-anim-walkd ,
+create evoke-link-walk dir-anim-table 
+    ' anim-link-walkr ,
+    ' anim-link-walku ,
+    ' anim-link-walkl ,
+    ' anim-link-walkd ,
+
+0 link.ts 0 autoanim: anim-link-swingu 10 , ;anim
+0 link.ts 0 autoanim: anim-link-swingd 9 , ;anim
+0 link.ts 0 autoanim: anim-link-swingl 11 h, ;anim
+0 link.ts 0 autoanim: anim-link-swingr 11 , ;anim
+
+create evoke-link-swing dir-anim-table 
+    ' anim-link-swingr ,
+    ' anim-link-swingu ,
+    ' anim-link-swingl ,
+    ' anim-link-swingd ,
+
 
 ( Logic )
 defrole link-role
@@ -20,9 +32,10 @@ var ctr
 action idle
 action walk  
 action start
+action attack
         
-\ todo: make the animation part dynamic, make this code reusable...
-: !face  dir @ olddir !  dir @ 90 / cells link-walk-anims + @ execute ; 
+\ todo: make the animation part dynamic, make this code reusable... 
+: !face  dir @ olddir !  evoke-link-walk ; 
 : downward  270 dir ! !face ;
 : upward    90 dir !  !face ;
 : leftward  180 dir ! !face ;
@@ -36,20 +49,28 @@ action start
 : ?stop   dirkeys? ?exit  idle ; 
 : ?edge
     x 2@  0 64 8 + 256 236 16 8 2- inside? ?exit
-    0 s" player-left-room-event" occur
+    0 s" player-left-room" occur
 ;
-
 : ?turn
     dirkeys? -exit lastkeydir @ dir @ = ?exit
     near-grid? if snap turn ;then
 ;
+: ?attack
+    <z> pressed -exit
+    -vel
+    evoke-link-swing
+    0 s" player-swung-sword" occur
+    13 pauses
+    idle
+;
+
 
 link-role :to walk ( - )
     0.15 anmspd !  !walkv ?edge ?turn
-    0 perform> begin ?stop ?edge ?180 pause ?turn again ;
+    0 perform> begin ?attack ?stop ?edge ?180 pause ?turn again ;
 link-role :to idle ( - )
-    -vel 0 anmspd !
-    0 perform> begin ?walk pause again ;
+    !face -vel 0 anmspd ! ?walk 
+    0 perform> begin ?attack ?walk pause again ;
 link-role :to start ( - )
     1.25 spd !  -9999 olddir ! downward idle  act> !dirkey ;
 

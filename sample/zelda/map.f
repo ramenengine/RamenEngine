@@ -1,19 +1,24 @@
-: world create array2d-head, does> to ^map ;
+
 
 create roombuf %array2d struct,
     16  16  tilebuf pitch@  0 0 tilebuf loc  roombuf /array2d
 
+( load the Tiled data )
 s" overworld-rooms.tmx" >data open-map
-s" testrooms1" find-tmxlayer tilebuf  0 16 load-tmxlayer  \ load below the buffer
-s" overworld-tiles.tsx" find-tileset# load-tileset
+    s" testrooms1" find-tmxlayer tilebuf  0 16 load-tmxlayer  \ load below the room buffer
+    s" overworld-tiles.tsx" find-tileset# load-tileset
 
-( load a room )
+( loading a room )
 : roomloc  #cols /mod #cols #rows 2* 16 + ;
 : room  ( n - )
     roomloc tilebuf adr-pitch
     0 4 roombuf adr-pitch
     #cols cells #rows 2move  ;
 0 room
+
+
+( world )
+: world create array2d-head, does> to ^map ;
 
 
 ( overworld map data )
@@ -36,7 +41,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 
 
 :listen
-    s" player-left-room-event" occured if
+    s" player-left-room" occured if
         x @ 0 <= if gw 256 16 - x ! ;then
         x @ 256 16 - >= if ge 0 x ! ;then
         y @ 64 16 + <= if gn 256 16 - y ! ;then

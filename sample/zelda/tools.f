@@ -57,6 +57,9 @@ var dir \ angle
     x @ 4 + 8 mod 4 - abs 2 < 
     y @ 4 + 8 mod 4 - abs 2 <  and
 ;
+: dir-anim-table  ( - )
+    does> dir @ 90 / cells + @ execute ;
+
 
 ( collision tools )
 : cbox  x 2@ mbw 2@ area 1 1 2- ;
