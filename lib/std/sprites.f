@@ -87,13 +87,13 @@ defaults >{
     frame@ nsprite animate ;
 
 \ Play an animation from the beginning
-: portray  ( anim - )  frmptr !  0 anmctr ! ;
+: evoke  ( anim - )  frmptr !  0 anmctr ! ;
     
 \ Define self-playing animations
 \ anim:  create self-playing animation
 : anim:  create  3,  here ;
 : autoanim:  ( regiontable|0 image speed - loopaddr )  ( - )  
-    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  portray ;
+    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  evoke ;
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr - )  here -  $deadbeef ,  , ;
