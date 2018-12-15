@@ -143,8 +143,10 @@ create ide-personality
         keycode #37 < ?exit
         keycode case
             <tab> of  repl toggle  endof
+            <f2> of  wipe  endof
         endcase
     then
+
 
     \ only when REPL? is true:
     repl? -exit
@@ -189,9 +191,14 @@ create ide-personality
 : +blinker repl? -exit  frmctr 16 and -exit  s[ [char] _ c+s ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      outputw  displayh bm -  dblue  fill ;
-: ?trans   repl? if 1 alpha else 0.4 alpha then ;
-: ?shad    repl? if 0.9 alpha else 0.4 alpha then ;
-: .output  2 2 +at  black ?shad  outbmp tblit  -2 -2 +at  white ?trans  outbmp tblit ;
+: ?trans   repl? if 1 alpha else 0.8 alpha then ;
+: ?shad    repl? if 1 alpha else 0.25 alpha then ;
+: .output
+    2 2 +at  black ?shad  outbmp tblit
+    -4 -4 +at  black ?shad  outbmp tblit
+    4 0 +at  black ?shad  outbmp tblit
+    -4 4 +at  black ?shad  outbmp tblit
+    2 -2 +at  white ?trans  outbmp tblit ;
 : bottom   lm bm ;
 : .cmdline
     bar  
@@ -225,7 +232,7 @@ create ide-personality
 
 only forth definitions also ideing
 : ide-system  idekeys ;
-: ide-overlay  0 0 at  unmount  shade  .output  repl @ if bottom at .cmdline then ;
+: ide-overlay  0 0 at  unmount  repl @ if shade then  .output  repl @ if bottom at .cmdline then ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 /ide  rasa
 : -ide  close-personality  HWND btf ;
