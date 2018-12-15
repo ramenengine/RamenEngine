@@ -2,8 +2,8 @@
 variable lastkeydir
 
 ( misc )
-: ztype zcount type ;
 : /sprite  draw> at@ 2pfloor at sprite+ ;
+: ztype zcount type ;
 : situated  's x 2@ 2+ x 2! ;
 : -vel    0 0 vx 2! ;
 : left?   <left> kstate ;
@@ -53,10 +53,9 @@ var dir \ angle
     y @ dup vy @ + 8 8 2/ 2i <>
     or  
 ;
-var spd
 : near-grid?
-    x @ 4 + 8 mod 4 - abs 3 < 
-    y @ 4 + 8 mod 4 - abs 3 <  and
+    x @ 4 + 8 mod 4 - abs 2 < 
+    y @ 4 + 8 mod 4 - abs 2 <  and
 ;
 
 ( collision tools )
@@ -64,3 +63,20 @@ var spd
 0 value you
 : with  me to you ;
 : hit?  me you = if 0 exit then   cbox you >{ cbox } overlap? ;
+
+
+( extend loop )
+var 'physics  \ code
+: physics>  r> 'physics ! ;
+: ?physics  'physics @ ?dup if >r then ;
+:slang think  ( - ) stage acts stage multi ;
+:slang physics ( - ) stage each> as ?physics vx 2@ x 2+! ;
+: default-step ( - ) step> think physics ;
+default-step
+
+
+( tilemap collision stuff )
+create tileprops  s" sample/zelda/data/tileprops.dat" file,
+:is tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
+:is on-tilemap-collide  onhitmap @ >r ; 
+: /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;

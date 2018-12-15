@@ -5,9 +5,10 @@ include sample/zelda/tools.f
 include sample/zelda/map.f
 include sample/zelda/link.f
 
-: /bg   bg as /tilemap 256 172 w 2! w 2@ 0 64 320 172 center x 2! ;
+( overworld scene! )
+: /bg   bg as /tilemap 256 256 w 2! ;
 : /cam  cam as act> x 2@ bg 's scrollx 2! ;
-: /hud  hud as 0 -64 bg situated draw> black 256 64 rectf ;
+: /hud  hud as bg 's x @ 0 x 2! draw> black 256 64 rectf ;
 
 : urhere  at@ x 2@ coords 2@ 4 4 2* 2+ at 5 5 rectf at ;
 : mapgrid
