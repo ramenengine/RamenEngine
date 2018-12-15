@@ -80,3 +80,21 @@ create tileprops  s" sample/zelda/data/tileprops.dat" file,
 :is tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
 :is on-tilemap-collide  onhitmap @ >r ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
+
+( event system - note this version is not re-entrant. )
+create listeners 100 stack,
+create args 8 stack,
+
+: :listen  ( - <code> ; ) ( me=source event c - )
+    :noname listeners push ; 
+
+: fetcheach  each> noop ;
+
+: (dispatch)  ( event c xt - event c )
+    2dup 2>r { execute } 2r> ;
+
+: occur ( ... #params event c - )
+    2>r args vacate args pushes 2r> ['] (dispatch) listeners each 2drop ;
+
+: occured  ( event c event c - ... true | false )
+    compare 0= if args fetcheach true else 0 then ;

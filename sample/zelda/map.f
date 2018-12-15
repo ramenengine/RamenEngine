@@ -34,6 +34,16 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 : ge  coords 2@ 1 0 2+ warp ;
 : gw  coords 2@ -1 0 2+ warp ;
 
+
+:listen
+    s" player-left-room-event" occured if
+        x @ 0 <= if gw 256 16 - x ! ;then
+        x @ 256 16 - >= if ge 0 x ! ;then
+        y @ 64 16 + <= if gn 256 16 - y ! ;then
+        y @ 256 16 - >= if gs 64 16 + y ! ;then
+    then
+;
+
 \ old scrolling code::::
 
 \ : fakeload   -vel  0 anmspd @!  15 pauses  anmspd ! ;

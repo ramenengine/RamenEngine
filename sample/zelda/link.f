@@ -27,14 +27,18 @@ action start
 : upward    90 dir !  !face ;
 : leftward  180 dir ! !face ;
 : rightward 0 dir !   !face ;
-: ?face  dir @ olddir @ = ?exit !face ;    
+: ?face   dir @ olddir @ = ?exit !face ;    
 : !walkv  dir @ spd @ vec vx 2! ;
 : snap    x 2@ 4 4 2+ 2dup 8 8 2mod 2- x 2! ;
 : turn    lastkeydir @ dir ! !walkv ?face ;
 : ?180    pkeydir dir @ - abs 180 = if turn then ;
 : ?walk   dirkeys? -exit  ?180 walk ;
 : ?stop   dirkeys? ?exit  idle ; 
-: ?edge   ; 
+: ?edge
+    x 2@  0 64 8 + 256 236 16 8 2- inside? ?exit
+    0 s" player-left-room-event" occur
+;
+
 : ?turn
     dirkeys? -exit lastkeydir @ dir @ = ?exit
     near-grid? if snap turn ;then
@@ -42,7 +46,7 @@ action start
 
 link-role :to walk ( - )
     0.15 anmspd !  !walkv ?edge ?turn
-    0 perform> begin ?stop ?edge ?180 ?turn pause again ;
+    0 perform> begin ?stop ?edge ?180 pause ?turn again ;
 link-role :to idle ( - )
     -vel 0 anmspd !
     0 perform> begin ?walk pause again ;

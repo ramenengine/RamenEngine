@@ -24,5 +24,5 @@ include sample/zelda/link.f
 
 /bg /cam /hud /minimap /link
 
-link as 128 128 x 2!
+link as 64 80 x 2!
 
