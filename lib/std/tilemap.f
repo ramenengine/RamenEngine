@@ -9,7 +9,6 @@ depend ramen/lib/stride2d.f
 create tiles #MAXTILES array,
 0 value tba  \ tileset base address
 [undefined] tilebuf [if] 1024 1024 buffer2d: tilebuf [then]
-defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
 
 \ tilemap vars
 var scrollx  var scrolly  \ used to define starting column and row!
@@ -45,7 +44,7 @@ var onhitmap              \ XT ( tile - )
 \  clip rectangle of the current destination bitmap.
 
 \  The tilemap is arranged in 32-bit cells, here's the format:
-\  00vh 0000 0000 0000 tttt tttt tttt tt00  ( t=tile # 0-16383, v=vflip, h=hflip)
+\  00vh 00tt tttt tttt tttt 0000 0000 0000  ( t=tile # 0-16383, v=vflip, h=hflip)
 
 \  TILEMAP draws within the clip rectangle + (1,1) pixels
 
@@ -57,6 +56,9 @@ var onhitmap              \ XT ( tile - )
     tiles [] to tba ;
 
 0 tilebase!
+
+: >gid  ( tile - gid )
+    $003fff000 and ;
 
 decimal \ for speed
 : tile>bmp  ( tiledata - bitmap )  $03fff000 and #10 >> tba + @ ;
@@ -114,17 +116,13 @@ create tstep 16 , 16 ,
         tbi @ tilebase!
         scrollx 2@  tstep 2@ scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
-: map@  ( col row - tile )  tilebuf loc @ ;
-
-: >gid  ( tile - gid )  $003fff000 and ;
-
 \ Tilemap collision
 include ramen/lib/tiled/collision.f
 
-: onhitmap>  ( - <code> ) r> code> onhitmap ! ;  ( tilecell - )
+: onhitmap>  ( - <code> )  ( tilecell - )
+    r> onhitmap ! ;  
 
-: ?'drop  ?dup ?exit  ['] drop ;
-
-: collide-objects-map  ( objlist tilesize - )
-    locals| tilesize |
-    each>   onhitmap @ ?'drop is map-collide  tilesize  collide-map ;
+\ : ?'drop  ?dup ?exit  ['] drop ;
+\ : collide-objects-map  ( objlist tilesize - )
+\     locals| tilesize |
+\     each>   onhitmap @ ?'drop is map-collide  tilesize  collide-tilemap ;
