@@ -2,7 +2,7 @@
 
 Ramen is a 2D game engine written in standard Forth.
 
-[Documentation](https://rogerlevy.gitbook.io/ramen/v/docs/)
+[Documentation](https://rogerlevy.gitbook.io/ramen)
 
 ## Features
 
