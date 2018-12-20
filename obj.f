@@ -48,6 +48,7 @@ used @ constant /objhead
 var en <flag  var hidden <flag  
 var x  var y  var vx  var vy
 var drw <adr  var beha <adr
+var marked \ for deletion
 
 : object,  ( - ) /object allotment /node ;
 
@@ -67,14 +68,16 @@ create root  object,                    \ catch-all destination
 : ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
 :noname  pool length 0= if here object, else pool pop then ; is new-node
 :noname dup ?remove >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
-: dismiss ( obj - ) free-node ;
+: dismiss ( obj - ) >{ marked on } ;
 
 \ making stuff move and displaying them
 : ?call  ( adr - ) ?dup -exit call ;
 : draw   ( - ) en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
 : draws  ( objlist ) each> as draw ;
 : act   ( - ) en @ -exit  beha @ ?call ;
-: acts  ( objlist ) each> as act ;
+: (acts) ( - ) each> as act ;
+: cleanup ( objlist ) each> as marked @ -exit me free-node ;
+: acts  ( objlist ) dup (acts) cleanup ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
 : away  ( obj x y - ) rot 's x 2@ 2+ at ;
