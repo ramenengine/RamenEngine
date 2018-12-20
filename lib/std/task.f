@@ -44,15 +44,15 @@ create queue 1000 stack,
         queue vacate
     } ;
 
-0 value caught
 : self?     sp@ ds >=  sp@ rs <= and ;
 : (halt)    begin pause again ;
 
 decimal
     : perform> ( n - <code> )
+        \ self? if ds 27 cells + sp!  r>  rs 58 cells + rp!  >r noop exit then
         ds 28 cells + !  ds 27 cells + sp !  r> rs 58 cells + !  rs 58 cells + rp !
         ['] (halt) >code rs 59 cells + !
-        self? if pause then
+\        self? if pause then
     ;
     : perform  ( xt n obj - )
         >{
