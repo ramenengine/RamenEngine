@@ -67,8 +67,8 @@ create root  object,                    \ catch-all destination
 : objects  ( parent n - ) for dup one loop drop ;
 : ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
 :noname  pool length 0= if here object, else pool pop then ; is new-node
-:noname dup ?remove >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
-: dismiss ( obj - ) >{ marked on } ;
+:noname  >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
+: dismiss ( obj - ) 's marked on ;
 
 \ making stuff move and displaying them
 : ?call  ( adr - ) ?dup -exit call ;
@@ -76,7 +76,7 @@ create root  object,                    \ catch-all destination
 : draws  ( objlist ) each> as draw ;
 : act   ( - ) en @ -exit  beha @ ?call ;
 : (acts) ( - ) each> as act ;
-: cleanup ( objlist ) each> as marked @ -exit me free-node ;
+: cleanup ( objlist ) each> as marked @ -exit marked off me free-node ;
 : acts  ( objlist ) dup (acts) cleanup ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
