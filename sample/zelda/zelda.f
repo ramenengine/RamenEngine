@@ -25,19 +25,21 @@ include sample/zelda/link.f
 
 /bg /cam /hud /minimap /link
 
-\ curtain open effect
-variable #frames
-: curtain
-    0 64 at  128 #frames @ 2 * - 0 max 256  black rectf
-    128 #frames @ 2 * + 0 at   128 256  black rectf
-    1 #frames +!
+link as 192 128 x 2!
+
+curtain-open
+
+create tempx 0 , 0 ,
+:listen
+    s" player-entered-cave" occurred if
+        link >{ 
+        x 2@ tempx 2!  
+        ( x y ) x 2! } 
+        in-cave on
+    ;then
+    s" player-exited-cave" occurred if
+        tempx 2@ link 's x 2!
+        curtain-open
+        in-cave off 
+    ;then
 ;
-
-stage one
-:now draw> curtain #frames @ 64 >= if me dismiss then ;
-
-
-
-link as 64 80 x 2!
-
-

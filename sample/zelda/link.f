@@ -29,12 +29,14 @@ defrole link-role
 var olddir
 var spd  
 var ctr
+var trigged
 action idle
 action walk  
 action start
 action attack
         
 \ todo: make the animation part dynamic, make this code reusable... 
+
 : !face  dir @ olddir !  evoke-link-walk ; 
 : downward  270 dir ! !face ;
 : upward    90 dir !  !face ;
@@ -48,7 +50,7 @@ action attack
 : ?walk   dirkeys? -exit  ?180 walk ;
 : ?stop   dirkeys? ?exit  idle ; 
 : ?edge
-    x 2@  0 64 8 + 256 236 16 8 2- inside? ?exit
+    x 2@  -1 63 8 + 257 237 16 8 2- inside? ?exit
     0 s" player-left-room" occur
 ;
 : ?turn
@@ -63,7 +65,22 @@ action attack
     13 pauses
     idle
 ;
-
+: ?trig
+    x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2mod 4 <= swap 4 <= and if
+        x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2/ roombuf loc @ >gid 2 - >r
+        r@ 0 =
+        r@ 6 = or
+        r@ 12 = or
+        r@ 22 = or
+        r@ 28 = or
+        r> 34 = or if
+            trigged @ ?exit
+            trigged on  cave
+        else
+            trigged off
+        ;then
+    then
+;
 
 link-role :to walk ( - )
     0.15 anmspd !  !walkv ?edge ?turn
@@ -72,8 +89,18 @@ link-role :to idle ( - )
     !face -vel 0 anmspd ! ?walk 
     0 perform> begin ?attack ?walk pause again ;
 link-role :to start ( - )
-    1.25 spd !  -9999 olddir ! downward idle  act> !dirkey ;
+    hidden off  snap  1.3 spd !  -9999 olddir ! downward idle  act> !dirkey ?trig ;
 
 : /link
     link as  link.ts img !  /solid /sprite  link-role role !
     16 8 mbw 2!  0 8 cx 2! start ;
+    
+
+:listen
+    s" player-entered-cave" occurred if
+        ( x y ) 2drop link >{ upward idle }
+    ;then
+    s" player-exited-cave" occurred if
+        link >{ hidden on -vel ['] start 64 after }
+    ;then
+;

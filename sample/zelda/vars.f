@@ -9,5 +9,6 @@ create cam object
 create hud object
 create minimap object
 create link object
+variable in-cave
 
 : mc  link ;

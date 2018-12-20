@@ -48,6 +48,7 @@ action idle
 action walk
 action turn ( angle )
 var dir \ angle
+var (xt)
 : will-cross-grid?
     x @ dup vx @ + 8 8 2/ 2i <>
     y @ dup vy @ + 8 8 2/ 2i <>
@@ -59,7 +60,8 @@ var dir \ angle
 ;
 : dir-anim-table  ( - )
     does> dir @ 90 / cells + @ execute ;
-
+: live-for  perform> pauses me dismiss ;
+: after  swap (xt) ! perform> pauses (xt) @ execute pause ;
 
 ( collision tools )
 : cbox  x 2@ mbw 2@ area 1 1 2- ;
@@ -81,23 +83,33 @@ default-step
 ( tilemap collision stuff )
 create tileprops  s" sample/zelda/data/tileprops.dat" file,
 :is tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
-:is on-tilemap-collide  onhitmap @ >r ; 
+:is on-tilemap-collide  onhitmap @ ?dup if >r then ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
 
 ( event system - note this version is not re-entrant. )
 create listeners 100 stack,
 create args 8 stack,
 
-: :listen  ( - <code> ; ) ( me=source event c - )
+: :listen  ( - <code> ; ) ( me=source event c - event c )
     :noname listeners push ; 
 
 : fetcheach  each> noop ;
 
 : (dispatch)  ( event c xt - event c )
-    -rot 2dup 2>r rot { execute } 2r> ;
+    { execute } ;
+
+: args!  ( ... #params - )
+    dup >r reverse args vacate r> args pushes ;
 
 : occur ( ... #params event c - )
-    2>r args vacate args pushes 2r> ['] (dispatch) listeners each 2drop ;
+    2>r args! 2r> ['] (dispatch) listeners each 2drop ;
 
-: occured  ( event c event c - ... true | false )
-    compare 0= if args fetcheach true else 0 then ;
+: occurred  ( event c event c - event c ... true | event c false )
+    2over 2>r compare 0= if 2r> args fetcheach true else 2r> 0 then ;
+    
+( curtain open effect )
+: *curtain  stage one draw> 128 256 black rectf ;
+: curtain-open
+    0 64 at *curtain 64 live-for -2 vx !
+    128 64 at *curtain 64 live-for 2 vx !
+;

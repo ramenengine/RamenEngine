@@ -29,10 +29,8 @@ create evoke-sword dir-anim-table
     endcase ;
 : *sword  me 0 0 away dir @ stage one /sprite in-front evoke-sword ;
 
-: live-for  perform> pauses me dismiss ;
-
 :listen
-    s" player-swung-sword" occured if
+    s" player-swung-sword" occurred if
         *sword 10 live-for
     then
 ;
