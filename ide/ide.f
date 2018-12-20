@@ -129,10 +129,10 @@ create ide-personality
 : toggle  dup @ not swap ! ;
 
 : special  ( n - )
-  case
-    [char] v of  paste  endof
-    [char] c of  copy   endof
-  endcase ;
+    case
+        [char] v of  paste  endof
+        [char] c of  copy   endof
+    endcase ;
 
 : idekeys
     \ always:
@@ -144,6 +144,14 @@ create ide-personality
         keycode case
             <tab> of  repl toggle  endof
             <f2> of  wipe  endof
+            <f5> of
+                shift? if
+                    s" main.f" included
+                else
+                    [defined] rld [if] ['] (rld) catch ?.catch [then]
+                then
+            endof  
+            
         endcase
     then
 
@@ -165,7 +173,6 @@ create ide-personality
             <down> of  cancel  endof
             <enter> of  alt? ?exit  obey  endof
             <backspace> of  rub  endof
-            [defined] rld [if] <f5> of  ['] (rld) catch ?.catch  endof  [then]
         endcase
     then
 ;
@@ -174,15 +181,16 @@ create ide-personality
 \ Rendering
 : ?...  dup 16 > if dup 16 - else 0 then ;
 : .S2 ( ? - ? )
-  #3 attribute
-  ." ( " depth i. ." ) " 
-  DEPTH 0> IF DEPTH 1p ?... ?DO S0 @ I 1 + CELLS - @
-    base @ #16 = if h. else . then  LOOP THEN
-  DEPTH 0< ABORT" Underflow"
-  FDEPTH ?DUP IF
-    ."  F: "
-    0  DO  I' I - #1 - FPICK N.  #1 +LOOP
-  THEN ;
+    depth -exit
+    #3 attribute
+    ." ( " depth i. ." ) " 
+    DEPTH 0> IF DEPTH 1p ?... ?DO S0 @ I 1 + CELLS - @
+      base @ #16 = if h. else . then  LOOP THEN
+    DEPTH 0< ABORT" Underflow"
+    FDEPTH ?DUP IF
+      ."  F: "
+      0  DO  I' I - #1 - FPICK N.  #1 +LOOP
+    THEN ;
   
 : ?.errs
     showerr  if  ." SHOWERR "  then
@@ -201,13 +209,13 @@ create ide-personality
     2 -2 +at  white ?trans  outbmp tblit ;
 : bottom   lm bm ;
 : .cmdline
-    bar  
+    repl @ if bar then
     output @ >r  display output !
         get-xy 2>r
             at@ cursor xy!  scrolling off
-            ?.errs  .s2
+            ?.errs  .s2 
             0 peny @ fonth + at
-            .cmdbuf
+            repl @ if .cmdbuf then
             scrolling on
         2r> at-xy
     r> output !
@@ -232,7 +240,7 @@ create ide-personality
 
 only forth definitions also ideing
 : ide-system  idekeys ;
-: ide-overlay  0 0 at  unmount  repl @ if shade then  .output  repl @ if bottom at .cmdline then ;
+: ide-overlay  0 0 at  unmount  repl @ if shade then  .output  bottom at .cmdline ;
 : rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 /ide  rasa
 : -ide  close-personality  HWND btf ;
