@@ -49,6 +49,7 @@ action walk
 action turn ( angle )
 var dir \ angle
 var (xt)
+var target
 : will-cross-grid?
     x @ dup vx @ + 8 8 2/ 2i <>
     y @ dup vy @ + 8 8 2/ 2i <>
@@ -60,8 +61,10 @@ var (xt)
 ;
 : dir-anim-table  ( - )
     does> dir @ 90 / cells + @ execute ;
-: live-for  perform> pauses me dismiss ;
-: after  swap (xt) ! perform> pauses (xt) @ execute pause ;
+: live-for  perform> pauses end ;
+: *task  stage one ;
+: (after)  perform> pauses (xt) @ target @ >{ execute } end ;
+: after  me { *task rot (xt) ! target ! (after) } ;
 
 ( collision tools )
 : cbox  x 2@ mbw 2@ area 1 1 2- ;

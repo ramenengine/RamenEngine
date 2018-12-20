@@ -101,6 +101,6 @@ link-role :to start ( - )
         ( x y ) 2drop link >{ upward idle }
     ;then
     s" player-exited-cave" occurred if
-        link >{ hidden on -vel ['] start 64 after }
+        link >{ hidden on -vel -act ['] start 64 after }
     ;then
 ;
