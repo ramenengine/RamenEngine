@@ -19,7 +19,7 @@ basis :to die ( - ) end ;
 ;
 
 ( shoot shit at link )
-: /shit  draw> 2 2 +at rndcolor 4 circf ;
+: /shit  draw> 8 8 +at pixalign rndcolor 4 circf ;
 : (snipe)  act> in-playfield? not ?end ;
 : snipe  { me from spawn /shit p1 toward 1.5 dup 2* vx 2! (snipe) } ;
 

@@ -44,7 +44,7 @@ variable lastkeydir
 : (those)  ( objlist filter-xt code - filter-xt code )
     rot each> as over execute if dup >r then ;
 : those>  ( objlist filter-xt - <code> )  ( - )  \ note you can't pass anything to <code>
-    r> (those) 2drop ;
+    r> { (those) 2drop } ;
 : cleanup  stage ['] dynamic? those> dismiss ;
 
 
@@ -92,7 +92,7 @@ var attributes <hex
     attributes @ and 0= if 0 ;then
     me you = ?exit
     cbox you >{ cbox } overlap? ;
-: draw-cbox  cbox 2over 2- 2swap 2pfloor at red rect ;
+: draw-cbox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 : show-cboxes
     stage one
     draw> stage each> as draw-cbox ;
