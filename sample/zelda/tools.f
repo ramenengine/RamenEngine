@@ -41,9 +41,15 @@ variable lastkeydir
 \     at-xy ;
 \ previous
 : toward  ( obj - x y )  's x 2@ x 2@ 2- angle uvec ;
+: (those)  ( objlist filter-xt code - filter-xt code )
+    rot each> as over execute if dup >r then ;
+: those>  ( objlist filter-xt - <code> )  ( - )  \ note you can't pass anything to <code>
+    r> (those) 2drop ;
+: cleanup  stage ['] dynamic? those> dismiss ;
 
 
-( actor )
+( actors )
+objlist tasks
 action start ( - )
 action idle ( - )
 action walk ( - )
@@ -52,14 +58,15 @@ var dir \ angle
 var (xt) <adr
 var target <adr
 var clipx  var clipy
+var targetid
 
 : live-for  ( n - ) perform> pauses end ;
-: *task  stage one ;
+: ?waste  target @ 's id @ targetid @ <> ?end ;
+: *task  me tasks one dup target ! 's id @ targetid ! act> ?waste ;
 : (after)  perform> pauses (xt) @ target @ >{ execute } end ;
-: after  ( xt n - ) me { *task rot (xt) ! target ! (after) } ;
-: ?waste  target @ 's marked @ ?end ;
-: (every)  perform> begin dup pauses ?waste (xt) @ target @ >{ execute } again ;
-: every  ( xt n - ) me { *task rot (xt) ! target ! (every) } ;
+: after  ( xt n - ) { *task swap (xt) ! (after) } ;
+: (every)  perform> begin dup pauses (xt) @ target @ >{ execute } again ;
+: every  ( xt n - ) { *task swap (xt) ! (every) } ;
 : /sprite  draw> pixalign sprite+ ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
 
@@ -116,10 +123,10 @@ action evoke-direction  ( - )
 var 'physics  \ code
 : physics>  r> 'physics ! ;
 : ?physics  'physics @ ?dup if >r then ;
-:slang think  ( - ) stage acts stage multi ;
+:slang think  ( - ) stage acts tasks multi stage multi tasks acts ;
 :slang physics ( - ) stage each> as ?physics vx 2@ x 2+! ;
-: default-step ( - ) step> think physics ;
-default-step
+: zelda-step ( - ) step> think physics stage sweep ;
+zelda-step
 
 
 ( tilemap collision stuff )

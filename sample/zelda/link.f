@@ -63,9 +63,10 @@ link-role :to evoke-direction  evoke-link-walk ;
 
 ( cave stuff )
 : emerge
-    snap  downward  trigged on  -act  halt
+    snap  downward  trigged on  -act  
     /clipsprite  16 y +!  0 -0.25 vx 2!
-    ['] start 64 after 
+    ['] start 64 after
+    halt
 ;
 : descend
     x 2@ tempx 2!  

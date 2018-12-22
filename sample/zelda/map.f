@@ -1,5 +1,4 @@
 
-
 create roombuf %array2d struct,
     16  16  tilebuf pitch@  0 0 tilebuf loc  roombuf /array2d
 
@@ -11,6 +10,7 @@ s" overworld-rooms.tmx" >data open-map
 ( loading a room )
 : roomloc  #cols /mod #cols #rows 2* 32 + ;
 : room  ( i - )  \ expressed as $rc  r=row c=column
+    cleanup
     1p roomloc tilebuf adr-pitch
     0 4 roombuf adr-pitch
     #cols cells #rows 2move  ;

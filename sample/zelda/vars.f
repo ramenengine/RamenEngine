@@ -9,10 +9,9 @@ create cam object
 create hud object
 create minimap object
 create link object
+: p1  link ;
 variable in-cave
 create tempx 0 , 0 ,
 #1
 bit #weapon
 drop
-
-: p1  link ;

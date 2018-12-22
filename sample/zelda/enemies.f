@@ -29,5 +29,5 @@ basis :to die ( - ) end ;
 : *orb  spawn /orb -5 orbit act> ~weapons ;
 
 ( stone statue )
-: *statue  spawn /orb ['] snipe 360 every ;
+: *statue  spawn /orb ['] snipe 270 every ;
 
