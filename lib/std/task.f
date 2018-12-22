@@ -65,9 +65,9 @@ decimal
     ;
 fixed
 
-: halt   0 perform> begin pause again ;
-: end    me dismiss self? -exit pause ;
-: ?end   if end then ;
+: halt   self? not if 0 perform> then begin pause again ;
+: end    dismiss halt ;
+: ?end   -exit end ;
 
 \ pulse the multitasker.
 : multi  ( objlist - )
