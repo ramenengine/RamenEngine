@@ -3,10 +3,10 @@
 create default-font
     /assetheader /allot  al-default-font , 8 , 0 , \ note: not a registered asset
 
-defer cold  :is cold ;   \ cold boot: executed once at runtime
-defer warm  :is warm ;   \ warm boot: executed potentially multiple times 
+defer cold  :make cold ;   \ cold boot: executed once at runtime
+defer warm  :make warm ;   \ warm boot: executed potentially multiple times 
 
-\ :is alert
+\ :make alert
 \    zstring 
 
 : boot
@@ -26,7 +26,7 @@ defer warm  :is warm ;   \ warm boot: executed potentially multiple times
 
 [defined] program [if]
     
-    :is bye  0 ExitProcess ; 
+    :make bye  0 ExitProcess ; 
     
     : publish ( - <name> )
         cr ." Publishing to "  >in @  bl parse type >in !  ." .exe ... "

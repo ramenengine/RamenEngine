@@ -2,7 +2,7 @@
 \ - Render subimages or image regions
 \ - Define animation data and animate sprites
 
-defer animlooped ( - )  :is animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
+defer animlooped ( - )  :make animlooped ;  \ define this in your app to do stuff every time an animation ends/loops
 
 \ Region tables
 6 cells constant /region

@@ -24,7 +24,7 @@
 : 1v  1 1 rot 2! ;
 : 2rnd  ( x y - x y )  rnd swap rnd swap ;
 : vrnd  >r  2rnd  r> 2! ;
-: uvec  ( deg - x y )   >r  r@ cos  r> sin negate ;  \ get unit vector from angle
+: uvec  ( deg - x y )   >r  r@ cos  r> sin ;  \ get unit vector from angle
 : vec  ( deg len - x y )  >r  uvec  r> dup 2* ;
 : angle  ( x y - deg ) 1pf 1pf fatan2 r>d f>p  360 + 360 mod ;
 : magnitude  ( x y - n )  2pf fdup f* fswap fdup f* f+ fsqrt f>p ;

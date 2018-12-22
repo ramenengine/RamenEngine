@@ -27,7 +27,7 @@ create attributes
   1.0 , 0 , 0.5 ,     1 ,  \ 5 purple
 variable output   \ output bitmap
 0 value tempbmp
-:is repl?  repl @ ;
+:make repl?  repl @ ;
 0 value outbmp
 
 \ --------------------------------------------------------------------------------------------------

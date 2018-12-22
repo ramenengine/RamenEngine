@@ -31,4 +31,4 @@ create assets 1000 *stack drop
 \ ------------------------------------------------------------------------------
 \ Standard synchronous loader
 
-:is initdata  each> reload ;
+:make initdata  each> reload ;
