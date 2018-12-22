@@ -86,7 +86,7 @@ create root  object,                    \ catch-all destination
 
 \ stage
 objlist stage  \ default object list
-: -stage  stage vacate  pool %node venery-sizeof erase  pool /node ;
+: /stage  stage vacate  pool %node venery-sizeof erase  pool /node ;
 
 \ static objects
 : object   ( - ) here as object, me stage push init $fffffffe en ! ;
