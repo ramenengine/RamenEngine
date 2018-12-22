@@ -53,8 +53,6 @@ var (xt) <adr
 var target <adr
 var clipx  var clipy
 
-: dir-anim-table  ( - )
-    does> dir @ 90 / cells + @ execute ;
 : live-for  ( n - ) perform> pauses end ;
 : *task  stage one ;
 : (after)  perform> pauses (xt) @ target @ >{ execute } end ;
@@ -99,6 +97,18 @@ defer spawn  ( - )
 : from  as ihb xy@ me away ;
 
 \ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
+
+( actor directional stuff )
+var olddir
+action evoke-direction  ( - )
+: !face  ( - ) dir @ olddir !  evoke-direction ; 
+: downward  ( - ) 90 dir ! !face ;
+: upward    ( - ) 270 dir !  !face ;
+: leftward  ( - ) 180 dir ! !face ;
+: rightward ( - ) 0 dir !   !face ;
+: ?face     ( - ) dir @ olddir @ = ?exit !face ;    
+: dir-anim-table  ( - )
+    does> dir @ 90 / cells + @ execute ;
 
 
 

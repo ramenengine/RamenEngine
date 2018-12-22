@@ -18,7 +18,6 @@ create evoke-sword dir-anim-table
     ' anim-swordl ,
     ' anim-swordu ,
     
-    
 : in-front 
     dir @ case
         0 of 12 2 x 2+! endof

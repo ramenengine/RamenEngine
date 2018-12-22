@@ -26,7 +26,6 @@ create evoke-link-swing dir-anim-table
 
 ( Logic )
 defrole link-role
-var olddir
 var spd  
 var ctr
 var trigged
@@ -37,12 +36,8 @@ action attack
         
 \ todo: make the animation part dynamic, make this code reusable... 
 
-: !face  dir @ olddir !  evoke-link-walk ; 
-: downward  90 dir ! !face ;
-: upward    270 dir !  !face ;
-: leftward  180 dir ! !face ;
-: rightward 0 dir !   !face ;
-: ?face   dir @ olddir @ = ?exit !face ;    
+link-role :to evoke-direction  evoke-link-walk ;
+
 : !walkv  dir @ spd @ vec vx 2! ;
 : snap    x 2@ 4 4 2+ 2dup 8 8 2mod 2- x 2! ;
 : turn    lastkeydir @ dir ! !walkv ?face ;
