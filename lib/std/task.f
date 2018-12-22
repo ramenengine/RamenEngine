@@ -6,7 +6,7 @@
 \ The following words should never be used within a task:
 \  - External calls
 \  - Console output 
-\  (See below for a workaround mechanism)
+\  (See below for a workaround)
 
 redef on
     var sp <adr  30 cells field ds <skip

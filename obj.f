@@ -80,7 +80,7 @@ create root  object,                    \ catch-all destination
 : acts  ( objlist ) dup (acts) cleanup ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
-: away  ( obj x y - ) rot 's x 2@ 2+ at ;
+: away  ( x y obj - ) 's x 2@ 2+ at ;
 : -act  ( - ) act> noop ;
 : objlist  ( - <name> )  create here as object, init ;
 
@@ -94,12 +94,14 @@ objlist stage  \ default object list
 \ Roles
 \ Note that role vars are global and not tied to any specific role.
 var role <adr
+basis defaults 's role !
 : ?update  ( - <name> )  >in @  defined if  >body lastrole !  drop r> drop exit then  drop >in ! ; 
 : defrole  ( - <name> ) ?update  create  here lastrole !  basis /roledef move, ;
 : role@  ( - role ) role @ dup 0= abort" Error: Role is null." ;
-: create-rolevar  ( - <name> ) %role cell create-field $76543210 , ;
-: rolevar  ( - <name> ) 0 ?unique drop  create-rolevar  does> field.offset @ role@ + ;
-: action   ( - <name> ) 0 ?unique drop  create-rolevar <adr does> field.offset @ role@ + @ execute ;
+: create-rolefield  ( size - <name> ) %role swap create-field $76543210 , ;
+: rolefield  ( size - <name> ) ?unique create-rolefield  does> field.offset @ role@ + ;
+: rolevar  ( - <name> ) 0 ?unique drop  cell create-rolefield  does> field.offset @ role@ + ;
+: action   ( - <name> ) 0 ?unique drop  cell create-rolefield <adr does> field.offset @ role@ + @ execute ;
 : :to   ( roledef - <name> ... )  ' >body field.offset @ + :noname swap ! ;
 : +exec  + @ execute ;
 : ->  ( roledef - <action> )  ' >body field.offset @ postpone literal postpone +exec ; immediate
