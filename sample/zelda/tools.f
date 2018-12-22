@@ -20,14 +20,14 @@ variable lastkeydir
 : keydir ( -- n )  
     left? if 180 exit then
     right? if 0 exit then
-    up? if 90 exit then
-    down? if 270 exit then
+    up? if 270 exit then
+    down? if 90 exit then
     -1 ;
 : pkeydir ( -- n )  
     pleft? if 180 exit then
     pright? if 0 exit then
-    pup? if 90 exit then
-    pdown? if 270 exit then
+    pup? if 270 exit then
+    pdown? if 90 exit then
     -1 ;
 : !dirkey
     pdirkeys? if pkeydir lastkeydir ! exit then
@@ -40,12 +40,13 @@ variable lastkeydir
 \         0 0 at-xy .me
 \     at-xy ;
 \ previous
+: toward  ( obj - x y )  's x 2@ x 2@ 2- angle uvec ;
 
 
 ( actor )
-action start
-action idle
-action walk
+action start ( - )
+action idle ( - )
+action walk ( - )
 action turn ( angle )
 var dir \ angle
 var (xt) <adr
@@ -54,45 +55,50 @@ var clipx  var clipy
 
 : dir-anim-table  ( - )
     does> dir @ 90 / cells + @ execute ;
-: live-for  perform> pauses end ;
+: live-for  ( n - ) perform> pauses end ;
 : *task  stage one ;
 : (after)  perform> pauses (xt) @ target @ >{ execute } end ;
-: after  me { *task rot (xt) ! target ! (after) } ;
+: after  ( xt n - ) me { *task rot (xt) ! target ! (after) } ;
+: ?waste  target @ 's marked @ ?end ;
+: (every)  perform> begin dup pauses ?waste (xt) @ target @ >{ execute } again ;
+: every  ( xt n - ) me { *task rot (xt) ! target ! (every) } ;
 : /sprite  draw> pixalign sprite+ ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
 
-
 ( grid )
-: will-cross-grid?
+: will-cross-grid? ( - f )
     x @ dup vx @ + 8 8 2/ 2i <>
     y @ dup vy @ + 8 8 2/ 2i <>
     or  
 ;
-: near-grid?
+: near-grid? ( - f )
     x @ 4 + 8 mod 4 - abs 2 < 
     y @ 4 + 8 mod 4 - abs 2 <  and
 ;
 
-( collision tools )
+( actor collisions )
 var attributes <hex
 %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
 0 0 16 16 defaults 's ihb xywh!
 0 value you
-: cbox  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
-: with  me to you ;
+: cbox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
+: with  ( - ) me to you ;
 : hit?  ( bitmask - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     attributes @ and 0= if 0 ;then
     me you = ?exit
     cbox you >{ cbox } overlap? ;
-
-: spawn  ihb xy@ me away stage one ;
-
-
-
 : draw-cbox  cbox 2over 2- 2swap 2pfloor at red rect ;
 : show-cboxes
     stage one
     draw> stage each> as draw-cbox ;
+
+( actor spawning )
+defer spawn  ( - )
+: obj-spawn  dir @ stage one dir ! ; 
+' obj-spawn is spawn
+: from  as ihb xy@ me away ;
+
+\ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
 
 
 
@@ -108,8 +114,8 @@ default-step
 
 ( tilemap collision stuff )
 create tileprops  s" sample/zelda/data/tileprops.dat" file,
-:is tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
-:is on-tilemap-collide  onhitmap @ ?dup if >r then ; 
+:make tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
+:make on-tilemap-collide  onhitmap @ ?dup if >r then ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
 
 ( event system - note this version is not re-entrant. )

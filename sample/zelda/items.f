@@ -14,24 +14,25 @@ item-regions items.image 0 autoanim: anim-swordd 0 v, ;anim
 
 create evoke-sword dir-anim-table
     ' anim-swordr ,
-    ' anim-swordu ,
-    ' anim-swordl ,
     ' anim-swordd ,
+    ' anim-swordl ,
+    ' anim-swordu ,
     
     
 : in-front 
     dir @ case
         0 of 12 2 x 2+! endof
-        90 of 0 -12  x 2+! endof
+        270 of 0 -12  x 2+! endof
         180 of -12 2 x 2+! endof
-        270 of 0 12 x 2+! endof
+        90 of 0 12 x 2+! endof
     endcase ;
-   
-: *sword  dir @ spawn dir ! /sprite #weapon attributes ! in-front evoke-sword ;
-: retract  /clipsprite dir @ 180 + 6 vec vx 2! ;
 
+( sword )
+: *sword  spawn /sprite #weapon attributes ! in-front evoke-sword ;
+: retract  /clipsprite dir @ 180 + 6 vec vx 2! ;
 :listen
     s" player-swung-sword" occurred if
-        *sword ['] retract 10 after 11 live-for 
+        p1 from *sword ['] retract 10 after 11 live-for 
     then
 ;
+

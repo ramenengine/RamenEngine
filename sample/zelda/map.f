@@ -58,6 +58,8 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     then
 ;
 
+: in-playfield? ( - flag ) x 2@  -1 63 8 + 257 237 16 8 2- inside? ;
+
 \ old scrolling code::::
 
 \ : fakeload   -vel  0 anmspd @!  15 pauses  anmspd ! ;

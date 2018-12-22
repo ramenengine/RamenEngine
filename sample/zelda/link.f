@@ -8,9 +8,9 @@
 
 create evoke-link-walk dir-anim-table 
     ' anim-link-walkr ,
-    ' anim-link-walku ,
-    ' anim-link-walkl ,
     ' anim-link-walkd ,
+    ' anim-link-walkl ,
+    ' anim-link-walku ,
 
 0 link.ts 0 autoanim: anim-link-swingu 10 , ;anim
 0 link.ts 0 autoanim: anim-link-swingd 9 , ;anim
@@ -19,9 +19,9 @@ create evoke-link-walk dir-anim-table
 
 create evoke-link-swing dir-anim-table 
     ' anim-link-swingr ,
-    ' anim-link-swingu ,
-    ' anim-link-swingl ,
     ' anim-link-swingd ,
+    ' anim-link-swingl ,
+    ' anim-link-swingu ,
 
 
 ( Logic )
@@ -38,8 +38,8 @@ action attack
 \ todo: make the animation part dynamic, make this code reusable... 
 
 : !face  dir @ olddir !  evoke-link-walk ; 
-: downward  270 dir ! !face ;
-: upward    90 dir !  !face ;
+: downward  90 dir ! !face ;
+: upward    270 dir !  !face ;
 : leftward  180 dir ! !face ;
 : rightward 0 dir !   !face ;
 : ?face   dir @ olddir @ = ?exit !face ;    
@@ -50,7 +50,7 @@ action attack
 : ?walk   dirkeys? -exit  ?180 walk ;
 : ?stop   dirkeys? ?exit  idle ; 
 : ?edge
-    x 2@  -1 63 8 + 257 237 16 8 2- inside? ?exit
+    in-playfield? ?exit
     0 s" player-left-room" occur
 ;
 : ?turn

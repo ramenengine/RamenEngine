@@ -39,9 +39,13 @@ link as 192 128 x 2!  hidden on
 
 curtain-open
 
-' /link 64 after
+: adventure
+    /link
+    link from *orb
+    64 128 at *statue
+;
 
-show-cboxes
+' adventure 64 after
 
-link as
-*orb 
+\ show-cboxes
+
