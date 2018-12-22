@@ -65,6 +65,19 @@ action attack
     13 pauses
     idle
 ;
+
+( cave stuff )
+: emerge
+    snap  downward  trigged on  -act  halt
+    /clipsprite  16 y +!  0 -0.25 vx 2!
+    ['] start 64 after 
+;
+: descend
+    x 2@ tempx 2!  
+    snap  upward  -act halt /clipsprite  0 0.25 vx 2!
+    ['] start 64 after
+;
+    
 : ?trig
     x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2mod 4 <= swap 4 <= and if
         x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2/ roombuf loc @ >gid 2 - >r
@@ -75,7 +88,9 @@ action attack
         r@ 28 = or
         r> 34 = or if
             trigged @ ?exit
-            trigged on  cave
+            trigged on
+            descend
+            ['] cave 64 after
         else
             trigged off
         ;then
@@ -89,18 +104,24 @@ link-role :to idle ( - )
     !face -vel 0 anmspd ! ?walk 
     0 perform> begin ?attack ?walk pause again ;
 link-role :to start ( - )
-    hidden off  snap  1.3 spd !  -9999 olddir ! downward idle  act> !dirkey ?trig ;
+    /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
+    act> !dirkey ?trig ;
 
 : /link
-    link as  link.ts img !  /solid /sprite  link-role role !
-    16 8 mbw 2!  0 8 cx 2! start ;
-    
+    link as  link.ts img !  /solid  link-role role !
+    16 8 mbw 2!  0 8 cx 2!  start ;
 
 :listen
     s" player-entered-cave" occurred if
-        ( x y ) 2drop link >{ upward idle }
+        link >{
+            ( x y ) x 2!
+            upward idle
+        }
     ;then
     s" player-exited-cave" occurred if
-        link >{ hidden on -vel -act ['] start 64 after }
+        link >{
+            tempx 2@ x 2!
+            emerge
+        }
     ;then
 ;

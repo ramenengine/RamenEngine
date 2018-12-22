@@ -25,7 +25,6 @@ create evoke-sword dir-anim-table
         90 of 0 -20  x 2+! endof
         180 of -12 -6 x 2+! endof
         270 of 0 4 x 2+! endof
-        
     endcase ;
 : *sword  me 0 0 away dir @ stage one /sprite in-front evoke-sword ;
 

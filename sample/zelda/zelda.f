@@ -23,17 +23,11 @@ include sample/zelda/link.f
 ;
 : /minimap  minimap as 16 16 hud situated draw> red urhere mapgrid ;
 
-create tempx 0 , 0 ,
 :listen
     s" player-entered-cave" occurred if
-        link >{ 
-        x 2@ tempx 2!  
-        ( x y ) x 2! } 
         in-cave on
     ;then
     s" player-exited-cave" occurred if
-        tempx 2@ link 's x 2!
-        curtain-open
         in-cave off 
     ;then
 ;

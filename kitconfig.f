@@ -1,7 +1,7 @@
 256 cells constant object-maxsize
 
 : initial-res  256 236 ;
-: initial-scale 4 ;
+: initial-scale 3 ;
 : initial-pos  100 0 ;
 
 \ true constant allegro-debug

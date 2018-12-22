@@ -10,5 +10,6 @@ create hud object
 create minimap object
 create link object
 variable in-cave
+create tempx 0 , 0 ,
 
 : mc  link ;

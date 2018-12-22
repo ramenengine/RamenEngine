@@ -3,6 +3,8 @@ variable lastkeydir
 
 ( misc )
 : /sprite  draw> at@ 2pfloor at sprite+ ;
+create clipx 0 , 0 ,
+: /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
 : ztype zcount type ;
 : situated  's x 2@ 2+ x 2! ;
 : -vel    0 0 vx 2! ;
