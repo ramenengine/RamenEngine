@@ -19,17 +19,19 @@ create evoke-sword dir-anim-table
     ' anim-swordd ,
     
     
-: in-front  ( angle ) dir !
+: in-front 
     dir @ case
-        0 of 12 -6 x 2+! endof
-        90 of 0 -20  x 2+! endof
-        180 of -12 -6 x 2+! endof
-        270 of 0 4 x 2+! endof
+        0 of 12 2 x 2+! endof
+        90 of 0 -12  x 2+! endof
+        180 of -12 2 x 2+! endof
+        270 of 0 12 x 2+! endof
     endcase ;
-: *sword  me 0 0 away dir @ stage one /sprite in-front evoke-sword ;
+   
+: *sword  dir @ spawn dir ! /sprite #weapon attributes ! in-front evoke-sword ;
+: retract  /clipsprite dir @ 180 + 6 vec vx 2! ;
 
 :listen
     s" player-swung-sword" occurred if
-        *sword 10 live-for
+        *sword ['] retract 10 after 11 live-for 
     then
 ;

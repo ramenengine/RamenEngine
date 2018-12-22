@@ -2,9 +2,7 @@
 variable lastkeydir
 
 ( misc )
-: /sprite  draw> at@ 2pfloor at sprite+ ;
-create clipx 0 , 0 ,
-: /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
+: pixalign  at@ 2pfloor at ;
 : ztype zcount type ;
 : situated  's x 2@ 2+ x 2! ;
 : -vel    0 0 vx 2! ;
@@ -34,24 +32,37 @@ create clipx 0 , 0 ,
 : !dirkey
     pdirkeys? if pkeydir lastkeydir ! exit then
     rdirkeys? if keydir lastkeydir ! exit then ;
-also ideing
-: (debug)
-    get-xy
-        black 0 alpha
-        0 0 at  write-src blend> output @ onto> displayw 4 rows rectf
-        0 0 at-xy .me
-    at-xy ;
-previous
+\ also ideing
+\ : (debug)
+\     get-xy
+\         black 0 alpha
+\         0 0 at  write-src blend> output @ onto> displayw 4 rows rectf
+\         0 0 at-xy .me
+\     at-xy ;
+\ previous
 
 
-( common actor stuff )
+( actor )
 action start
 action idle
 action walk
 action turn ( angle )
 var dir \ angle
-var (xt)
-var target
+var (xt) <adr
+var target <adr
+var clipx  var clipy
+
+: dir-anim-table  ( - )
+    does> dir @ 90 / cells + @ execute ;
+: live-for  perform> pauses end ;
+: *task  stage one ;
+: (after)  perform> pauses (xt) @ target @ >{ execute } end ;
+: after  me { *task rot (xt) ! target ! (after) } ;
+: /sprite  draw> pixalign sprite+ ;
+: /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
+
+
+( grid )
 : will-cross-grid?
     x @ dup vx @ + 8 8 2/ 2i <>
     y @ dup vy @ + 8 8 2/ 2i <>
@@ -61,18 +72,28 @@ var target
     x @ 4 + 8 mod 4 - abs 2 < 
     y @ 4 + 8 mod 4 - abs 2 <  and
 ;
-: dir-anim-table  ( - )
-    does> dir @ 90 / cells + @ execute ;
-: live-for  perform> pauses end ;
-: *task  stage one ;
-: (after)  perform> pauses (xt) @ target @ >{ execute } end ;
-: after  me { *task rot (xt) ! target ! (after) } ;
 
 ( collision tools )
-: cbox  x 2@ mbw 2@ area 1 1 2- ;
+var attributes <hex
+%rect sizeof field ihb  \ interaction hitbox; relative to x,y position
+0 0 16 16 defaults 's ihb xywh!
 0 value you
+: cbox  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
 : with  me to you ;
-: hit?  me you = if 0 exit then   cbox you >{ cbox } overlap? ;
+: hit?  ( bitmask - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
+    attributes @ and 0= if 0 ;then
+    me you = ?exit
+    cbox you >{ cbox } overlap? ;
+
+: spawn  ihb xy@ me away stage one ;
+
+
+
+: draw-cbox  cbox 2over 2- 2swap 2pfloor at red rect ;
+: show-cboxes
+    stage one
+    draw> stage each> as draw-cbox ;
+
 
 
 ( extend loop )

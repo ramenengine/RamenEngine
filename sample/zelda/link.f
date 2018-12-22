@@ -111,6 +111,8 @@ link-role :to start ( - )
     link as  link.ts img !  /solid  link-role role !
     16 8 mbw 2!  0 8 cx 2!  start ;
 
+-8 link 's ihb y!
+
 :listen
     s" player-entered-cave" occurred if
         link >{

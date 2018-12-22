@@ -1,10 +1,11 @@
 empty
+include sample/zelda/tools.f
 include sample/zelda/vars.f
 include sample/zelda/data.f
-include sample/zelda/tools.f
 include sample/zelda/map.f
 include sample/zelda/items.f
 include sample/zelda/link.f
+include sample/zelda/enemies.f
 
 ( overworld scene! )
 : /bg   bg as /tilemap 256 256 w 2! ;
@@ -15,13 +16,13 @@ include sample/zelda/link.f
 : mapgrid
     8 for
         16 for
-            5 5 white rect
+            5 5 rect
             4 0 +at
         loop
         4 -16 * 4 +at
     loop
 ;
-: /minimap  minimap as 16 16 hud situated draw> red urhere mapgrid ;
+: /minimap  minimap as 16 16 hud situated draw> red urhere grey mapgrid ;
 
 :listen
     s" player-entered-cave" occurred if
@@ -39,3 +40,8 @@ link as 192 128 x 2!  hidden on
 curtain-open
 
 ' /link 64 after
+
+show-cboxes
+
+link as
+*orb 

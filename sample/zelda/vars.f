@@ -11,5 +11,8 @@ create minimap object
 create link object
 variable in-cave
 create tempx 0 , 0 ,
+#1
+bit #weapon
+drop
 
-: mc  link ;
+: p1  link ;
