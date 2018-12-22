@@ -41,7 +41,7 @@ show-stage
 ( default step; note no multitasking )
 :slang think  ( - ) stage acts ;
 :slang physics ( - ) stage each> as vx 2@ x 2+! ;
-: default-step ( - ) step> think physics ;
+: default-step ( - ) step> think physics stage sweep ;
 default-step
 
 : stop ( - ) step> noop ;

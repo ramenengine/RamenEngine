@@ -45,10 +45,12 @@ redef on  \ we'll keep this on while compiling RAMEN itself
 
 %node @ %obj struct.size +!
 used @ constant /objhead
-var en <flag  var hidden <flag  
+var id
+var en <hex  var hidden <flag  
 var x  var y  var vx  var vy
 var drw <adr  var beha <adr
 var marked \ for deletion
+variable nextid
 
 : object,  ( - ) /object allotment /node ;
 
@@ -62,22 +64,24 @@ create root  object,                    \ catch-all destination
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;
 : >parent  ( node - node|0 ) node.parent @ ;
-: init  ( - ) defaults 's en en [ maxsize /objhead - ]# move ;
+: !id  1 nextid +!  nextid @ id ! ;
+: init  ( - ) defaults 's en en [ maxsize /objhead - ]# move  !id ;
 : one ( parent - me=obj ) new-node as init me swap push at@ x 2! ;
 : objects  ( parent n - ) for dup one loop drop ;
 : ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
 :noname  pool length 0= if here object, else pool pop then ; is new-node
 :noname  >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
-: dismiss ( obj - ) 's marked on ;
+: dismiss ( - ) marked on ;
+: dynamic?  ( - flag ) en @ #1 and ;
+: static?  ( - flag ) en @ #1 and 0= ;
 
 \ making stuff move and displaying them
 : ?call  ( adr - ) ?dup -exit call ;
 : draw   ( - ) en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
 : draws  ( objlist ) each> as draw ;
 : act   ( - ) en @ -exit  beha @ ?call ;
-: (acts) ( - ) each> as act ;
-: cleanup ( objlist ) each> as marked @ -exit marked off me free-node ;
-: acts  ( objlist ) dup (acts) cleanup ;
+: sweep ( objlist ) each> as marked @ -exit marked off id off me free-node ;
+: acts  ( objlist ) each> as act ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
 : away  ( x y obj - ) 's x 2@ 2+ at ;
@@ -86,7 +90,8 @@ create root  object,                    \ catch-all destination
 
 \ stage
 objlist stage  \ default object list
-: /stage  stage vacate  pool %node venery-sizeof erase  pool /node ;
+:slang /pool   pool %node venery-sizeof erase  pool /node ;
+: /stage  stage vacate  /pool  0 nextid ! ;
 
 \ static objects
 : object   ( - ) here as object, me stage push init $fffffffe en ! ;

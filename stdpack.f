@@ -14,4 +14,4 @@ depend ramen/lib/tiled/tiled.f     cr .( Loaded Tiled support. ) \ "
 
 :slang think  stage dup acts multi ;
 :slang physics  stage each> as vx 2@ x 2+! ;
-: default-step  step> think physics ;
+: default-step  step> think physics stage sweep ;
