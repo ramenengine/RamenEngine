@@ -2,7 +2,19 @@
 
 Ramen is a 2D game engine written in standard Forth.
 
-[Documentation](https://rogerlevy.gitbook.io/ramen)
+[1.0 Documentation](https://rogerlevy.gitbook.io/ramen)
+
+Status:
+
+2.0 is in development and it fixes and improves on a ***lot***.
+
+## Setup (new)
+
+This is the package repo, which depends on other packages.  Grab the [Distribution](https://rogerlevy.gitbook.io/RamenEngine) which includes all the dependencies at the correct versions.
+
+Download [SwiftForth](https://www.forth.com/swiftforth/)
+
+(GForth support is working on Linux, if anyone can help get it working on Windows please get in touch (post an issue or send me a message on [Twitter](https://twitter.com/RamenEngine).)
 
 ## Features
 
@@ -28,7 +40,7 @@ Want to watch some videos? Here's footage of examples from Ramen's predecessor. 
 
 Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/%20), a commercial game I wrote in Forth to prove it can be done. Large chunks of this game's engine live on in Ramen.
 
-## Getting Started
+## Getting Started (OLD!!! will update when 2.0 releases)
 
 1. Download [SwiftForth](https://www.forth.com/swiftforth/). After installing add the bin folder to your path.
 2. Download or clone [ramenExamples](https://github.com/RogerLevy/ramenExamples)
