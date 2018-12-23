@@ -24,14 +24,6 @@ include sample/zelda/enemies.f
 ;
 : /minimap  minimap as 16 16 hud situated draw> red urhere grey mapgrid ;
 
-:listen
-    s" player-entered-cave" occurred if
-        in-cave on
-    ;then
-    s" player-exited-cave" occurred if
-        in-cave off 
-    ;then
-;
 
 /bg /cam /hud /minimap 
 

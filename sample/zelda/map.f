@@ -48,6 +48,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     s" player-left-room" occurred if
         in-cave @ if
             overworld return
+            in-cave off
             0 s" player-exited-cave" occur
         else 
             x @ 0 <= if gw 256 16 - x ! ;then
@@ -55,7 +56,10 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
             y @ 64 16 + <= if gn 256 16 - y ! ;then
             y @ 256 16 - >= if gs 64 16 + y ! ;then
         then
-    then
+    ;then
+    s" player-entered-cave" occurred if
+        ( x y ) in-cave on
+    ;then
 ;
 
 : in-playfield? ( - flag ) x 2@  -1 63 8 + 257 237 16 8 2- inside? ;

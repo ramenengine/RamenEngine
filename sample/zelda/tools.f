@@ -40,7 +40,6 @@ variable lastkeydir
 \         0 0 at-xy .me
 \     at-xy ;
 \ previous
-: toward  ( obj - x y )  's x 2@ x 2@ 2- angle uvec ;
 : (those)  ( objlist filter-xt code - filter-xt code )
     rot each> as over execute if dup >r then ;
 : those>  ( objlist filter-xt - <code> )  ( - )  \ note you can't pass anything to <code>
@@ -59,6 +58,9 @@ var (xt) <adr
 var target <adr
 var clipx  var clipy
 var targetid
+var attributes <hex
+%rect sizeof field ihb  \ interaction hitbox; relative to x,y position
+0 0 16 16 defaults 's ihb xywh!
 
 : live-for  ( n - ) perform> pauses end ;
 : ?waste  target @ 's id @ targetid @ <> ?end ;
@@ -69,6 +71,8 @@ var targetid
 : every  ( xt n - ) { *task swap (xt) ! (every) } ;
 : /sprite  draw> pixalign sprite+ ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
+: ipos  x 2@ ihb xy@ 2+ ;
+: toward  ( obj - x y )  >{ ipos } ipos 2- angle uvec ;
 
 ( grid )
 : will-cross-grid? ( - f )
@@ -82,9 +86,6 @@ var targetid
 ;
 
 ( actor collisions )
-var attributes <hex
-%rect sizeof field ihb  \ interaction hitbox; relative to x,y position
-0 0 16 16 defaults 's ihb xywh!
 0 value you
 : cbox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
 : with  ( - ) me to you ;
@@ -94,10 +95,7 @@ var attributes <hex
     cbox you >{ cbox } overlap? ;
 : draw-cbox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 :slang on-top  act> me stage push ;
-: show-cboxes
-    stage one
-    on-top
-    draw> stage each> as draw-cbox ;
+: show-cboxes  stage one  on-top  draw> stage each> as draw-cbox ;
 
 ( actor spawning )
 defer spawn  ( - )
@@ -137,26 +135,30 @@ create tileprops  s" sample/zelda/data/tileprops.dat" file,
 :make on-tilemap-collide  onhitmap @ ?dup if >r then ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
 
-( event system - note this version is not re-entrant. )
+( event system )
 create listeners 100 stack,
-create args 8 stack,
+create args 100 stack,
 
 : :listen  ( - <code> ; ) ( me=source event c - event c )
     :noname listeners push ; 
 
-: fetcheach  each> noop ;
-
 : (dispatch)  ( event c xt - event c )
-    { execute } ;
+    sp@ >r { execute } r> sp! drop ;
 
-: args!  ( ... #params - )
-    dup >r reverse args vacate r> args pushes ;
+: +args  ( ... #params - )
+    dup >r args pushes r> args push ;
+
+: -args  ( - )
+    args length args pop - 1 - args truncate ;
+
+: args@  ( - ... )
+    args >top dup @ for cell- dup >r @ r> loop drop ;
 
 : occur ( ... #params event c - )
-    2>r args! 2r> ['] (dispatch) listeners each 2drop ;
+    2>r +args 2r> ['] (dispatch) listeners each 2drop -args ;
 
 : occurred  ( event c event c - event c ... true | event c false )
-    2over 2>r compare 0= if 2r> args fetcheach true else 2r> 0 then ;
+    2over 2>r compare 0= if 2r> args@ true ;then 2r> 0 ;
     
 ( curtain open effect )
 : *curtain  stage one draw> 128 256 black rectf ;

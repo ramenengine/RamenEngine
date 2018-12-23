@@ -32,6 +32,6 @@ create evoke-sword dir-anim-table
 :listen
     s" player-swung-sword" occurred if
         p1 from *sword ['] retract 10 after 12 live-for 
-    then
+    ;then
 ;
 
