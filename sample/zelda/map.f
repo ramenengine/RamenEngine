@@ -7,13 +7,22 @@ s" overworld-rooms.tmx" >data open-map
     s" testrooms1" find-tmxlayer tilebuf  0 32 load-tmxlayer  \ load well below the room buffer
     s" overworld-tiles.tsx" find-tileset# load-tileset
 
+
 ( loading a room )
+defer enemyimage  ' 2drop is enemyimage
+create enemy-handlers  0 , ' enemyimage , 0 ,
+: *enemies
+    s" overworld-rooms.tmx" >data open-map
+    s" Enemy Locations" find-objgroup enemy-handlers load-objects
+;
 : roomloc  #cols /mod #cols #rows 2* 32 + ;
 : room  ( i - )  \ expressed as $rc  r=row c=column
     cleanup
-    1p roomloc tilebuf adr-pitch
+    1p dup room# ! roomloc tilebuf adr-pitch
     0 4 roombuf adr-pitch
-    #cols cells #rows 2move  ;
+    #cols cells #rows 2move
+    0 ['] *enemies later
+;
 0 room
 
 : cave  ( - )

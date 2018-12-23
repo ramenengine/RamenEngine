@@ -4,7 +4,7 @@ variable lastkeydir
 ( misc )
 : pixalign  at@ 2pfloor at ;
 : ztype zcount type ;
-: situated  's x 2@ 2+ x 2! ;
+: situate  's x 2@ 2+ x 2! ;
 : -vel    0 0 vx 2! ;
 : left?   <left> kstate ;
 : right?  <right> kstate ;

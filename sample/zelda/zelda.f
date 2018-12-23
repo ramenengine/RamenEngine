@@ -22,17 +22,17 @@ include sample/zelda/enemies.f
         4 -16 * 4 +at
     loop
 ;
-: /minimap  minimap as 16 16 hud situated draw> red urhere grey mapgrid ;
+: /minimap  minimap as 16 16 hud situate draw> red urhere grey mapgrid ;
 
 
 /bg /cam /hud /minimap 
 
-link as 192 128 x 2!  hidden on 
+link as hidden on 
 
 curtain-open
 
 : adventure
-    /link
+    /link  64 96 x 2!  
     link from *orb
     64 128 at *statue
 ;

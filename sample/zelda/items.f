@@ -20,9 +20,9 @@ create evoke-sword dir-anim-table
     
 : in-front 
     dir @ case
-        0 of 12 2 x 2+! endof
+        0 of 12 2 x 2+! 14 ihb h! endof
         270 of 0 -12  x 2+! endof
-        180 of -12 2 x 2+! endof
+        180 of -12 2 x 2+! 14 ihb h! endof
         90 of 0 12 x 2+! endof
     endcase ;
 
