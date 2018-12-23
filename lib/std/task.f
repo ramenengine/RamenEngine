@@ -43,8 +43,8 @@ create queue 1000 stack,
     {
         queue length for  sp@  i 2 * queue []  swap >r  2@ execute  r> sp!  loop
         queue vacate
-    } ;
-
+    }
+;
 : self?     sp@ ds >=  sp@ rs <= and ;
 : (halt)    begin pause again ;
 

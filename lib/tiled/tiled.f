@@ -8,8 +8,8 @@ depend ramen/lib/std/tilemap.f
 create roles #MAXTILES stack,
 create bitmaps 100 stack,         \ single-image tileset's bitmaps
 defer tmxobj   ( object-nnn role - )
-defer tmxrect  ( object-nnn w h - )
 defer tmximage ( object-nnn gid - )
+defer tmxrect  ( object-nnn w h - )
 
 var gid
 rolevar recipe
@@ -50,8 +50,6 @@ also xmling also tmxing
 \ 1) Regular scripted game objects where the tile gid points to a role in a table.
 \ 2) Rectangular objects with no associated tile
 \ 3) Environment (image) objects where the gid points to a bitmap in the global tileset
-
-: /roles  ( - )  0 roles [] #MAXTILES cells erase ;
 
 : /roles  ( - )  0 roles [] #MAXTILES cells erase ;
 
@@ -100,15 +98,20 @@ create $$$ #256 allot
  
 : ?tmxobj  dup if tmxobj else 2drop then ;
 
-: load-objects  ( objgroup - )
-    eachel> that's object 
+: ?2drop  ?dup 0= if ['] 2drop then ;
+: ?3drop  ?dup 0= if ['] 3drop then ;
+:slang @handlers  @+ ?2drop is tmxobj @+ ?2drop is tmximage @ ?3drop is tmxrect ;
+
+\ handler-table format:   object , image , rectangle , 
+: load-objects  ( objgroup handler-table - )
+    @handlers  eachel> that's object 
         dup xy@ at
         dup rectangle? if
             dup el?type if  load-script ( nnn role|0 ) ?tmxobj  exit then  
             dup wh@ ( nnn w h ) tmxrect
         else
             dup gid@ dup  roles [] @ ?dup if
-                ( nnn gid role|0 ) nip ( nnn role|0 ) ?tmxobj
+                ( nnn gid role|0 ) nip ( nnn role|0 ) tmxobj
             else
                 ( nnn gid ) tmximage
             then
@@ -130,9 +133,6 @@ create $$$ #256 allot
 : -bitmaps  bitmaps length for  bitmaps pop -bmp  loop ;
 
 : open-map  ( path c - )
-    close-tmx  /roles  -tiles  -bitmaps  open-tmx ;
-
-: open-tilemap  ( path c - )  \ doesn't delete any tiles; assumes static tileset
-    close-tmx  /roles  -bitmaps  open-tmx ;
+    close-tmx  /roles  open-tmx ;
 
 only forth definitions
