@@ -15,8 +15,8 @@ redef off
 
 create main object,  \ proxy for the Forth data and return stacks
 
-: nxten  begin  me node.next @ as  me -exit  en @ until ;
-: pause
+: nxten  ( - )  begin  me node.next @ as  me -exit  en @ until ;
+: pause  ( - ) 
     \ save state
     dup \ ensure TOS is on stack
     sp@ sp !
@@ -28,8 +28,9 @@ create main object,  \ proxy for the Forth data and return stacks
     sp @ sp!
     drop \ ensure TOS is in TOS register
 ;
-: pauses  for  pause  loop ;
-: secs   fps * pauses ;  \ not meant for precision timing
+: pauses  ( n - ) for  pause  loop ;
+: seconds  ( n - n ) fps * ;  \ not meant for precision timing
+: dally  ( n - ) seconds pauses ;
 
 \ external-calls facility - say "<val> ['] word later" to schedule a word that calls an external library.
 \ you can pass a single parameter to each call, such as an object or an asset.
