@@ -20,8 +20,9 @@ basis :to die ( - ) end ;
 
 ( shoot shit at link )
 : /shit  draw> 8 8 +at pixalign rndcolor 4 circf ;
-: (snipe)  act> in-playfield? not ?end ;
-: snipe  { me from spawn /shit p1 toward 1.5 dup 2* vx 2! (snipe) } ;
+: (limit)  act> in-playfield? not ?end ;
+: (snipe)  p1 perform> 30 pauses toward 1.5 dup 2* vx 2! ;
+: snipe  { me from spawn /shit (limit) (snipe) } ;
 
 ( blue orb thing )
 : orbit  !startxy perform> 0 begin dup 16 vec startx 2@ 2+ x 2! over + pause again ;

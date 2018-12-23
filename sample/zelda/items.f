@@ -31,7 +31,7 @@ create evoke-sword dir-anim-table
 : retract  /clipsprite dir @ 180 + 6 vec vx 2! ;
 :listen
     s" player-swung-sword" occurred if
-        p1 from *sword ['] retract 10 after 11 live-for 
+        p1 from *sword ['] retract 10 after 12 live-for 
     then
 ;
 

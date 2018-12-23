@@ -93,8 +93,10 @@ var attributes <hex
     me you = ?exit
     cbox you >{ cbox } overlap? ;
 : draw-cbox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
+:slang on-top  act> me stage push ;
 : show-cboxes
     stage one
+    on-top
     draw> stage each> as draw-cbox ;
 
 ( actor spawning )
