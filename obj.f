@@ -1,5 +1,5 @@
-[defined] object-maxsize [if] object-maxsize [else] 256 cells [then] constant maxsize
-maxsize constant /object
+[defined] object-maxsize not [if] 256 cells constant object-maxsize [then] 
+object-maxsize constant maxsize
 [defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
 variable lastrole \ used by map loaders (when loading objects scripts)
 struct %role
@@ -52,7 +52,7 @@ var drw <adr  var beha <adr
 var marked \ for deletion
 variable nextid
 
-: object,  ( - ) /object allotment /node ;
+: object,  ( - ) maxsize allotment /node ;
 
 create defaults  object,                \ default values are stored here
                                         \ they are copied to new instances by INIT
