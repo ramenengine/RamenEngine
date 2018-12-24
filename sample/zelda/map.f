@@ -30,20 +30,19 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 
 
 ( world )
-: world create array2d-head, does> to ^map ;
+struct %world
+    %world %array2d sizeof sfield world.rooms
+    %world svar world.num
+create worlds 20 array,
 
+: world^  world# @ worlds []@ ;
+: worldloc  world^ loc 
+: world ( n - )  20 mod world# ! ;
+: does-world  does> world.num @ world ;
+: /world  ( n world - )  >r 20 mod dup r@ world.num ! r> swap worlds [] ! ;
+: world:  ( n - <name> ) create %world *struct /world does-world ;
+: warp  ( col row )  2dup coords 2!  world^ loc c@ room ;
 
-( overworld map data )
-16 8 world overworld  overworld
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $11 , $10 , $01 , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $00 , $31 , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-: warp  ( col row )  2dup coords 2!  ^map loc @ room ;
 
 ( go north go south etc )
 : gn  coords 2@ 0 -1 2+ warp ;
@@ -52,24 +51,6 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 : gw  coords 2@ -1 0 2+ warp ;
 
 : return  coords 2@ warp ;
-
-:listen
-    s" player-left-room" occurred if
-        in-cave @ if
-            overworld return
-            in-cave off
-            0 s" player-exited-cave" occur
-        else 
-            x @ 0 <= if gw 256 16 - x ! ;then
-            x @ 256 16 - >= if ge 0 x ! ;then
-            y @ 64 16 + <= if gn 256 16 - y ! ;then
-            y @ 256 16 - >= if gs 64 16 + y ! ;then
-        then
-    ;then
-    s" player-entered-cave" occurred if
-        ( x y ) in-cave on
-    ;then
-;
 
 : in-playfield? ( - flag ) x 2@  -1 63 8 + 257 237 16 8 2- inside? ;
 
