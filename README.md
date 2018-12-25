@@ -10,7 +10,7 @@ Status:
 
 ## Setup (new)
 
-This is the package repo, which depends on other packages.  Grab the [Distribution](https://rogerlevy.gitbook.io/RamenEngine) which includes all the dependencies at the correct versions.
+This is the package repo, which depends on other packages.  Grab the [Distribution](https://github.com/RogerLevy/RamenEngine) which includes all the dependencies at the correct versions.
 
 Download [SwiftForth](https://www.forth.com/swiftforth/)
 
