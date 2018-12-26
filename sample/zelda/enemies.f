@@ -46,5 +46,5 @@ s" enemy-icon.png" >data image: enemy-icon.image
 \ note: Tiled stores positions with Y representing the BOTTOM of the object.
 \ we compensate by subtracting 16 from it.
 :make enemyimage ( node gid - )
-    2drop  at@ cr roombox inside? if roomxy 2negate 64 + 16 - +at *test then
+    2drop  at@ roombox inside? if roomxy 2negate 64 + 16 - +at *test then
 ;
