@@ -75,28 +75,37 @@ create root  object,                    \ catch-all destination
 : dynamic?  ( - flag ) en @ #1 and ;
 : static?  ( - flag ) en @ #1 and 0= ;
 
-\ making stuff move and displaying them
+( making stuff move and displaying them )
 : ?call  ( adr - ) ?dup -exit call ;
 : draw   ( - ) en @ -exit  hidden @ ?exit  x 2@ at  drw @ ?call ;
 : draws  ( objlist ) each> as draw ;
 : act   ( - ) en @ -exit  beha @ ?call ;
-: sweep ( objlist ) each> as marked @ -exit marked off id off me free-node ;
+: sweep ( objlist )  each> as marked @ -exit marked off id off me free-node ;
+\     each> as
+\         marked @ -exit
+\         me >first ?dup if me { recurse } then 
+\         marked off id off me free-node ;
 : acts  ( objlist ) each> as act ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
 : away  ( x y obj - ) 's x 2@ 2+ at ;
 : -act  ( - ) act> noop ;
-: objlist  ( - <name> )  create here as object, init ;
 
-\ stage
+( objlist )
+\ : objlist-draw  draw> me { draws } ;
+\ : objlist-act   act> me { acts } ;
+\ : /objlist  objlist-act objlist-draw ;
+: objlist  ( - <name> )  create here as object, init ; \ $fffffffe en ! /objlist ;
+
+( stage )
 objlist stage  \ default object list
 :slang /pool   pool %node venery-sizeof erase  pool /node ;
 : /stage  stage vacate  /pool  0 nextid ! ;
 
-\ static objects
+( static objects )
 : object   ( - ) here as object, me stage push init $fffffffe en ! ;
 
-\ Roles
+( roles )
 \ Note that role vars are global and not tied to any specific role.
 var role <adr
 basis defaults 's role !
@@ -104,15 +113,23 @@ basis defaults 's role !
 : defrole  ( - <name> ) ?update  create  here lastrole !  basis /roledef move, ;
 : role@  ( - role ) role @ dup 0= abort" Error: Role is null." ;
 : create-rolefield  ( size - <name> ) %role swap create-field $76543210 , ;
-: rolefield  ( size - <name> ) ?unique create-rolefield  does> field.offset @ role@ + ;
-: rolevar  ( - <name> ) 0 ?unique drop  cell create-rolefield  does> field.offset @ role@ + ;
-: action   ( - <name> ) 0 ?unique drop  cell create-rolefield <adr does> field.offset @ role@ + @ execute ;
+: rolefield  ( size - <name> )
+    ?unique  create-rolefield  does> field.offset @ role@ + ;
+: rolevar  ( - <name> )
+    0 ?unique drop
+    cell create-rolefield
+        does> field.offset @ role@ + ;
+: action   ( - <name> )
+    0 ?unique drop
+    cell create-rolefield <adr
+        does> field.offset @ role@ + @ execute ;
 : :to   ( roledef - <name> ... )  ' >body field.offset @ + :noname swap ! ;
 : +exec  + @ execute ;
-: ->  ( roledef - <action> )  ' >body field.offset @ postpone literal postpone +exec ; immediate
+: ->  ( roledef - <action> )
+    ' >body field.offset @ postpone literal postpone +exec ; immediate
 
-\ Inspection
+( Inspection )
 : o.   ( obj - ) %obj .fields ;
 : .me  ( - ) me o. ;
 : .role  ( obj - )  's role @ ?dup if %role .fields else ." No role" then ;
-: .objlist  ( objlist - )  dup length . each> as  cr ." ID: " id ?  ."  X/Y: " x 2? ;
+: .objlist  ( objlist - )  dup length . each> as  cr me h. ."  ID: " id ?  ."  X/Y: " x 2? ;

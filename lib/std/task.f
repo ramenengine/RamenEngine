@@ -72,7 +72,6 @@ fixed
 
 \ pulse the multitasker.
 : multi  ( objlist - )
-    dup 0= if drop ;then
     dup length 0= if drop ;then
     >first main node.next !
     dup
