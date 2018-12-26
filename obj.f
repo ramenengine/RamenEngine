@@ -49,7 +49,7 @@ var id
 var en <hex  var hidden <flag  
 var x  var y  var vx  var vy
 var drw <adr  var beha <adr
-var marked \ for deletion
+var marked <flag \ for deletion
 variable nextid
 
 : object,  ( - ) maxsize allotment /node ;
@@ -115,3 +115,4 @@ basis defaults 's role !
 : o.   ( obj - ) %obj .fields ;
 : .me  ( - ) me o. ;
 : .role  ( obj - )  's role @ ?dup if %role .fields else ." No role" then ;
+: .objlist  ( objlist - )  dup length . each> as  cr ." ID: " id ?  ."  X/Y: " x 2? ;
