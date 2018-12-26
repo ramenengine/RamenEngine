@@ -101,7 +101,7 @@ link-role :to idle ( - )
     0 perform> begin ?attack ?walk pause again ;
 link-role :to start ( - )
     /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
-    act> !dirkey ?trig ;
+    act> !dirkey ?trig ~items ;
 
 : /link
     link as  link.ts img !  /solid  link-role role !

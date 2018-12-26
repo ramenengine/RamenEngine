@@ -3,7 +3,6 @@ empty
 include sample/zelda/tools.f
 include sample/zelda/vars.f
 include sample/zelda/map.f
-include sample/zelda/inventory.f
 include sample/zelda/items.f
 include sample/zelda/link.f
 include sample/zelda/enemies.f

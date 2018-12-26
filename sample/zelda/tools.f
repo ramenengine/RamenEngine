@@ -2,7 +2,7 @@
 variable lastkeydir
 
 ( misc )
-: pixalign  at@ 2pfloor at ;
+: enum  dup constant 1 + ;
 : ztype zcount type ;
 : situate  's x 2@ 2+ x 2! ;
 : -vel    0 0 vx 2! ;
@@ -40,11 +40,11 @@ variable lastkeydir
 \         0 0 at-xy .me
 \     at-xy ;
 \ previous
-: (those)  ( objlist filter-xt code - filter-xt code )
-    rot each> as over execute if dup >r then ;
-: those>  ( objlist filter-xt - <code> )  ( - )  \ note you can't pass anything to <code>
-    over 0= if 2drop r> drop ;then
-    r> { (those) 2drop } ;
+: (those)  ( filter-xt code objlist - filter-xt code )
+    each> as over execute if dup >r then ;
+: those>  ( filter-xt objlist - <code> )  ( - )  \ note you can't pass anything to <code>
+    dup 0= if 2drop r> drop ;then
+    r> { swap (those) 2drop } ;
 
 
 ( actors )
@@ -58,7 +58,7 @@ var (xt) <adr
 var target <adr
 var clipx  var clipy
 var targetid
-var attributes <hex
+var flags <hex
 %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
 0 0 16 16 defaults 's ihb xywh!
 
@@ -72,7 +72,7 @@ var attributes <hex
 : (every)  perform> begin dup pauses (xt) @ target @ >{ execute } again ;
 : every  ( xt n - ) { *task swap (xt) ! (every) } ;
 : every>  ( n - <code> ) r> code> swap every ;
-: /sprite  draw> pixalign sprite+ ;
+: /sprite  draw> sprite+ ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
 : ipos  x 2@ ihb xy@ 2+ ;
 : toward  ( obj - x y )  >{ ipos } ipos 2- angle uvec ;
@@ -92,8 +92,8 @@ var attributes <hex
 0 value you
 : cbox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
 : with  ( - ) me to you ;
-: hit?  ( bitmask - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
-    attributes @ and 0= if 0 ;then
+: hit?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
+    flags @ and 0= if 0 ;then
     me you = ?exit
     cbox you >{ cbox } overlap? ;
 : draw-cbox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
@@ -113,7 +113,7 @@ var olddir
 action evoke-direction  ( - )
 : !face  ( - ) dir @ olddir !  evoke-direction ; 
 : downward  ( - ) 90 dir ! !face ;
-: upward    ( - ) 270 dir !  !face ;
+: upward    ( - ) 270 dir ! !face ;
 : leftward  ( - ) 180 dir ! !face ;
 : rightward ( - ) 0 dir !   !face ;
 : ?face     ( - ) dir @ olddir @ = ?exit !face ;    
@@ -162,3 +162,52 @@ create args 100 stack,
     0 64 at *curtain 64 live-for -2 vx !
     128 64 at *curtain 64 live-for 2 vx !
 ; 
+
+( quest state )
+: qvar  dup constant cell+ ;
+: qfield  over constant + ;
+create quest  64 kbytes /allot
+quest value quest-ptr
+
+
+
+( flags )
+#1
+bit #important
+bit #weapon
+bit #item
+value next-flag
+var flags <hex
+
+: flag?  flags @ and 0<> ;
+: +flag  flags or! ;
+: -flag  invert flags and! ;
+: important? #important flag? ;
+
+
+( item stuff )
+include sample/zelda/item-assets.f
+quest-ptr
+    256 cells qfield inventory
+to quest-ptr
+
+var itemtype
+var quantity   1 defaults 's quantity !
+var col  var row
+
+action gotten ( - )
+: item[]  ( n - adr ) cells inventory + ;
+: get  ( quantity itemtype - ) item[] +! ;
+basis :to gotten  ( - )  quantity @ itemtype @ get ;
+: .item  ( obj - )  dup >{ h. ."  Type: " itemtype ?  ."  Quantity: " quantity ? } ;
+: pickup ( obj - ) >{ cr ." Got: " me .item gotten dismiss } ;
+: have  ( itemtype - n )  item[] @ ;
+
+: /weapon  #weapon +flag  #item -flag ;
+: *item  ( itemtype - )
+    spawn itemtype !  #item +flag  
+    /sprite item-regions rgntbl !  items.image img ! 
+;
+
+: ~items  with stage each> as #item hit? -exit me you >{ pickup } ;
+

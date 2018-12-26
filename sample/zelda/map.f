@@ -17,7 +17,7 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 ;
 : srcrc  #cols /mod #cols #rows 2* 32 + ;
 : disposable?  dynamic? important? not and ;
-: thinout  ['] disposable? those> dismiss ;
+: thinout  ['] disposable? swap those> dismiss ;
 : cleanup  stage thinout  world thinout ;
 : room  ( i - )  \ expressed as $cr  c=column r=row 
     cleanup
