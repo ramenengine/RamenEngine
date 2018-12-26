@@ -48,13 +48,6 @@ defaults >{
 
 : >region  ( n - srcx srcy w h )
     img @ 0= if 0 0 0 0 ;then
-    frmptr @ 0= if
-        img @ image.subcount @ if
-            img @ subxywh
-        else
-            drop 0 0 img @ imagewh
-        then
-    ;then 
     rgntbl @ if
         rgntbl @ framexywh
     else
@@ -63,9 +56,9 @@ defaults >{
 
 : curflip  frmptr @ if frmptr @ @ #3 and ;then  0 ;
 
-:slang ?regorg  ( - )  \ apply the region origin
-    rgntbl @ -exit frmptr @ -exit
-    rgntbl @  frmptr @ @  /region * + 4 cells + 2@ cx 2! ;
+: ?regorg  ( n - n )  \ apply the region origin
+    rgntbl @ -exit 
+    rgntbl @ over /region * + 4 cells + 2@ cx 2! ;
 
 : nsprite  ( n - )   \ note: IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
     ?regorg >region curflip sprite ;
