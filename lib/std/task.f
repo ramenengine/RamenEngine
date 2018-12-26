@@ -72,19 +72,21 @@ fixed
 
 \ pulse the multitasker.
 : multi  ( objlist - )
-    dup length 0= if drop exit then
-    {
-        >first main node.next !
-        dup
-        sp@ main 's sp !
-        rp@ main 's rp !
-        main as  ['] pause catch if
-            cr ." A task crashed; stopping. "  empty exit
+    dup 0= if drop ;then
+    dup length 0= if drop ;then
+    >first main node.next !
+    dup
+    sp@ main 's sp !
+    rp@ main 's rp !
+    main >{
+        ['] pause catch if
+            cr ." A task crashed. Halting it."  halt
         then
-        drop
-    } 
+    }
+    drop
     arbitrate
 ;
+
 
 \ cmdline only:
 : direct  ( obj - <word> )  '  0  rot  perform ;
