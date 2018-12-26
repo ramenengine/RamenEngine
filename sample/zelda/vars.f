@@ -17,17 +17,15 @@ drop
 
 16 constant #cols
 11 constant #rows
-\ create coords 3 , 3 , 
-\ variable room#
-0 value world^
+0 value world          \ pointer to a %world
 create bg object 
 create cam object 
 create hud object
 create minimap object
 create link object
 : p1  link ;
-\ variable in-cave
-\ create tempx 0 , 0 ,
+defer important?  ( - flag )
+
 
 \ attributes
 #1
@@ -41,3 +39,13 @@ enum #sword
 enum #bomb
 enum #potion
 drop
+
+\ object flags
+var flags
+#1
+bit #important
+drop
+: flag?  flags @ and 0<> ;
+: +flag  flags or! ;
+: -flag  invert flags and! ;
+:make important? ( - flag ) #important flag? ;

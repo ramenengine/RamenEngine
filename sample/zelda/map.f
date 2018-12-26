@@ -15,35 +15,39 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
     s" overworld-rooms.tmx" >data open-map
     s" Enemy Locations" find-objgroup enemy-handlers load-objects
 ;
-: roomloc  #cols /mod #cols #rows 2* 32 + ;
-: room  ( i - )  \ expressed as $rc  r=row c=column
+: srcrc  #cols /mod #cols #rows 2* 32 + ;
+: disposable?  dynamic? important? not and ;
+: thinout  ['] disposable? those> dismiss ;
+: cleanup  stage thinout  world thinout ;
+: room  ( i - )  \ expressed as $cr  c=column r=row 
     cleanup
-    1p dup room# ! roomloc tilebuf adr-pitch
+    1p dup room# ! srcrc tilebuf adr-pitch
     0 4 roombuf adr-pitch
     #cols cells #rows 2move
     0 ['] *enemies later
 ;
-0 room
 
 : cave  ( - )
     $37 room 128 8 - 236 8 - 2 s" player-entered-cave" occur ;
 
 
 ( world )
-: world create array2d-head, does> to ^map ;
+struct %world
+    %world object-maxsize sfield world>objlist
+    %world svar world.rooms
+    
+: defworld  ( w h - <name> )
+    objlist 0 , 
+    here me world.rooms ! ( w h ) array2d-head,
+        \ array ought to be last thing in dictionary so we can comma crap in
+    does>
+        \ world stage remove  dup stage push
+        to world ;
 
+: maploc  ( col row - adr )
+    world world.rooms @ loc ;
 
-( overworld map data )
-16 8 world overworld  overworld
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $11 , $10 , $01 , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $00 , $31 , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-$FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
-: warp  ( col row )  2dup coords 2!  ^map loc @ room ;
+: warp  ( col row )  2dup coords 2!  maploc @ room ;
 
 ( go north go south etc )
 : gn  coords 2@ 0 -1 2+ warp ;
@@ -53,35 +57,4 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 
 : return  coords 2@ warp ;
 
-:listen
-    s" player-left-room" occurred if
-        in-cave @ if
-            overworld return
-            in-cave off
-            0 s" player-exited-cave" occur
-        else 
-            x @ 0 <= if gw 256 16 - x ! ;then
-            x @ 256 16 - >= if ge 0 x ! ;then
-            y @ 64 16 + <= if gn 256 16 - y ! ;then
-            y @ 256 16 - >= if gs 64 16 + y ! ;then
-        then
-    ;then
-    s" player-entered-cave" occurred if
-        ( x y ) in-cave on
-    ;then
-;
-
 : in-playfield? ( - flag ) x 2@  -1 63 8 + 257 237 16 8 2- inside? ;
-
-\ old scrolling code::::
-
-\ : fakeload   -vel  0 anmspd @!  15 pauses  anmspd ! ;
-\ : shiftwait  begin pause scrshift @ 0= until
-\     x @ 1 + dup 8 mod - x !  y @ 1 + dup 8 mod - y !  idle ;
-\ : scroll  fakeload  godir  shiftwait ;
-
-\     dirkeys? -exit
-\     x @ camx @ -  0 <=  left? and             if  0 scroll  then
-\     x @ camx @ -  320 mbw @ -  >=  right? and if  1 scroll  then
-\     y @ camy @ 8 + -  0 <=  up? and           if  2 scroll  then
-\     y @ camy @ -  208 mbh @ -  >=  down? and  if  3 scroll  then ;

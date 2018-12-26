@@ -43,8 +43,8 @@ variable lastkeydir
 : (those)  ( objlist filter-xt code - filter-xt code )
     rot each> as over execute if dup >r then ;
 : those>  ( objlist filter-xt - <code> )  ( - )  \ note you can't pass anything to <code>
+    over 0= if 2drop r> drop ;then
     r> { (those) 2drop } ;
-: cleanup  stage ['] dynamic? those> dismiss ;
 
 
 ( actors )
@@ -62,13 +62,16 @@ var attributes <hex
 %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
 0 0 16 16 defaults 's ihb xywh!
 
+: debug  ( val - val ) dup ['] h. later ;
 : live-for  ( n - ) perform> pauses end ;
 : ?waste  target @ 's id @ targetid @ <> ?end ;
-: *task  me tasks one dup target ! 's id @ targetid ! act> ?waste ;
+: *task  me tasks one  dup target ! 's id @ targetid ! act> ?waste ;
 : (after)  perform> pauses (xt) @ target @ >{ execute } end ;
 : after  ( xt n - ) { *task swap (xt) ! (after) } ;
+: after>  ( n - <code> ) r> code> swap after ;
 : (every)  perform> begin dup pauses (xt) @ target @ >{ execute } again ;
 : every  ( xt n - ) { *task swap (xt) ! (every) } ;
+: every>  ( n - <code> ) r> code> swap every ;
 : /sprite  draw> pixalign sprite+ ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
 : ipos  x 2@ ihb xy@ 2+ ;
@@ -117,17 +120,10 @@ action evoke-direction  ( - )
 : dir-anim-table  ( - )
     does> dir @ 90 / cells + @ execute ;
 
-
-
-( extend loop )
+( physics )
 var 'physics  \ code
 : physics>  r> 'physics ! ;
 : ?physics  'physics @ ?dup if >r then ;
-:slang think  ( - ) stage acts tasks multi stage multi tasks acts ;
-:slang physics ( - ) stage each> as ?physics vx 2@ x 2+! ;
-: zelda-step ( - ) step> think physics stage sweep ;
-zelda-step
-
 
 ( tilemap collision stuff )
 create tileprops  s" sample/zelda/data/tileprops.dat" file,
@@ -165,4 +161,4 @@ create args 100 stack,
 : curtain-open
     0 64 at *curtain 64 live-for -2 vx !
     128 64 at *curtain 64 live-for 2 vx !
-;
+; 
