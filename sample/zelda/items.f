@@ -32,4 +32,3 @@ create evoke-sword dir-anim-table
 ( others )
 : *bomb    #bomb *item   4 quantity !  draw> 1 nsprite ;
 : *potion  #potion *item draw> 2 nsprite ;
-

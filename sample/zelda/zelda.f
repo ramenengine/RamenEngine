@@ -57,6 +57,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     ;then
     s" player-entered-cave" occurred if
         ( x y ) in-cave on
+        #sword have not if 128 8 - 128 at *sword then
     ;then
 ;
 
@@ -69,7 +70,6 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     link as 64 after>
         /link  64 96 x 2!
         \ test objects:
-        64 64 at *sword
         64 128 at *orb
         64 180 at *statue
 ;

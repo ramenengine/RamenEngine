@@ -28,7 +28,8 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 ;
 
 : cave  ( - )
-    $37 room 128 8 - 236 8 - 2 s" player-entered-cave" occur ;
+    $37 room
+    128 8 - 236 8 - 2 s" player-entered-cave" occur ;
 
 
 ( world )
