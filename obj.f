@@ -25,8 +25,11 @@ redef on  \ we'll keep this on while compiling RAMEN itself
     redef @ ?exit
     >in @
         bl word find  if
-            >body >magic $76543210 =  if
+            >body dup >r >magic $76543210 =  if
+                r> to lastfield
                 r> drop  ( value of >IN ) drop  ( size ) drop  exit
+            else
+                r> ( body ) drop
             then
         else
             ( addr ) drop
@@ -112,7 +115,7 @@ basis defaults 's role !
 : ->  ( roledef - <action> )  ' >body field.offset @ postpone literal postpone +exec ; immediate
 
 \ Inspection
-: o.   ( obj - ) %obj .fields ;
+: o.   ( obj - ) dup h. %obj .fields ;
 : .me  ( - ) me o. ;
 : .role  ( obj - )  's role @ ?dup if %role .fields else ." No role" then ;
 : .objlist  ( objlist - )  dup length . each> as  cr ." ID: " id ?  ."  X/Y: " x 2? ;

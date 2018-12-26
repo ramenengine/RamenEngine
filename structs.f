@@ -1,4 +1,5 @@
 also venery
+    0 value lastfield
     
     struct %struct
         %struct %node sembed struct.node
@@ -17,7 +18,9 @@ also venery
         
     : create-field  ( struct bytes - <name> )  ( - field )
         swap  >r
-        create  %field *struct dup /node  dup r@ push
+        create
+            here to lastfield
+            %field *struct dup /node  dup r@ push
             r@ struct.size @ over field.offset !
             ['] (.field) over field.inspector !  \ initialize the inspector
             udup field.size !
@@ -43,7 +46,7 @@ previous
     *struct drop ;
 
 : is>  ( - <code> )  ( adr size - )
-    r> code> lastbody field.inspector ! ;
+    r> code> lastfield field.inspector ! ;
 
 : (.fields)
     each> ( adr field )
