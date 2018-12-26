@@ -53,6 +53,7 @@ link-role :to evoke-direction  evoke-link-walk ;
     near-grid? if snap turn ;then
 ;
 : ?attack
+    #sword have -exit
     <z> pressed -exit
     -vel
     evoke-link-swing
