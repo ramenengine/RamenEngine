@@ -23,7 +23,8 @@ redef on
 
     \ animation state; all can be modified freely.  only required value is IMG.
     var img <adr  \ image asset
-    var frmptr <adr  \ frame pointer
+    var anm <adr  \ animation base
+    var frm 
     var rgntbl <adr \ region table
     var anmspd    \ animation speed (1.0 = normal, 0.5 = half, 2.0 = double ...)
     var anmctr    \ animation counter
@@ -54,7 +55,9 @@ defaults >{
         img @ subxywh
     then ;
 
-: curflip  frmptr @ if frmptr @ @ #3 and ;then  0 ;
+: frame  anm @ frm @ /frame * + ;
+
+: curflip  anm @ if frame @ #3 and ;then  0 ;
 
 : ?regorg  ( n - n )  \ apply the region origin
     rgntbl @ -exit 
@@ -64,32 +67,32 @@ defaults >{
     ?regorg >region curflip sprite ;
 
 : animate  ( - )  \ Advance the animation
-    frmptr @ -exit anmspd @ -exit
+    anm @ -exit anmspd @ -exit
     anmspd @ anmctr +!
     \ looping
     begin  anmctr @ 1 >= while
-        -1 anmctr +!  /frame frmptr +!
-        frmptr @ @ $deadbeef = if  frmptr @ cell+ @ frmptr +!  animlooped  then
+        -1 anmctr +!  1 frm +!
+        frame @ $deadbeef = if  frame cell+ @ frm +!  animlooped  then
     repeat
 ;
  
-: frame@  ( - n | 0 )  \ 0 if frmptr is null
-    frmptr @ dup if @ then ;
+: frame@  ( - n | 0 )  \ 0 if anm is null
+    anm @ dup if drop frame @ then ;
 
 : sprite+  ( - )  \ draw and advance the animation
     frame@ nsprite animate ;
 
 \ Play an animation from the beginning
-: evoke  ( anim - )  frmptr !  0 anmctr ! ;
+: play  ( anim - )  anm !  0 anmctr !  0 frm ! ;
     
 \ Define self-playing animations
 \ anim:  create self-playing animation
 : anim:  create  3,  here ;
 : autoanim:  ( regiontable|0 image speed - loopaddr )  ( - )  
-    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  evoke ;
+    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  play ;
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
-: ;anim  ( loopaddr - )  here -  $deadbeef ,  , ;
+: ;anim  ( loopaddr - )  $deadbeef ,  here -  /frame i/ 1p 1 + , ;
 : range,  ( start len - ) bounds do i , loop ;
 
 \ flipped frame utilities
