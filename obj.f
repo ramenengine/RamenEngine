@@ -47,8 +47,8 @@ redef on  \ we'll keep this on while compiling RAMEN itself
 \  you can itterate over objlists as a whole, or just over a pool at a time
 
 %node @ %obj struct.size +!
+var id  \ don't move this (?)
 used @ constant /objhead
-var id
 var en <hex  var hidden <flag  
 var x  var y  var vx  var vy
 var drw <adr  var beha <adr
@@ -71,7 +71,7 @@ create root  object,                    \ catch-all destination
 : init  ( - ) defaults 's en en [ maxsize /objhead - ]# move  !id ;
 : one ( parent - me=obj ) new-node as init me swap push at@ x 2! ;
 : objects  ( parent n - ) for dup one loop drop ;
-: ?remove  ( obj - ) dup >parent ?dup if remove else drop then ;
+: ?remove  ( obj - ) dup >parent dup if remove else drop drop then ;
 :noname  pool length 0= if here object, else pool pop then ; is new-node
 :noname  >{ en @ $fffffffe <> if me pool push else me ?remove then } ; is free-node
 : dismiss ( - ) marked on ;
