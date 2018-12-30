@@ -33,7 +33,7 @@ previous
     create-field
         does> field.offset @ + ;
         
-: svar  ( struct - <name> )
+: svar  ( struct - <name> )  ( adr - adr+n )
     cell sfield ;
 
 : sizeof  ( struct - size )

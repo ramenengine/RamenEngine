@@ -24,7 +24,7 @@ redef on
     \ animation state; all can be modified freely.  only required value is IMG.
     var img <adr  \ image asset
     var anm <adr  \ animation base
-    var frm 
+    var spr       \ sprite index
     var rgntbl <adr \ region table
     var anmspd    \ animation speed (1.0 = normal, 0.5 = half, 2.0 = double ...)
     var anmctr    \ animation counter
@@ -55,41 +55,44 @@ defaults >{
         img @ subxywh
     then ;
 
-: frame  anm @ frm @ /frame * + ;
+: frame  anm @ anmctr @ pfloor /frame * + ;
 
-: curflip  anm @ if frame @ #3 and ;then  0 ;
+: curflip  ( index - index n )
+    anm @ if frame @ #3 and ;then  dup 3 and ;
 
-: ?regorg  ( n - n )  \ apply the region origin
+: ?regorg  ( index - index )  \ apply the region origin
     rgntbl @ -exit 
     rgntbl @ over /region * + 4 cells + 2@ cx 2! ;
 
-: nsprite  ( n - )   \ note: IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
+: frame@  ( - n | 0 )  \ 0 if anm is null
+    anm @ dup if drop frame @ then dup spr ! ;
+
+\ NSPRITE
+\ draw a sprite either from a subdivided image, animation, or image plus region table.
+\ if there's no animation, you can pack the flip info into the index. (lower 2 bits)
+\ IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
+: nsprite  ( index - )   
+    anm @ if spr ! frame@ then
     ?regorg >region curflip sprite ;
 
-: animate  ( - )  \ Advance the animation
-    anm @ -exit anmspd @ -exit
-    anmspd @ anmctr +!
-    \ looping
-    begin  anmctr @ 1 >= while
-        -1 anmctr +!  1 frm +!
-        frame @ $deadbeef = if  frame cell+ @ frm +!  animlooped  then
-    repeat
+: +frame  ( speed - )  \ Advance the animation
+    ?dup -exit anm @ -exit 
+    anmctr +!
+    \ looping:
+    frame @ $deadbeef = if  frame cell+ @ anmctr +!  animlooped  then
 ;
  
-: frame@  ( - n | 0 )  \ 0 if anm is null
-    anm @ dup if drop frame @ then ;
-
 : sprite+  ( - )  \ draw and advance the animation
-    frame@ nsprite animate ;
+    frame@ nsprite anmspd @ +frame ;
 
 \ Play an animation from the beginning
-: play  ( anim - )  anm !  0 anmctr !  0 frm ! ;
+: animate  ( anim - )  anm !  0 anmctr ! ;
     
 \ Define self-playing animations
 \ anim:  create self-playing animation
 : anim:  create  3,  here ;
 : autoanim:  ( regiontable|0 image speed - loopaddr )  ( - )  
-    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  play ;
+    anim: does>  @+ rgntbl ! @+ img ! @+ anmspd !  animate ;
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
 : ;anim  ( loopaddr - )  $deadbeef ,  here -  /frame i/ 1p 1 + , ;
