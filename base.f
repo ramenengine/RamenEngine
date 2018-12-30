@@ -63,6 +63,6 @@ used @ value baseline
 
 create ldr 64 allot
 : rld  ldr count included ;
-: ld   bl parse ldr place  s" .f" ldr append  rld ;
+: ld   bl parse s" .f" strjoin 2dup 2>r included 2r> ldr place ;
 
 gild
