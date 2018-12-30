@@ -45,7 +45,8 @@ variable lastkeydir
 : those>  ( filter-xt objlist - <code> )  ( - )  \ note you can't pass anything to <code>
     dup 0= if 2drop r> drop ;then
     r> { swap (those) 2drop } ;
-
+: njump  ( n adr - ) 
+    swap cells + @ execute ;
 
 ( actors )
 objlist tasks
@@ -126,7 +127,7 @@ var 'physics  \ code
 : ?physics  'physics @ ?dup if >r then ;
 
 ( tilemap collision stuff )
-create tileprops  s" sample/zelda/data/tileprops.dat" file,
+create tileprops  s" tileprops.dat" >data file,
 :make tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
 :make on-tilemap-collide  onhitmap @ ?dup if >r then ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
@@ -166,7 +167,7 @@ create args 100 stack,
 ( quest state )
 : qvar  dup constant cell+ ;
 : qfield  over constant + ;
-create quest  64 kbytes /allot
+create quest  64 kb /allot
 quest value quest-ptr
 
 

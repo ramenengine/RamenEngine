@@ -14,3 +14,4 @@ include ramen/lib/upscale.f
 gild
 
 ld main
+ld sample/zelda/objdefs

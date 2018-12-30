@@ -68,7 +68,8 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     overworld 3 3 warp
     curtain-open
     link as 64 after>
-        /link  64 96 x 2!
+        64 96 x 2!
+        /link  
         \ test objects:
         64 128 at *orb
         64 180 at *statue

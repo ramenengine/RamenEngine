@@ -1,4 +1,5 @@
 var hp  2 defaults 's hp !
+var maxhp  2 defaults 's maxhp !
 var damaged  \ stores the attack power of the last call to -HP
 var startx  var starty
 action die ( - )
@@ -26,7 +27,7 @@ basis :to die ( - ) end ;
 
 ( blue orb thing )
 : orbit  !startxy perform> 0 begin dup 16 vec startx 2@ 2+ x 2! over + pause again ;
-: /orb  draw> 8 8 +at  8 8 damaged @ if rndcolor else blue then circf ;
+: /orb  draw> 8 8 +at  damaged @ if rndcolor else blue then 8 circf ;
 : *orb  spawn /orb -5 orbit act> ~weapons ;
 
 ( stone statue )

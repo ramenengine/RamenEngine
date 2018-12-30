@@ -57,8 +57,8 @@ link-role :to evoke-direction  evoke-link-walk ;
     <z> pressed -exit
     -vel
     evoke-link-swing
-    0 s" player-swung-sword" occur
-    13 pauses
+    { p1 from *sword-attack }
+    10 pauses
     idle
 ;
 
@@ -109,6 +109,7 @@ link-role :to start ( - )
     16 8 mbw 2!  0 8 cx 2!  start ;
 
 -8 link 's ihb y!
+
 
 :listen
     s" player-entered-cave" occurred if

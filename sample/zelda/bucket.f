@@ -9,3 +9,16 @@
 \     x @ camx @ -  320 mbw @ -  >=  right? and if  1 scroll  then
 \     y @ camy @ 8 + -  0 <=  up? and           if  2 scroll  then
 \     y @ camy @ -  208 mbh @ -  >=  down? and  if  3 scroll  then ;
+
+
+( object types )
+1
+enum #link
+enum #test
+enum #sword
+enum #bomb
+enum #potion
+enum #orb
+enum #statue
+value nextitemtype
+
