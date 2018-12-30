@@ -6,7 +6,7 @@ Ramen is a 2D game engine written in standard Forth.
 
 Status:
 
-2.0 is in development and it fixes and improves on a ***lot***.
+2.0 is in development and it fixes and improves on a ***lot***.  I am working on a [rewrite of my Zelda clone](https://github.com/RogerLevy/RamenEngine/tree/zelda) which runs on 2.0.
 
 ## Setup (new)
 
