@@ -4,10 +4,11 @@ enum #link  defobj <link>
 enum #test  
 enum #sword defobj <sword>
 enum #bomb  defobj <bomb>
-enum #potion defobj <potion>
+enum #potion  defobj <potion>
 enum #rupee
 enum #orb   defobj <orb>
 enum #statue
+enum #swordattack  defobj <swordattack>
 value nextitemtype
 
 ( link )
@@ -37,7 +38,8 @@ value nextitemtype
         then
     ;
     
-( sword attack )
+( sword attacks )
+    <swordattack> :to setup  #directional #weapon #directional or flags ! ;
     : in-front 
         dir @ case
             0 of 12 2 x 2+! 14 ihb h! endof
@@ -46,11 +48,10 @@ value nextitemtype
             90 of 0 12 x 2+! endof
         endcase ;
     : retract  /clipsprite dir @ 180 + 4 vec vx 2! ;
-    : *sword-attack
-        spawn *sword #weapon #directional or flags ! !dir in-front evoke-sword
-        ['] retract 7 after 9 live-for ;
+    <swordattack> :to start  in-front evoke-sword ;
+    : swordstab  spawn *swordattack ['] retract 7 after 9 live-for ;
     :listen
         s" player-swung-sword" occurred if
-            p1 from { *sword-attack }
+            p1 from { swordstab }
         ;then   
     ;
