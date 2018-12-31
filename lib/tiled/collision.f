@@ -15,7 +15,7 @@ defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )
     bit BIT_CEL
     bit BIT_FLR
     bit BIT_WLT
-    bit BIT_WLR
+    bit BIT_WRT
 value tile-bits
 
 define collisioning
@@ -26,7 +26,7 @@ define collisioning
     : cel? BIT_CEL and ; \ ' ceiling '
     : flr? BIT_FLR and ; \ ' floor '
     : wlt? BIT_WLT and ; \ ' wall left '
-    : wrt? BIT_WLR and ; \ ' wall right '
+    : wrt? BIT_WRT and ; \ ' wall right '
     
     : vector   create 0 , here 0 , constant ;
     vector nx ny
