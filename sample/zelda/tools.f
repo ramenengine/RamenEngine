@@ -99,31 +99,18 @@ var startx  var starty
 : with  ( - ) me to you ;
 : hit?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     flags @ and 0= if 0 ;then
-    me you = ?exit
+    me you = if 0 ;then
     ibox you >{ ibox } overlap? ;
 : draw-ibox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 :slang on-top  act> me stage push ;
 : show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
 
 ( actor spawning )
-defer spawn  ( - )
-: obj-spawn  dir @ stage one dir ! ; 
-' obj-spawn is spawn
+0 value spawner
+\ defer spawn 
 : from  dup 's ihb xy@ rot away ;
-
+: spawn  me to spawner me from ;
 \ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
-
-( actor directional stuff )
-var olddir
-action evoke-direction  ( - )
-: !face  ( - ) dir @ olddir !  evoke-direction ; 
-: downward  ( - ) 90 dir ! !face ;
-: upward    ( - ) 270 dir ! !face ;
-: leftward  ( - ) 180 dir ! !face ;
-: rightward ( - ) 0 dir !   !face ;
-: ?face     ( - ) dir @ olddir @ = ?exit !face ;    
-: dir-anim-table  ( - )
-    does> dir @ 90 / cells + @ execute ;
 
 ( physics )
 var 'physics  \ code
@@ -169,50 +156,11 @@ create args 100 stack,
 ; 
 
 ( quest state )
-: qvar  dup constant cell+ ;
-: qfield  over constant + ;
 create quest  64 kb /allot
-quest value quest-ptr
+quest value quest^
+: qfield  quest^ constant +to quest^ ;
+: qvar  cell qfield ;
 
 
 
-( flags )
-#1
-bit #important
-bit #weapon
-bit #item
-value next-flag
-var flags <hex
-
-: flag?  flags @ and 0<> ;
-: +flag  flags or! ;
-: -flag  invert flags and! ;
-: important? #important flag? ;
-
-
-( item stuff )
-include sample/zelda/item-assets.f
-quest-ptr
-    256 cells qfield inventory
-to quest-ptr
-
-var itemtype
-var quantity   1 defaults 's quantity !
-var col  var row
-
-action gotten ( - )
-: item[]  ( n - adr ) cells inventory + ;
-: get  ( quantity itemtype - ) item[] +! ;
-basis :to gotten  ( - )  quantity @ itemtype @ get ;
-: .item  ( obj - )  dup >{ h. ."  Type: " itemtype ?  ."  Quantity: " quantity ? } ;
-: pickup ( obj - ) >{ cr ." Got: " me .item gotten dismiss } ;
-: have  ( itemtype - n )  item[] @ ;
-
-: /weapon  #weapon +flag  #item -flag ;
-: *item  ( itemtype - )
-    spawn itemtype !  #item +flag  
-    /sprite item-regions rgntbl !  items.image img ! 
-;
-
-: ~items  with stage each> as #item hit? -exit me you >{ pickup } ;
 

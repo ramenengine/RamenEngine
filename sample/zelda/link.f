@@ -104,7 +104,7 @@ create evoke-link-swing dir-anim-table
     0 perform> begin ?attack ?walk pause again ;
 <link> :to start ( - )
     /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
-    act> !dirkey ?trig ~items ;
+    act> !dirkey ?trig ;
 
 
 : /link  link as  #link /obj ;

@@ -14,7 +14,6 @@ s" enemy-icon.png" >data image: enemy-icon.image
 : *test  spawn /test act> ~weapons ;
 
 
-
 : roomwh  #cols #rows 16 16 2* ;
 : roomxy  room# @ srcrc 32 - 16 16 2* ;
 : roombox  ( - x y x y )  roomxy roomwh area ;

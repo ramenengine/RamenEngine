@@ -2,10 +2,12 @@ empty
 : >data  s" sample/zelda/data/" 2swap strjoin ;
 include sample/zelda/tools.f
 include sample/zelda/vars.f
-include sample/zelda/map.f
 include sample/zelda/common.f
+include sample/zelda/common-zelda.f
+include sample/zelda/map.f
+\ include sample/zelda/items.f
+\ include sample/zelda/item-assets.f
 include sample/zelda/objdefs.f
-include sample/zelda/items.f
 \ include sample/zelda/link.f
 \ include sample/zelda/enemies.f
 
