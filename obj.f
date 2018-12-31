@@ -1,6 +1,6 @@
 [defined] object-maxsize not [if] 256 cells constant object-maxsize [then] 
 object-maxsize constant maxsize
-[defined] roledef-size [if] roledef-size [else] 256 cells [then] constant /roledef
+[defined] roledef-size [if] roledef-size [else] 4 kb [then] constant /roledef
 variable lastrole \ used by map loaders (when loading objects scripts)
 struct %role
 struct %obj
@@ -109,10 +109,13 @@ basis defaults 's role !
 : create-rolefield  ( size - <name> ) %role swap create-field $76543210 , ;
 : rolefield  ( size - <name> ) ?unique create-rolefield  does> field.offset @ role@ + ;
 : rolevar  ( - <name> ) 0 ?unique drop  cell create-rolefield  does> field.offset @ role@ + ;
-: action   ( - <name> ) 0 ?unique drop  cell create-rolefield <adr does> field.offset @ role@ + @ execute ;
+: action   ( - <name> ) ( ??? - ??? )
+    0 ?unique drop  cell create-rolefield <adr
+    does> field.offset @ role@ + @ execute ;
 : :to   ( roledef - <name> ... )  ' >body field.offset @ + :noname swap ! ;
 : +exec  + @ execute ;
-: ->  ( roledef - <action> )  ' >body field.offset @ postpone literal postpone +exec ; immediate
+: ->  ( roledef - <action> )
+    ' >body field.offset @ postpone literal postpone +exec ; immediate
 
 \ Inspection
 : o.   ( obj - ) dup h. %obj .fields ;
