@@ -47,6 +47,7 @@ variable lastkeydir
     r> { swap (those) 2drop } ;
 : njump  ( n adr - ) 
     swap cells + @ execute ;
+: rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
 
 ( actors )
 objlist tasks
@@ -60,6 +61,7 @@ var target <adr
 var clipx  var clipy
 var targetid
 var flags <hex
+var startx  var starty
 %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
 0 0 16 16 defaults 's ihb xywh!
 
@@ -77,6 +79,8 @@ var flags <hex
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
 : ipos  x 2@ ihb xy@ 2+ ;
 : toward  ( obj - x y )  >{ ipos } ipos 2- angle uvec ;
+: !startxy x 2@ startx 2! ;
+: bit#  ( bitmask - n )  #1 32 for 2dup and if 2drop i unloop ;then 1 << loop 2drop -1 ;
 
 ( grid )
 : will-cross-grid? ( - f )
@@ -91,21 +95,21 @@ var flags <hex
 
 ( actor collisions )
 0 value you
-: cbox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
+: ibox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
 : with  ( - ) me to you ;
 : hit?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     flags @ and 0= if 0 ;then
     me you = ?exit
-    cbox you >{ cbox } overlap? ;
-: draw-cbox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
+    ibox you >{ ibox } overlap? ;
+: draw-ibox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 :slang on-top  act> me stage push ;
-: show-cboxes  stage one  on-top  draw> stage each> as draw-cbox ;
+: show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
 
 ( actor spawning )
 defer spawn  ( - )
 : obj-spawn  dir @ stage one dir ! ; 
 ' obj-spawn is spawn
-: from  as ihb xy@ me away ;
+: from  dup 's ihb xy@ rot away ;
 
 \ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
 

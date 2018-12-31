@@ -1,1 +1,1 @@
-ld sample/zelda/zelda
+include sample/zelda/zelda.f

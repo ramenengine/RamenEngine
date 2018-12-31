@@ -11,14 +11,3 @@
 \     y @ camy @ -  208 mbh @ -  >=  down? and  if  3 scroll  then ;
 
 
-( object types )
-1
-enum #link
-enum #test
-enum #sword
-enum #bomb
-enum #potion
-enum #orb
-enum #statue
-value nextitemtype
-

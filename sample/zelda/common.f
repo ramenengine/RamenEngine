@@ -16,32 +16,125 @@
 \   types and/or flags should be common to objects AND tiles
 \ ===================================================================================
 
+#16 rolefield typename <cstring
+rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
+#32 rolefield imagepath <cstring
+rolevar regiontablesize 
+rolevar regiontable <adr
+8 cells rolefield dropables
+%rect sizeof rolefield initial-mhb \ map hitbox
+	var objtype
+	var quantity    
+	var bitmask <hex        \ what the object should interact with
+	var flags   <hex        \ what attributes the object has
+	%rect sizeof field ihb \ interaction hitbox
+	var hp
+	var maxhp
+	var atk
+    var hp  2 defaults 's hp !
+    var maxhp  2 defaults 's maxhp !
+    var damaged  \ stores the attack power of the last call to -HP
+    var startx  var starty
+
+action /settings ( - )
+action start ( - )
+action die ( - )
+    basis :to die ( - ) end ;
+
+( object and tile flags )
+#1
+bit #directional
+bit #gfxclip
+bit #important
+bit #solid
+bit #collider
+bit #inair
+\ bit #entrance
+\ bit #ground
+bit #fire
+bit #water
+bit #npc
+bit #item
+bit #enemy
+value nextflag
+
+( definition role array )
+create objdefs 255 array,
+: def  1 - objdefs [] @ ;
+
+( graphics )
+: (clip)  clipx 2@ cx 2@ 2- 16 16 ;
+: obj-sprite #gfxclip flag? if (clip) clip> then spr @ nsprite ;
+: obj-animate  #gfxclip flag? if (clip) clip> then sprite+ ;
+
+: gfx-sprite draw> obj-sprite ;
+: gfx-animation draw> obj-animate ;
+: ?flash  if rndcolor then ;
+: gfx-circle draw> 8 8 +at  tint 4@ rgba damaged @ ?flash 8 circf ;
+: gfx-box draw> tint 4@ rgba damaged @ ?flash 16 16 rectf ;
+
+0
+enum #none
+enum #circle
+enum #box
+enum #sprite
+enum #animation
+drop
+create graphics-types
+	' noop ,
+	' gfx-circle ,
+	' gfx-box ,
+	' gfx-sprite ,
+	' gfx-animation , 
+: ?graphics graphics-types njump ;
 
 
-struct %def
-    %def #16 sfield def>basename <cstring
-    %def svar def.gfxtype   \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
-    %def #32 sfield def>imagepath <cstring
-    %def svar def.regiontablesize
-    %def svar def.regiontable <adr
-    %def %rect sizeof sfield def>mhb \ map hitbox
-    %def 8 cells sfield def>drops
-    %def var def.role <adr
-    %def object-maxsize sfield def>template
-        var objtype
-        var quantity    
-        var bitmask <hex        \ what the object should interact with
-        var flags   <hex        \ what attributes the object has
-        %rect sizeof field ihb \ interaction hitbox
-        var hp
-        var maxhp
-        var atk
+( damage )
+: -hp  ( n - )  dup negate hp +! damaged ! hp @ ?exit die ;
+: undamage  damaged off ;
+: damage  ( n obj - )
+    >{ damaged @ if drop } ;then -hp ['] undamage 60 after } ;
 
-action start
+( initialization and spawning )
+: ?find  dup -exit find ;
+: ?solid  #solid flag? -exit  physics> tilebuf collide-tilemap ;
+: /obj  ( objtype - )
+	dup objtype ! def role !
+	regiontable @ rgntbl !
+	initial-mhb wh@ mbw 2!
+	gfxtype @ ?graphics
+    /settings
+	?solid
+	start
+;
+: *obj  ( objtype - )
+	dir @
+		stage one swap /obj
+		#directional flag? if dir ! else drop then 
+;
 
-create objdefs %def sizeof 255 * /allot 
+( making object definitions )
+: (typeid)  s" #" 2swap strjoin ;
+: create-spawner create , does> @ *obj ;
+: create-initializer  create , does> @ /obj ;
 
-: def  1 - [ %def sizeof ]# * objdefs + ;
+\ creates multiple words:
+\   <name>-role
+\   *<name> ( - ) spawns the object
+\   /<name> ( - ) 
+: defobj ( - <name> )
+	0 locals| typeid |
+	bl parse 2>r
+		2r@ (typeid) evaluate to typeid 
+		s" create <" s[ 2r@ +s s" >" +s ]s evaluate
+		here lastrole !
+		here basis /roledef move, typeid 1 - objdefs [] !
+		typeid s" create-spawner *" 2r@ strjoin evaluate
+		typeid s" create-initializer /" 2r@ strjoin evaluate
+	2r> 2drop
+;
+
+( compile-time struct literal tools )
 : field+  >body @ + ;
 : := ( baseadr - <fieldname> <values...> baseadr )
     0 locals| n |
@@ -55,79 +148,34 @@ create objdefs %def sizeof 255 * /allot
 ;
 : $= ( baseadr - <fieldname> <string> baseadr )
     dup ' field+ >r 0 parse r> place ;
-: drop  drop ;
 
 
-\            notes
-\ *<type>    early version: #<type> *obj
-\ /<type>    early version: #<type> /obj
-\ #<type>    created from the datatable
-\ 
+( motion )
+: orbit  !startxy perform> 0 begin dup 16 vec startx 2@ 2+ x 2! over + pause again ;
 
-: >def  's objtype @ def ;
-: template  objdef def>template ;
+( interactions )
 
-: (clip)  clipx 2@ cx 2@ 2- 16 16 ;
-: obj-sprite #gfxclip flag? if (clip) clip> then spr @ nsprite ;
-: obj-animate  #gfxclip flag? if (clip) clip> then sprite+ ;
+: actiontable  ( #cells - <name> )  ( n - )
+    0 ?unique drop  cells create-rolefield <adr
+    does> field.offset @ role@ + swap cells + @ execute ;
 
-: gfx-sprite draw> obj-sprite ;
-: gfx-animation draw> obj-animate ;
-: ?flash  if rndcolor then ;
-: gfx-circle draw> 8 8 +at  blue damaged @ ?flash 8 circf ;
-: gfx-box draw> blue damaged @ ?flash 16 16 rectf ;
+32 actiontable collide
 
-create graphics-types
-    ' noop ,
-    ' gfx-circle ,
-    ' gfx-box ,
-    ' gfx-sprite ,
-    ' gfx-animation , 
-: ?graphics graphics-types njump ;
+: :on  ( attribute role - <code> ; )
+	' >body field.offset @ + swap bit# cells + :noname swap ! ;
 
-: ?find  dup -exit find ;
-
-\ the slow way.  will speed up later
-: @template  /objhead + me /objhead + object-maxsize /objhead - move ;
-
-
-( object and tile flags )
-#1
-bit #directional
-bit #gfxclip
-bit #important
-bit #solid
-bit #collider
-bit #inair
-bit #ground
-bit #fire
-bit #water
-bit #human
-bit #item
-bit #entrance
-bit #enemy
-value nextflag
-
-: ?solid  #solid flag? -exit  physics> tilebuf collide-tilemap ;
-
-: /obj  ( objtype - )
-    objtype !
-    me >def locals| d |
-    d def>template @template
-    d def>imagepath ?find if execute else drop 0 then img !
-    d def.regiontable @ rgntbl !
-    d def.gfxtype @ ?graphics
-    d def>mhb wh@ mbw 2!
-    d def.role @ ?dup if role ! then
-    ?solid
-    start
+: interact  ( - )
+    stage each> as  en @ -exit
+        bitmask @ -exit
+		with stage each> as you 's bitmask @ hit? if
+			\ ." hit "
+			you 's bitmask @ flags @ and 32 for
+				dup #1 and if
+					\ ." collide "
+					i me you >{ to you collide me } to you
+				then 1 >>
+			loop drop
+		then 
 ;
 
-
-: *obj  ( objtype - )
-    dir @
-        stage one swap /obj
-        #directional flag? if dir ! else drop then 
-;
-
-previous
+: spawn  me from ;
