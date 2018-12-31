@@ -28,5 +28,5 @@ include sample/zelda/item-assets.f
 : get  ( quantity objtype - ) item[] +! ;
 basis :to gotten  ( - )  quantity @ objtype @ get ;
 \ : .item  ( obj - )  dup >{ h. ."  Type: " itemtype ?  ."  Quantity: " quantity ? } ;
-: pickup ( obj - ) >{ cr ." Got: " ( me .item ) gotten dismiss } ;
+: pickup ( obj - ) >{ ( cr ." Got: " me .item ) gotten dismiss } ;
 : have  ( itemtype - n )  item[] @ ;

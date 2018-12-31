@@ -39,7 +39,7 @@ var damaged  \ stores the attack power of the last call to -HP
 var startx  var starty
 var quantity   
 
-action /settings ( - )
+action setup ( - )
 action start ( - )
 action die ( - )
     basis :to die ( - ) end ;
@@ -89,6 +89,7 @@ enum #box
 enum #sprite
 enum #animation
 drop
+#sprite basis 's gfxtype !  \ default for all objects is simple sprite
 create graphics-types
 	' noop ,
 	' gfx-circle ,
@@ -107,7 +108,7 @@ create graphics-types
 	initial-mhb wh@ mbw 2!
 	initial-bitmask @ bitmask !
 	gfxtype @ ?graphics
-    /settings
+    setup
 	?solid
 	!dir
 	start
@@ -166,8 +167,8 @@ create graphics-types
 	s" :on collide " evaluate ;
 
 : collide?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
+    me you = if drop 0 ;then
     bitmask @ you 's flags @ and 0= if 0 ;then
-    me you = if 0 ;then
     ibox you >{ ibox } overlap? ;
 
 : interact  ( - )
@@ -178,7 +179,7 @@ create graphics-types
 			bitmask @ you 's flags @ and 32 for
 				dup #1 and if
 					\ ." collide "
-					i me collide 
+					i collide 
 				then 1 >>
 			loop drop
 		then 

@@ -106,7 +106,7 @@ var startx  var starty
 : show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
 
 ( actor spawning )
-0 value spawner
+stage value spawner
 \ defer spawn 
 : from  dup 's ihb xy@ rot away ;
 : spawn  me to spawner me from ;

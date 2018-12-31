@@ -1,35 +1,56 @@
 ( object types )
 1
-enum #link
-enum #test
-enum #sword
-enum #bomb
-enum #potion
+enum #link  defobj <link>
+enum #test  
+enum #sword defobj <sword>
+enum #bomb  defobj <bomb>
+enum #potion defobj <potion>
 enum #rupee
-enum #orb
+enum #orb   defobj <orb>
 enum #statue
 value nextitemtype
 
 ( link )
-defobj <link>
     include sample/zelda/link.f
-    #sprite <link> 's gfxtype !
-    <link> :to /settings link.ts img !   #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 0 ihb xy! ;
+    <link> :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 0 ihb xy! ;
     #item <link> :hit  you pickup ;
 
 ( blue orb thing )
-defobj <orb>
     #circle <orb> 's gfxtype !
-    <orb> :to /settings   blue tinted ;
+    <orb> :to setup   blue tinted ;
     <orb> :to start  -5 orbit ;
     #weapon <orb> :hit  1 me damage ;
 
 ( bomb )
-defobj <bomb>
-    #sprite <bomb> 's gfxtype !
-    <bomb> :to /settings  /item  4 quantity !  1 spr ! ;
+    <bomb> :to setup  /item  4 quantity !  1 spr ! ;
     
 ( potion )
-defobj <potion>
-    #sprite <potion> 's gfxtype !
-    <potion> :to /settings  /item  2 spr ! ;
+    <potion> :to setup  /item  2 spr ! ;
+
+( sword )
+    <sword> :to setup  /item  anim-swordu ;
+    :listen
+        #sword have not if 
+            s" player-entered-cave" occurred if
+                128 8 - 128 at *sword 
+            ;then
+        then
+    ;
+    
+( sword attack )
+    : in-front 
+        dir @ case
+            0 of 12 2 x 2+! 14 ihb h! endof
+            270 of 0 -12 x 2+! endof
+            180 of -12 2 x 2+! 14 ihb h! endof
+            90 of 0 12 x 2+! endof
+        endcase ;
+    : retract  /clipsprite dir @ 180 + 4 vec vx 2! ;
+    : *sword-attack
+        spawn *sword #weapon #directional or flags ! !dir in-front evoke-sword
+        ['] retract 7 after 9 live-for ;
+    :listen
+        s" player-swung-sword" occurred if
+            p1 from { *sword-attack }
+        ;then   
+    ;
