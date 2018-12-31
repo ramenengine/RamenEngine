@@ -1,6 +1,3 @@
-    
-
-
 
 ( sword )
 : in-front 

@@ -1,11 +1,3 @@
-\ item types
-1
-enum #rupees
-enum #sword
-enum #bomb
-enum #potion
-drop
-
 \ more attributes
 nextflag
 bit #weapon
@@ -25,14 +17,13 @@ action evoke-direction  ( - )
 : leftward  ( - ) 180 dir ! !face ;
 : rightward ( - ) 0 dir !   !face ;
 : ?face     ( - ) dir @ olddir @ = ?exit !face ;    
-: dir-anim-table  ( - )
-    does> dir @ 90 / cells + @ execute ;
+: dir-anim-table  ( - )  does> dir @ 90 / cells + @ execute ;
     
 ( item stuff )
+action gotten ( - )
 include sample/zelda/item-assets.f
 256 cells qfield inventory
-
-action gotten ( - )
+: /item  item-regions rgntbl !  items.image img !  #item +flag ;
 : item[]  ( n - adr ) cells inventory + ;
 : get  ( quantity objtype - ) item[] +! ;
 basis :to gotten  ( - )  quantity @ objtype @ get ;

@@ -119,11 +119,11 @@ create graphics-types
 : create-spawner create , does> @ *obj ;
 : create-initializer  create , does> @ /obj ;
 
-: defobj ( - <name> )
+: defobj ( - <name> )  \ name should be actually encased by '<' and '>'
 	0 locals| typeid |
-	bl parse 2>r
+	>in @ create >in !
+	bl parse #1 /string #1 - 2>r
 		2r@ (typeid) evaluate to typeid 
-		s" create <" s[ 2r@ +s s" >" +s ]s evaluate
 		here lastrole !
 		here basis /roledef move, typeid 1 - objdefs [] !
 		typeid s" create-spawner *" 2r@ strjoin evaluate
