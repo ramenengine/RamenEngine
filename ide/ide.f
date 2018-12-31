@@ -25,6 +25,21 @@ create attributes
   1 , 1 , 0.3 ,   1 ,  \ 3 light yellow
   0 , 1 , 1 ,     1 ,  \ 4 cyan
   1.0 , 0 , 0.5 ,     1 ,  \ 5 purple
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
+  1 , 1 , 1 , 1 ,      \ 0 white
 variable output   \ output bitmap
 0 value tempbmp
 :make repl?  repl @ ;
