@@ -18,6 +18,6 @@ defobj link
 ( blue orb thing )
 defobj orb
     #circle <orb> 's gfxtype !
-    <orb> :to /settings   ['] blue >body 4@ tint 4!   #weapon bitmask ! ;
+    <orb> :to /settings   ['] blue >body 4@ tint 4! ;
     <orb> :to start -5 orbit ;
-    #weapon <orb> :on collide  1 me damage ;
+    #weapon <orb> :hit  1 me damage ;

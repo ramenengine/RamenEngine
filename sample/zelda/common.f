@@ -22,19 +22,21 @@ rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
 rolevar regiontablesize 
 rolevar regiontable <adr
 8 cells rolefield dropables
+rolevar initial-bitmask
 %rect sizeof rolefield initial-mhb \ map hitbox
-	var objtype
-	var quantity    
-	var bitmask <hex        \ what the object should interact with
-	var flags   <hex        \ what attributes the object has
-	%rect sizeof field ihb \ interaction hitbox
-	var hp
-	var maxhp
-	var atk
-    var hp  2 defaults 's hp !
-    var maxhp  2 defaults 's maxhp !
-    var damaged  \ stores the attack power of the last call to -HP
-    var startx  var starty
+
+var objtype
+var quantity    
+var bitmask <hex        \ what the object should interact with
+var flags   <hex        \ what attributes the object has
+%rect sizeof field ihb \ interaction hitbox
+var hp
+var maxhp
+var atk
+var hp  2 defaults 's hp !
+var maxhp  2 defaults 's maxhp !
+var damaged  \ stores the attack power of the last call to -HP
+var startx  var starty
 
 action /settings ( - )
 action start ( - )
@@ -102,6 +104,7 @@ create graphics-types
 	dup objtype ! def role !
 	regiontable @ rgntbl !
 	initial-mhb wh@ mbw 2!
+	initial-bitmask @ bitmask !
 	gfxtype @ ?graphics
     /settings
 	?solid
@@ -159,10 +162,15 @@ create graphics-types
     0 ?unique drop  cells create-rolefield <adr
     does> field.offset @ role@ + swap cells + @ execute ;
 
-32 actiontable collide
+32 actiontable collide  \ me = the one checking, you = the object collided with
 
-: :on  ( attribute role - <code> ; )
+: :on  ( attribute role - <actiontable> <code> ; )
 	' >body field.offset @ + swap bit# cells + :noname swap ! ;
+
+: :hit  ( attribute role - <code> ; )
+	2dup 's initial-bitmask @ or over 's initial-bitmask !
+	s" :on collide " evaluate ;
+
 
 : interact  ( - )
     stage each> as  en @ -exit
