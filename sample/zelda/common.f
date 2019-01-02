@@ -4,14 +4,6 @@
 \ 2. I want to be able to define objects from within Ramen
 \ 3. I want all objects to have enough common logic
 \    to make simple games with no code
-
-\ maybe don't store in a binary file
-\  a human-readable format (maybe a custom one, using Forth) would be more futureproof.
-
-\ first allocate the space for the datatable
-\ load stuff into the datatable
-\ then load all the code, making connections to it
-
 \ object type index...
 \   types and/or flags should be common to objects AND tiles
 \ ===================================================================================
@@ -37,7 +29,6 @@ var hp  2 defaults 's hp !
 var maxhp  2 defaults 's maxhp !
 var damaged  \ stores the attack power of the last call to -HP
 var startx  var starty
-var quantity   
 
 action setup ( - )
 action start ( - )
