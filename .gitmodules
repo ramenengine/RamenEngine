@@ -7,3 +7,6 @@
 [submodule "ramen"]
 	path = ramen
 	url = https://github.com/RogerLevy/ramen.git
+[submodule "3dpack"]
+	path = 3dpack
+	url = https://github.com/RogerLevy/3dpack.git
