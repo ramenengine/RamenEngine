@@ -1,6 +1,7 @@
 [defined] object-maxsize not [if] 256 cells constant object-maxsize [then] 
 object-maxsize constant maxsize
 [defined] roledef-size [if] roledef-size [else] 4 kb [then] constant /roledef
+
 variable lastrole \ used by map loaders (when loading objects scripts)
 struct %role
 struct %obj
@@ -62,7 +63,7 @@ create defaults  object,                \ default values are stored here
 defaults as  en on 
 
 create pool  object,                    \ where we cache free objects
-create root  object,                    \ catch-all destination
+create root  object,                    \ parent of all objlists
 
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;
@@ -89,7 +90,7 @@ create root  object,                    \ catch-all destination
 : act>   ( - <code> ) r> beha ! ;
 : away  ( x y obj - ) 's x 2@ 2+ at ;
 : -act  ( - ) act> noop ;
-: objlist  ( - <name> )  create here as object, init ;
+: objlist  ( - <name> )  create here as object, init me root push ;
 
 \ stage
 objlist stage  \ default object list

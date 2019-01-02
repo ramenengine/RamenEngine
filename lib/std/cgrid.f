@@ -9,8 +9,8 @@ struct cbox
 define cgriding
     cbox svar x1    cbox svar y1
     cbox svar x2    cbox svar y2
-    cbox svar s1    cbox svar s2  \ sectors 1-4
-    cbox svar s3    cbox svar s4
+    cbox svar s1 <adr   cbox svar s2 <adr \ sectors 1-4
+    cbox svar s3 <adr   cbox svar s4 <adr
 
     #8 #12 + constant #bitshift
 
