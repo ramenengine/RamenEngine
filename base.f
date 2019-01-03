@@ -42,7 +42,7 @@ include ramen/draw.f    cr .( Loaded draw module... ) \ "
 redef off  \ from here on fields only defined if not previously defined
 
 : frmctr  frmctr 1p ;
-used @ value baseline
+%object sizeof value baseline
 
 [undefined] LIGHTWEIGHT [if]
     include ramen/default.f
@@ -50,13 +50,13 @@ used @ value baseline
 
 : empty
     ." [Empty]" cr
-    /stage -assets baseline used !
+    /stage -assets baseline %object struct.size !
     s" default-step" evaluate empty
     only forth definitions
 ;
 
 : gild
-    used @ to baseline     
+    %object sizeof to baseline     
     only forth definitions
     s" marker (empty)" evaluate 
 ;

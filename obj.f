@@ -4,7 +4,8 @@ object-maxsize constant maxsize
 
 variable lastrole \ used by map loaders (when loading objects scripts)
 struct %role
-struct %obj
+struct %object
+%object value fields  \ change this to create unrelated object-y structs (careful!)
 create basis /roledef /allot  \ default rolevar and action values for all newly created roles
 
 \ ME is defined in afkit
@@ -16,7 +17,7 @@ create mestk  0 , 16 cells allot
 : }  ( - ) state @ if s" r> as" evaluate else  i}  then ; immediate
 : >{ ( object - )  s" { as " evaluate ; immediate    \ }
 
-: used  ( - adr ) %obj struct.size ;
+: (used)  ( - adr ) %object struct.size ;
 
 variable redef  \ should you want to bury anything
 redef on  \ we'll keep this on while compiling RAMEN itself
@@ -37,8 +38,8 @@ redef on  \ we'll keep this on while compiling RAMEN itself
         then
     >in ! ;
 
-: ?maxsize  ( - ) used @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
-: field ( size - <name> )  ?unique ?maxsize %obj swap create-field $76543210 , does> field.offset @ me + ;
+: ?maxsize  ( - ) (used) @ maxsize >= abort" Cannot create object field; USED is maxed out. Increase OBJECT-MAXSIZE." ;
+: field ( size - <name> )  ?unique ?maxsize fields swap create-field $76543210 , does> field.offset @ me + ;
 : var ( - <name> ) cell field ;
 : 's  ( object - <field> adr ) ' >body field.offset @ ?lit s" +" evaluate ; immediate  \ also works with rolevars
 
@@ -47,9 +48,9 @@ redef on  \ we'll keep this on while compiling RAMEN itself
 \  you can create "pools" which can dynamically allocate objects
 \  you can itterate over objlists as a whole, or just over a pool at a time
 
-%node @ %obj struct.size +!
+%node @ %object struct.size +!
 var id  \ don't move this (?)
-used @ constant /objhead
+(used) @ constant /objhead
 var en <hex  var hidden <flag  
 var x  var y  var vx  var vy
 var drw <adr  var beha <adr
@@ -119,7 +120,7 @@ basis defaults 's role !
     ' >body field.offset @ postpone literal postpone +exec ; immediate
 
 \ Inspection
-: o.   ( obj - ) dup h. %obj .fields ;
+: o.   ( obj - ) dup h. %object .fields ;
 : .me  ( - ) me o. ;
 : .role  ( obj - )  's role @ ?dup if %role .fields else ." No role" then ;
 : .objlist  ( objlist - )  dup length . each> as  cr ." ID: " id ?  ."  X/Y: " x 2? ;
