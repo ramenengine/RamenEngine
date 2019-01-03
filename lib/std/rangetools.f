@@ -1,4 +1,4 @@
-: area  ( x y w h - x1 y1 x2 y2 )  2over 2+ ;
+: aabb  ( x y w h - x1 y1 x2 y2 )  2over 2+ ;
 : lowerupper  ( n n - lower higher )  2dup > if  swap  then ;
 : between  ( n n - n )  lowerupper  over -  #1 +  rnd + ;
 : vary  ( n rnd - n )  dup 0.5 *  -rot rnd +  swap - ;

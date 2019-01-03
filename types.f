@@ -18,9 +18,6 @@ struct %rect
 : h@    rect.h @ ;                : h!    rect.h ! ;
 : xy@   2@ ;                      : xy!   2! ;
 : wh@   rect.w 2@ ;               : wh!   rect.w 2! ;
-
-: rect.  dup xy@ 2. rot wh@ 2. ;
-
 : xywh@  4@ ;                     : xywh! 4! ;
 : x2@   dup x@ swap w@ + ;        : x2!   >r r@ x@ - r> w! ;
 : y2@   dup y@ swap h@ + ;        : y2!   >r r@ y@ - r> h! ;
