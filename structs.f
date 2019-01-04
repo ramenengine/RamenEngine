@@ -63,6 +63,7 @@ previous
 [defined] h. [if]
     : <hex  is> drop @ dup 0= if #5 attribute then ." $" h. normal ;
     : <adr  <hex ;
+    : <xt   <hex ;
 [else]
     : <adr  ;
 [then]
