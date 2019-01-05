@@ -39,7 +39,7 @@ value nextitemtype
     ;
     
 ( sword attacks )
-    <swordattack> :to setup  #directional #weapon #directional or flags ! ;
+    <swordattack> :to setup  #directional #weapon or flags ! ;
     : in-front 
         dir @ case
             0 of 12 2 x 2+! 14 ihb h! endof

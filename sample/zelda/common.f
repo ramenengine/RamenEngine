@@ -1,13 +1,3 @@
-\ ===================================================================================
-\ Goals
-\ 1. I don't want to have to create a function for every object
-\ 2. I want to be able to define objects from within Ramen
-\ 3. I want all objects to have enough common logic
-\    to make simple games with no code
-\ object type index...
-\   types and/or flags should be common to objects AND tiles
-\ ===================================================================================
-
 #16 rolefield typename <cstring
 rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
 #32 rolefield imagepath <cstring
@@ -65,7 +55,7 @@ create objdefs 255 array,
 ( graphics )
 : (clip)  clipx 2@ cx 2@ 2- 16 16 ;
 : obj-sprite #gfxclip flag? if (clip) clip> then spr @ nsprite ;
-: obj-animate  #gfxclip flag? if (clip) clip> then sprite+ ;
+: obj-animate  #gfxclip flag? if (clip) clip> then sprite ;
 
 : gfx-sprite draw> obj-sprite ;
 : gfx-animation draw> obj-animate ;

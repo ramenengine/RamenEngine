@@ -75,8 +75,8 @@ var startx  var starty
 : (every)  perform> begin dup pauses (xt) @ target @ >{ execute } again ;
 : every  ( xt n - ) { *task swap (xt) ! (every) } ;
 : every>  ( n - <code> ) r> code> swap every ;
-: /sprite  draw> sprite+ ;
-: /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite+ ;
+: /sprite  draw> sprite ;
+: /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite ;
 : ipos  x 2@ ihb xy@ 2+ ;
 : toward  ( obj - x y )  >{ ipos } ipos 2- angle uvec ;
 : !startxy x 2@ startx 2! ;
@@ -95,7 +95,7 @@ var startx  var starty
 
 ( actor collisions )
 0 value you
-: ibox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ area 1 1 2- ;
+: ibox  ( - x y x y )  x 2@ ihb xy@ 2+ ihb wh@ aabb 1 1 2- ;
 : with  ( - ) me to you ;
 : hit?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     flags @ and 0= if 0 ;then
