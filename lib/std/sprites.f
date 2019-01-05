@@ -36,14 +36,15 @@ defaults >{
     1 anmspd !
 }
 
-\ Drawing
-: sprite ( srcx srcy w h flip )
+( Drawing )
+: bsprite ( srcx srcy w h flip )
     locals| flip h w y x |
     img @ -exit
     img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 2@ 2af
     ang @ >rad 1af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
+( FRame stuff )
 : framexywh  ( n rgntbl - srcx srcy w h )
     swap /region * + 4@ ;
 
@@ -51,17 +52,28 @@ defaults >{
     img @ 0= if 0 0 0 0 ;then
     rgntbl @ if
         rgntbl @ framexywh
-    else
+    ;then
+    img @ image.subw @ if
         img @ subxywh
-    then ;
+    else
+        0 0 img @ imagewh
+    then
+;
 
+( Animation )
 : frame  anm @ anmctr @ pfloor /frame * + ;
 
 : curflip  ( index - index n )
     anm @ if frame @ #3 and ;then  dup 3 and ;
 
 : ?regorg  ( index - index )  \ apply the region origin
-    rgntbl @ -exit 
+    rgntbl @ 0= if
+        img @ image.subw @ if
+            img @ image.subw 2@ 0.5 0.5 2* cx 2!
+        else 
+            img @ imagewh 0.5 0.5 2* cx 2!
+        then
+    ;then
     rgntbl @ over /region * + 4 cells + 2@ cx 2! ;
 
 : frame@  ( - n | 0 )  \ 0 if anm is null
@@ -71,9 +83,10 @@ defaults >{
 \ draw a sprite either from a subdivided image, animation, or image plus region table.
 \ if there's no animation, you can pack the flip info into the index. (lower 2 bits)
 \ IMG must be subdivided and/or RGNTBL must be set. (region table takes precedence.)
+\ if neither, then the whole IMG will be drawn
 : nsprite  ( index - )   
     anm @ if spr ! frame@ then
-    ?regorg >region curflip sprite ;
+    ?regorg >region curflip bsprite ;
 
 : +frame  ( speed - )  \ Advance the animation
     ?dup -exit anm @ -exit 
@@ -82,7 +95,7 @@ defaults >{
     frame @ $deadbeef = if  frame cell+ @ anmctr +!  animlooped  then
 ;
  
-: sprite+  ( - )  \ draw and advance the animation
+: sprite  ( - )  \ draw sprite and advance the animation if any
     frame@ nsprite anmspd @ +frame ;
 
 \ Play an animation from the beginning

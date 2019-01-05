@@ -38,28 +38,29 @@ fixed
 
 : backdrop  fore 4@ al_clear_to_color  white  0 0 at ;
 
-\ Bitmap drawing utilities - f stands for flipped
-\  All of these words use the current color for tinting.
-\  Not all effect combinations are available; these are intended as conveniences.
-\  To draw regions of bitmaps, use Allegro's draw bitmap region functions directly
-\  or use sub bitmaps (see SUBBMP).
-\  The anchor for rotation with CSRBLITF is the center of the passed bitmap.
+\ Bitmap drawing words
+\  The anchor for rotation and scaling with XBLIT is the center of the passed bitmap.
 
-: blitf  ( bmp flip )  over 0= if  2drop exit  then  >r  destxy 2af  r> al_draw_bitmap ;
-: tblitf  ( bmp flip )  over 0= if  2drop exit  then  >r  fore 4@  destxy 2af  r> al_draw_tinted_bitmap ;
-: >center  bmpwh 1 rshift  swap 1 rshift ;
-: sblitf  ( bmp dw dh flip )
-    locals| flip dh dw | ?dup -exit
-    ( bmp )  dup >r  0 0 r> bmpwh 4af  destxy dw dh 4af  flip  al_draw_scaled_bitmap ;
-: csrblitf ( bmp sx sy ang flip )
-    locals| flip ang sy sx bmp |  bmp -exit
-    bmp dup >center destxy  4af  sx sy ang 3af  flip
-    al_draw_scaled_rotated_bitmap ;
-: blit   ( bmp ) 0 blitf ;
-: tblit  ( bmp ) 0 tblitf ;
-: blitrgnf  ( bmp x y w h flip )
+: fblit  ( bmp flip )
+    over 0= if 2drop ;then
+    >r  destxy 2af  r> al_draw_bitmap ;
+: blit   ( bmp ) 0 fblit ;
+: tblit  ( bmp )
+    dup 0= if drop ;then
+    fore 4@  destxy 2af  0 al_draw_tinted_bitmap ;
+: sblit  ( bmp destw desth )
+    locals| dh dw |
+    ?dup -exit
+    ( bmp )  dup >r  0 0 r> bmpwh 4af  destxy dw dh 4af  0  al_draw_scaled_bitmap ;
+: >center  bmpwh 1 >> swap 1 >> swap ;
+: xblit ( bmp scalex scaley angle flip )
+    locals| flip ang sy sx bmp |
+    bmp -exit
+    bmp fore 4@ bmp >center destxy  4af  sx sy ang 3af  flip
+    al_draw_tinted_scaled_rotated_bitmap ;
+: bblit  ( bmp x y w h flip )
     locals| flip h w y x bmp |
-    bmp  x y w h 4af  destxy 2af  flip  al_draw_bitmap_region ;
+    bmp  fore 4@  x y w h 4af  destxy 2af  flip  al_draw_tinted_bitmap_region ;
 
 
 \ Text; uses Ramen font assets
