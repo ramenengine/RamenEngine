@@ -36,14 +36,15 @@ defaults >{
     1 anmspd !
 }
 
-\ Drawing
-: sprite ( srcx srcy w h flip )
+( Drawing )
+: bsprite ( srcx srcy w h flip )
     locals| flip h w y x |
     img @ -exit
     img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 2@ 2af
     ang @ >rad 1af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
+( FRame stuff )
 : framexywh  ( n rgntbl - srcx srcy w h )
     swap /region * + 4@ ;
 
@@ -59,6 +60,7 @@ defaults >{
     then
 ;
 
+( Animation )
 : frame  anm @ anmctr @ pfloor /frame * + ;
 
 : curflip  ( index - index n )
@@ -84,7 +86,7 @@ defaults >{
 \ if neither, then the whole IMG will be drawn
 : nsprite  ( index - )   
     anm @ if spr ! frame@ then
-    ?regorg >region curflip sprite ;
+    ?regorg >region curflip bsprite ;
 
 : +frame  ( speed - )  \ Advance the animation
     ?dup -exit anm @ -exit 
@@ -93,7 +95,7 @@ defaults >{
     frame @ $deadbeef = if  frame cell+ @ anmctr +!  animlooped  then
 ;
  
-: sprite+  ( - )  \ draw and advance the animation
+: sprite  ( - )  \ draw sprite and advance the animation if any
     frame@ nsprite anmspd @ +frame ;
 
 \ Play an animation from the beginning
