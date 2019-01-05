@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="d2407d78-0347-465d-9a49-0f7f0f4ef835" kpf_version="5" name="Zelda.komodoproject">
+<preference-set idref="d2407d78-0347-465d-9a49-0f7f0f4ef835" id="project" preftype="project">
+  <string relative="path" id="import_dirname"></string>
+  <string id="import_exclude_matches">*.*~;*.bak;*.tmp;CVS;.#*;*.pyo;*.pyc;.svn;_svn;.git;.hg;.bzr;*%25*;tmp*.html;.DS_Store;*.swp;*.kpf;*.komodoproject;.komodotools;__pycache__;*.fs</string>
+  <long id="prefs_version">1</long>
+</preference-set>
+</project>
