@@ -53,7 +53,7 @@ variable lastkeydir
 
 ( tasks )
 objlist tasks
-var (xt) <adr
+var (xt) <xt
 var target <adr
 var targetid
 : debug  ( val - val ) dup ['] h. later ;
@@ -63,7 +63,7 @@ var targetid
 : (after)  perform> pauses (xt) @ target @ >{ execute } end ;
 : after  ( xt n - ) { *task swap (xt) ! (after) } ;
 : after>  ( n - <code> ) r> code> swap after ;
-: (every)  perform> begin dup pauses (xt) @ target @ >{ execute } again ;
+: (every)  perform> begin (xt) @ target @ >{ execute } dup pauses again ;
 : every  ( xt n - ) { *task swap (xt) ! (every) } ;
 : every>  ( n - <code> ) r> code> swap every ;
 
