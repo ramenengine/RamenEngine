@@ -28,8 +28,8 @@ create (fc)  3 cells allot
 create c1  0 , 0 , 0 , 1 , 
 create c2  0 , 0 , 0 , 1 ,
 : colorcycle
-    0.4 0.4 frmctr -20 / 75 + c1 lch!
-    0.4 0.4 frmctr -20 / c2 lch!
+    0.4 0.4 now -20 / 75 + c1 lch!
+    0.4 0.4 now -20 / c2 lch!
     c1 c2
 ;
 : ramenbg  ( - ) 0 0 at unmount colorcycle displaywh vgradient ;
