@@ -11,23 +11,6 @@ s" sample/3d2019/data/2018.png" image: 2018.png
 s" sample/3d2019/data/2019.png" image: 2019.png
 s" sample/3d2019/data/star.png" image: star.png
 
-variable orbita  
-variable orbith
-180 orbita ! 
-50 orbith !
-
-
-( Camera )
-:slang look-at-subject  ( subject - )
-    locals| m |
-    m 's pos >y @ orbith @ + pos >y !
-    m orbita @  m 's pan @ +   200  orbitted  pos >z !  pos >x ! \ situate
-    m pan-towards pan ! \ toward
-    m 200 tilt-towards tilt !
-    camera-transform
-;
-: update-cam  ( subject camera -- )  dup to cam  >{ look-at-subject } ;
-
 ( quad model )
 create quad.mdl TRIANGLE_STRIP modeldata
 quad.mdl vertices:
@@ -75,22 +58,22 @@ var lifetime
         0.66 5 pos >x @ 1000 + 5 / tint lch!
         tint 3@ rgb tinted model
         chr002.png tex !
-        roll @ 360 + 175 + 180 mod 180 / 1 swap - tri 2 * 1 90 tint lch!
+        roll @ 360 + 175 + 180 mod 180 / 1 swap - tri 2 * 1 90 tint lch!  \ fake lighting
         tint 3@ rgb tinted model
 ;
 
 : bouncybounce
-    0 12 timespan 2!   pos >y 0 100 quadratic out ease
-    12 12 timespan 2!  pos >y 100 0 quadratic in ease
-    24 8  timespan 2!  pos >y 0 30 quadratic out ease
-    32 8  timespan 2!  pos >y 30 0 quadratic in ease
+    0 12 timespan    pos >y 0 100 quadratic out ease
+    12 12 timespan   pos >y 100 0 quadratic in ease
+    24 8  timespan   pos >y 0 30 quadratic out ease
+    32 8  timespan   pos >y 30 0 quadratic in ease
 ;
 : spinnyspin
-    180 90 timespan 2!  roll -360 0 overshoot inout ease
+    180 90 timespan  roll -360 0 overshoot inout ease
 ;
 
 : flyon
-    0 240 timespan 2!
+    0 240 timespan
     pos >z 0 -1200  sine out ease
     pos >y 1500 0   sine out ease
     roll 360 4 * 0  sine out ease
@@ -105,7 +88,7 @@ var lifetime
 : *star
     stage one star.png img ! 2 2 sx 2!
     1 0.5 0.5 tint 3!
-    draw> sprite+ 5 ang +! vx 2@ 0.97 dup 2* vx 2!
+    draw> sprite 5 ang +! vx 2@ 0.97 dup 2* vx 2!
 ;
 
 0 value time
@@ -133,17 +116,22 @@ message value pointer
 : present
     ['] burst 260 after
     ['] *2019 260 after
-    *task pointer perform> c@ 1p for nextchar loop end ;
+    *task pointer perform> c@ 1p for nextchar loop end
+;
 
 : think  tasks multi  stage acts  models acts  stage multi  models multi ;
 
-:now  show> ramenbg 0 0 at upscale> stage draws 3d models draws 2d ;
+: +alphatex
+    ALLEGRO_ALPHA_FUNCTION ALLEGRO_RENDER_GREATER al_set_render_state
+    ALLEGRO_ALPHA_TEST #1 al_set_render_state
+    ALLEGRO_ALPHA_TEST_VALUE 0 al_set_render_state
+;
+: -alphatex
+    ALLEGRO_ALPHA_TEST #0 al_set_render_state
+;
+
+: render  +alphatex 3d models draws -alphatex ;
+
+:now  show> ramenbg 0 0 at upscale> stage draws render 2d ;
 :now  step> think physics +tweens stage sweep ;
 present
-
-ALLEGRO_ALPHA_FUNCTION ALLEGRO_RENDER_GREATER al_set_render_state
-ALLEGRO_ALPHA_TEST #1 al_set_render_state
-ALLEGRO_ALPHA_TEST_VALUE 0 al_set_render_state
-
-\ ALLEGRO_DEPTH_TEST 0 al_set_render_state
-\ ALLEGRO_DEPTH_WRITE 0 al_set_render_state
