@@ -51,7 +51,7 @@ redef off  \ from here on fields only defined if not previously defined
 : empty
     ." [Empty]" cr
     /stage -assets baseline %object struct.size !
-    s" default-step" evaluate empty
+    s" default-step show-stage" evaluate empty
     only forth definitions
 ;
 
