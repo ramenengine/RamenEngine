@@ -11,6 +11,7 @@ include sample/zelda/objdefs.f
 \ include sample/zelda/link.f
 \ include sample/zelda/enemies.f
 
+
 ( extend loop )
 : think  ( - ) stage acts tasks multi world multi stage multi tasks acts ;
 : physics ( - ) stage each> as ?physics vx 2@ x 2+! ;
@@ -78,6 +79,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 \        64 180 at *statue
 ;
 
+include ramen/lib/upscale.f
+:now show> ramenbg upscale> stage draws ;
 adventure
-\ show-cboxes
 

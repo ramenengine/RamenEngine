@@ -147,15 +147,16 @@ create graphics-types
 	2dup 's initial-bitmask @ or over 's initial-bitmask !
 	s" :on collide " evaluate ;
 
-: collide?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
-    me you = if drop 0 ;then
+: collide?  ( - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
+    me you = if 0 ;then
     bitmask @ you 's flags @ and 0= if 0 ;then
     ibox you >{ ibox } overlap? ;
 
 : interact  ( - )
-    stage each> as  en @ -exit
+    stage each> as  \ en @ -exit
         bitmask @ -exit
-		stage each> to you collide? if
+		stage each> to you
+        collide? if
 			\ ." hit "
 			bitmask @ you 's flags @ and 32 for
 				dup #1 and if
