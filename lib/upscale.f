@@ -4,7 +4,7 @@ depend ramen/draw.f
 nativewh canvas: canv
 
 : (size)  viewwh canv resize-canvas ;
-: (upscale)  canv >bmp onto>  black 0 alpha backdrop unmount call ;
+: (upscale)  ( code - ) canv >bmp onto>  black 0 alpha backdrop unmount call ;
 : upscaled  ( xt - bmp )  >code  (size)  (upscale)  canv >bmp ;
 : upscale   ( xt - )  upscaled mount blit ;
 : upscale>  ( - <code> )  r> code> upscale ;

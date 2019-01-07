@@ -67,13 +67,7 @@ defaults >{
     anm @ if frame @ #3 and ;then  dup 3 and ;
 
 : ?regorg  ( index - index )  \ apply the region origin
-    rgntbl @ 0= if
-        img @ image.subw @ if
-            img @ image.subw 2@ 0.5 0.5 2* cx 2!
-        else 
-            img @ imagewh 0.5 0.5 2* cx 2!
-        then
-    ;then
+    rgntbl @ -exit
     rgntbl @ over /region * + 4 cells + 2@ cx 2! ;
 
 : frame@  ( - n | 0 )  \ 0 if anm is null
