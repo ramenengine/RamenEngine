@@ -84,11 +84,14 @@ var lifetime
     ['] bouncybounce 360 every
 ;
 
+: *image   stage one img !  ;
+: csprite  img @ imagewh 0.5 0.5 2* cx 2!  sprite ;
+
 
 : *star
-    stage one star.png img ! 2 2 sx 2!
+    star.png *image 2 2 sx 2!
     1 0.5 0.5 tint 3!
-    draw> sprite 5 ang +! vx 2@ 0.97 dup 2* vx 2!
+    draw> csprite 5 ang +! vx 2@ 0.97 dup 2* vx 2!
 ;
 
 0 value time
