@@ -106,6 +106,6 @@ defaults >{
 : range,  ( start len - ) bounds do i , loop ;
 
 \ flipped frame utilities
-: h,  #1 or , ;
-: v,  #2 or , ;
-: hv, #3 or , ;
+: ,h  #1 or , ;
+: ,v  #2 or , ;
+: ,hv #3 or , ;
