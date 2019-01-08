@@ -1,3 +1,9 @@
+empty
+[undefined] 3d [if]
+    include 3dpack/3dpack.f
+    gild
+[then]
+
 depend sample/3d2019/tools.f
 depend ramen/lib/upscale.f
 depend ramen/lib/tweening.f
