@@ -1,6 +1,6 @@
 warning off
 true constant dev
-true constant HD
+\ true constant HD
 true constant opengl
 include ramen/ramen.f         cr .( Loaded Ramen. ) \ "
 \ fs on
