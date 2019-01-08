@@ -2,15 +2,20 @@ empty
 : >data  s" sample/zelda/data/" 2swap strjoin ;
 include sample/zelda/tools.f
 include sample/zelda/vars.f
+include sample/zelda/common.f
+include sample/zelda/common-zelda.f
 include sample/zelda/map.f
-include sample/zelda/items.f
-include sample/zelda/link.f
-include sample/zelda/enemies.f
+\ include sample/zelda/items.f
+\ include sample/zelda/item-assets.f
+include sample/zelda/objdefs.f
+\ include sample/zelda/link.f
+\ include sample/zelda/enemies.f
+
 
 ( extend loop )
 : think  ( - ) stage acts tasks multi world multi stage multi tasks acts ;
 : physics ( - ) stage each> as ?physics vx 2@ x 2+! ;
-: zelda-step ( - ) step> think physics stage sweep ;
+: zelda-step ( - ) step> think physics interact stage sweep ;
 zelda-step
 
 
@@ -57,7 +62,6 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     ;then
     s" player-entered-cave" occurred if
         ( x y ) in-cave on
-        #sword have not if 128 8 - 128 at *sword then
     ;then
 ;
 
@@ -68,12 +72,14 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     overworld 3 3 warp
     curtain-open
     link as 64 after>
-        /link  64 96 x 2!
+        64 96 x 2!
+        /link  
         \ test objects:
         64 128 at *orb
-        64 180 at *statue
+\        64 180 at *statue
 ;
 
+include ramen/lib/upscale.f
+:now show> ramenbg upscale> stage draws ;
 adventure
-\ show-cboxes
 

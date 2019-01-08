@@ -1,3 +1,13 @@
+
+var spd  
+var ctr
+var trigged
+action idle
+action walk  
+action start
+action attack
+
+
 ( Data )
 16 16 s" link-tiles-sheet.png" >data tileset: link.ts
 
@@ -25,18 +35,10 @@ create evoke-link-swing dir-anim-table
 
 
 ( Logic )
-defrole link-role
-var spd  
-var ctr
-var trigged
-action idle
-action walk  
-action start
-action attack
         
 \ todo: make the animation part dynamic, make this code reusable... 
 
-link-role :to evoke-direction  evoke-link-walk ;
+<link> :to evoke-direction  evoke-link-walk ;
 
 : !walkv  dir @ spd @ vec vx 2! ;
 : snap    x 2@ 4 4 2+ 2dup 8 8 2mod 2- x 2! ;
@@ -58,7 +60,7 @@ link-role :to evoke-direction  evoke-link-walk ;
     -vel
     evoke-link-swing
     0 s" player-swung-sword" occur
-    13 pauses
+    10 pauses
     idle
 ;
 
@@ -94,21 +96,18 @@ link-role :to evoke-direction  evoke-link-walk ;
     then
 ;
 
-link-role :to walk ( - )
+<link> :to walk ( - )
     0.15 anmspd !  !walkv ?edge ?turn
     0 perform> begin ?attack ?stop ?edge ?180 pause ?turn again ;
-link-role :to idle ( - )
+<link> :to idle ( - )
     !face -vel 0 anmspd ! ?walk 
     0 perform> begin ?attack ?walk pause again ;
-link-role :to start ( - )
+<link> :to start ( - )
     /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
-    act> !dirkey ?trig ~items ;
+    act> !dirkey ?trig ;
 
-: /link
-    link as  link.ts img !  /solid  link-role role !
-    16 8 mbw 2!  0 8 cx 2!  start ;
 
--8 link 's ihb y!
+: /link  link as  #link /obj ;
 
 :listen
     s" player-entered-cave" occurred if
