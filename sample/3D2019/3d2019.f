@@ -1,6 +1,7 @@
 depend sample/3d2019/tools.f
 depend ramen/lib/upscale.f
 depend ramen/lib/tweening.f
+depend afkit/ans/param-enclosures.f
 
 objlist models
 
@@ -52,13 +53,13 @@ var lifetime
     models one  !3pos  chr !  quad.mdl mdl !
     200 0 0 +at3
     100 200 100 scl 3!
-    draw>
+    draw>  
         chr001.png tex !
         !chrcoords
-        0.66 5 pos >x @ 1000 + 5 / tint lch!
+        0.66 5 1( pos >x @ 1000 + 5 / ) tint lch!
         tint 3@ rgb tinted model
         chr002.png tex !
-        roll @ 360 + 175 + 180 mod 180 / 1 swap - tri 2 * 1 90 tint lch!  \ fake lighting
+        1( roll @ 360 + 175 + 180 mod 180 / 1 swap - tri 2 * ) 1 90 tint lch!  \ fake lighting
         tint 3@ rgb tinted model
 ;
 
@@ -95,7 +96,7 @@ var lifetime
 ;
 
 0 value time
-: pulse  4.5 +to time  7 time sin 1.6 * + dup ;
+: pulse  4.5 +to time  1( 7 time sin 1.6 * + ) dup ;
 : wobble time 0.48 * sin 30 * >rad ;
 
 : (2019)  displaywh 2 2 2/ at  yellow  2019.png >bmp pulse wobble 0 xblit ;
@@ -133,8 +134,8 @@ message value pointer
     ALLEGRO_ALPHA_TEST #0 al_set_render_state
 ;
 
-: render  +alphatex 3d models draws -alphatex ;
+: render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
 
-:now  show> ramenbg 0 0 at upscale> stage draws render 2d ;
+:now  show> ramenbg 0 0 at upscale> stage draws  models render ;
 :now  step> think physics +tweens stage sweep ;
 present
