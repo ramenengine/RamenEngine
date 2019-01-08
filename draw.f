@@ -136,3 +136,12 @@ viewwh ch ! cw !
     
     2r> 2r>  cch ! ccw ! ccy ! ccx ! ;
 previous
+
+( standard 2D mode; no need to call unless you do stuff to the projection matrix )
+transform p
+: 2d
+    p al_identity_transform
+    p 0 0 -16384 3af displaywh 16384 3af al_orthographic_transform
+    p al_use_projection_transform    
+    ALLEGRO_DEPTH_TEST #0 al_set_render_state
+;
