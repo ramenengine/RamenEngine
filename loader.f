@@ -17,3 +17,6 @@ gild
 
 ( Load main program )
 ld main
+
+( Tests )
+ld 3dpack/odetest
