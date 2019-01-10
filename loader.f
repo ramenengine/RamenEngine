@@ -12,8 +12,8 @@ include ramen/stdpack.f       cr .( Loaded Standard Pack. ) \ "
 ( Directory )
 : wstest   s" ld ws/test" evaluate ;
 : 3d2019   s" ld sample/3d2019/3d2019" evaluate ;
-: zelda    s" ld sample/zelda/zelda" evaluate ;
+: loz    s" ld sample/zelda/loz" evaluate ;
 gild
 
 ( Load main program )
-ld main
+loz
