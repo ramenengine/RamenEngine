@@ -54,7 +54,6 @@ var lifetime
 
 : tri  2 * 1 - abs 1 swap - ;
 
--1350 0 0 at3
 : *letter ( #char - )
     dup bl = if drop 200 0 0 +at3 ;then
     [char] A - 1p
@@ -72,21 +71,21 @@ var lifetime
 ;
 
 : bouncybounce
-    0 12 timespan    pos >y 0 100 quadratic out ease
-    12 12 timespan   pos >y 100 0 quadratic in ease
-    24 8  timespan   pos >y 0 30 quadratic out ease
-    32 8  timespan   pos >y 30 0 quadratic in ease
+    0 12 timespan    pos >y 0 100 quadratic out tween
+    12 12 timespan   pos >y 100 0 quadratic in tween
+    24 8  timespan   pos >y 0 30 quadratic out tween
+    32 8  timespan   pos >y 30 0 quadratic in tween
 ;
 : spinnyspin
-    180 90 timespan  roll -360 0 overshoot inout ease
+    180 90 timespan  roll -360 0 overshoot inout tween
 ;
 
 : flyon
     0 240 timespan
-    pos >z 0 -1200  sine out ease
-    pos >y 1500 0   sine out ease
-    roll 360 4 * 0  sine out ease
-    pan -360 2 * 0  sine out ease
+    pos >z 0 -1200  sine out tween
+    pos >y 1500 0   sine out tween
+    roll 360 4 * 0  sine out tween
+    pan -360 2 * 0  sine out tween
 ;    
 : dance
     ['] spinnyspin 360 every    
@@ -128,7 +127,10 @@ message value pointer
 : present
     ['] burst 260 after
     ['] *2019 260 after
-    *task pointer perform> c@ 1p for nextchar loop end
+    
+    *task pointer perform>
+        -1350 0 0 at3
+        c@ 1p for nextchar loop end
 ;
 
 : think  tasks multi  stage acts  models acts  stage multi  models multi ;
