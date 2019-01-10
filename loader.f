@@ -16,4 +16,4 @@ include ramen/stdpack.f       cr .( Loaded Standard Pack. ) \ "
 gild
 
 ( Load main program )
-ld main
+3d2019
