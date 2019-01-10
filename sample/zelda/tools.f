@@ -101,7 +101,7 @@ var startx  var starty
     flags @ and 0= if 0 ;then
     me you = if 0 ;then
     ibox you >{ ibox } overlap? ;
-: draw-ibox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
+: draw-ibox  ibox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 :slang on-top  act> me stage push ;
 : show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
 

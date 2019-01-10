@@ -13,7 +13,7 @@ value nextitemtype
 
 ( link )
     include sample/zelda/link.f
-    <link> :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 0 ihb xy! ;
+    <link> :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 -8 ihb xy! ;
     #item <link> :hit  you pickup ;
 
 ( blue orb thing )
