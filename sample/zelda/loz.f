@@ -80,6 +80,4 @@ include ramen/lib/upscale.f
 adventure
 
 
-
-
 ld sample/zelda/tests

@@ -81,10 +81,10 @@ create graphics-types
 	initial-mhb wh@ mbw 2!
 	initial-bitmask @ bitmask !
 	gfxtype @ ?graphics
-    setup
+    setup   \ <--- user code
 	?solid
 	!dir
-	start
+	start   \ <--- user code
 ;
 : *obj  ( objtype - ) stage one /obj ;
 
@@ -92,6 +92,7 @@ create graphics-types
 : create-spawner create , does> @ *obj ;
 : create-initializer  create , does> @ /obj ;
 
+\ creates 3 words in addition to the role (if it wasn't already defined)
 : deftype ( - <name> )  \ name should be actually encased by '<' and '>'
     0 ?unique drop
 	>in @ defrole >in !
@@ -110,12 +111,6 @@ create graphics-types
 : id>type  objtypes [] @ ;
 : .name    body> >name count type ;
 : .type    ( obj - ) 's role @ .name ;
-
-
-\ creates multiple words:
-\   <name>-role
-\   *<name> ( - ) spawns the object
-\   /<name> ( - ) 
 
 ( compile-time struct literal tools )
 : field+  >body @ + ;
