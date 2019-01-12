@@ -1,15 +1,10 @@
 empty
 : >data  s" sample/zelda/data/" 2swap strjoin ;
 include sample/zelda/tools.f
-include sample/zelda/vars.f
+include sample/zelda/globals.f
 include sample/zelda/common.f
-include sample/zelda/common-zelda.f
 include sample/zelda/map.f
-\ include sample/zelda/items.f
-\ include sample/zelda/item-assets.f
-include sample/zelda/objdefs.f
-\ include sample/zelda/link.f
-\ include sample/zelda/enemies.f
+include sample/zelda/objtypes.f
 
 256 236 resolution
 
@@ -19,8 +14,6 @@ include sample/zelda/objdefs.f
 : zelda-step ( - ) step> think physics interact stage sweep ;
 zelda-step
 
-
-( overworld scene! )
 : /bg   bg as /tilemap 256 256 w 2! ;
 : /cam  cam as act> x 2@ bg 's scrollx 2! ;
 : /hud  hud as bg 's x @ 0 x 2! draw> black 256 64 rectf ;
@@ -53,6 +46,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
         in-cave @ if
             overworld return
             in-cave off
+            dialog off
             0 s" player-exited-cave" occur
         else 
             x @ 0 <= if gw 256 16 - x ! ;then
@@ -84,3 +78,7 @@ include ramen/lib/upscale.f
 :now show> ramenbg upscale> stage draws ;
 adventure
 
+
+
+
+ld sample/zelda/tests

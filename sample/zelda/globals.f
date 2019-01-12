@@ -13,7 +13,8 @@ qvar maxpotions 1 maxpotions !
 16 constant #cols
 11 constant #rows
 0 value world          \ pointer to a %world
-create bg object 
+create bg object
+include sample/zelda/printer.f
 create cam object 
 create hud object
 create minimap object

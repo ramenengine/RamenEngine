@@ -5,3 +5,9 @@
         0 8 +at
         s"     ALONE! TAKE THIS." print ;
 ;
+
+:listen
+    s" player-entered-cave" occurred if
+        takethis
+    ;then
+;

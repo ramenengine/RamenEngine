@@ -106,7 +106,6 @@ create evoke-link-swing dir-anim-table
     /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
     act> !dirkey ?trig ;
 
-
 : /link  link as  #link /obj ;
 
 :listen

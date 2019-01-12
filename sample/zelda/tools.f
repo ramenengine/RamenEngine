@@ -108,7 +108,7 @@ var startx  var starty
 ( actor spawning )
 stage value spawner
 \ defer spawn 
-: from  dup 's ihb xy@ rot away ;
+: from  dup 's ihb xy@ away ;
 : spawn  me to spawner me from ;
 \ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
 
