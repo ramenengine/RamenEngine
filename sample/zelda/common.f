@@ -12,11 +12,11 @@ rolevar initial-bitmask
 rolevar typeid
 
 var objtype
-var quantity   1 defaults 's quantity ! 
+var qty   1 defaults 's qty ! 
 var bitmask <hex        \ what the object should interact with
 var flags   <hex        \ what attributes the object has
 %rect sizeof field ihb \ interaction hitbox
-var damaged  \ stores the attack power of the last call to -HP
+var damaged  \ stores the attack power of the last call to DAMAGE
 var startx  var starty
 
 action setup ( - )
@@ -93,6 +93,7 @@ create graphics-types
 : create-initializer  create , does> @ /obj ;
 
 : deftype ( - <name> )  \ name should be actually encased by '<' and '>'
+    0 ?unique drop
 	>in @ defrole >in !
 	bl parse #1 /string #1 - 2>r
         nexttype lastrole @ 's typeid !
