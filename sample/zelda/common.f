@@ -4,7 +4,6 @@
 
 #16 rolefield typename <cstring
 rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
-#32 rolefield imagepath <cstring
 rolevar regiontablesize 
 rolevar regiontable <adr
 8 cells rolefield dropables

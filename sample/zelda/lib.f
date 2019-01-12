@@ -35,7 +35,7 @@ action evoke-direction  ( - )
     
 ( item stuff )
 include sample/zelda/item-assets.f
-256 cells qfield inventory
+256 cells quest-field inventory
 : /item  item-regions rgntbl !  items.image img !  #item +flag ;
 : item[]  ( n - adr ) cells inventory + ;
 : get  ( quantity objtype - ) item[] +! ;

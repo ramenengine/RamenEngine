@@ -1,14 +1,14 @@
 ( global variables and savestate )
 
-\ #16 qfield player
-2 cells qfield coords  3 3 coords 2!
-qvar room#
-\ qvar world#
-qvar in-cave
-qvar tempx  qvar tempy
-\ object-maxsize qfield linkstate
-qvar maxbombs  8 maxbombs !
-qvar maxpotions 1 maxpotions !
+\ #16 quest-field player
+2 cells quest-field coords  3 3 coords 2!
+quest-var room#
+\ quest-var world#
+quest-var in-cave
+quest-var tempx  quest-var tempy
+\ object-maxsize quest-field linkstate
+quest-var maxbombs  8 maxbombs !
+quest-var maxpotions 1 maxpotions !
 
 16 constant #cols
 11 constant #rows

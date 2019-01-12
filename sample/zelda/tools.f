@@ -158,8 +158,8 @@ create args 100 stack,
 ( quest state )
 create quest  64 kb /allot
 quest value quest^
-: qfield  quest^ constant +to quest^ ;
-: qvar  cell qfield ;
+: quest-field  quest^ constant +to quest^ ;
+: quest-var  cell quest-field ;
 
 
 
