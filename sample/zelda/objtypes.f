@@ -10,7 +10,6 @@
 \     2r> drop
 \ ;
 
-
 ( object types - maintain the ordering to keep savestates coherent )
 deftype <link>
 deftype <test>

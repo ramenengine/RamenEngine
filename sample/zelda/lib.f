@@ -52,7 +52,7 @@ include sample/zelda/item-assets.f
 : item[]  ( n - adr ) cells inventory + ;
 : get  ( qty objtype - ) item[] +! ;
 : .item  ( obj - )  dup .type  ."  qty: " 's qty ? ;
-: pickup ( obj - ) >{ cr ." Got: " me .item  qty @ objtype @ get dismiss } ;
+: pickup ( obj - ) >{ cr ." Picked up: " me .item  qty @ objtype @ get dismiss } ;
 : have  ( objtype - n )  item[] @ ;
 
 ( npc's )

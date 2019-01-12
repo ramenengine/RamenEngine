@@ -93,8 +93,8 @@ create graphics-types
 : create-initializer  create , does> @ /obj ;
 
 \ creates 3 words in addition to the role (if it wasn't already defined)
-: deftype ( - <name> )  \ name should be actually encased by '<' and '>'
-    0 ?unique drop
+: deftype ( - <name> )  \ name should be encased by '<' and '>'
+    >in @ exists if drop ;then >in !
 	>in @ defrole >in !
 	bl parse #1 /string #1 - 2>r
         nexttype lastrole @ 's typeid !
