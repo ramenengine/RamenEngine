@@ -14,7 +14,7 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
     s" Enemy Locations" find-objgroup enemy-handlers load-objects
 ;
 : srcrc  #cols /mod #cols #rows 2* 32 + ;
-: disposable?  dynamic? important? not and ;
+: disposable?  dynamic? #important set? not and ;
 : thinout  ['] disposable? swap those> dismiss ;
 : cleanup  stage thinout  world thinout ;
 : room  ( i - )  \ expressed as $cr  c=column r=row 

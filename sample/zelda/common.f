@@ -38,15 +38,14 @@ create objtypes 255 array,
 : def  objtypes [] @ ;
 
 ( flags )
-: flag?  flags @ and 0<> ;
+: set?  flags @ and 0<> ;
 : +flag  flags or! ;
 : -flag  flags not! ;
-: important? #important flag? ;
 
 ( common graphics types )
 : (clip)  clipx 2@ cx 2@ 2- 16 16 ;
-: obj-sprite #gfxclip flag? if (clip) clip> then spr @ nsprite ;
-: obj-animate  #gfxclip flag? if (clip) clip> then sprite ;
+: obj-sprite #gfxclip set? if (clip) clip> then spr @ nsprite ;
+: obj-animate  #gfxclip set? if (clip) clip> then sprite ;
 
 : gfx-sprite draw> obj-sprite ;
 : gfx-animation draw> obj-animate ;
@@ -73,9 +72,8 @@ create graphics-types
 : ?graphics graphics-types njump ;
 
 ( initialization and spawning )
-: ?find  dup -exit find ;
-: ?solid  #solid flag? -exit  physics> tilebuf collide-tilemap ;
-: !dir  #directional flag? if spawner 's dir @ else 90 then dir ! ;
+: ?solid  #solid set? -exit  physics> tilebuf collide-tilemap ;
+: !dir  #directional set? if spawner 's dir @ else 90 then dir ! ;
 : /obj  ( objtype - )
 	dup objtype ! def role !
 	regiontable @ rgntbl !
@@ -87,10 +85,9 @@ create graphics-types
 	!dir
 	start   \ <--- user code
 ;
-: *obj  ( objtype - ) stage one /obj ;
 
 ( defining object types )
-: create-spawner create , does> @ *obj ;
+: create-spawner create , does> @ stage one /obj ;
 : create-initializer  create , does> @ /obj ;
 
 \ creates 3 words in addition to the role (if it wasn't already defined)
