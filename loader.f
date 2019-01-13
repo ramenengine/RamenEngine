@@ -15,5 +15,4 @@ include ramen/stdpack.f       cr .( Loaded Standard Pack. ) \ "
 : loz    s" ld sample/zelda/loz" evaluate ;
 gild
 
-( Load main program )
-loz
+include main.f

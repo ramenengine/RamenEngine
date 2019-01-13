@@ -2,35 +2,36 @@
 
 1 value nexttype
 
-#16 rolefield typename <cstring
-rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
-rolevar regiontablesize 
-rolevar regiontable <adr
-8 cells rolefield dropables
-rolevar initial-bitmask
-%rect sizeof rolefield initial-mhb \ map hitbox
-rolevar typeid
+( role vars )
+    rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
+    rolevar regiontablesize 
+    rolevar regiontable <adr
+    rolevar initial-bitmask
+    %rect sizeof rolefield initial-mhb \ map hitbox
+    rolevar typeid
 
-var objtype
-var qty   1 defaults 's qty ! 
-var bitmask <hex        \ what the object should interact with
-var flags   <hex        \ what attributes the object has
-%rect sizeof field ihb \ interaction hitbox
-var damaged  \ stores the attack power of the last call to DAMAGE
-var startx  var starty
+( object vars )
+    var objtype
+    var qty   1 defaults 's qty ! 
+    var bitmask <hex        \ what the object should interact with
+    var flags   <hex        \ what attributes the object has
+    %rect sizeof field ihb \ interaction hitbox
+    var damaged  \ stores the attack power of the last call to DAMAGE
+    var startx  var starty
 
-action setup ( - )
-action start ( - )
-action die ( - )
-    basis :to die ( - ) end ;   
+( actions )
+    action setup ( - )
+    action start ( - )
+    action die ( - )
+        basis :to die ( - ) end ;   
 
 ( object and tile flags )
-#1
-bit #directional
-bit #gfxclip
-bit #solid
-bit #important
-value nextflag
+    #1
+    bit #directional
+    bit #gfxclip
+    bit #solid
+    bit #important
+    value nextflag
 
 ( definition role array )
 create objtypes 255 array,
@@ -112,20 +113,6 @@ create graphics-types
 : .name    body> >name count type ;
 : .type    ( obj - ) 's role @ .name ;
 
-( compile-time struct literal tools )
-: field+  >body @ + ;
-: := ( baseadr - <fieldname> <values...> baseadr )
-    0 locals| n |
-    dup >r ' field+ ( fieldadr )
-        begin bl parse ?dup while
-            evaluate over !
-            cell+
-        repeat
-        ( fieldadr c-addr ) drop drop
-    r>
-;
-: $= ( baseadr - <fieldname> <string> baseadr )
-    dup ' field+ >r 0 parse r> place ;
 
 ( define action tables )
 \ allocates space for a vector table in roles. when executed, the given

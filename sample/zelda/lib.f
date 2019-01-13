@@ -11,6 +11,10 @@ nextflag
     bit #enemy
 drop
 
+( rolefields )
+    8 cells rolefield dropables
+
+
 ( vars )
     var hp
     var maxhp
@@ -26,6 +30,8 @@ drop
     dup negate hp +! damaged !
     hp @ 0 <= if hp @ h. end ;then
     60 after> damaged off ;
+: in-playfield? ( - flag ) x 2@  -1 63 8 + 257 237 16 8 2- inside? ;
+
 
 ( canned motions )
 : orbit  ( n )

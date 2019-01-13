@@ -18,16 +18,16 @@ variable lastkeydir
 : rdirkeys?  <left> released  <right> released or  <up> released or  <down> released or ;
 : pdirkeys?  <left> pressed <right> pressed or <up> pressed or <down> pressed or ;
 : keydir ( -- n )  
-    left? if 180 exit then
-    right? if 0 exit then
-    up? if 270 exit then
-    down? if 90 exit then
+    left? if 180 ;then
+    right? if 0 ;then
+    up? if 270 ;then
+    down? if 90 ;then
     -1 ;
 : pkeydir ( -- n )  
-    pleft? if 180 exit then
-    pright? if 0 exit then
-    pup? if 270 exit then
-    pdown? if 90 exit then
+    pleft? if 180 ;then
+    pright? if 0 ;then
+    pup? if 270 ;then
+    pdown? if 90 ;then
     -1 ;
 : !dirkey
     pdirkeys? if pkeydir lastkeydir ! exit then

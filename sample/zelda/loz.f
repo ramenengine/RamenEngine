@@ -1,10 +1,14 @@
 empty
 : >data  s" sample/zelda/data/" 2swap strjoin ;
+
+( "engine" )
 include sample/zelda/tools.f
 include sample/zelda/globals.f
 include sample/zelda/common.f
-include sample/zelda/map.f
+
+( game specific stuff )
 include sample/zelda/lib.f
+include sample/zelda/map.f
 include sample/zelda/objtypes.f
 
 256 236 resolution

@@ -1,6 +1,4 @@
 
-create roombuf %array2d struct,
-    16  16  tilebuf pitch@  0 0 tilebuf loc  roombuf /array2d
 
 ( load the Tiled data )
 s" overworld-rooms.tmx" >data open-map
@@ -40,7 +38,7 @@ struct %world
 : defworld  ( w h - <name> )
     objlist 0 , 
     here me world.rooms ! ( w h ) array2d-head,
-        \ array ought to be last thing in dictionary so we can comma crap in
+        \ array ought to be last thing in dictionary so that we can comma rooms in
     does>
         \ world stage remove  dup stage push
         to world ;
@@ -58,4 +56,3 @@ struct %world
 
 : return  coords 2@ warp ;
 
-: in-playfield? ( - flag ) x 2@  -1 63 8 + 257 237 16 8 2- inside? ;
