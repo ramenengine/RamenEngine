@@ -6,7 +6,7 @@ include ramen/ramen.f         cr .( Loaded Ramen. ) \ "
 ide
 \ include ws/ws.f               cr .( Loaded Workspace. ) \ "
 \ ui off
-\ include ramen/stdpack.f       cr .( Loaded Standard Pack. ) \ "
+include ramen/stdpack.f       cr .( Loaded Standard Pack. ) \ "
 
 ( Directory )
 \ : wstest   s" ld ws/test" evaluate ;
