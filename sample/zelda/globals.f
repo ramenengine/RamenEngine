@@ -22,5 +22,5 @@ include sample/zelda/printer.f
 create cam  <actor> stage actor
 create hud  <actor> stage actor
 create minimap  <actor> stage actor
-0 value link
+create link  <actor> stage actor
 : p1  link ;

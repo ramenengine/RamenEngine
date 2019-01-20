@@ -11,8 +11,6 @@ include sample/zelda/lib.f
 include sample/zelda/map.f
 include sample/zelda/objtypes.f
 
-
-
 256 236 resolution
 
 ( extend loop )
@@ -83,8 +81,8 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 
 include ramen/lib/upscale.f
 :now show> ramenbg upscale> stage draws ;
-adventure
 
+adventure
 
 ld sample/zelda/tests
 

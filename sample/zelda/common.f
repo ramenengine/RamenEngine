@@ -2,16 +2,15 @@
 
 1 value nextType
 
-( role vars )
+extend-class <role>
     rolevar gfxtype    \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
-    rolevar regiontablesize 
+    rolevar regiontablesize  <int
     rolevar regiontable <adr
-    rolevar initial-bitmask
+    rolevar initial-bitmask <hex
     %rect sizeof rolefield initial-mhb    \ map hitbox
     rolevar typeid
+end-class
 
-
-( object vars )
 extend-class <actor>
     var objtype
     var qty
@@ -21,16 +20,18 @@ extend-class <actor>
     var damaged             \ stores the attack power of the last call to DAMAGE
     var startx  var starty
 end-class
-<actor> template >{
-    1 qty !
-}
 
+<actor> template as
+    1 qty !
 
 ( actions )
+extend-class <role>
     action setup ( - )
     action start ( - )
     action die ( - )
-        basis :to die ( - ) end ;   
+end-class
+
+basis :to die ( - ) end ;   
 
 
 ( object and tile flags )
@@ -114,7 +115,7 @@ create graphics-types
 ;
 
 ( misc )
-: .type    ( obj - ) 's role @ .name ;
+: .type    ( obj - ) >class .name ;
 
 
 ( define action tables )
