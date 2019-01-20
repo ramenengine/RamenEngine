@@ -11,6 +11,8 @@ include sample/zelda/lib.f
 include sample/zelda/map.f
 include sample/zelda/objtypes.f
 
+
+
 256 236 resolution
 
 ( extend loop )
@@ -85,3 +87,5 @@ adventure
 
 
 ld sample/zelda/tests
+
+\ cr .( [Zelda] )

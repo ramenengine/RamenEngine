@@ -16,11 +16,17 @@ drop
 
 
 ( vars )
+extend-class <actor> 
     var hp
     var maxhp
     var atk
-    var hp  2 defaults 's hp !
-    var maxhp  2 defaults 's maxhp !
+    var hp  
+    var maxhp
+end-class
+<actor> template >{
+    2 hp !
+    2 maxhp !
+}
 
 ( misc )
 : sf@+  dup sf@ cell+ ;

@@ -31,22 +31,25 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 
 
 ( world )
-struct %world
-    %world object-maxsize sfield world>objlist
-    %world svar world.rooms
+<actor> class <world>
+    var rooms  \ array2d
+end-class    
     
-: defworld  ( w h - <name> )
-    objlist 0 , 
-    here me world.rooms ! ( w h ) array2d-head,
-        \ array ought to be last thing in dictionary so that we can comma rooms in
+: defworld  ( - <name> )
+    create <world> static  me to world
     does>
         \ world stage remove  dup stage push
-        to world ;
+        to world
+;
+
+: world-rooms:  ( w h - )
+    world as  here rooms ! ( w h ) array2d-head, ;
 
 : maploc  ( col row - adr )
-    world world.rooms @ loc ;
+    world 's rooms @ loc ;
 
-: warp  ( col row )  2dup coords 2!  maploc @ room ;
+: warp  ( col row )
+    2dup coords 2!  maploc @ room ;
 
 ( go north go south etc )
 : gn  coords 2@ 0 -1 2+ warp ;

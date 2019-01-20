@@ -22,6 +22,7 @@ deftype <statue>
 deftype <swordattack>
 deftype <dude>
 
+
 ( load in scripts - order doesn't matter )
 include sample/zelda/obj/link.f
 include sample/zelda/obj/test.f
