@@ -1,1 +1,1 @@
-deftype <statue>
+create-type <statue>

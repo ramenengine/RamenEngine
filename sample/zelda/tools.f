@@ -43,27 +43,31 @@ variable lastkeydir
 : (those)  ( filter-xt code objlist - filter-xt code )
     each> as over execute if dup >r then ;
 : those>  ( filter-xt objlist - <code> )  ( - )  \ note you can't pass anything to <code>
-    dup 0= if 2drop r> drop ;then
     r> { swap (those) 2drop } ;
 : njump  ( n adr - ) 
     swap cells + @ execute ;
 : rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
 
-( actors )
+( actor extensions )
 objlist tasks
 action start ( - )
 action idle ( - )
 action walk ( - )
 action turn ( angle )
-var dir \ angle
-var (xt) <adr
-var target <adr
-var clipx  var clipy
-var targetid
-var flags <hex
-var startx  var starty
-%rect sizeof field ihb  \ interaction hitbox; relative to x,y position
-0 0 16 16 defaults 's ihb xywh!
+extend-class <actor>
+    var dir \ angle
+    var (xt) <adr
+    var target <adr
+    var clipx  var clipy
+    var targetid
+    var flags \ <hex
+    var startx  var starty
+    %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
+    var 'physics  \ code
+end-class
+<actor> prototype >{
+    0 0 16 16 ihb xywh!
+}
 
 : debug  ( val - val ) dup ['] h. later ;
 : live-for  ( n - ) perform> pauses end ;
@@ -113,7 +117,6 @@ stage value spawner
 \ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
 
 ( physics )
-var 'physics  \ code
 : physics>  r> 'physics ! ;
 : ?physics  'physics @ ?dup if >r then ;
 

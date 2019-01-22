@@ -16,7 +16,7 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 : srcrc  #cols /mod #cols #rows 2* 32 + ;
 : disposable?  dynamic? #important set? not and ;
 : thinout  ['] disposable? swap those> dismiss ;
-: cleanup  stage thinout  world thinout ;
+: cleanup  stage thinout ;
 : room  ( i - )  \ expressed as $cr  c=column r=row 
     cleanup
     1p dup room# ! srcrc tilebuf adr-pitch
@@ -31,22 +31,23 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 
 
 ( world )
-struct %world
-    %world object-maxsize sfield world>objlist
-    %world svar world.rooms
+0 0 class <world>
+    var rooms  \ array2d
+end-class
     
-: defworld  ( w h - <name> )
-    objlist 0 , 
-    here me world.rooms ! ( w h ) array2d-head,
-        \ array ought to be last thing in dictionary so that we can comma rooms in
-    does>
-        \ world stage remove  dup stage push
-        to world ;
+: create-world  ( - <name> )  ( - )
+    create <world> static  me to world
+    does>  to world
+;
+
+: rooms:  ( w h - )
+    here world 's rooms ! ( w h ) array2d-head, ;
 
 : maploc  ( col row - adr )
-    world world.rooms @ loc ;
+    world 's rooms @ loc ;
 
-: warp  ( col row )  2dup coords 2!  maploc @ room ;
+: warp  ( col row )
+    2dup coords 2!  maploc @ room ;
 
 ( go north go south etc )
 : gn  coords 2@ 0 -1 2+ warp ;

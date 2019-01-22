@@ -1,4 +1,4 @@
-deftype <swordattack>
+create-type <swordattack>
     <swordattack> :to setup  #directional #weapon or flags ! ;
     : in-front 
         dir @ case

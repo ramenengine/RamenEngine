@@ -1,29 +1,37 @@
 \ note this code is specific to 2d games and needs modification for 3d
 
-1 value nexttype
+1 value nextType
 
-( role vars )
-    rolevar gfxtype \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
-    rolevar regiontablesize 
-    rolevar regiontable <adr
-    rolevar initial-bitmask
-    %rect sizeof rolefield initial-mhb \ map hitbox
-    rolevar typeid
+extend-class <role>
+    var gfxtype    \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
+    var regiontable-size  <int
+    var regiontable <adr
+    var initial-bitmask <hex
+    %rect sizeof field initial-mhb    \ map hitbox
+    var typeid
+end-class
 
-( object vars )
+extend-class <actor>
     var objtype
-    var qty   1 defaults 's qty ! 
-    var bitmask <hex        \ what the object should interact with
-    var flags   <hex        \ what attributes the object has
-    %rect sizeof field ihb \ interaction hitbox
-    var damaged  \ stores the attack power of the last call to DAMAGE
+    var qty
+    var bitmask <hex        \ whaet the object should interact with
+    \ var flags   <hex        \ what attributes the object has
+    %rect sizeof field ihb  \ interaction hitbox
+    var damaged             \ stores the attack power of the last call to DAMAGE
     var startx  var starty
+end-class
+
+<actor> prototype as
+    1 qty !
 
 ( actions )
+extend-class <role>
     action setup ( - )
     action start ( - )
     action die ( - )
-        basis :to die ( - ) end ;   
+end-class
+
+basis :to die ( - ) end ;   
 
 ( object and tile flags )
     #1
@@ -33,9 +41,9 @@
     bit #important
     value nextflag
 
-( definition role array )
-create objtypes 255 array,
-: def  objtypes [] @ ;
+( object type array )
+create typeRoles 255 array,
+: type>role  typeRoles [] @ ;
 
 ( flags )
 : set?  flags @ and 0<> ;
@@ -50,7 +58,7 @@ create objtypes 255 array,
 : gfx-sprite draw> obj-sprite ;
 : gfx-animation draw> obj-animate ;
 : ?flash  if rndcolor then ;
-: gfx-circle draw> 8 8 +at  tint 4@ rgba damaged @ ?flash 8 circf ;
+: gfx-circle draw> 8 8 +at  tint 4@ rgba damaged @ ?flash 8 circlef ;
 : gfx-box draw> tint 4@ rgba damaged @ ?flash 16 16 rectf ;
 
 0
@@ -75,11 +83,12 @@ create graphics-types
 : ?solid  #solid set? -exit  physics> tilebuf collide-tilemap ;
 : !dir  #directional set? if spawner 's dir @ else 90 then dir ! ;
 : /obj  ( objtype - )
-	dup objtype ! def role !
-	regiontable @ rgntbl !
-	initial-mhb wh@ mbw 2!
-	initial-bitmask @ bitmask !
-	gfxtype @ ?graphics
+	dup type>role role !
+    objtype !
+    role's regiontable @ rgntbl !
+    role's initial-mhb wh@ mbw 2!
+    role's initial-bitmask @ bitmask !
+    role's gfxtype @ ?graphics
     setup   \ <--- user code
 	?solid
 	!dir
@@ -87,36 +96,34 @@ create graphics-types
 ;
 
 ( defining object types )
-: create-spawner create , does> @ stage one /obj ;
+: create-spawner create , does> @  stage one  /obj ;
 : create-initializer  create , does> @ /obj ;
 
-\ creates 3 words in addition to the role (if it wasn't already defined)
-: deftype ( - <name> )  \ name should be encased by '<' and '>'
+\ creates 3 words in addition to the class and annonymous role (if it wasn't already defined)
+: create-type ( - <name> )  \ name should be encased by '<' and '>'
     >in @ exists if drop ;then >in !
-	>in @ defrole >in !
-	bl parse #1 /string #1 - 2>r
-        nexttype lastrole @ 's typeid !
-		lastrole @ nexttype objtypes [] !
-		nexttype s" create-spawner *" 2r@ strjoin evaluate
-		nexttype s" create-initializer /" 2r@ strjoin evaluate
-        nexttype s" constant #" 2r@ strjoin evaluate
-        1 +to nexttype
+	>in @  create-role 
+    >in !
+	bl parse #1 /string #1 - 2>r 
+        nextType lastRole 's typeid !
+		lastRole nextType typeRoles [] !
+		nextType s" create-spawner *" 2r@ strjoin evaluate
+		nextType s" create-initializer /" 2r@ strjoin evaluate
+        nextType s" constant #" 2r@ strjoin evaluate
+        1 +to nextType
 	2r> 2drop
 ;
 
 ( misc )
-: type>id  's typeid @ ;
-: id>type  objtypes [] @ ;
-: .name    body> >name count type ;
-: .type    ( obj - ) 's role @ .name ;
+: .type    ( obj - ) >class .name ;
 
 
 ( define action tables )
 \ allocates space for a vector table in roles. when executed, the given
 \ indexed action is run.
 : actiontable  ( #cells - <name> )  ( n - )
-    0 ?unique drop  cells create-rolefield <adr
-    does> field.offset @ role@ + swap cells + @ execute ;
+    cells ?superfield <adr  -exit
+    does> <role> superfield>offset role@ + swap cells + @ execute ;
 
 ( interactions )
 
@@ -124,7 +131,7 @@ create graphics-types
 
 \ assign handler for corresponding attribute (bit number) in the given actiontable
 : :on  ( attribute role - <actiontable> <code> ; )
-	' >body field.offset @ + swap bit# cells + :noname swap ! ;
+	postpone 's swap bit# cells + :noname swap ! ;
 
 \ same as :ON but configures the given role's initial-bitmask for you
 \ and uses the COLLIDE actiontable specifically
@@ -151,3 +158,4 @@ create graphics-types
 			loop drop
 		then 
 ;
+

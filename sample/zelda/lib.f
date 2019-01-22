@@ -12,15 +12,22 @@ nextflag
 drop
 
 ( rolefields )
-    8 cells rolefield dropables
-
+extend-class <role>
+    8 cells field dropables
+end-class
 
 ( vars )
+extend-class <actor> 
     var hp
     var maxhp
     var atk
-    var hp  2 defaults 's hp !
-    var maxhp  2 defaults 's maxhp !
+    var hp  
+    var maxhp
+end-class
+<actor> prototype >{
+    2 hp !
+    2 maxhp !
+}
 
 ( misc )
 : sf@+  dup sf@ cell+ ;
