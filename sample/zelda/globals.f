@@ -17,10 +17,10 @@ create roombuf %array2d struct,
 11 constant #rows
 0 value world          \ pointer to a %world
 
-create bg  <tilemap> stage actor
+create bg  stage actor
 include sample/zelda/printer.f
-create cam  <actor> stage actor
-create hud  <actor> stage actor
-create minimap  <actor> stage actor
-create link  <actor> stage actor
+create cam  stage actor
+create hud  stage actor
+create minimap  stage actor
+create link  stage actor
 : p1  link ;

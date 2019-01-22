@@ -65,7 +65,7 @@ extend-class <actor>
     %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
     var 'physics  \ code
 end-class
-<actor> template >{
+<actor> prototype >{
     0 0 16 16 ihb xywh!
 }
 
@@ -152,7 +152,7 @@ create args 100 stack,
     2over 2>r compare 0= if 2r> args@ true ;then 2r> 0 ;
     
 ( curtain open effect )
-: *curtain  <actor> stage one draw> 128 256 black rectf ;
+: *curtain  stage one draw> 128 256 black rectf ;
 : curtain-open
     0 64 at *curtain 64 live-for -2 vx !
     128 64 at *curtain 64 live-for 2 vx !

@@ -12,8 +12,9 @@ nextflag
 drop
 
 ( rolefields )
-    8 cells rolefield dropables
-
+extend-class <role>
+    8 cells field dropables
+end-class
 
 ( vars )
 extend-class <actor> 
@@ -23,7 +24,7 @@ extend-class <actor>
     var hp  
     var maxhp
 end-class
-<actor> template >{
+<actor> prototype >{
     2 hp !
     2 maxhp !
 }

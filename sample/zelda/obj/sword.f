@@ -1,4 +1,4 @@
-deftype <sword>
+create-type <sword>
     <sword> :to setup  /item  anim-swordu ;
     
     :listen

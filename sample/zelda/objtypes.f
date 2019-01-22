@@ -11,16 +11,16 @@
 \ ;
 
 ( object types - maintain the ordering to keep savestates coherent )
-deftype <link>
-deftype <test>
-deftype <sword>
-deftype <bomb>
-deftype <potion>
-deftype <rupee>
-deftype <orb>
-deftype <statue>
-deftype <swordattack>
-deftype <dude>
+create-type <link>
+create-type <test>
+create-type <sword>
+create-type <bomb>
+create-type <potion>
+create-type <rupee>
+create-type <orb>
+create-type <statue>
+create-type <swordattack>
+create-type <dude>
 
 
 ( load in scripts - order doesn't matter )

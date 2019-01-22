@@ -1,5 +1,8 @@
 empty
+include ramen/stdpack.f       
+
 : >data  s" sample/zelda/data/" 2swap strjoin ;
+
 
 ( "engine" )
 include sample/zelda/tools.f
@@ -14,7 +17,7 @@ include sample/zelda/objtypes.f
 256 236 resolution
 
 ( extend loop )
-: think  ( - ) stage acts tasks multi world multi stage multi tasks acts ;
+: think  ( - ) stage acts  tasks multi  stage multi  tasks acts ;
 : physics ( - ) stage each> as ?physics vx 2@ x 2+! ;
 : zelda-step ( - ) step> think physics interact stage sweep ;
 zelda-step
@@ -36,7 +39,9 @@ zelda-step
 : /minimap  minimap as 16 16 hud situate draw> red urhere grey mapgrid ;
 
 ( overworld map data )
-16 8 defworld overworld  overworld
+create-world overworld  overworld
+
+16 8 overworld rooms:
 $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
 $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
 $FF , $FF , $11 , $10 , $01 , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , 
@@ -67,15 +72,18 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
 
 : adventure
     cleanup
-    /bg /cam /hud /minimap 
+    /bg /cam /hud /minimap
+
     link as hidden on 
     overworld 3 3 warp
+
     curtain-open
+    
     link as 64 after>
         64 96 x 2!
         /link  
         \ test objects:
-        64 128 at *orb
+        64 128 at 0 ['] *orb later
 \        64 180 at *statue
 ;
 
@@ -84,6 +92,3 @@ include ramen/lib/upscale.f
 
 adventure
 
-ld sample/zelda/tests
-
-\ cr .( [Zelda] )

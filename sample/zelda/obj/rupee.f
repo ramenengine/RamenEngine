@@ -1,1 +1,1 @@
-deftype <rupee>
+create-type <rupee>

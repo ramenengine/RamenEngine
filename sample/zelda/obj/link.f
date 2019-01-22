@@ -1,11 +1,13 @@
-deftype <link>
+create-type <link>
 
     <link> :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 -8 ihb xy! ;
     #item <link> :hit  you pickup ;
 
-var spd  
-var ctr
-var trigged
+<actor> fields:
+    var spd  
+    var ctr
+    var trigged
+
 action idle
 action walk  
 action start

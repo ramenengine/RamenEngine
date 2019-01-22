@@ -3,25 +3,25 @@
 1 value nextType
 
 extend-class <role>
-    rolevar gfxtype    \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
-    rolevar regiontablesize  <int
-    rolevar regiontable <adr
-    rolevar initial-bitmask <hex
-    %rect sizeof rolefield initial-mhb    \ map hitbox
-    rolevar typeid
+    var gfxtype    \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
+    var regiontable-size  <int
+    var regiontable <adr
+    var initial-bitmask <hex
+    %rect sizeof field initial-mhb    \ map hitbox
+    var typeid
 end-class
 
 extend-class <actor>
     var objtype
     var qty
-    var bitmask <hex        \ what the object should interact with
+    var bitmask <hex        \ whaet the object should interact with
     \ var flags   <hex        \ what attributes the object has
     %rect sizeof field ihb  \ interaction hitbox
     var damaged             \ stores the attack power of the last call to DAMAGE
     var startx  var starty
 end-class
 
-<actor> template as
+<actor> prototype as
     1 qty !
 
 ( actions )
@@ -32,7 +32,6 @@ extend-class <role>
 end-class
 
 basis :to die ( - ) end ;   
-
 
 ( object and tile flags )
     #1
@@ -84,11 +83,12 @@ create graphics-types
 : ?solid  #solid set? -exit  physics> tilebuf collide-tilemap ;
 : !dir  #directional set? if spawner 's dir @ else 90 then dir ! ;
 : /obj  ( objtype - )
-	objtype !
-	regiontable @ rgntbl !
-	initial-mhb wh@ mbw 2!
-	initial-bitmask @ bitmask !
-	gfxtype @ ?graphics
+	dup type>role role !
+    objtype !
+    role's regiontable @ rgntbl !
+    role's initial-mhb wh@ mbw 2!
+    role's initial-bitmask @ bitmask !
+    role's gfxtype @ ?graphics
     setup   \ <--- user code
 	?solid
 	!dir
@@ -96,19 +96,19 @@ create graphics-types
 ;
 
 ( defining object types )
-: create-spawner create , does> @ dup type>role stage one /obj ;
-\ : create-initializer  create , does> @ /obj ;
+: create-spawner create , does> @  stage one  /obj ;
+: create-initializer  create , does> @ /obj ;
 
 \ creates 3 words in addition to the class and annonymous role (if it wasn't already defined)
-: deftype ( - <name> )  \ name should be encased by '<' and '>'
+: create-type ( - <name> )  \ name should be encased by '<' and '>'
     >in @ exists if drop ;then >in !
-	>in @  <actor> role 
+	>in @  create-role 
     >in !
 	bl parse #1 /string #1 - 2>r 
         nextType lastRole 's typeid !
 		lastRole nextType typeRoles [] !
 		nextType s" create-spawner *" 2r@ strjoin evaluate
-		\ nextType s" create-initializer /" 2r@ strjoin evaluate
+		nextType s" create-initializer /" 2r@ strjoin evaluate
         nextType s" constant #" 2r@ strjoin evaluate
         1 +to nextType
 	2r> 2drop
@@ -122,8 +122,8 @@ create graphics-types
 \ allocates space for a vector table in roles. when executed, the given
 \ indexed action is run.
 : actiontable  ( #cells - <name> )  ( n - )
-    cells rolefield <adr
-    does> rolefield>ofs role@ + swap cells + @ execute ;
+    cells ?superfield <adr  -exit
+    does> <role> superfield>offset role@ + swap cells + @ execute ;
 
 ( interactions )
 
@@ -131,7 +131,7 @@ create graphics-types
 
 \ assign handler for corresponding attribute (bit number) in the given actiontable
 : :on  ( attribute role - <actiontable> <code> ; )
-	' >body rolefield>ofs + swap bit# cells + :noname swap ! ;
+	postpone 's swap bit# cells + :noname swap ! ;
 
 \ same as :ON but configures the given role's initial-bitmask for you
 \ and uses the COLLIDE actiontable specifically

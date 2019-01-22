@@ -1,12 +1,10 @@
 true constant dev
 \ true constant HD
-include ramen/ramen.f         cr .( Loaded Ramen. ) \ "
+include ramen/ramen.f         
 \ fs on
-\ ide
-\ include ws/ws.f               cr .( Loaded Workspace. ) \ "
+ide
+\ include ws/ws.f             
 \ ui off
-include ramen/stdpack.f       cr .( Loaded Standard Pack. ) \ "
-
 
 ( Directory )
 \ : wstest   s" ld ws/test" evaluate ;

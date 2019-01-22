@@ -1,4 +1,4 @@
-deftype <orb>
+create-type <orb>
 
     #circle <orb> 's gfxtype !
     <orb> :to setup   blue tinted ;

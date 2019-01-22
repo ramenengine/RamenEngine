@@ -16,7 +16,7 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 : srcrc  #cols /mod #cols #rows 2* 32 + ;
 : disposable?  dynamic? #important set? not and ;
 : thinout  ['] disposable? swap those> dismiss ;
-: cleanup  stage thinout  world thinout ;
+: cleanup  stage thinout ;
 : room  ( i - )  \ expressed as $cr  c=column r=row 
     cleanup
     1p dup room# ! srcrc tilebuf adr-pitch
@@ -31,19 +31,17 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 
 
 ( world )
-<actor> class <world>
+0 0 class <world>
     var rooms  \ array2d
-end-class    
+end-class
     
-: defworld  ( - <name> )
+: create-world  ( - <name> )  ( - )
     create <world> static  me to world
-    does>
-        \ world stage remove  dup stage push
-        to world
+    does>  to world
 ;
 
-: world-rooms:  ( w h - )
-    world as  here rooms ! ( w h ) array2d-head, ;
+: rooms:  ( w h - )
+    here world 's rooms ! ( w h ) array2d-head, ;
 
 : maploc  ( col row - adr )
     world 's rooms @ loc ;
