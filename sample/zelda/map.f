@@ -31,12 +31,12 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 
 
 ( world )
-0 0 class <world>
+0 0 class _world
     var rooms  \ array2d
 end-class
     
 : create-world  ( - <name> )  ( - )
-    create <world> static  me to world
+    create _world static  me to world
     does>  to world
 ;
 

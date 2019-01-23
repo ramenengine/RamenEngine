@@ -2,7 +2,7 @@
 
 1 value nextType
 
-extend-class <role>
+extend-class _role
     var gfxtype    \ 0 = nothing, 1 = circle, 2 = box, 3 = sprite, 4 = animation
     var regiontable-size  <int
     var regiontable <adr
@@ -11,7 +11,7 @@ extend-class <role>
     var typeid
 end-class
 
-extend-class <actor>
+extend-class _actor
     var objtype
     var qty
     var bitmask <hex        \ whaet the object should interact with
@@ -21,11 +21,11 @@ extend-class <actor>
     var startx  var starty
 end-class
 
-<actor> prototype as
+_actor prototype as
     1 qty !
 
 ( actions )
-extend-class <role>
+extend-class _role
     action setup ( - )
     action start ( - )
     action die ( - )
@@ -100,11 +100,11 @@ create graphics-types
 : create-initializer  create , does> @ /obj ;
 
 \ creates 3 words in addition to the class and annonymous role (if it wasn't already defined)
-: create-type ( - <name> )  \ name should be encased by '<' and '>'
+: create-type ( - <name> )  \ name should be preceded by r-
     >in @ exists if drop ;then >in !
 	>in @  create-role 
     >in !
-	bl parse #1 /string #1 - 2>r 
+	bl parse #2 /string 2>r 
         nextType lastRole 's typeid !
 		lastRole nextType typeRoles [] !
 		nextType s" create-spawner *" 2r@ strjoin evaluate
@@ -123,7 +123,7 @@ create graphics-types
 \ indexed action is run.
 : actiontable  ( #cells - <name> )  ( n - )
     cells ?superfield <adr  -exit
-    does> <role> superfield>offset role@ + swap cells + @ execute ;
+    does> _role superfield>offset role@ + swap cells + @ execute ;
 
 ( interactions )
 

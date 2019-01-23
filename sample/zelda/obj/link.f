@@ -1,9 +1,9 @@
-create-type <link>
+create-type r-link
 
-    <link> :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 -8 ihb xy! ;
-    #item <link> :hit  you pickup ;
+    r-link :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 -8 ihb xy! ;
+    #item r-link :hit  you pickup ;
 
-<actor> fields:
+_actor fields:
     var spd  
     var ctr
     var trigged
@@ -38,7 +38,7 @@ create evoke-link-swing dir-anim-table
     ' anim-link-swingl ,
     ' anim-link-swingu ,
 
-    <link> :to evoke-direction  evoke-link-walk ;
+    r-link :to evoke-direction  evoke-link-walk ;
 
 ( Logic )
         
@@ -98,13 +98,13 @@ create evoke-link-swing dir-anim-table
         then
     ;
 
-    <link> :to walk ( - )
+    r-link :to walk ( - )
         0.15 anmspd !  !walkv ?edge ?turn
         0 perform> begin ?attack ?stop ?edge ?180 pause ?turn again ;
-    <link> :to idle ( - )
+    r-link :to idle ( - )
         !face -vel 0 anmspd ! ?walk 
         0 perform> begin ?attack ?walk pause again ;
-    <link> :to start ( - )
+    r-link :to start ( - )
         /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
         act> !dirkey ?trig ;
 

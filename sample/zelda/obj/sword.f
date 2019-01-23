@@ -1,5 +1,5 @@
-create-type <sword>
-    <sword> :to setup  /item  anim-swordu ;
+create-type r-sword
+    r-sword :to setup  /item  anim-swordu ;
     
     :listen
         #sword have not if 

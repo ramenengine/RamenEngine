@@ -54,7 +54,7 @@ action start ( - )
 action idle ( - )
 action walk ( - )
 action turn ( angle )
-extend-class <actor>
+extend-class _actor
     var dir \ angle
     var (xt) <adr
     var target <adr
@@ -65,7 +65,7 @@ extend-class <actor>
     %rect sizeof field ihb  \ interaction hitbox; relative to x,y position
     var 'physics  \ code
 end-class
-<actor> prototype >{
+_actor prototype >{
     0 0 16 16 ihb xywh!
 }
 

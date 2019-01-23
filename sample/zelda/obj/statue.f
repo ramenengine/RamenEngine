@@ -1,1 +1,1 @@
-create-type <statue>
+create-type r-statue

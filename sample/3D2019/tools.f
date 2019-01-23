@@ -87,14 +87,14 @@ struct %cuboid
 : xyz2!   dup >r cz2! r> xy! ;
 
 ( 3D actors )
-extend-class <role>
+extend-class _role
     action start ( - )
     action idle ( - )
     action walk ( - )
     action turn ( angle )
 end-class
 
-extend-class <actor>
+extend-class _actor
     var dir \ angle
     var clipx  var clipy
     var flags <hex
@@ -102,7 +102,7 @@ extend-class <actor>
     %cuboid sizeof field ihb  \ interaction hitbox; relative to position
 end-class
 
-0 0 0 16 16 16 <actor> template 's ihb xyzwhd!
+0 0 0 16 16 16 _actor template 's ihb xyzwhd!
 
 \ : ipos     pos 3@ ihb xyz@ 3+ ;
 \ : toward   ( obj - x y )  >{ ipos } ipos 2- angle uvec ;

@@ -1,1 +1,1 @@
-create-type <rupee>
+create-type r-rupee
