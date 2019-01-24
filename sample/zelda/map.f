@@ -13,15 +13,15 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
     s" overworld-rooms.tmx" >data open-map
     s" Enemy Locations" find-objgroup enemy-handlers load-objects
 ;
-: srcrc  #cols /mod #cols #rows 2* 32 + ;
 : disposable?  dynamic? #important set? not and ;
 : thinout  ['] disposable? swap those> dismiss ;
 : cleanup  stage thinout ;
+: src-rowcol  #cols /mod #cols #rows 2* 32 + ;
 : room  ( i - )  \ expressed as $cr  c=column r=row 
     cleanup
-    1p dup room# ! srcrc tilebuf adr-pitch
-    0 4 roombuf adr-pitch
-    #cols cells #rows 2move
+    1p dup room# ! src-rowcol  tilebuf adr-pitch
+        0 4  roombuf adr-pitch
+        #cols cells #rows 2move
     0 ['] *enemies later
 ;
 

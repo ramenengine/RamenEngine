@@ -9,13 +9,20 @@ extend-class _role
     var initial-bitmask <hex
     %rect sizeof field initial-mhb    \ map hitbox
     var typeid
+    
+    ( actions )
+    action setup ( - )
+    action start ( - )
+    action die ( - )
 end-class
+
+basis :to die ( - ) end ;   
 
 extend-class _actor
     var objtype
     var qty
     var bitmask <hex        \ whaet the object should interact with
-    \ var flags   <hex        \ what attributes the object has
+    var flags   <hex        \ what attributes the object has
     %rect sizeof field ihb  \ interaction hitbox
     var damaged             \ stores the attack power of the last call to DAMAGE
     var startx  var starty
@@ -24,14 +31,6 @@ end-class
 _actor prototype as
     1 qty !
 
-( actions )
-extend-class _role
-    action setup ( - )
-    action start ( - )
-    action die ( - )
-end-class
-
-basis :to die ( - ) end ;   
 
 ( object and tile flags )
     #1
@@ -99,7 +98,7 @@ create graphics-types
 : create-spawner create , does> @  stage one  /obj ;
 : create-initializer  create , does> @ /obj ;
 
-\ creates 3 words in addition to the class and annonymous role (if it wasn't already defined)
+\ creates 3 words in addition to the role (if it wasn't already defined)
 : create-type ( - <name> )  \ name should be preceded by r-
     >in @ exists if drop ;then >in !
 	>in @  create-role 
@@ -115,7 +114,7 @@ create graphics-types
 ;
 
 ( misc )
-: .type    ( obj - ) >class .name ;
+: .type    ( obj - ) 's role @ .name ;
 
 
 ( define action tables )
@@ -150,7 +149,8 @@ create graphics-types
 		stage each> to you
         collide? if
 			\ ." hit "
-			bitmask @ you 's flags @ and 32 for
+			bitmask @ you 's flags @ and 
+			32 for
 				dup #1 and if
 					\ ." collide "
 					i collide 
