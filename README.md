@@ -2,6 +2,6 @@ Ramen 2.0
 
 main distribution package for Ramen.  includes the [ramen package](https://github.com/RogerLevy/ramen) as a submodule and all dependencies.
 
-todo: move and update the readme, rewrite the docs
+todo: move and update the readme, rewrite the docs, finish samples
 
-current status: many bugfixes, the API is mostly stable but Tiled support may be reworked a bit.
+current status: API has gone through lots of changes, lots of bugfixes.  design is improved over 1.0 by a lot - basically don't use 1.0.
