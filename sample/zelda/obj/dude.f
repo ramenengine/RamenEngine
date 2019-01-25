@@ -1,3 +1,3 @@
-create-type r-dude
-    r-dude :to setup  /npc   1 spr ! ;
+create-type `dude
+    `dude :to setup  /npc   1 spr ! ;
 

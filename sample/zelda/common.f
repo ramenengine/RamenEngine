@@ -99,11 +99,11 @@ create graphics-types
 : create-initializer  create , does> @ /obj ;
 
 \ creates 3 words in addition to the role (if it wasn't already defined)
-: create-type ( - <name> )  \ name should be preceded by r-
+: create-type ( - <name> )  \ name should be preceded by `
     >in @ exists if drop ;then >in !
 	>in @  create-role 
     >in !
-	bl parse #2 /string 2>r 
+	bl parse #1 /string 2>r 
         nextType lastRole 's typeid !
 		lastRole nextType typeRoles [] !
 		nextType s" create-spawner *" 2r@ strjoin evaluate
@@ -121,6 +121,7 @@ create graphics-types
 \ allocates space for a vector table in roles. when executed, the given
 \ indexed action is run.
 : actiontable  ( #cells - <name> )  ( n - )
+    _role fields:
     cells ?superfield <adr  -exit
     does> _role superfield>offset role@ + swap cells + @ execute ;
 

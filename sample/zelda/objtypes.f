@@ -11,16 +11,16 @@
 \ ;
 
 ( object types - maintain the ordering to keep savestates coherent )
-create-type r-link
-create-type r-test
-create-type r-sword
-create-type r-bomb
-create-type r-potion
-create-type r-rupee
-create-type r-orb
-create-type r-statue
-create-type r-swordattack
-create-type r-dude
+create-type `link
+create-type `test
+create-type `sword
+create-type `bomb
+create-type `potion
+create-type `rupee
+create-type `orb
+create-type `statue
+create-type `swordattack
+create-type `dude
 
 
 ( load in scripts - order doesn't matter - later on i'll automate this )

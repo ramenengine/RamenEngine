@@ -1,6 +1,6 @@
-create-type r-orb
+create-type `orb
 
-    #circle r-orb 's gfxtype !
-    r-orb :to setup   blue tinted ;
-    r-orb :to start  -5 orbit ;
-    #weapon r-orb :hit  1 damage ;
+    #circle `orb 's gfxtype !
+    `orb :to setup   blue tinted ;
+    `orb :to start  -5 orbit ;
+    #weapon `orb :hit  1 damage ;
