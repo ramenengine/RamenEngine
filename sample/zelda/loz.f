@@ -3,6 +3,8 @@ include ramen/stdpack.f
 
 : >data  s" sample/zelda/data/" 2swap strjoin ;
 
+( misc )
+depend afkit/ans/param-enclosures.f
 
 ( "engine" )
 include sample/zelda/tools.f
@@ -84,7 +86,7 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
         /link  
         \ test objects:
         64 128 at 0 ['] *orb later
-\        64 180 at *statue
+        64 180 at *statue
 ;
 
 include ramen/lib/upscale.f

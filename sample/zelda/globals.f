@@ -11,16 +11,16 @@ quest-var maxbombs  8 maxbombs !
 quest-var maxpotions 1 maxpotions !
 
 create roombuf %array2d struct,
-    16  16  tilebuf pitch@  0 0 tilebuf loc  roombuf /array2d
+    16  16  tilebuf pitch@  1( 0 0 tilebuf loc )  roombuf /array2d
 
 16 constant #cols
 11 constant #rows
 0 value world          \ pointer to a %world
 
-create bg  stage actor
+stage actor bg  
 include sample/zelda/printer.f
-create cam  stage actor
-create hud  stage actor
-create minimap  stage actor
-create link  stage actor
+stage actor cam 
+stage actor hud  
+stage actor minimap
+stage actor link  
 : p1  link ;
