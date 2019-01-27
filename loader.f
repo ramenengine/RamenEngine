@@ -7,9 +7,14 @@ ide
 \ ui off
 
 ( Directory )
-\ : wstest   s" ld ws/test" evaluate ;
-\ : 3d2019   s" ld sample/3d2019/3d2019" evaluate ;
+: wstest   s" ld ws/test" evaluate ;
+: 3d2019   s" ld sample/3d2019/3d2019" evaluate ;
 : loz    s" ld sample/zelda/loz" evaluate ;
 gild
 
-include main.f
+s" session.f" file-exists [if]
+    include session.f
+[else]
+    include main.f
+[then]
+                                                                                     

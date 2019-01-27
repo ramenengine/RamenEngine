@@ -1,10 +1,12 @@
 empty
 include ramen/stdpack.f       
+256 236 resolution
 
 : >data  s" sample/zelda/data/" 2swap strjoin ;
 
 ( misc )
 depend afkit/ans/param-enclosures.f
+depend sample/tools.f
 
 ( "engine" )
 include sample/zelda/tools.f
@@ -16,7 +18,6 @@ include sample/zelda/lib.f
 include sample/zelda/map.f
 include sample/zelda/objtypes.f
 
-256 236 resolution
 
 ( extend loop )
 : think  ( - ) stage acts  tasks multi  stage multi  tasks acts ;
@@ -79,9 +80,9 @@ $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $FF , $F
     link as hidden on 
     overworld 3 3 warp
 
-    curtain-open
+\    curtain-open
     
-    link as 64 after>
+\    link as 64 after>
         64 96 x 2!
         /link  
         \ test objects:

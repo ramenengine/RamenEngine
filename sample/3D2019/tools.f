@@ -51,21 +51,6 @@ variable lastkeydir
 : rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
 : bit#  ( bitmask - n )  #1 32 for 2dup and if 2drop i unloop ;then 1 << loop 2drop -1 ;
 
-( tasks )
-objlist tasks
-var (xt) <xt
-var target <adr
-var targetid
-: debug  ( val - val ) dup ['] h. later ;
-: live-for  ( n - ) perform> pauses end ;
-: ?waste  target @ 's id @ targetid @ <> ?end ;
-: *task  me tasks one  dup target ! 's id @ targetid ! act> ?waste ;
-: (after)  perform> pauses (xt) @ target @ >{ execute } end ;
-: after  ( xt n - ) { *task swap (xt) ! (after) } ;
-: after>  ( n - <code> ) r> code> swap after ;
-: (every)  perform> begin (xt) @ target @ >{ execute } dup pauses again ;
-: every  ( xt n - ) { *task swap (xt) ! (every) } ;
-: every>  ( n - <code> ) r> code> swap every ;
 
 ( cuboid struct )
 struct %cuboid
@@ -102,7 +87,7 @@ extend-class _actor
     %cuboid sizeof field ihb  \ interaction hitbox; relative to position
 end-class
 
-0 0 0 16 16 16 _actor template 's ihb xyzwhd!
+0 0 0 16 16 16 _actor prototype 's ihb xyzwhd!
 
 \ : ipos     pos 3@ ihb xyz@ 3+ ;
 \ : toward   ( obj - x y )  >{ ipos } ipos 2- angle uvec ;

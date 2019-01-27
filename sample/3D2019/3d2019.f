@@ -1,11 +1,8 @@
 empty
+include 3dpack/3dpack.f
 480 240 resolution
 
-[undefined] 3d [if]
-    include 3dpack/3dpack.f
-    gild
-[then]
-
+depend sample/tools.f
 depend sample/3d2019/tools.f
 depend ramen/lib/upscale.f
 depend ramen/lib/tweening.f
@@ -34,7 +31,11 @@ quad.mdl indices:
     0 , 2 , 3 , 
 ;indices
 
-var chr
+extend-class _actor
+    var chr
+    var lifetime
+end-class
+
 
 : !vcolor  ( ALLEGRO_VERTEX - ) >r fore 4@ r> ALLEGRO_VERTEX.r 4! ;
 : tinted  mdl @ veach> !vcolor ;
@@ -50,7 +51,6 @@ var chr
 ;
 : !3pos  at3@ pos 3! ;
 
-var lifetime
 
 : tri  2 * 1 - abs 1 swap - ;
 
@@ -120,17 +120,15 @@ var lifetime
 
 
 create message ," HAPPY NEW YEAR"
-message value pointer
 
-: nextchar  #1 +to pointer  pointer c@ ?dup if { *letter anim } 5 pauses then ;
+: nextchar  dup c@ { *letter anim } #1 + ;
 
 : present
     ['] burst 260 after
     ['] *2019 260 after
-    
-    *task pointer perform>
+    *task 0 perform>
         -1350 0 0 at3
-        c@ 1p for nextchar loop end
+        message count 1p for nextchar 5 pauses loop end
 ;
 
 : think  tasks multi  stage acts  models acts  stage multi  models multi ;
@@ -147,5 +145,6 @@ message value pointer
 : render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
 
 :now  show> ramenbg 0 0 at upscale> stage draws  models render ;
-:now  step> think physics +tweens stage sweep ;
+:now  step>  think physics  +tweens  stage sweep ;
+
 present

@@ -49,7 +49,6 @@ variable lastkeydir
 : rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
 
 ( actor extensions )
-objlist tasks
 action start ( - )
 action idle ( - )
 action walk ( - )
@@ -69,16 +68,7 @@ _actor prototype >{
     0 0 16 16 ihb xywh!
 }
 
-: debug  ( val - val ) dup ['] h. later ;
 : live-for  ( n - ) perform> pauses end ;
-: ?waste  target @ 's id @ targetid @ <> ?end ;
-: *task  me tasks one  dup target ! 's id @ targetid ! act> ?waste ;
-: (after)  perform> pauses (xt) @ target @ >{ execute } end ;
-: after  ( xt n - ) { *task swap (xt) ! (after) } ;
-: after>  ( n - <code> ) r> code> swap after ;
-: (every)  perform> begin dup pauses (xt) @ target @ >{ execute } again ;
-: every  ( xt n - ) { *task swap (xt) ! (every) } ;
-: every>  ( n - <code> ) r> code> swap every ;
 : /sprite  draw> sprite ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite ;
 : ipos  x 2@ ihb xy@ 2+ ;
