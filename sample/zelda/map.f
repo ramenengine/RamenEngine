@@ -13,7 +13,7 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
     s" overworld-rooms.tmx" >data open-map
     s" Enemy Locations" find-objgroup enemy-handlers load-objects
 ;
-: disposable?  dynamic? #important set? not and ;
+: disposable?  dyn @ #important set? not and ;
 : thinout  ['] disposable? swap those> dismiss ;
 : cleanup  stage thinout ;
 : src-rowcol  #cols /mod #cols #rows 2* 32 + ;
