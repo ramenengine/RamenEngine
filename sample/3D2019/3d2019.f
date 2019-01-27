@@ -2,7 +2,7 @@ empty
 include 3dpack/3dpack.f
 480 240 resolution
 
-depend sample/tools.f
+depend sample/lib/utils.f
 depend sample/3d2019/tools.f
 depend ramen/lib/upscale.f
 depend ramen/lib/tweening.f
@@ -34,6 +34,8 @@ quad.mdl indices:
 extend-class _actor
     var chr
     var lifetime
+    2 cells field v1
+    var spinspd
 end-class
 
 
@@ -96,9 +98,19 @@ end-class
 : csprite  img @ imagewh 0.5 0.5 2* cx 2!  sprite ;
 
 
+: spinaround
+    #2 rnd if 1 else -1 then spinspd !
+    act>
+    x 2@  displaywh 2halve  2- v1 2! 
+    spinspd @  v1 2@ magnitude 1000 /  1 swap - * 
+        v1  rotate
+    v1 2@ displaywh 2halve 2+  x 2!
+;
+
 : *star
     star.png *image 2 2 sx 2!
     1 0.5 0.5 tint 3!
+    spinaround
     draw> csprite 5 ang +! vx 2@ 0.97 dup 2* vx 2!
 ;
 
@@ -112,7 +124,7 @@ end-class
 
 
 : burst
-    displaywh 0.5 0.5 2* at
+    displaywh 2halve at
     200 for *star 360 rnd 5 45 between vec vx 2! loop ;
 
 
