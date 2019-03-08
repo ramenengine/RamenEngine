@@ -1,55 +1,10 @@
-( variables )
-variable lastkeydir
-%v3d sizeof field vel
+extend: _actor
+    %v3d sizeof field vel
+;class
 
 ( misc )
-: enum  dup constant 1 + ;
-: ztype zcount type ;
-: situate  's pos 3@ 3+ pos 2! ;
+: situate  at3@ pos 3! ;
 : -vel    0 0 0 vel 3! ;
-: left?   <left> kstate ;
-: right?  <right> kstate ;
-: up?     <up> kstate ;
-: down?   <down> kstate ;
-: pleft?   <left> pressed ;
-: pright?  <right> pressed ;
-: pup?     <up> pressed ;
-: pdown?   <down> pressed ;
-: dirkeys?  left? right? or up? or down? or ;
-: rdirkeys?  <left> released  <right> released or  <up> released or  <down> released or ;
-: pdirkeys?  <left> pressed <right> pressed or <up> pressed or <down> pressed or ;
-: keydir ( -- n )  
-    left? if 180 exit then
-    right? if 0 exit then
-    up? if 270 exit then
-    down? if 90 exit then
-    -1 ;
-: pkeydir ( -- n )  
-    pleft? if 180 exit then
-    pright? if 0 exit then
-    pup? if 270 exit then
-    pdown? if 90 exit then
-    -1 ;
-: !dirkey
-    pdirkeys? if pkeydir lastkeydir ! exit then
-    rdirkeys? if keydir lastkeydir ! exit then ;
-\ also ideing
-\ : (debug)
-\     get-xy
-\         black 0 alpha
-\         0 0 at  write-src blend> output @ onto> displayw 4 rows rectf
-\         0 0 at-xy .me
-\     at-xy ;
-\ previous
-: (those)  ( filter-xt code objlist - filter-xt code )
-    each> as over execute if dup >r then ;
-: those>  ( filter-xt objlist - <code> )  ( - )  \ note you can't pass anything to <code>
-    dup 0= if 2drop r> drop ;then
-    r> { swap (those) 2drop } ;
-: njump  ( n adr - ) 
-    swap cells + @ execute ;
-: rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
-: bit#  ( bitmask - n )  #1 32 for 2dup and if 2drop i unloop ;then 1 << loop 2drop -1 ;
 
 
 ( cuboid struct )
@@ -72,20 +27,20 @@ struct %cuboid
 : xyz2!   dup >r cz2! r> xy! ;
 
 ( 3D actors )
-extend-class _role
+extend: _role
     action start ( - )
     action idle ( - )
     action walk ( - )
     action turn ( angle )
-end-class
+;class
 
-extend-class _actor
+extend: _actor
     var dir \ angle
     var clipx  var clipy
     var flags <hex
     3 cells field startpos
     %cuboid sizeof field ihb  \ interaction hitbox; relative to position
-end-class
+;class
 
 0 0 0 16 16 16 _actor prototype 's ihb xyzwhd!
 
@@ -114,39 +69,35 @@ end-class
 ( actor spawning )
 stage value spawner
 \ defer spawn
-: 3away  ( x y z obj - )  's pos 3@ 3+ at3 ;
-: from  dup 's ihb xyz@ rot 3away ;
-: spawn  me to spawner me from ;
+: 3from  ( x y z obj - )  's pos 3@ 3+ at3 ;
+\ : from  dup 's ihb xyz@ rot 3away ;
+\ : spawn  me to spawner me from ;
 \ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
 
-( physics )
-var 'physics  \ code
-: physics>  r> 'physics ! ;
-: ?physics  'physics @ ?dup if >r then ;
+( misc 3d stuff )
+objlist: models
+: !vcolor  ( ALLEGRO_VERTEX - ) >r fore 4@ r> ALLEGRO_VERTEX.r 4! ;
+: tmodel  tint 3@ rgb ['] !vcolor mdl @ veach model ;
+: uv!  ( u v n - )  >r 2af r> mdl @ v[] ALLEGRO_VERTEX.u 2! ;
+: !3pos  at3@ pos 3! ;
+: *model  ( model - )  models one mdl ! !3pos ;
+: tri  2 * 1 - abs 1 swap - ;
+: +alphatex
+    ALLEGRO_ALPHA_FUNCTION ALLEGRO_RENDER_GREATER al_set_render_state
+    ALLEGRO_ALPHA_TEST #1 al_set_render_state
+    ALLEGRO_ALPHA_TEST_VALUE 0 al_set_render_state
+;
+: -alphatex
+    ALLEGRO_ALPHA_TEST #0 al_set_render_state
+;
+: centered  displaywh 2 2 2/ at ;
 
 
-( event system )
-create listeners 100 stack,
-create args 100 stack,
+( lowres 3d loop )
+depend ramen/lib/tweening.f
+: think  tasks multi  stage acts  models acts  stage multi  models multi ;
+: render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
 
-: :listen  ( - <code> ; ) ( me=source event c - event c )
-    :noname listeners push ; 
-
-: (dispatch)  ( event c xt - event c )
-    sp@ >r { execute } r> sp! drop ;
-
-: +args  ( ... #params - )
-    dup >r args pushes r> args push ;
-
-: -args  ( - )
-    args length args pop - 1 - args truncate ;
-
-: args@  ( - ... )
-    args >top dup @ for cell- dup >r @ r> loop drop ;
-
-: occur ( ... #params event c - )
-    2>r +args 2r> ['] (dispatch) listeners each 2drop -args ;
-
-: occurred  ( event c event c - event c ... true | event c false )
-    2over 2>r compare 0= if 2r> args@ true ;then 2r> 0 ;
-    
+depend ramen/lib/upscale.f
+:now  show> ramenbg 0 0 at upscale> stage draws  models render ;
+:now  step>  think physics  +tweens  sweep ;

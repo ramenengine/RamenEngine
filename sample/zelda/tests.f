@@ -1,4 +1,10 @@
-loz
+include sample/zelda/loz.f
+/overworld  3 3 warp
+
+\ test objects:
+64 128 at *orb
+64 180 at *statue
+
 
 ( cave text test )
 

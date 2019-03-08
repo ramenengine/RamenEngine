@@ -1,7 +1,7 @@
-create-type `link
+type: link
 
-    `link :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 -8 ihb xy! ;
-    #item `link :hit  you pickup ;
+    link :to setup  #solid flags !   0 8 cx 2!   16 8 mbw 2!   0 -8 ihb xy! ;
+    #item link :hit  you pickup ;
 
 _actor fields:
     var spd  
@@ -14,12 +14,12 @@ action start
 action attack
 
 ( Data )
-16 16 s" link-tiles-sheet.png" >data tileset: link.ts
+16 16 s" link-tiles-sheet.png" >data tileset: link.image
 
-0 link.ts 1 6 / autoanim: anim-link-walku 2 , 2 ,h ;anim
-0 link.ts 1 6 / autoanim: anim-link-walkd 0 , 1 , ;anim
-0 link.ts 1 6 / autoanim: anim-link-walkl 3 ,h 4 ,h ;anim
-0 link.ts 1 6 / autoanim: anim-link-walkr 3 , 4 , ;anim
+link.image 1 6 / autoanim: anim-link-walku 2 , 2 ,h ;anim
+link.image 1 6 / autoanim: anim-link-walkd 0 , 1 , ;anim
+link.image 1 6 / autoanim: anim-link-walkl 3 ,h 4 ,h ;anim
+link.image 1 6 / autoanim: anim-link-walkr 3 , 4 , ;anim
 
 create evoke-link-walk dir-anim-table 
     ' anim-link-walkr ,
@@ -27,10 +27,10 @@ create evoke-link-walk dir-anim-table
     ' anim-link-walkl ,
     ' anim-link-walku ,
 
-0 link.ts 0 autoanim: anim-link-swingu 10 , ;anim
-0 link.ts 0 autoanim: anim-link-swingd 9 , ;anim
-0 link.ts 0 autoanim: anim-link-swingl 11 ,h ;anim
-0 link.ts 0 autoanim: anim-link-swingr 11 , ;anim
+link.image 0 autoanim: anim-link-swingu 10 , ;anim
+link.image 0 autoanim: anim-link-swingd 9 , ;anim
+link.image 0 autoanim: anim-link-swingl 11 ,h ;anim
+link.image 0 autoanim: anim-link-swingr 11 , ;anim
 
 create evoke-link-swing dir-anim-table 
     ' anim-link-swingr ,
@@ -38,7 +38,7 @@ create evoke-link-swing dir-anim-table
     ' anim-link-swingl ,
     ' anim-link-swingu ,
 
-    `link :to evoke-direction  evoke-link-walk ;
+    link :to evoke-direction  evoke-link-walk ;
 
 ( Logic )
         
@@ -57,7 +57,7 @@ create evoke-link-swing dir-anim-table
         near-grid? if snap turn ;then
     ;
     : ?attack
-        #sword have -exit
+        sword have -exit
         <z> pressed -exit
         -vel
         evoke-link-swing
@@ -98,27 +98,27 @@ create evoke-link-swing dir-anim-table
         then
     ;
 
-    `link :to walk ( - )
+    link :to walk ( - )
         0.15 anmspd !  !walkv ?edge ?turn
         0 perform> begin ?attack ?stop ?edge ?180 pause ?turn again ;
-    `link :to idle ( - )
+    link :to idle ( - )
         !face -vel 0 anmspd ! ?walk 
         0 perform> begin ?attack ?walk pause again ;
-    `link :to start ( - )
+    link :to start ( - )
         /sprite  hidden off  snap  1.3 spd !  -9999 olddir !  downward idle
         act> !dirkey ?trig ;
 
-    : /link  link as  #link /obj ;
+    : /link  link0 as  link /obj ;
 
     :listen
         s" player-entered-cave" occurred if
-            link >{
+            link0 >{
                 ( x y ) x 2!
                 upward idle
             }
         ;then
         s" player-exited-cave" occurred if
-            link >{
+            link0 >{
                 tempx 2@ x 2!
                 emerge
             }

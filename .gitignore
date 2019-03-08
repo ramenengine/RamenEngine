@@ -1,2 +1,5 @@
 session.f
 allegro\.log
+_*.*
+bin
+private

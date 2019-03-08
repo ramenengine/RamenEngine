@@ -1,0 +1,1 @@
+ ./ramen/make_sfwin.bat test sample/platformer/platformer.f sample\platformer

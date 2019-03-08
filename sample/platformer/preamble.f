@@ -1,0 +1,17 @@
+empty                         \ clears the dictionary
+include ramen/stdpack.f       
+320 240 resolution
+
+( misc )
+depend afkit/ans/param-enclosures.f
+depend sample/tools.f
+depend sample/events.f
+
+page
+
+create startxy 0 , 0 ,
+stage actor: cam
+
+( upscaling )
+depend ramen/lib/upscale.f
+:now show> ramenbg 0 0 at upscale> stage draws ;

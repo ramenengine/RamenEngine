@@ -1,2 +1,0 @@
-( Load main program )
-

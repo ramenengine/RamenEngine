@@ -1,17 +1,21 @@
 
 
 ( load the Tiled data )
-s" overworld-rooms.tmx" >data open-map
-    s" testrooms1" find-tmxlayer tilebuf  0 32 load-tmxlayer  \ load well below the room buffer
-    s" overworld-tiles.tsx" find-tileset# load-tileset
-
+: reload
+    -tiles -bitmaps 
+    s" overworld-rooms.tmx" >data open-map
+        s" testrooms1" find-tmxlayer tilebuf  0 32 load-tmxlayer  \ load well below the room buffer
+        s" overworld-tiles.tsx" find-tileset# load-tileset
+; reload
 
 ( loading a room )
 defer enemyimage  ' 2drop is enemyimage
 create enemy-handlers  0 , ' enemyimage , 0 ,
 : *enemies
-    s" overworld-rooms.tmx" >data open-map
-    s" Enemy Locations" find-objgroup enemy-handlers load-objects
+    {
+        s" overworld-rooms.tmx" >data open-map
+        s" Enemy Locations" find-objgroup enemy-handlers load-objects
+    }
 ;
 : disposable?  dyn @ #important set? not and ;
 : thinout  ['] disposable? swap those> dismiss ;
@@ -22,7 +26,7 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
     1p dup room# ! src-rowcol  tilebuf adr-pitch
         0 4  roombuf adr-pitch
         #cols cells #rows 2move
-    0 ['] *enemies later
+    *enemies
 ;
 
 : cave  ( - )
@@ -31,20 +35,22 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 
 
 ( world )
-0 0 class _world
+nodetree: worlds
+
+0 node-class: _world
     var rooms  \ array2d
-end-class
+;class
     
-: create-world  ( - <name> )  ( - )
-    create _world static  me to world
-    does>  to world
+: world:  ( - <name> )  ( - )
+    create _world static  me to world  me worlds push
+    does>  to world  0 world worlds indexof world# !
 ;
 
 : rooms:  ( w h - )
     here world 's rooms ! ( w h ) array2d-head, ;
 
 : maploc  ( col row - adr )
-    world 's rooms @ loc ;
+    world 's rooms @ loc ;  
 
 : warp  ( col row )
     2dup coords 2!  maploc @ room ;
