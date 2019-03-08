@@ -6,7 +6,6 @@ extend: _actor
 : situate  at3@ pos 3! ;
 : -vel    0 0 0 vel 3! ;
 
-
 ( cuboid struct )
 struct %cuboid
     %cuboid %rect sizeof sfield cuboid>rect
@@ -66,16 +65,10 @@ extend: _actor
 : on-top  act> me stage push ;
 \ : show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
 
-( actor spawning )
-stage value spawner
-\ defer spawn
-: 3from  ( x y z obj - )  's pos 3@ 3+ at3 ;
-\ : from  dup 's ihb xyz@ rot 3away ;
-\ : spawn  me to spawner me from ;
-\ : map-spawn  <-- how object spawners will "know" a map or room is being loaded.
 
 ( misc 3d stuff )
 objlist: models
+: 3from  ( x y z obj - )  's pos 3@ 3+ at3 ;
 : !vcolor  ( ALLEGRO_VERTEX - ) >r fore 4@ r> ALLEGRO_VERTEX.r 4! ;
 : tmodel  tint 3@ rgb ['] !vcolor mdl @ veach model ;
 : uv!  ( u v n - )  >r 2af r> mdl @ v[] ALLEGRO_VERTEX.u 2! ;
@@ -95,9 +88,8 @@ objlist: models
 
 ( lowres 3d loop )
 depend ramen/lib/tweening.f
+depend ramen/lib/upscale.f
 : think  tasks multi  stage acts  models acts  stage multi  models multi ;
 : render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
-
-depend ramen/lib/upscale.f
 :now  show> ramenbg 0 0 at upscale> stage draws  models render ;
 :now  step>  think physics  +tweens  sweep ;

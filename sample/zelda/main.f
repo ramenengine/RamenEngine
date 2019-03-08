@@ -6,3 +6,4 @@ include sample/zelda/loz.f
     link0 as 64 after> me stage push
 ;
 adventure
+
