@@ -1,5 +1,5 @@
 : initial-res  480 240 ;
-: initial-scale 4 ;
+: initial-scale 3 ;
 : initial-pos  0 0 ;
 
 true constant allegro-audio
