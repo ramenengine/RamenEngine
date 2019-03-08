@@ -10,7 +10,7 @@ ld globals      \ global variables
 ld map          \ words for loading and working with map data
 ld constants    \ flags and things
 ld extensions   \ project-wide extensions for classes
-ld helpers      \ more global higher-level words
+ld etc          \ more global higher-level words
 ld curtain      \ curtain open effect
 ld motions      \ canned motions for actors
 ld item         \ item-related words

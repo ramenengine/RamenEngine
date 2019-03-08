@@ -7,8 +7,6 @@ depend afkit/ans/param-enclosures.f
 depend sample/tools.f
 depend sample/events.f
 
-page
-
 create startxy 0 , 0 ,
 stage actor: cam
 
