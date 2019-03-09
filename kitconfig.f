@@ -1,3 +1,5 @@
+\ place this at the root of your hard drive (e.g. C:/) to configure AFKit at a global level.  
+
 : initial-res  480 240 ;
 : initial-scale 3 ;
 : initial-pos  0 0 ;
