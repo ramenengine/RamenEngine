@@ -1,4 +1,6 @@
 include ramen/ramen.f           \ goes first
+
+empty                           \ closes and frees any previous project
 project: sample/platformer      \ sets the project's root folder so that LD knows where to look
 
 ld preamble                     \ loads dependencies and sets up some global stuff like upscaling

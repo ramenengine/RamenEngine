@@ -1,4 +1,3 @@
-empty                                   \ close any already loaded project
 include ramen/stdpack.f                 \ load the standard pack
 256 236 resolution                      \ set the virtual screen resolution
 

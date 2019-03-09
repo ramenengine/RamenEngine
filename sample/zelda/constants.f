@@ -10,3 +10,6 @@ nextflag
     bit #item
     bit #enemy
 drop
+
+16 constant #cols
+11 constant #rows

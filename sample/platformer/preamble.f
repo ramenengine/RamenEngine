@@ -1,4 +1,3 @@
-empty                         \ clears the dictionary
 include ramen/stdpack.f       
 320 240 resolution
 

@@ -7,3 +7,5 @@ include sample/zelda/loz.f
 ;
 adventure
 
+
+:make warm  adventure ;
