@@ -16,6 +16,6 @@
         then
     ;then
     s" player-entered-cave" occurred if
-        ( x y ) in-cave on
+        in-cave on
     ;then
 ;

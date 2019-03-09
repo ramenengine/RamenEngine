@@ -1,4 +1,19 @@
-\ note this code is specific to 2d games and needs modification for 3d
+( ---=== Common objects framework ===--- )
+
+\ this framework helps with creating object types.
+\ it takes care of the following:
+\ - some canned graphics types - circle, box, sprites
+\ - attributes and handling collisions between objects based on them
+\ - initial map hitbox
+\ - enum-style type id's
+\ - generic actions: SETUP START DIE
+\ - hitbox for object-object collisions
+\ - standardized object initialization
+\ - standardized initialization words e.g. /ACTOR *ACTOR
+\ - action tables
+\ - standardized object-object collision handling
+
+\ note: this code is specific to 2d games and needs modification for 3d
 
 1 value nextType
 
@@ -18,7 +33,6 @@ basis :to die ( - ) end ;
 
 extend: _actor
     var objtype 
-    var qty
     var bitmask <hex        \ whaet the object should interact with
     var flags   <hex        \ what attributes the object has
     %rect sizeof field ihb  \ interaction hitbox
@@ -26,10 +40,6 @@ extend: _actor
     var startx  var starty
     var dir \ angle
 ;class
-
-_actor prototype as
-    1 qty !
-
 
 ( object and tile flags )
     #1

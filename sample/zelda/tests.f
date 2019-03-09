@@ -25,7 +25,7 @@ include sample/zelda/loz.f
 ( placeholder creature hordes )
 
 : roomwh  #cols #rows 16 16 2* ;
-: roomxy  room# @ src-rowcol 32 - 16 16 2* ;
+: roomxy  room# @ srcrc 32 - 16 16 2* ;
 : roombox  ( - x y x y )  roomxy roomwh aabb ;
 
 \ note: Tiled stores positions with Y representing the BOTTOM of the object.

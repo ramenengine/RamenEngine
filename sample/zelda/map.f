@@ -21,12 +21,15 @@ create enemy-handlers  0 , ' enemyimage , 0 ,
 : thinout  ['] disposable? swap those> dismiss ;
 : cleanup  stage thinout ;
 
+: srcrc  ( - r c )
+    #cols /mod #cols #rows 2* 32 + ;
+
 : !roomsrc ( room# - )
-    #cols /mod #cols #rows 2* 32 +   #cols #rows  srcrect xywh! ;
+    srcrc   #cols #rows  srcrect xywh! ;
 
 : room  ( i - )  \ expressed as $cr  c=column r=row 
     1p dup room# !
-    !roomsrc  tilebuf dup 0 4 put2d 
+    !roomsrc  tilebuf roombuf 0 4 put2d 
     cleanup *enemies
 ;
 
