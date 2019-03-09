@@ -1,0 +1,15 @@
+// komodo tool: sf include venery.f
+// ================================
+// cwd: %p
+// doNotOpenOutputWindow: 1
+// insertOutput: 0
+// is_clean: true
+// keyboard_shortcut: F5###F4
+// operateOnSelection: 0
+// parseOutput: 0
+// runIn: no-console
+// showParsedOutputList: 0
+// type: command
+// version: 1.1.5
+// ================================
+sf include venery.f

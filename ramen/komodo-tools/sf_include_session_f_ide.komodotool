@@ -1,0 +1,18 @@
+{
+  "insertOutput": 0, 
+  "parseRegex": "", 
+  "doNotOpenOutputWindow": 1, 
+  "keyboard_shortcut": "F5", 
+  "name": "sf include session.f ide", 
+  "operateOnSelection": 0, 
+  "value": [
+    "sf include session.f"
+  ], 
+  "cwd": "%p", 
+  "version": "1.0.12", 
+  "env": "", 
+  "showParsedOutputList": 0, 
+  "type": "command", 
+  "parseOutput": 0, 
+  "runIn": "command-output-window"
+}
