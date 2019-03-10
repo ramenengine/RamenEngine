@@ -84,20 +84,6 @@ create native  /ALLEGRO_MONITOR_INFO /allot
 
 \ ------------------------------------ initializing the display ------------------------------------
 
-: windowed
-    fs off
-    ALLEGRO_WINDOWED
-    ALLEGRO_RESIZABLE or
-    ALLEGRO_OPENGL or
-    al_set_new_display_flags ;
-windowed
-
-: fullscreen
-    fs on
-    ALLEGRO_FULLSCREEN_WINDOW
-    ALLEGRO_OPENGL or
-    al_set_new_display_flags ;
-
 : assertAllegro ( - ) 
     allegro? ?exit   true to allegro?  init-allegro-all
     0 native al_get_monitor_info 0= abort" Couldn't get monitor info; try replugging the monitor or restarting"
@@ -113,19 +99,20 @@ windowed
 : displaywh ( - w h ) displayw displayh ;
 
 : init-display  ( w h - )
-    locals| h w |
     assertAllegro
+    fs @ if 2drop nativewh then
+    locals| h w | 
 
     ALLEGRO_DEPTH_SIZE #24 ALLEGRO_SUGGEST  al_set_new_display_option
     ALLEGRO_VSYNC 1 ALLEGRO_SUGGEST  al_set_new_display_option
 
     [defined] dev [if]
-        fs @ if  0 0  else  initial-pos 40 +  then  al_set_new_window_position
+        fs @ 0= if  initial-pos 40 + al_set_new_window_position then  
         w h al_create_display  to display    
         fs @ 0= if   display initial-pos al_set_window_position  then
     [else]
         \ centered:
-        fs @ if  0 0 al_set_new_window_position  else  
+        fs @ 0= if
             nativew 2 / w 2 / - nativeh 2 / h 2 / - 40 - al_set_new_window_position
         then
         w h al_create_display  to display    
@@ -262,7 +249,23 @@ using internal
 : -state  ( - ) -1 >state +!  (state) al_restore_state ;
 previous
 
-windowed  +display 
+: windowed
+    fs off
+    ALLEGRO_WINDOWED
+    ALLEGRO_RESIZABLE or
+    ALLEGRO_OPENGL or
+    al_set_new_display_flags
+    +display ;
+
+: fullscreen
+    fs on
+    [defined] dev [if] ALLEGRO_FULLSCREEN_WINDOW [else] ALLEGRO_FULLSCREEN [then]
+    ALLEGRO_OPENGL or
+    al_set_new_display_flags
+    +display ;
+
+fullscreen
+
 \ --------------------------------------------------------------------------------------------------
 include afkit/piston.f
 \ --------------------------------------------------------------------------------------------------

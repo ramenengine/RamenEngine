@@ -1,4 +1,4 @@
-depend ramen/stdpack.f
+depend ramen/basic.f
 depend 3dpack/v3d.f       cr .( Loaded vector3d module. ) \ "    
 depend 3dpack/model.f     cr .( Loaded 3d model module. ) \ "
 depend 3dpack/cam3d.f     cr .( Loaded 3d camera module. ) \ "

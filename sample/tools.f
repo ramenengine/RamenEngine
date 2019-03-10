@@ -1,3 +1,5 @@
+depend ramen/lib/std/collision.f
+
 ( misc )
 : enum  dup constant 1 + ;
 : ztype zcount type ;
@@ -77,9 +79,9 @@ _actor fields:   var 'physics <adr \ code
 : ?physics  'physics @ ?dup if >r then ;
 
 ( tilemap collision )
-_actor fields:  var onmaphit <word \ xt
-:make tileprops@  >gid 1.0 and 0<> ;
-:make on-tilemap-collide  onmaphit @ execute ; 
+\ _actor fields:  var onmaphit <word \ xt
+\ :make tileprops@  >gid 1.0 and 0<> ;
+\ :make on-tilemap-collide  onmaphit @ execute ; 
 
 ( extend loop )
 : think  ( - ) stage acts  tasks multi  stage multi  tasks acts ;

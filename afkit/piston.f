@@ -5,7 +5,6 @@
 \  The loop has some common controls:
 \    ALT-F12 - break the loop
 \    ALT-F4 - quit the process
-\    ALT-ENTER - toggle fullscreen
 
 \ Values
 0 value now  \ in frames  ( read-only )
@@ -35,7 +34,6 @@ defer repl?     :noname  0 ; is repl?
 \ Event stuff
 create evt  256 /allot
 : etype  ( - ALLEGRO_EVENT_TYPE )  evt ALLEGRO_EVENT.TYPE @ ;
-z" AKFS" @ constant FULLSCREEN_EVENT
 
 : poll  ( - ) pollKB  pollJoys ;
 : break ( - ) true to breaking? ;
@@ -126,7 +124,6 @@ variable (catch)
             <rctrl>  of  true to ctrl?  endof
             <lshift>  of  true to shift?  endof
             <rshift>  of  true to shift?  endof
-            <enter>  of  alt? -exit  fs @ not fs ! endof
             <f4>     of  alt? -exit  bye  endof
             <f12>    of  alt? -exit  break  endof  
         endcase
@@ -142,52 +139,8 @@ variable (catch)
         endcase
     then ;
 
-variable winx  variable winy
-: ?poswin ( - )   \ save/restore window position when toggling in and out of fullscreen
-    display al_get_display_flags ALLEGRO_FULLSCREEN_WINDOW and if
-        fs @ 0= if  r> call  display winx @ winy @ al_set_window_position  then
-    else
-        fs @ if     display winx winy al_get_window_position  then
-    then ;
-
 : al-emit-user-event  ( type - )  \ EVT is expected to be filled, except for the type
     evt ALLEGRO_EVENT.type !  uesrc evt 0 al_emit_user_event ;
-
-0 value #lastscale
-variable newfs
-: 2s>f ( ix iy - f: x y ) swap s>f s>f ;
-: ?fs ( - )
-    ?poswin
-    fs @ newfs @ = ?exit
-    fs @ 0= if
-        #lastscale to #globalscale
-    then
-    
-    display ALLEGRO_FULLSCREEN_WINDOW fs @ #1 and al_set_display_flag 0= if
-        -display
-        fs @ 0= if
-            windowed +display
-        else
-            fullscreen +display
-        then
-    then
-    
-    fs @ newfs !
-    fs @ if
-        #globalscale to #lastscale
-        \ find biggest integer scaling that fits
-        nativewh 2s>f f/ 
-        res xy@ 2s>f f/ f> if
-            nativeh res y@ /
-        else
-            nativew res x@ /
-        then
-            4 min to #globalscale
-    then
-    FULLSCREEN_EVENT al-emit-user-event
-    
-    false to alt?
-;
 
 : ?hidemouse  display oscursor @ if al_show_mouse_cursor else al_hide_mouse_cursor then ; 
 
@@ -210,7 +163,23 @@ variable newfs
     ?suppress  'step try  1 +to now
     2r> at  r> to offsetTable  r> to me  throw ;
 : ?step  ( - )  ['] step catch to steperr ;
-: /go ( - ) resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
+
+: 2s>f ( ix iy - f: x y ) swap s>f s>f ;
+: ?/fs  ( - )
+    fs @ if
+        \ find biggest integer scaling that fits
+        nativewh 2s>f f/ 
+        res xy@ 2s>f f/ f> if
+            nativeh res y@ /
+        else
+            nativew res x@ /
+        then
+        4 min to #globalscale
+    then
+;
+
+
+: /go ( - )  ?/fs resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
 : go/ ( - ) eventq al_flush_event_queue  >ide  false to breaking?  ;
 : show> ( - <code> ) r> to 'show ;  ( - <code> )  ( - )
 : step> ( - <code> ) r> to 'step ;  ( - <code> )  ( - )
@@ -223,7 +192,7 @@ variable newfs
         me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me  ?system
         eco @ ?exit
     repeat ;
-: frame ( - ) ?show present attend poll ?step ?fs ?hidemouse ;
+: frame ( - ) ?show present attend poll ?step ?hidemouse ;
 : go ( - )   /go    begin  frame  breaking? until  go/ ;
 
 \ default demo: dark blue screen with bouncing white square
