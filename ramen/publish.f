@@ -6,17 +6,10 @@ create default-font  \ note not a registered asset
 defer cold  :make cold ;   \ cold boot: executed once at runtime
 defer warm  :make warm ;   \ warm boot: executed potentially multiple times 
 
-: gamewindow
-    fs off
-    ALLEGRO_WINDOWED
-    ALLEGRO_OPENGL or
-    al_set_new_display_flags ;
-
 : boot
     false to allegro?
     #3 to #globalscale
-    gamewindow
-    scaled-res init-display
+    windowed
     al-default-font default-font font.fnt !
     project off
     oscursor off
