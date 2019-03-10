@@ -15,7 +15,7 @@ include ws/ws.f
         s" <Tab> = toggle the console" label nr
         s" <F10> = toggle the gui" label nr
         s" <F5> = reload last file" label nr
-        s" <Shift-F5> = reload the session" label nr
+        s" <Shift-F5> = include session.f" label nr
         s" <F2> = new page, toggle all" label nr
         s" <Alt-Enter> = toggle fullscreen" label nr 
     ;
