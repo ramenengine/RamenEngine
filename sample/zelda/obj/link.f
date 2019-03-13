@@ -81,7 +81,7 @@ create evoke-link-swing dir-anim-table
         
     : ?trig
         x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2mod 4 <= swap 4 <= and if
-            x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2/ roombuf loc @ >gid 2 - >r
+            x 2@ vx 2@ 2+ 2 -6 2+ 16 16 2/ roombuf loc @ $3ff000 and 2 - >r
             r@ 0 =
             r@ 6 = or
             r@ 12 = or

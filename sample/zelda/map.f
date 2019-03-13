@@ -2,10 +2,9 @@
 
 ( load the Tiled data )
 : reload
-    -tiles -bitmaps 
-    s" overworld-rooms.tmx" >data open-map
-        s" testrooms1" find-tmxlayer tilebuf  0 32 load-tmxlayer  \ load well below the room buffer
-        s" overworld-tiles.tsx" find-tileset# load-tileset
+    s" zelda.buf" >data 0 0 tilebuf loc 512 512 * cells @file
+    0 tilebank 16 16 288 256 dimbank 
+    s" overworld-tiles.png" >data 0 0 loadtiles
 ; reload
 
 ( loading a room )
@@ -13,8 +12,8 @@ defer enemyimage  ' 2drop is enemyimage
 create enemy-handlers  0 , ' enemyimage , 0 ,
 : *enemies
     {
-        s" overworld-rooms.tmx" >data open-map
-        s" Enemy Locations" find-objgroup enemy-handlers load-objects
+\        s" overworld-rooms.tmx" >data open-map
+\        s" Enemy Locations" find-objgroup enemy-handlers load-objects
     }
 ;
 : disposable?  dyn @ #important set? not and ;
