@@ -11,7 +11,7 @@ depend ramen/lib/stride2d.f
     create tiles #MAXTILES array, 
     :noname drop  tiles 0array ; +loadtrig 
     0 value tba  \ tileset base address
-    1024 1024 buffer2d: tilebuf 
+    512 512 buffer2d: tilebuf 
 [then]
 
 extend: _actor
@@ -71,9 +71,10 @@ decimal \ for speed
 fixed
 
 create tstep 16 , 16 ,
+: tstep@  tstep 2@ ;
 
 : tilemap  ( addr /pitch - )
-    hold>  tstep 2@  clipwh  2over 2/ 2 1 2+  locals| rows cols th tw pitch | 
+    hold>  tstep@  clipwh  2over 2/ 2 1 2+  locals| rows cols th tw pitch | 
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
@@ -92,7 +93,7 @@ create tstep 16 , 16 ,
 : >car  ( x y - x y )  2dup 2 / swap 2 / + >r - r> ;
 
 : isotilemap  ( addr /pitch cols rows - )
-    hold>  tstep 2@  locals| th tw rows cols pitch |
+    hold>  tstep@  locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
             third  cols for
@@ -111,12 +112,12 @@ create tstep 16 , 16 ,
     draw>
         tbi @ tilebase!
         at@ w 2@ clip>
-            scrollx 2@  tstep 2@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+            scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap  ( - )
     draw>
         tbi @ tilebase!
-        scrollx 2@  tstep 2@ scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
+        scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 
 \ Tilemap collision
 include ramen/lib/std/collision.f
