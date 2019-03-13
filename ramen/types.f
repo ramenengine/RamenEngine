@@ -24,3 +24,5 @@ struct %rect
 : xy2@  dup 2@ rot wh@ 2+ ;       : xy2!  >r r@ xy@ 2- r> wh! ;
 
 : aabb@ xywh@ 2over 2+ ;
+
+create srcrect  0 , 0 , 0 , 0 ,

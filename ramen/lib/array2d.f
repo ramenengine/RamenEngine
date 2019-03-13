@@ -80,8 +80,6 @@ struct %array2d
 :noname  cr  cells bounds do  i @ h.  cell +loop ;
 : 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
 
-create srcrect  0 , 0 , 0 , 0 ,
-
 : put2d  ( src-array2d dest-array2d col row - )  \ no clipping
     rot adr-pitch 2>r
     srcrect xy@ rot adr-pitch 2r> ( adr pitch adr pitch )
