@@ -36,7 +36,7 @@ define collisioning
     : vector   create 0 , here 0 , constant ;
     vector nx ny
     
-    : gap  tstep@ ;  \ just square tiles supported for now
+    : gap  ( - n ) tstep@ drop ;  \ just square tiles supported for now
     
     : px x @ ;
     : py y @ ;

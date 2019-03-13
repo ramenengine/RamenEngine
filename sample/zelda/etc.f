@@ -19,7 +19,7 @@
 
 ( tilemap collision stuff )
 create tileprops  s" tileprops.dat" >data file,
-:make tileprops@  $3ff000 and if dup 1 - 1i tileprops + c@ then ;
+:make tileprops@  $3ff000 and dup if 1 - 1i tileprops + c@ then ;
 :make on-tilemap-collide  onmaphit @ ?dup if >r then ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
 
