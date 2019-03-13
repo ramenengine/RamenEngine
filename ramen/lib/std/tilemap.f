@@ -3,7 +3,6 @@
 
 depend ramen/lib/array2d.f
 depend ramen/lib/buffer2d.f
-depend ramen/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 
@@ -11,7 +10,7 @@ depend ramen/lib/stride2d.f
     create tiles #MAXTILES array, 
     :noname drop  tiles 0array ; +loadtrig 
     0 value tba  \ tileset base address
-    1024 1024 buffer2d: tilebuf 
+    512 512 buffer2d: tilebuf 
 [then]
 
 extend: _actor
