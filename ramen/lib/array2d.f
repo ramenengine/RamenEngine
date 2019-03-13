@@ -65,20 +65,20 @@ struct %array2d
 : adr-pitch  ( col row array2d - adr /pitch )
     dup >r loc r> pitch@ ;
 
-: some2d  ( ... col row #cols #rows array2d XT - ... )  ( ... adr #cells - ... )
-    >r >r  r@ dims clip   2swap r> adr-pitch
+: each2d  ( ... col row #cols #rows XT array2d - ... )  ( ... adr #cells - ... )
+    swap  >r >r  r@ dims clip   2swap r> adr-pitch
     r>  locals| xt pitch src #rows #cols |
     #rows 0 do  src #cols xt execute  pitch +to src  loop ;
     
-: some2d>  r> code> some2d ;
+: each2d>  r> code> each2d ;
 
 :noname  third ifill ;
-: fill2d  ( val col row #cols #rows array2d - )  literal some2d  drop ;
+: fill2d  ( val col row #cols #rows array2d - )  literal each2d  drop ;
 
 : clear2d  >r 0 0 0 r@ dims r> fill2d ;
 
 :noname  cr  cells bounds do  i @ h.  cell +loop ;
-: 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
+: 2d.  >r 0 0 r@ dims 16 16 2min  r> literal each2d  ;
 
 : put2d  ( src-array2d dest-array2d col row - )  \ no clipping
     rot adr-pitch 2>r
