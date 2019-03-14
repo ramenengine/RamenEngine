@@ -1,5 +1,5 @@
 include ramen/basic.f
-include ramen/std/tilemap2.f
+include ramen/lib/std/tilemap2.f
 320 240 resolution
 
 ( misc )
