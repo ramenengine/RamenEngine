@@ -6,8 +6,8 @@ project: sample/newyear                 \ sets the project's root folder so that
                                        
 empty                                   \ close any already loaded project
 include 3dpack/3dpack.f                 \ load the 3d packet
-nativewh 6 6 2/ resolution              \ set the virtual screen resolution (depends on display)
-\ 480 240 resolution                      \ fixed resolution
+nativewh 4 4 2/ resolution              \ set the virtual screen resolution (depends on display)
+\ 320 240 resolution                      \ fixed resolution
 
 
 depend sample/tools.f                   \ common toolkit for the samples

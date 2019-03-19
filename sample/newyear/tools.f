@@ -92,5 +92,5 @@ depend ramen/lib/upscale.f
 : render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
 : scaledwh  viewwh globalscale dup 2* ;
 : cdraws  scaledwh 2halve translate tpush draws tpop ;
-:now  show> ramenbg 0 0 at upscale> 2d stage cdraws  ; \ models render ;
+:now  show> ramenbg 0 0 at upscale> 2d stage cdraws  models render ;
 :now  step>  think physics  +tweens  sweep ;
