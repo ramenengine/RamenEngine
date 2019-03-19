@@ -62,14 +62,18 @@ using internal
     cliph sf@ f>s al_set_clipping_rectangle
 ;
 
+: mountw  ( - n ) res x@ #globalscale * ;
+: mounth  ( - n ) res y@ #globalscale * ;
+: mountwh  mountw mounth ;
+
 : mount  ( - )
     m1 al_identity_transform
     m1 #globalscale s>f 1sf dup al_scale_transform
     fs @ if
         m1
-            nativew 2 / res x@ #globalscale * 2 / -  s>f 1sf
+            displayw 2 / mountw 2 / -  s>f 1sf
             repl @ if 0 else 
-                nativeh 2 / res y@ #globalscale * 2 / -  s>f 1sf
+                displayh 2 / mounth 2 / -  s>f 1sf
             then
                 al_translate_transform
     then
@@ -94,7 +98,8 @@ using internal
 ;
 
 variable (catch)
-: try ( code - IOR ) dup -exit  sp@ cell+ >r  code> catch (catch) !  r> sp!  (catch) @ ;
+: try ( code - IOR )
+    dup -exit  sp@ cell+ >r  code> catch (catch) !  r> sp!  (catch) @ ;
 
 : suspend ( - ) 
     begin
@@ -142,7 +147,8 @@ variable (catch)
 : al-emit-user-event  ( type - )  \ EVT is expected to be filled, except for the type
     evt ALLEGRO_EVENT.type !  uesrc evt 0 al_emit_user_event ;
 
-: ?hidemouse  display oscursor @ if al_show_mouse_cursor else al_hide_mouse_cursor then ; 
+: ?hidemouse ( - )
+    display oscursor @ if al_show_mouse_cursor else al_hide_mouse_cursor then ; 
 
 : onto  ( bmp - )  dup display = if al_get_backbuffer then al_set_target_bitmap ;
 : ?greybg ( - ) fs @ -exit  display onto  unmount  0.1e 0.1e 0.1e 1e 4sf al_clear_to_color ;
@@ -155,7 +161,6 @@ variable (catch)
         r> to offsetTable  r> to me  
     2r> at
     (catch) @ ( ior ) throw ;
-: ?show ( - )  ['] show catch to showerr ;
 : present ( - ) al_flip_display ;
 : ?suppress ( - ) repl? if clearkb then ;
 : step ( - )
@@ -165,21 +170,21 @@ variable (catch)
 : ?step  ( - )  ['] step catch to steperr ;
 
 : 2s>f ( ix iy - f: x y ) swap s>f s>f ;
-: ?/fs  ( - )
-    fs @ if
-        \ find biggest integer scaling that fits
-        nativewh 2s>f f/ 
+
+: refit ( - )  \ find biggest integer scaling that fits display
+    displaywh 2s>f f/ 
         res xy@ 2s>f f/ f> if
-            nativeh res y@ /
-        else
-            nativew res x@ /
-        then
-        4 min to #globalscale
+        displayh res y@ /
+    else
+        displayw res x@ /
     then
+    to #globalscale
 ;
 
+: ?show ( - )
+    refit  ['] show catch to showerr ;
 
-: /go ( - )  ?/fs resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
+: /go ( - )  resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
 : go/ ( - ) eventq al_flush_event_queue  >ide  false to breaking?  ;
 : show> ( - <code> ) r> to 'show ;  ( - <code> )  ( - )
 : step> ( - <code> ) r> to 'step ;  ( - <code> )  ( - )

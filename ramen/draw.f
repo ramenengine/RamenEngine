@@ -133,7 +133,7 @@ previous
 transform: p
 : 2d
     p al_identity_transform
-    p 0 0 -16384 3af viewwh globalscale dup 2* 16384 3af al_orthographic_transform
+    p 0 0 -16384 3af   displaywh 16384 3af   al_orthographic_transform
     p al_use_projection_transform    
     ALLEGRO_DEPTH_TEST #0 al_set_render_state
 ;

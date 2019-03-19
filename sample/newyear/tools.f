@@ -83,7 +83,6 @@ objlist: models
 : -alphatex
     ALLEGRO_ALPHA_TEST #0 al_set_render_state
 ;
-: centered  displaywh 2 2 2/ at ;
 
 
 ( lowres 3d loop )
@@ -91,5 +90,7 @@ depend ramen/lib/tweening.f
 depend ramen/lib/upscale.f
 : think  tasks multi  stage acts  models acts  stage multi  models multi ;
 : render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
-:now  show> ramenbg 0 0 at upscale> stage draws  models render ;
+: scaledwh  viewwh globalscale dup 2* ;
+: cdraws  scaledwh 2halve translate tpush draws tpop ;
+:now  show> ramenbg 0 0 at upscale> 2d stage cdraws  ; \ models render ;
 :now  step>  think physics  +tweens  sweep ;

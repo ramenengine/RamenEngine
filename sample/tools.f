@@ -1,3 +1,4 @@
+depend ramen/lib/std/tilemap2.f
 
 ( misc )
 : enum  dup constant 1 + ;
