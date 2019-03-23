@@ -130,7 +130,7 @@ define wsing
     : ?hover  ( figure - )
         hovered vacate
         each> as
-            mouse xy@ pos@ me node.parent @ >{ pos@ } 2+ dims@ area inside? if
+            mouse xy@ pos@ me node.parent @ >{ pos@ } 2+ dims@ area within? if
                 me hovered push  
             then
     ;
@@ -139,7 +139,7 @@ define wsing
         hovered >top @ >{
             #boxed ?? if
                 #click attr or!
-                data@ } rot ( data count old-me ) as ['] evaluate catch ?.catch
+                data@ } rot ( data count old-me ) as evaluate
             ;then
             drop 
         } 
@@ -156,8 +156,8 @@ only forth definitions also wsing
 : window:up   figure >{ y @ rowh - y ! } ;
 : window:down figure >{ y @ rowh + 0 min y ! } ;
 
-: ws:pageup   mouse xy@ window aabb@ inside? if window:down else ide:pageup then ;
-: ws:pagedown mouse xy@ window aabb@ inside? if window:up else ide:pagedown then ;
+: ws:pageup   mouse xy@ window aabb@ within? if window:down else ide:pageup then ;
+: ws:pagedown mouse xy@ window aabb@ within? if window:up else ide:pagedown then ;
 
 : ui-mouse
     etype ALLEGRO_EVENT_MOUSE_AXES = if
