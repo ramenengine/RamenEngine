@@ -3,7 +3,6 @@
 
 depend ramen/lib/array2d.f
 depend ramen/lib/buffer2d.f
-depend ramen/lib/stride2d.f
 
 [undefined] #MAXTILES [if] 16384 constant #MAXTILES [then]
 
