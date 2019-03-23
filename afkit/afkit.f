@@ -59,22 +59,14 @@ create penx  0 ,  here 0 ,  constant peny
 \ Initializing Allegro and creating the display window
 
 : init-allegro-all
-  al_init
-    not if  s" Couldn't initialize Allegro." alert     -1 abort then
-  al_init_image_addon
-    not if  s" Allegro: Couldn't initialize image addon." alert      -1 abort then
-  al_init_primitives_addon
-    not if  s" Allegro: Couldn't initialize primitives addon." alert -1 abort then
-  al_init_font_addon
-    not if  s" Allegro: Couldn't initialize font addon." alert       -1 abort then
-  al_init_ttf_addon
-    not if  s" Allegro: Couldn't initialize TTF addon." alert       -1 abort then
-  al_install_mouse
-    not if  s" Allegro: Couldn't initialize mouse." alert            -1 abort then
-  al_install_keyboard
-    not if  s" Allegro: Couldn't initialize keyboard." alert         -1 abort then
-  al_install_joystick
-    not if  s" Allegro: Couldn't initialize joystick." alert         -1 abort then
+  al_init 0= abort" Couldn't initialize Allegro."  
+  al_init_image_addon 0= abort" Allegro: Couldn't initialize image addon." 
+  al_init_primitives_addon 0= abort" Allegro: Couldn't initialize primitives addon."
+  al_init_font_addon 0= abort" Allegro: Couldn't initialize font addon." 
+  al_init_ttf_addon 0= abort" Allegro: Couldn't initialize TTF addon."
+  al_install_mouse 0= abort" Allegro: Couldn't initialize mouse." 
+  al_install_keyboard 0= abort" Allegro: Couldn't initialize keyboard."
+  al_install_joystick 0= abort" Allegro: Couldn't initialize joystick."
 ;
 
 create native  /ALLEGRO_MONITOR_INFO /allot

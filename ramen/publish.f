@@ -14,14 +14,25 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
     project off
     oscursor off
     fixed
-    ['] initdata catch if s" An asset failed to load." alert then
+    ['] initdata catch abort" An asset failed to load."
 ;
 
-: kickoff
+: kickoff  
     boot cold warm go ;
-    
+
+: error  ( message count - )
+    zstring >r  display z" Bad trouble" z" "  r>  z" Shoot" ALLEGRO_MESSAGEBOX_ERROR
+        al_show_native_message_box drop ;
+
 : runtime
-    kickoff bye ;
+    [in-platform] sf [if]
+        ['] kickoff catch ?dup if
+           (THROW) error
+        then
+    [else]
+        kickoff 
+    [then]
+    bye ;
 
 : relify
     dup asset? if srcfile dup count s" data/" search if  rot place  else 3drop then
@@ -33,7 +44,8 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
         cr ." Publishing to "  >in @ bl parse type >in !  ." .exe ... "
         ['] relify assets each
         ['] runtime 'main !
-        program ;
+        program
+        -display ;
         
 [else]
     cr .( PROGRAM not defined; PUBLISH disabled )

@@ -99,7 +99,11 @@ using internal
 
 variable (catch)
 : try ( code - IOR )
-    dup -exit  sp@ cell+ >r  code> catch (catch) !  r> sp!  (catch) @ ;
+    [defined] dev [if]
+        dup -exit  sp@ cell+ >r  code> catch (catch) !  r> sp!  (catch) @
+    [else]
+        call 0 
+    [then] ;
 
 : suspend ( - ) 
     begin
@@ -167,7 +171,7 @@ variable (catch)
     me >r  offsetTable >r  at@ 2>r
     ?suppress  'step try  1 +to now
     2r> at  r> to offsetTable  r> to me  throw ;
-: ?step  ( - )  ['] step catch to steperr ;
+: ?step  ( - )  ['] step >code try to steperr ;
 
 : 2s>f ( ix iy - f: x y ) swap s>f s>f ;
 
@@ -182,7 +186,7 @@ variable (catch)
 ;
 
 : ?show ( - )
-    refit  ['] show catch to showerr ;
+    refit  ['] show >code try to showerr ;
 
 : /go ( - )  resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
 : go/ ( - ) eventq al_flush_event_queue  >ide  false to breaking?  ;
