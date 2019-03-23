@@ -33,9 +33,9 @@ fixed
         swap  onto call
     2r> at  r> al_set_target_bitmap ;
 : movebmp  ( src sx sy w h )  write-src BLEND>  4af  destxy 2af   0 al_draw_bitmap_region ;
-: clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
 : backdrop  fore 4@ al_clear_to_color  white  0 0 at ;
+: drench  ( bmp )  onto>  backdrop ;
 
 
 

@@ -40,8 +40,7 @@ create ldr 256 /allot
 create project 256 /allot
 
 include ramen/publish.f  
-include ramen/draw.f     
-
+include ramen/draw.f
 include ramen/default.f
 
 : panic ( - ) step> noop ;
@@ -62,9 +61,6 @@ variable ldl
             throw ;
 
 : rld  ldr count nip -exit ldr count (included) ;
-
-
-
 
 : ld  ( -- <file> )
     bl parse s" .f" strjoin 2>r
