@@ -2,7 +2,6 @@
 
 depend ramen/lib/array2d.f
 depend ramen/lib/buffer2d.f
-\ depend ramen/lib/stride2d.f
 
 512 512 buffer2d: tilebuf
 8 stack: tilebanks
@@ -22,14 +21,14 @@ depend ramen/lib/buffer2d.f
 : tilebank  ( n - )
     7 and tilebanks [] @ to tb ;  0 tilebank
 
-: puttiles ( bitmap destx desty -- )  \ rect is in SRCRECT, dest bank is specified with TILEBANK
-    tb >bmp onto> at srcrect xywh@ movebmp ;
+: puttiles ( bitmap -- )  \ rect is in SRCRECT, dest x,y in pen, dest bank is specified with TILEBANK
+    tb >bmp onto> srcrect xywh@ movebmp ;
 
 : entire ( bitmap - )
     0 0 rot bmpwh srcrect xywh! ;
     
-: loadtiles  ( path count destx desty -- )
-    2>r loadbmp dup entire dup 2r> puttiles -bmp ;
+: loadtiles  ( path count -- )  \ dest x,y in pen, dest bank is specified with TILEBANK
+    loadbmp dup entire dup puttiles -bmp ;
 
 : dimbank  ( tilew tileh bankw bankh -- )
     tb resize-canvas tb subdivide ;

@@ -4,7 +4,7 @@
 : reload
     s" zelda.buf" >data 0 0 tilebuf loc 512 512 * cells @file
     0 tilebank 16 16 288 256 dimbank 
-    s" overworld-tiles.png" >data 0 0 loadtiles
+    0 0 at s" overworld-tiles.png" >data loadtiles
 ; reload
 
 ( loading a room )
