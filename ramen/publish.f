@@ -38,15 +38,17 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
     dup asset? if srcfile dup count s" data/" search if  rot place  else 3drop then
                else drop then ;
 
-[defined] program [if]
-    
-    : publish ( - <name> )
-        cr ." Publishing to "  >in @ bl parse type >in !  ." .exe ... "
-        ['] relify assets each
-        ['] runtime 'main !
-        program
-        -display ;
-        
-[else]
-    cr .( PROGRAM not defined; PUBLISH disabled )
+[in-platform] sf [if]
+  [defined] program [if]
+      
+      : publish ( - <name> )
+          cr ." Publishing to "  >in @ bl parse type >in !  ." .exe ... "
+          ['] relify assets each
+          ['] runtime 'main !
+          program
+          -display ;
+          
+  [else]
+      cr .( PROGRAM not defined; PUBLISH disabled )
+  [then]
 [then]
