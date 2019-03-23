@@ -2,14 +2,16 @@
 [defined] wsing [if] \\ [then]
 
 #2 #0 #0 [version] [ws]
-#1 #5 #0 [ramen] [checkver]
+#2 #0 #0 [ramen] [checkver]
 
 only forth definitions
 
 create window  %rect sizeof /allot
 create hovered 32 stack,
-variable ui  ui on
+variable ui  
 create mouse 0 , 0 ,
+
+ui on
 
 ( element class )
 0 node-class: _element

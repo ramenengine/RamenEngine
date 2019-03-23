@@ -11,13 +11,13 @@ include ws/ws.f
     : option:  >in @ bl parse button >in ! : ;
     
     : help
-        s" [[[ Ramen 2.0 ]]]" label nr
+        s" /// Ramen two point oh " label nr
         s" <Tab> = toggle the console" label nr
         s" <F10> = toggle the gui" label nr
         s" <F5> = reload last file" label nr
         s" <Shift-F5> = include session.f" label nr
         s" <F2> = new page, toggle all" label nr
-        s" <Alt-Enter> = toggle fullscreen" label nr 
+        \ s" <Alt-Enter> = toggle fullscreen" label nr 
     ;
     help
         

@@ -1,6 +1,6 @@
 [undefined] [ramen] [if] 
     include afkit/ans/version.f
-    #1 #9 #0 [version] [ramen]
+    #2 #0 #0 [version] [ramen]
     
     cr .( Loading Ramen... ) \ "
     include ramen/base.f          \ gilded
