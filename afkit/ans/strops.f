@@ -6,7 +6,7 @@ create $buffers  16384 allot  \ string concatenation buffer stack (circular)
 variable >s                   \ pointer into $buffers
 : s[  ( adr c - )  >s @ 256 + 16383 and >s !  >s @ $buffers + place ;
 : +s  ( adr c - )  >s @ $buffers + append ;
-: c+s  ( c - )     >s @ $buffers + count + c!  1 >s @ $buffers + +! ;
+: +c  ( c - )     >s @ $buffers + count + c!  1 >s @ $buffers + +! ;
 create $outbufs  16384 allot \ output buffers; circular stack of buffers
 variable >out
 : ]s  ( - adr c )  \ fetch finished string

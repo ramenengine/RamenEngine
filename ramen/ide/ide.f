@@ -235,7 +235,7 @@ create ide-personality
     showerr  if  ." SHOWERR "  then
     steperr  if  ." STEPERR "  then ;
 
-: +blinker repl? -exit  now 16 and -exit  s[ [char] _ c+s ]s ;
+: +blinker repl? -exit  now 16 and -exit  s[ [char] _ +c ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      displayw  displayh #rows   fh * -  dblue  fillrect ;
 : ?trans   repl? if 1 alpha else 0.8 alpha then ;
