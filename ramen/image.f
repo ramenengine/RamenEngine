@@ -54,7 +54,8 @@ asset: %image
     r@ imagewh  r@ image.subw 2@  2/ 2pfloor  r@ image.subcols 2!
     *  r> image.subcount ! ;
 : subxy  >r  pfloor  r@ image.subcols @  /mod  2pfloor  r> image.subw 2@ 2* ;
-: subxywh  dup >r  subxy r> image.subw 2@ ;
+: subwh   image.subw 2@ ;
+: subxywh  dup >r  subxy r> subwh ;
 
 : tileset:  ( tilew tileh imagepath c - <name> )
     image: lastbody subdivide ;
