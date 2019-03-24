@@ -58,9 +58,6 @@ decimal \ for speed
     : tile  ( tiledat - )
         ?dup -exit  dup >r  tile>rgn  r> #28 >> draw-region ;
         
-    : tile+  ( stridex stridey tiledat - )
-        tile +at ;
-
 fixed
 
 
@@ -72,7 +69,7 @@ fixed
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
-                tw 0 i @ tile+
+                i @ tile tw 0 +at
             cell +loop
         th + at   ( addr )  pitch +
     loop  drop  ;
@@ -91,7 +88,7 @@ fixed
     rows for
         at@  ( addr x y )
             third  cols for
-                tw th third @ tile+  cell+
+                dup @ tile  cell+   tw th +at
             loop  drop
         tw negate th 2+ at   ( addr )  pitch +
     loop  drop  ;
@@ -108,12 +105,14 @@ extend: _actor
     var tbi                   \ tilebank index
 ;class
 
+: tilemap  ( - )
+    tbi @ tilebank
+    at@ w 2@ clip>
+        scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+
 : /tilemap  ( - )
     viewwh w 2!
-    draw>
-        tbi @ tilebank
-        at@ w 2@ clip>
-            scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+    draw> tilemap ;
 
 \ : /isotilemap  ( cols rows - )
 \     w 2!

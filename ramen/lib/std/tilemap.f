@@ -66,7 +66,6 @@ decimal \ for speed
 : tilesize  ( tiledata - w h )  tile>bmp bmpwh ;
 : draw-bitmap  over 0= if 2drop exit then  >r  at@ 2af  r> al_draw_bitmap ;
 : tile  ( tiledat - )  ?dup -exit  dup tile>bmp swap #28 >> draw-bitmap ;
-: tile+  ( stridex stridey tiledat - )  tile +at ;
 fixed
 
 create tstep 16 , 16 ,
@@ -77,7 +76,7 @@ create tstep 16 , 16 ,
     rows for
         at@  ( addr x y )
             third  cols cells over + swap do
-                tw 0 i @ tile+
+                i @ tile tw 0 +at
             cell +loop
         th + at   ( addr )  pitch +
     loop  drop  ;
@@ -96,7 +95,7 @@ create tstep 16 , 16 ,
     rows for
         at@  ( addr x y )
             third  cols for
-                tw th third @ tile+  cell+
+                dup @ tile  cell+  tw th +at
             loop  drop
         tw negate th 2+ at   ( addr )  pitch +
     loop  drop  ;
