@@ -189,11 +189,8 @@ only forth definitions also wsing
 : (system)   ide-system  ?toggle-ui  ui @ if ui-mouse then ;
 
 [defined] dev [if]
-    0 value ui:lasterr
     :make ?system
-        ['] (system) catch
-        dup if ui:lasterr 0= if cr ." GUI error." dup to ui:lasterr throw ;then then
-        to ui:lasterr
+        ['] (system) catch ?dup if cr ." GUI error." i. then
     ;
     
     :make ?overlay  ide-overlay  ui @ if drawui then  unmount ;

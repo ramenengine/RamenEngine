@@ -97,11 +97,13 @@ using internal
         al_set_separate_blender
 ;
 
+variable (catch)
 : try ( code - IOR )
     dup -exit  
     [defined] dev [if]
-        code> catch 
-    [else]
+        sp@ cell+ >r  code> catch (catch) !  r> sp!
+        (catch) @
+    [else] 
         call 0 
     [then] ;
 
@@ -182,18 +184,19 @@ using internal
     me >r  offsetTable >r  at@ 2>r
     ?suppress  'step try to steperr   1 +to now
     2r> at  r> to offsetTable  r> to me ;
+: pump ( - ) repl? ?exit  'pump try to pumperr ;
 
 : /go ( - )  resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
-: go/ ( - ) eventq al_flush_event_queue  >host  false to breaking?  ;
+: go/ ( - )  eventq al_flush_event_queue  >host  false to breaking?  ;
 : show> ( - <code> ) r> to 'show ;  ( - <code> )  ( - )
 : step> ( - <code> ) r> to 'step ;  ( - <code> )  ( - )
 : pump> ( - <code> ) r> to 'pump ;  ( - <code> )  ( - )
 : get-next-event ( - ) eco @ if al_wait_for_event #1 else al_get_next_event then ;
 : @event ( - flag ) eventq evt get-next-event ;
-: pump ( - ) repl? ?exit  'pump try to pumperr ;
 : attend ( - )
     begin  @event  breaking? not and  while
-        me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me  ?system
+        me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me
+        ?system
         eco @ ?exit
     repeat ;
 : frame ( - ) show present attend poll step ?hidemouse ;
