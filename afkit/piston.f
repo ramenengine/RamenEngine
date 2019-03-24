@@ -64,18 +64,18 @@ using internal
 
 : mountw  ( - n ) res x@ #globalscale * ;
 : mounth  ( - n ) res y@ #globalscale * ;
-: mountwh  mountw mounth ;
+: mountwh ( - w h ) mountw mounth ;
+
+: mountx  ( - n ) displayw 2 / mountw 2 / - ;
+: mounty  ( - n ) repl @ if 0 else displayh 2 / mounth 2 / - then ;
+: mountxy ( - x y ) mountx mounty ;
+
 
 : mount  ( - )
     m1 al_identity_transform
     m1 #globalscale s>f 1sf dup al_scale_transform
     fs @ if
-        m1
-            displayw 2 / mountw 2 / -  s>f 1sf
-            repl @ if 0 else 
-                displayh 2 / mounth 2 / -  s>f 1sf
-            then
-                al_translate_transform
+        m1 mountxy swap s>f s>f 2sf al_translate_transform
     then
     \ m1 0.625e 0.625e 2sf al_translate_transform
     m1 al_use_transform
