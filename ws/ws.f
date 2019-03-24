@@ -173,10 +173,15 @@ only forth definitions also wsing
 ;
 
 : blank  ( figure )
-    vacate
-;
-: button  ( text c )  { figure *element data! #boxed attr ! } ;
-: label  ( text c )   { figure *element data! } ;
+    vacate ;
+
+0 value lastel
+: named  lastel constant ;
+
+: /button  data! #boxed attr ! ;
+: /label   data! ;
+: button  ( text c )  { figure *element me to lastel /button } ;
+: label  ( text c )   { figure *element me to lastel /label } ;
 : nr  { figure *element #newrow attr ! } ;  \ new row
 : drawui  consolas font>  unmount  figure (ui) ;
 
