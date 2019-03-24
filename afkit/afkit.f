@@ -40,7 +40,7 @@ variable fs    \  enables fullscreen when on
 [undefined] initial-res [if]  : initial-res  640 480 ;  [then]
 [undefined] initial-pos [if]  : initial-pos  0 0 ;  [then]
 create res  initial-res swap , ,
-defer >ide
+defer >host
 _AL_MAX_JOYSTICK_STICKS constant MAX_STICKS
 create joysticks   MAX_STICKS /ALLEGRO_JOYSTICK_STATE * /allot
 16 cells constant /transform
@@ -158,8 +158,7 @@ create native  /ALLEGRO_MONITOR_INFO /allot
         display al_get_win_window_handle btf ;
 [then]
 
-:make >ide HWND btf ;
->ide
+:make >host HWND btf ;
 
 \ ----------------------------------------------- keyboard -----------------------------------------
 
@@ -262,4 +261,4 @@ fullscreen
 include afkit/piston.f
 \ --------------------------------------------------------------------------------------------------
 
->ide
+>host

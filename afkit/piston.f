@@ -97,10 +97,10 @@ using internal
         al_set_separate_blender
 ;
 
-variable (catch)
 : try ( code - IOR )
+    dup -exit  
     [defined] dev [if]
-        dup -exit  sp@ cell+ >r  code> catch (catch) !  r> sp!  (catch) @
+        code> catch 
     [else]
         call 0 
     [then] ;
@@ -154,27 +154,7 @@ variable (catch)
 : ?hidemouse ( - )
     display oscursor @ if al_show_mouse_cursor else al_hide_mouse_cursor then ; 
 
-: onto  ( bmp - )  dup display = if al_get_backbuffer then al_set_target_bitmap ;
-: ?greybg ( - ) fs @ -exit  display onto  unmount  0.1e 0.1e 0.1e 1e 4sf al_clear_to_color ;
-: show ( - )
-    at@ 2>r  
-        me >r  offsetTable >r
-            ?greybg  mount  display onto
-            'show try (catch) !
-            unmount  display onto  ?overlay
-        r> to offsetTable  r> to me  
-    2r> at
-    (catch) @ ( ior ) throw ;
-: present ( - ) al_flip_display ;
-: ?suppress ( - ) repl? if clearkb then ;
-: step ( - )
-    me >r  offsetTable >r  at@ 2>r
-    ?suppress  'step try  1 +to now
-    2r> at  r> to offsetTable  r> to me  throw ;
-: ?step  ( - )  ['] step >code try to steperr ;
-
 : 2s>f ( ix iy - f: x y ) swap s>f s>f ;
-
 : refit ( - )  \ find biggest integer scaling that fits display
     displaywh 2s>f f/ 
         res xy@ 2s>f f/ f> if
@@ -185,11 +165,26 @@ variable (catch)
     to #globalscale
 ;
 
-: ?show ( - )
-    refit  ['] show >code try to showerr ;
+: onto  ( bmp - )  dup display = if al_get_backbuffer then al_set_target_bitmap ;
+: ?greybg ( - ) fs @ -exit  display onto  unmount  0.1e 0.1e 0.1e 1e 4sf al_clear_to_color ;
+: show ( - )
+    refit  
+    at@ 2>r  
+        me >r  offsetTable >r
+            ?greybg  mount  display onto
+            'show try to showerr
+            unmount  display onto  ?overlay
+        r> to offsetTable  r> to me  
+    2r> at ;
+: present ( - ) al_flip_display ;
+: ?suppress ( - ) repl? if clearkb then ;
+: step ( - )
+    me >r  offsetTable >r  at@ 2>r
+    ?suppress  'step try to steperr   1 +to now
+    2r> at  r> to offsetTable  r> to me ;
 
 : /go ( - )  resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
-: go/ ( - ) eventq al_flush_event_queue  >ide  false to breaking?  ;
+: go/ ( - ) eventq al_flush_event_queue  >host  false to breaking?  ;
 : show> ( - <code> ) r> to 'show ;  ( - <code> )  ( - )
 : step> ( - <code> ) r> to 'step ;  ( - <code> )  ( - )
 : pump> ( - <code> ) r> to 'pump ;  ( - <code> )  ( - )
@@ -201,7 +196,7 @@ variable (catch)
         me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me  ?system
         eco @ ?exit
     repeat ;
-: frame ( - ) ?show present attend poll ?step ?hidemouse ;
+: frame ( - ) show present attend poll step ?hidemouse ;
 : go ( - )   /go    begin  frame  breaking? until  go/ ;
 
 \ default demo: dark blue screen with bouncing white square

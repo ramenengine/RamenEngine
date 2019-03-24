@@ -46,7 +46,7 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
           ['] relify assets each
           ['] runtime 'main !
           program
-          -display ;
+          >host ;
           
   [else]
       cr .( PROGRAM not defined; PUBLISH disabled )
