@@ -18,7 +18,7 @@
 12 constant /FRAC
 $FFFFF000 constant INT_MASK
 $00000FFF constant FRAC_MASK
-: FPGRAN  s" 4096e" evaluate ; immediate
+: FPRES  s" 4096e" evaluate ; immediate
 4096  constant PGRAN
 $1000 constant 1.0
 
@@ -49,14 +49,14 @@ $1000 constant 1.0
 : 2i  swap 1i swap 1i ;
 : 3i  >r 1i swap 1i swap r> 1i ;
 : 4i  swap 1i swap 1i  2>r  swap 1i swap 1i  2r> ;
-: 1pf  s>f FPGRAN f/ ;
+: 1pf  s>f FPRES f/ ;
 : 2pf  swap 1pf 1pf ;
 : pfloor  INT_MASK and ;
 : pfrac   FRAC_MASK and ;
 : pceil   #1 - pfloor 1.0 + ;
 : 2pfloor  pfloor swap pfloor swap ;
 : 2pceil   pceil swap pceil swap ;
-: f>p  FPGRAN f* f>s ;
+: f>p  FPRES f* f>s ;
 
 wordlist constant fixpointing
 : fixed    fixpointing +order decimal ;  \ assumes no support for fixed point literals
