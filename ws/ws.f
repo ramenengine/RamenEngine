@@ -126,7 +126,7 @@ define wsing
     ;
     
     : (ui)  ( figure - )
-        /window  draw-window  margins xy@ at  dup relative>  each> as draw ;
+        /window  ( draw-window )  margins xy@ at  dup relative>  each> as draw ;
     
     \ --- interaction ---
     : ?hover  ( figure - )
