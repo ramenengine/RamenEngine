@@ -108,12 +108,14 @@ create tstep 16 , 16 ,
 : /tilemap  ( - )
     viewwh w 2!
     draw>
+        scrollx 2@ 0 0 2max scrollx 2!
         tbi @ tilebase!
         at@ w 2@ clip>
             scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
 
 : /isotilemap  ( - )
     draw>
+        scrollx 2@ 0 0 2max scrollx 2!
         tbi @ tilebase!
         scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  50 50 isotilemap ;
 

@@ -26,12 +26,19 @@ depend ramen/lib/buffer2d.f
 
 : entire ( bitmap - )
     0 0 rot bmpwh srcrect xywh! ;
-    
+
+: (loadtiles)  ( bitmap )
+    dup entire dup puttiles -bmp ;    
+
 : loadtiles  ( path count -- )  \ dest x,y in pen, dest bank is specified with TILEBANK
-    loadbmp dup entire dup puttiles -bmp ;
+    loadbmp (loadtiles) ;
 
 : dimbank  ( tilew tileh bankw bankh -- )
     tb resize-canvas tb subdivide ;
+
+: loadtileset  ( path count tilew tileh -- )
+    2>r   0 0 at  loadbmp 2r> third bmpwh dimbank  (loadtiles) ;
+
 
 \ -------------------------------------------------------------------------------------------------
 \ Render a tilemap
@@ -64,7 +71,7 @@ fixed
 : tstep@  ( - w h )
     tb image.subw 2@ ;
 
-: tilemap  ( addr /pitch - )
+: draw-tilemap  ( addr /pitch - )
     hold>  tstep@  clipwh  2over 2/ 2 1 2+  locals| rows cols th tw pitch | 
     rows for
         at@  ( addr x y )
@@ -83,7 +90,7 @@ fixed
 : >iso  ( x y - x y )  2dup swap 1 >> - >r + r> ;
 : >car  ( x y - x y )  2dup 2 / swap 2 / + >r - r> ;
 
-: isotilemap  ( addr /pitch cols rows - )
+: draw-isotilemap  ( addr /pitch cols rows - )
     hold>  tstep@  locals| th tw rows cols pitch |
     rows for
         at@  ( addr x y )
@@ -108,7 +115,8 @@ extend: _actor
 : tilemap  ( - )
     tbi @ tilebank
     at@ w 2@ clip>
-        scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  tilemap ;
+        scrollx 2@ 0 0 2max scrollx 2!
+        scrollx 2@  tstep@ scrollofs  tilebuf loc  tilebuf pitch@  draw-tilemap ;
 
 : /tilemap  ( - )
     viewwh w 2!
@@ -117,6 +125,7 @@ extend: _actor
 \ : /isotilemap  ( cols rows - )
 \     w 2!
 \     draw>
+\         scrollx 2@ 0 0 2max scrollx 2!
 \         tbi @ tilebank
 \         scrollx 2@ tilebuf loc  tilebuf pitch@  w 2@ isotilemap ;
 
