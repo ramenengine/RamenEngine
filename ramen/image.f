@@ -28,8 +28,8 @@ asset: %image
 
 \ load-image  ( path c image - ) 
 \ free-image  ( image - )  
-: load-image  >r  zstring al_load_bitmap  r> init-image ;
 : free-image  image.bmp @ -bmp ;
+: load-image  dup free-image init-image ;
 
 \ Canvas (images without source files)
 
