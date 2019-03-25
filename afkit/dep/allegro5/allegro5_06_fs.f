@@ -32,8 +32,10 @@ function: al_close_directory  ( ALLEGRO_FS_ENTRY -- bool )
 
 \ AL_FUNC(bool,                 al_filename_exists,  (const char *path));
 \ AL_FUNC(bool,                 al_remove_filename,  (const char *path));
-\ AL_FUNC(char *,               al_get_current_directory, (void));
-\ AL_FUNC(bool,                 al_change_directory, (const char *path));
+
+function: al_get_current_directory  ( -- char* )
+function: al_change_directory  ( char* -- bool )
+
 \ AL_FUNC(bool,                 al_make_directory,   (const char *path));
 \
 \ AL_FUNC(ALLEGRO_FILE *,       al_open_fs_entry,    (ALLEGRO_FS_ENTRY *e,

@@ -67,6 +67,7 @@ create penx  0 ,  here 0 ,  constant peny
   al_install_mouse 0= abort" Allegro: Couldn't initialize mouse." 
   al_install_keyboard 0= abort" Allegro: Couldn't initialize keyboard."
   al_install_joystick 0= abort" Allegro: Couldn't initialize joystick."
+  al_init_native_dialog_addon 0= abort" Allegro: Couldn't initialize native dialogs."
 ;
 
 create native  /ALLEGRO_MONITOR_INFO /allot
@@ -256,6 +257,12 @@ previous
     +display ;
 
 fullscreen
+
+( Misc )
+
+create (wd) #512 allot
+: zwd  ( - zadr )  al_get_current_directory zcount (wd) zplace  (wd) ;
+: cwd  ( adr c - flag )  (wd) zplace   (wd) al_change_directory 0<> ;
 
 \ --------------------------------------------------------------------------------------------------
 include afkit/piston.f
