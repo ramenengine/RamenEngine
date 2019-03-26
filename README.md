@@ -1,6 +1,6 @@
 Ramen 2.0
 
-a 2D game engine - makes commercial-quality games in Forth.
+a 2D game engine for making commercial-quality computer games in Forth.
 
 i've gone from a submodule-based system to including all dependencies in the repository.
 
