@@ -206,7 +206,7 @@ transform: (identity)
 : hold>  ( - <code> )  1 al_hold_bitmap_drawing  r> call  0 al_hold_bitmap_drawing ;
 : loadbmp  ( adr c - bmp ) zstring al_load_bitmap ;
 : savebmp  ( bmp adr c - ) zstring swap al_save_bitmap 0= abort" Allegro: Error saving bitmap." ;
-: -bmp  ?dup -exit al_destroy_bitmap ;
+: -bmp  ( bmp - )  ?dup -exit al_destroy_bitmap ;
 
 create write-src  ALLEGRO_ADD , ALLEGRO_ONE   , ALLEGRO_ZERO          , ALLEGRO_ADD , ALLEGRO_ONE , ALLEGRO_ZERO , 
 create add-src    ALLEGRO_ADD , ALLEGRO_ALPHA , ALLEGRO_ONE           , ALLEGRO_ADD , ALLEGRO_ONE , ALLEGRO_ONE  , 

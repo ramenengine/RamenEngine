@@ -28,9 +28,10 @@ fixed
 
 
 \ Bitmaps, backbuffer
+: *bmp  ( w h - bmp ) 2i al_create_bitmap ;
 : onto>  ( bmp - <code> )
     r>  al_get_target_bitmap >r  at@ 2>r
-        swap  onto call
+        swap  onto  0 0 at  call
     2r> at  r> al_set_target_bitmap ;
 : movebmp  ( src sx sy w h )  write-src BLEND>  4af  destxy 2af   0 al_draw_bitmap_region ;
 : backbuf  display al_get_backbuffer ;
