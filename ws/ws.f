@@ -9,7 +9,8 @@ only forth definitions
 create window  %rect sizeof /allot
 create hovered 32 stack,
 variable ui  
-create mouse 0 , 0 ,
+
+: mdelta  mouse 2@ mickey 2@ 2- ;
 
 ui on
 
@@ -164,14 +165,15 @@ only forth definitions also wsing
 : ui-mouse
     etype ALLEGRO_EVENT_MOUSE_AXES = if
         evt ALLEGRO_MOUSE_EVENT.x 2@ 2p mouse xy!
+
         { figure ?hover }
         repl @ if 
-            evt ALLEGRO_MOUSE_EVENT.dz @ 0 > if ws:pageup then
-            evt ALLEGRO_MOUSE_EVENT.dz @ 0 < if ws:pagedown then
+            evt ALLEGRO_MOUSE_EVENT.dz @ 0 > if ws:pageup ;then
+            evt ALLEGRO_MOUSE_EVENT.dz @ 0 < if ws:pagedown ;then
         then
-    then
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?click then
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if { unclick } then
+    ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?click ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if { unclick } ;then
 ;
 
 : blank  ( figure )
@@ -200,12 +202,18 @@ only forth definitions also wsing
     :make ?system
         ['] (system) catch ?dup if cr ." GUI error." i. then
     ;
-    
+        
     :make ?overlay  ide-overlay  ui @ if drawui then  unmount ;
     
     :make free-node  destroy ;
     
-    : empty  hovered vacate  fs @ not if unclick then  figure blank  _element invalidate-pool  empty ;
+    : empty
+        hovered vacate
+        fs @ not if unclick then
+        figure blank
+        _element invalidate-pool
+        empty
+    ;
     
     oscursor on 
 [then]

@@ -21,6 +21,11 @@
 0 value me    \ for Ramen
 0 value offsetTable
 
+\ Mouse
+create mouse 0 , 0 ,
+create (mouse) 0 , 0 ,
+create mickey 0 , 0 ,
+
 \ Flags
 variable eco   \ enable to save CPU (for repl/editors etc)
 variable oscursor   oscursor on  \ turn off to hide the OS's mouse cursor
@@ -35,7 +40,8 @@ defer repl?     :noname  0 ; is repl?
 create evt  256 /allot
 : etype  ( - ALLEGRO_EVENT_TYPE )  evt ALLEGRO_EVENT.TYPE @ ;
 
-: poll  ( - ) pollKB  pollJoys ;
+: !mickey  (mouse) 2@ mickey 2!  mouse 2@ (mouse) 2! ;
+: poll  ( - ) pollKB  pollJoys  !mickey ;
 : break ( - ) true to breaking? ;
 
 defer bye
@@ -122,15 +128,15 @@ variable (catch)
 ;
 
 : standard-events ( - )
-    etype ALLEGRO_EVENT_DISPLAY_RESIZE = if  display al_acknowledge_resize  then
-    etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  bye  then
-    [defined] dev [if]  etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  suspend  then  [then]
+    etype ALLEGRO_EVENT_DISPLAY_RESIZE = if  display al_acknowledge_resize  ;then
+    etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  bye  ;then
+    [defined] dev [if]  etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  suspend  ;then  [then]
     
     \ still needed in published games, don't remove
     etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if
         clearkb  false to alt?
-    then
-
+    ;then
+    
     etype ALLEGRO_EVENT_KEY_DOWN = if
         evt ALLEGRO_KEYBOARD_EVENT.keycode @ case
             <alt>    of  true to alt?  endof
@@ -142,7 +148,7 @@ variable (catch)
             <f4>     of  alt? -exit  bye  endof
             <f12>    of  alt? -exit  break  endof  
         endcase
-    then
+    ;then
     etype ALLEGRO_EVENT_KEY_UP = if
         evt ALLEGRO_KEYBOARD_EVENT.keycode @ case
             <alt>    of  false to alt?  endof
@@ -152,7 +158,8 @@ variable (catch)
             <lshift>  of  false to shift?  endof
             <rshift>  of  false to shift?  endof
         endcase
-    then ;
+    ;then
+;
 
 : al-emit-user-event  ( type - )  \ EVT is expected to be filled, except for the type
     evt ALLEGRO_EVENT.type !  uesrc evt 0 al_emit_user_event ;
