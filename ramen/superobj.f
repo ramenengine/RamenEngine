@@ -11,12 +11,7 @@
 \ [x] - Pool allocation (problem: objects aren't all nodes!!! what do?? maybe just custom build for actors)
 
 \ TODO:
-\ [x] - CLASS: copy all field instances and add them, plus the offset table
-\ [x] - Make nodes compatible with this so we can subclass from them
 \ [ ] - Implement arrays, stacks and strings, including dynamic ones.
-\ [x] - Initialize offset tables with high offsets intended to cause segfaults
-\ [x] - >{ { }
-\ [x] - Implement ?ALREADY
 
 \ MAYBE, MAYBE NOT:
 \ [ ] - Automatic construction/destruction of embedded objects, such as collections  (downside: slow)
@@ -32,6 +27,7 @@
 0 value (superfield)  \ temporary variable
 0 value (size)        \ temporary variable
 0 value lastClass  \ last defined Class
+create mestk  0 , 16 cells allot
 
 : ?literal  state @ if postpone literal then ;
 
@@ -98,18 +94,15 @@ previous
     dup to me  >class >offsetTable to offsetTable
     ( ?converse )
 ;
-create mestk  0 , 16 cells allot
+
 : i{ ( - ) me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpreter version, uses a circular stack
 : i} ( - ) mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ as ; 
-: {  ( - ) state @ if s" me >r" evaluate else  i{  then ; immediate
+: {  ( - ) state @ if s" me >r as" evaluate else  i{  then ; immediate
 : }  ( - ) state @ if s" r> as" evaluate else  i}  then ; immediate
-: >{ ( object - )  s" { as " evaluate ; immediate  \ }
-
 
 : add-field  ( field class - )  >fields push ;
 
 : superfield.offset ; immediate
-
 
 : 's  ( object - <field> adr )
     state @ if
@@ -199,7 +192,7 @@ create mestk  0 , 16 cells allot
 \        dup field.class @ dup if
 \            ( field class )
 \            swap  @ offsetTable + @ me +
-\                >{ recurse }
+\                { recurse }
 \        else
 \            drop drop
 \        then
@@ -221,7 +214,7 @@ create mestk  0 , 16 cells allot
 ;
 
 : destruct  ( object - )
-    >{ me >class class.destructor @ execute } ;
+    { me >class class.destructor @ execute } ;
 
 : destroy  ( object - )
     dup destruct

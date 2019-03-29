@@ -91,7 +91,7 @@ extend: _actor
 
 ( displaying the message )
 create message ," HAPPY NEW YEAR"
-: nextchar  dup c@ { *letter /dance } #1 + ;                                \ takes an address and returns it, inc. by #1
+: nextchar  dup c@ me { *letter /dance } #1 + ;                                \ takes an address and returns it, inc. by #1
 
 ( kickoff the demo )
 : demo 

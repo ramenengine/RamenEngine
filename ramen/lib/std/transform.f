@@ -35,7 +35,7 @@ identity tpush
 ;
 
 : view>  ( object - <code> )
-    >{ view } tpush r> call tpop ;
+    { view } tpush r> call tpop ;
 
 : transform>  ( object - <code> )
-    >{ transform } tpush r> call tpop ;
+    { transform } tpush r> call tpop ;

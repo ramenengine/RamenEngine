@@ -113,7 +113,7 @@ define wsing
     transform: r:m
     
     : relative>  ( object - <code> )
-        >{  r:m mfetch  r:m  pos@ [undefined] HD [if] 2pfloor [then] translate  r:m mpush }
+        {  r:m mfetch  r:m  pos@ [undefined] HD [if] 2pfloor [then] translate  r:m mpush }
         r> call
         mdrop ;
         
@@ -133,13 +133,13 @@ define wsing
     : ?hover  ( figure - )
         hovered vacate
         each> as
-            mouse xy@ pos@ me node.parent @ >{ pos@ } 2+ dims@ area within? if
+            mouse xy@ pos@ me node.parent @ { pos@ } 2+ dims@ area within? if
                 me hovered push  
             then
     ;
     : click
         me
-        hovered >top @ >{
+        hovered >top @ {
             #boxed ?? if
                 #click attr or!
                 data@ } rot ( data count old-me ) as evaluate
@@ -156,8 +156,8 @@ define wsing
 only forth definitions also wsing
 
 
-: window:up   figure >{ y @ rowh - y ! } ;
-: window:down figure >{ y @ rowh + 0 min y ! } ;
+: window:up   figure { y @ rowh - y ! } ;
+: window:down figure { y @ rowh + 0 min y ! } ;
 
 : ws:pageup   mouse xy@ window aabb@ within? if window:down else ide:pageup then ;
 : ws:pagedown mouse xy@ window aabb@ within? if window:up else ide:pagedown then ;
@@ -166,14 +166,14 @@ only forth definitions also wsing
     etype ALLEGRO_EVENT_MOUSE_AXES = if
         evt ALLEGRO_MOUSE_EVENT.x 2@ 2p mouse xy!
 
-        { figure ?hover }
+        me { figure ?hover }
         repl @ if 
             evt ALLEGRO_MOUSE_EVENT.dz @ 0 > if ws:pageup ;then
             evt ALLEGRO_MOUSE_EVENT.dz @ 0 < if ws:pagedown ;then
         then
     ;then
     etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?click ;then
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if { unclick } ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if me { unclick } ;then
 ;
 
 : blank  ( figure )
@@ -184,9 +184,9 @@ only forth definitions also wsing
 
 : /button  data! #boxed attr ! ;
 : /label   data! ;
-: button  ( text c )  { figure *element me to lastel /button } ;
-: label  ( text c )   { figure *element me to lastel /label } ;
-: nr  { figure *element #newrow attr ! } ;  \ new row
+: button  ( text c )  me { figure *element me to lastel /button } ;
+: label  ( text c )   me { figure *element me to lastel /label } ;
+: nr  me { figure *element #newrow attr ! } ;  \ new row
 : drawui  consolas font>  unmount  figure (ui) ;
 
 : ?toggle-ui

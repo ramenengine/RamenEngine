@@ -44,7 +44,7 @@ extend: _actor
 0 0 0 16 16 16 _actor prototype 's ihb xyzwhd!
 
 \ : ipos     pos 3@ ihb xyz@ 3+ ;
-\ : toward   ( obj - x y )  >{ ipos } ipos 2- angle uvec ;
+\ : toward   ( obj - x y )  { ipos } ipos 2- angle uvec ;
 : !startpos pos 3@ startpos 3! ;
 
 
@@ -58,8 +58,8 @@ extend: _actor
 : hit?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     flags @ and 0= if 0 ;then
     me you = if 0 ;then
-    ibreadth you >{ ibreadth } cross? dup -exit drop
-    ibox you >{ ibox } overlap? ;
+    ibreadth you { ibreadth } cross? dup -exit drop
+    ibox you { ibox } overlap? ;
 
 \ : draw-ibox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 : on-top  act> me stage push ;

@@ -1,8 +1,8 @@
 ( player )
 : aligned  at@ 2dup 16 16 2mod 2- at ; 
 : ?dig
-    dir @ 0 = if  x 2@ 22 u+ tile@ 1 = if  me 22 0 from aligned 0 at@ tile! { break }  then  then
-    dir @ 180 = if  x 2@ -8 u+ tile@ 1 = if  me -8 0 from aligned 0 at@ tile! { break }  then  then
+    dir @ 0 = if  x 2@ 22 u+ tile@ 1 = if  me 22 0 from aligned 0 at@ tile! me { break }  then  then
+    dir @ 180 = if  x 2@ -8 u+ tile@ 1 = if  me -8 0 from aligned 0 at@ tile! me { break }  then  then
 ;
 : ?jump
     onground @ -exit

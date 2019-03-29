@@ -21,7 +21,7 @@ also wsing
     s" Test" label named mauser
     : (p.)  1pf #2 (f.) ;
     stage one
-    :now act> maus swap (p.) s[ (p.) +s ]s mauser >{ data! } ;    
+    :now act> maus swap (p.) s[ (p.) +s ]s mauser { data! } ;    
 previous
 
 : (dialog)

@@ -35,7 +35,7 @@ create objlists  _node static            \ parent of all objlists
 
 : actor:free-node
     dup _actor is? not if  destroy ;then
-    >{
+    {
         dyn @ if  me destroy  then
         id off  \ necessary for breaking connections
     }
@@ -116,5 +116,5 @@ objlist: stage  \ default object list
 
 : .objlist  ( objlist - )
     dup length 1i i. each>
-        >{  cr me h. ." ID: " id ?  ."  X/Y: " x 2?  } ;
+        {  cr me h. ." ID: " id ?  ."  X/Y: " x 2?  } ;
 

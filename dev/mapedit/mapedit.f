@@ -21,8 +21,8 @@ create curColor 1e sf, 1e sf, 1e sf, 1e sf,
 : mapedit:show  show> ramenbg unmount stage draws ;
 mapedit:show
 
-: beside  >{ y @   x @ w @ sx @ * + } 16 + x !   y ! ;
-: below   >{ x @   y @ h @ sy @ * + } 16 + y !   x ! ;
+: beside  { y @   x @ w @ sx @ * + } 16 + x !   y ! ;
+: below   { x @   y @ h @ sy @ * + } 16 + y !   x ! ;
 : outline  w 2@ sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect ;
 
 stage actor: map0   /tilemap  256 256 w 2!  2 2 sx 2!  16 16 x 2!
@@ -42,8 +42,8 @@ stage actor: tileset0  2 2 sx 2!
 
 stage actor: hilite0  
     :noname draw>  curTile @ -exit
-                tile0 >{ w 2@ sx 2* } w 2!
-                tileset0 >{ curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+  }  x 2!
+                tile0 { w 2@ sx 2* } w 2!
+                tileset0 { curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+  }  x 2!
                 outline ; execute
 
 
@@ -51,7 +51,7 @@ stage actor: hilite0
 : subcols  image.subcols @ ;
 
 : box  x 2@ w 2@ sx 2@ 2* aabb 1 1 2- ;
-: (tile)  map0 >{ curtile @ maus x 2@ 2- sx 2@ 2/ scrollx 2@ 2+ tb subwh 2/ tilebuf loc } ;
+: (tile)  map0 { curtile @ maus x 2@ 2- sx 2@ 2/ scrollx 2@ 2+ tb subwh 2/ tilebuf loc } ;
 : that   (tile) @ curtile ! ;
 : lay  (tile) ! ;
 : mpos  maus x 2@ 2- sx 2@ 2/ ;

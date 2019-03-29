@@ -112,13 +112,13 @@ create evoke-link-swing dir-anim-table
 
     :listen
         s" player-entered-cave" occurred if
-            link0 >{
+            link0 {
                 ( x y ) x 2!
                 upward idle
             }
         ;then
         s" player-exited-cave" occurred if
-            link0 >{
+            link0 {
                 tempx 2@ x 2!
                 emerge
             }

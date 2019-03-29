@@ -35,7 +35,7 @@ define tweening
 
     : store  ( val - ) dest @ ! ; \ storer @ execute ;
 
-    : target!   dup target ! >{ ?id ?dup if @ targetid ! then } ;
+    : target!   dup target ! { ?id ?dup if @ targetid ! then } ;
 
     : *tween  ( adr start end ease-xt in/out-xt - me=tween )
         me  _tween dynamic  me tweens push  target!
@@ -45,7 +45,7 @@ define tweening
             (length) @ + endtime !
     ;
     
-    : orphaned?  ( - flag ) target @ >{ ?id dup if @ targetid @ <> then } ;
+    : orphaned?  ( - flag ) target @ { ?id dup if @ targetid @ <> then } ;
 
     : +tween  ( - )
         now starttime @ < ?exit
@@ -90,7 +90,7 @@ only forth definitions also tweening
 :xt OVERSHOOT     1.70158 overshoot-func ;
 
 : tween  ( adr start end ease-xt in/out-xt - )
-    { *tween } ;
+    me { *tween } ;
 
 : +tweens  ( - )
     tweens each> as +tween ;
