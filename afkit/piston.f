@@ -46,9 +46,8 @@ create evt  256 /allot
 
 defer bye
 
-
 :make bye
-    [defined] dev [if] s" empty" evaluate [then]
+    \ [defined] dev [if] s" empty" evaluate [then]
     al_uninstall_system  0 ExitProcess ; 
 
 define internal
