@@ -95,9 +95,11 @@ previous
     ( ?converse )
 ;
 
-: i{ ( - ) me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk ! ;  \ interpreter version, uses a circular stack
+\ interpreter version, uses a circular stack
+: i{ ( obj - ) me mestk dup @ cells + cell+ !  mestk @ 1 + 15 and mestk !  as ;
 : i} ( - ) mestk @ 1 - 15 and mestk !  mestk dup @ cells + cell+ @ as ; 
-: {  ( - ) state @ if s" me >r as" evaluate else  i{  then ; immediate
+
+: {  ( obj - ) state @ if s" me >r as" evaluate else  i{  then ; immediate
 : }  ( - ) state @ if s" r> as" evaluate else  i}  then ; immediate
 
 : add-field  ( field class - )  >fields push ;
