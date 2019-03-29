@@ -99,6 +99,7 @@ stage actor: ctl
 
 : mapedit-events
     etype ALLEGRO_EVENT_KEY_CHAR = if
+        keycode <s> = ctrl? and if  s" save" evaluate ;then
         keycode <e> = if  0 curtile !  ;then
         keycode <up> = if     sh negate map0 's scrolly +! ;then
         keycode <down> = if   sh map0 's scrolly +! ;then
@@ -123,19 +124,29 @@ option: clear-tile
     !color  16 16 rectf
 ;
 option: revert-tileset  (load-tileset) ;
+nr
 s" save-tileset" button
 option: new-tileset  16 16 256 1024 dimbank  curTileset$ off ; 
 option: load-tileset  curTileset$ image-formats osopen if (load-tileset) then ;
 nr
 s" Tilemap" label
-s" save-tilemap" button
 option: revert-tilemap  (load-tilemap) ;
+nr
+s" save-tilemap" button
 option: new-tilemap  tilebuf clear2d  curTilemap$ off ;
 option: load-tilemap  curTilemap$ s" *.buf" osopen if (load-tilemap) then ;
 nr
 s" Palette" label
 option: load-palette  curPalette$ image-formats osopen if (load-palette) then ;
 
+nr
+s" <space> + LB = Pan" label
+nr
+s" cursor keys = Pan (shift=by screens)" label
+nr
+s" <e> = Transparent color" label
+nr
+s" <ctrl> + <s> = Save" label
 nr
 s" Resize viewport: <w> <h> tilemap0 's w 2! " label
 nr
