@@ -11,8 +11,8 @@ stage one :now act> ui on ;  \ workspace always on
 ;
 
 : app-events
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?b on then
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if ?b off then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?b on ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if ?b off ;then
 ;
 
 : maus   mouse 2@ globalscale dup 2/ ;
@@ -47,3 +47,5 @@ previous
     2>r  zwd  z" Open"  2r> zstring
         ALLEGRO_FILECHOOSER_FILE_MUST_EXIST (dialog)
 ;
+
+: image-formats  s" *.png;*.jpg;*.bmp;*.gif;*.tif" ;

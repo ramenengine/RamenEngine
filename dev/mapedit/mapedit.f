@@ -8,38 +8,44 @@ depend ramen/lib/std/tilemap2.f         \ load tilemap support
 nativewh resolution
 
 ld apptools
+0 tilebank
 
-create curMapFile  256 /allot   s" dev/mapedit/zelda.buf" curMapFile place
-create curTilesetFile  256 /allot  s" dev/mapedit/overworld-tiles.png" curTilesetFile place
-create curPaletteFile  256 /allot  s" dev/mapedit/NES_palette.png" curPaletteFile place
-variable curTile  4 curtile !
+create curTilemap$  256 /allot   s" dev/mapedit/zelda.buf" curTilemap$ place
+create curTileset$  256 /allot  s" dev/mapedit/overworld-tiles.png" curTileset$ place
+create curPalette$  256 /allot  s" dev/mapedit/NES_palette.png" curPalette$ place
+variable curTile  1 curtile !
 create palette  %image sizeof /allot
 create curColor 1e sf, 1e sf, 1e sf, 1e sf,
 : !color  curColor fore 4 cells move ;
 
-curPaletteFile count palette load-image
-
 : mapedit:show  show> ramenbg unmount stage draws ;
 mapedit:show
 
-stage actor: map0   /tilemap  256 256 w 2!  2 2 sx 2!  0 0 x 2!
-    :now draw>  me transform> tilemap ;
+: beside  >{ y @   x @ w @ sx @ * + } 16 + x !   y ! ;
+: below   >{ x @   y @ h @ sy @ * + } 16 + y !   x ! ;
+: outline  w 2@ sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect ;
 
-stage actor: tile0  524 0 x 2!  16 16 sx 2!
-    :now  16 16 w 2!  draw>  me transform> 0 0 at curTile @ tile ;
+stage actor: map0   /tilemap  256 256 w 2!  2 2 sx 2!  16 16 x 2!
+    :now draw>  me transform>  0 0 at  tilemap ;
 
-stage actor: color0 524 270 x 2!  256 16 w 2!
-    :now  draw>  !color  w 2@ rectf ;
+stage actor: tile0  16 16 sx 2!  16 16 w 2!
+    :now  draw>  map0 below  outline  me transform>  0 0 at  curTile @ tile  ;
 
-stage actor: tileset0  524 300 x 2!  2 2 sx 2!  
-    :now draw>  tb img !  img @ imagewh w 2!  0 0 tb imagewh 0 bsprite ;
+stage actor: color0  256 16 w 2!
+    :now  draw>  tile0 below  !color  w 2@ rectf ;
 
-stage actor: hilite0
-    :noname draw>  tileset0 >{ curTile @ tb subxy sx 2@ 2*   x 2@ 2+  at  tile0 's w 2@
-                sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect } ; execute
+stage actor: palette0  1.5 1.5 sx 2!  palette img ! 
+    :now  draw> palette imagewh w 2!  color0 below  sprite ;
 
-stage actor: palette0  796 0 x 2!  1.5 1.5 sx 2!  palette img ! 
-    :now palette imagewh w 2! draw> sprite ;
+stage actor: tileset0  2 2 sx 2!  
+    :now  draw>  map0 beside  tb img !  img @ imagewh w 2!  0 0 tb imagewh 0 bsprite ;
+
+stage actor: hilite0  
+    :noname draw>  curTile @ -exit
+                tile0 >{ w 2@ sx 2* } w 2!
+                tileset0 >{ curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+  }  x 2!
+                outline ; execute
+
 
 
 : subcols  image.subcols @ ;
@@ -57,8 +63,6 @@ stage actor: palette0  796 0 x 2!  1.5 1.5 sx 2!  palette img !
 : pan  mdelta globalscale dup 2/ sx 2@ 2/ 2negate scrollx 2+! ;
 
 stage actor: ctl
-
-
 :noname act>
     map0 as 
         <space> kstate lb @ and if  pan  ;then
@@ -77,9 +81,14 @@ stage actor: ctl
 : tilebankbmp ( n - bmp )
     tb >r  tilebank  tb >bmp   r> to tb ;
 
-: save
-    0 0 tilebuf loc 512 512 * cells curMapFile count file!
-    0 tilebankbmp curTilesetFile count savebmp
+: save-tileset
+    curTileset$ @ 0= if  curTileset$ image-formats ossave -exit then
+    0 tilebankbmp curTileset$ count savebmp
+;
+
+: save-tilemap
+    curTilemap$ @ 0= if  curTilemap$ s" *.buf" ossave -exit then
+    tilebuf count2d curTilemap$ count file!
 ;
 
 : tw  tb subwh drop ;
@@ -101,30 +110,40 @@ stage actor: ctl
 : mapedit:pump  pump> app-events mapedit-events ;
 mapedit:pump
 
-: (load-tilemap)  curMapFile count 0 0 tilebuf loc 512 512 * cells @file ;
-
-: (load-tileset)  0 tilebank  curTilesetFile count 16 16 loadtileset ;
+: (load-tilemap)  curTilemap$ count 0 0 tilebuf loc 512 512 * cells @file ;
+: (load-tileset)  0 tilebank  curTileset$ count 16 16 loadtileset ;
+: (load-palette)  curPalette$ count palette load-image ;
 
 nr
-option: load-tilemap  curMapFile s" *.buf" osopen if (load-tilemap) then ;
-option: load-tileset  curTilesetFile s" *.png" osopen if (load-tileset) then ;
+s" save" button
 nr
-option: wash
+s" Tileset" label
+option: clear-tile
     curTile @ tile>rgn 2drop rot onto> at
     !color  16 16 rectf
 ;
-option: revert
-    (load-tilemap)  (load-tileset)
-;
+option: revert-tileset  (load-tileset) ;
+s" save-tileset" button
+option: new-tileset  16 16 256 1024 dimbank  curTileset$ off ; 
+option: load-tileset  curTileset$ image-formats osopen if (load-tileset) then ;
+nr
+s" Tilemap" label
+s" save-tilemap" button
+option: revert-tilemap  (load-tilemap) ;
+option: new-tilemap  tilebuf clear2d  curTilemap$ off ;
+option: load-tilemap  curTilemap$ s" *.buf" osopen if (load-tilemap) then ;
+nr
+s" Palette" label
+option: load-palette  curPalette$ image-formats osopen if (load-palette) then ;
 
-\ option: load-palette ;
-\ option: load-project ;
-\ option: new-project ;
-s" save" button
-
+nr
+s" Resize viewport: <w> <h> tilemap0 's w 2! " label
+nr
 (load-tileset)
 (load-tilemap)
-\ load-palette
+(load-palette)
+
+: save  save-tileset save-tilemap ;
 : empty  save empty ;
 
 page
