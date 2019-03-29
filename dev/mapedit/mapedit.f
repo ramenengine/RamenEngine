@@ -42,8 +42,8 @@ stage actor: tileset0  2 2 sx 2!
 
 stage actor: hilite0  
     :noname draw>  curTile @ -exit
-                tile0 { w 2@ sx 2* } w 2!
-                tileset0 { curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+  }  x 2!
+                tile0 { w 2@ }  tileset0 { sx 2@ }  2*  w 2!
+                tileset0 { curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+ }  x 2!
                 outline ; execute
 
 
