@@ -2,7 +2,7 @@
 
 ( load the Tiled data )
 : reload
-    s" zelda.buf" >data 0 0 tilebuf loc 512 512 * cells @file
+    s" zelda.buf" >data tilebuf count2d @file
     0 tilebank 16 16 288 256 dimbank 
     0 0 at s" overworld-tiles.png" >data loadtiles
 ; reload

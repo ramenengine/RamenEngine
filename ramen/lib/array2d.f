@@ -30,8 +30,8 @@ struct %array2d
 : array2d:  ( numcols numrows - <name> )
     create array2d, ;
 
-: count2d ( array2d - data #cells )
-    dup array2d.data @ swap array2d.cols 2@ * ;
+: count2d ( array2d - data size )
+    dup array2d.data @ swap array2d.cols 2@ * cells ;
 
 : dims  ( array2d - numcols numrows )
     array2d.cols 2@ ;
@@ -98,6 +98,6 @@ struct %array2d
 marker dispose
 create a  10 15 array2d,
 create b  12 7 array2d,
-a count2d 5 ifill
-b count2d 10 ifill
+a count2d cell/ 5 ifill
+b count2d cell/ 10 ifill
 dispose
