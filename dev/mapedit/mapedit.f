@@ -15,6 +15,7 @@ create curPaletteFile  256 /allot  s" dev/mapedit/NES_palette.png" curPaletteFil
 variable curTile  4 curtile !
 create palette  %image sizeof /allot
 create curColor 1e sf, 1e sf, 1e sf, 1e sf,
+: !color  curColor fore 4 cells move ;
 
 curPaletteFile count palette load-image
 
@@ -28,7 +29,7 @@ stage actor: tile0  524 0 x 2!  16 16 sx 2!
     :now  16 16 w 2!  draw>  me transform> 0 0 at curTile @ tile ;
 
 stage actor: color0 524 270 x 2!  256 16 w 2!
-    :now  draw>  curColor fore 4 cells move  w 2@ rectf ;
+    :now  draw>  !color  w 2@ rectf ;
 
 stage actor: tileset0  524 300 x 2!  2 2 sx 2!  
     :now draw>  tb img !  img @ imagewh w 2!  0 0 tb imagewh 0 bsprite ;
@@ -78,20 +79,20 @@ palette0 as :noname act>
     0 tilebankbmp curTilesetFile count savebmp
 ;
 
-: empty  save empty ;
-
 : tw  tb subwh drop ;
 : th  tb subwh nip ;
 : -tw  tw negate ;
 : -th  th negate ;
 
+: ?*  shift? if 16 * then ;
+
 : mapedit-events
     etype ALLEGRO_EVENT_KEY_CHAR = if
-        keycode <e> = if  0 curtile !  ;then
-        keycode <up> = if     -th map0 's scrolly +! ;then
-        keycode <down> = if   th map0 's scrolly +! ;then
-        keycode <left> = if   -tw map0 's scrollx +! ;then
-        keycode <right> = if  tw map0 's scrollx +! ;then
+        keycode <e> =      if  0 curtile !  ;then
+        keycode <up> =     keycode <pad8> = or if  -th ?* map0 's scrolly +! ;then
+        keycode <down> =   keycode <pad2> = or if  th  ?* map0 's scrolly +! ;then
+        keycode <left> =   keycode <pad4> = or if  -tw ?* map0 's scrollx +! ;then
+        keycode <right> =  keycode <pad6> = or if  tw  ?* map0 's scrollx +! ;then
     then
 ;
 
@@ -105,6 +106,15 @@ mapedit:pump
 nr
 option: load-tilemap  curMapFile s" *.buf" osopen if (load-tilemap) then ;
 option: load-tileset  curTilesetFile s" *.png" osopen if (load-tileset) then ;
+nr
+option: wash
+    curTile @ tile>rgn 2drop rot onto> at
+    !color  16 16 rectf
+;
+option: revert
+    (load-tilemap)  (load-tileset)
+;
+
 \ option: load-palette ;
 \ option: load-project ;
 \ option: new-project ;
@@ -113,6 +123,7 @@ s" save" button
 (load-tileset)
 (load-tilemap)
 \ load-palette
+: empty  save empty ;
 
 page
 repl off
