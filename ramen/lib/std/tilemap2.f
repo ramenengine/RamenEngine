@@ -57,7 +57,7 @@ depend ramen/lib/buffer2d.f
 decimal \ for speed
 
     : tile>rgn  ( tiledata - bitmap x y w h )
-        tb dup >r >bmp swap $003ff000 and 1.0 - r> subxywh ;
+        tb >bmp swap $003ff000 and 1.0 - tb subxywh ;
     
     : draw-region  ( bitmap x y w h flip - )
         >r  4af  at@ 2af  r> al_draw_bitmap_region ;

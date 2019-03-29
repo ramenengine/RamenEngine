@@ -16,11 +16,20 @@ create curPalette$  256 /allot  s" dev/mapedit/NES_palette.png" curPalette$ plac
 variable curTile  1 curtile !
 create palette  %image sizeof /allot
 create curColor 1e sf, 1e sf, 1e sf, 1e sf,
-: !color  curColor fore 4 cells move ;
+0 value cbbmp  \ clipboard bitmap
 
 : mapedit:show  show> ramenbg unmount stage draws ;
 mapedit:show
 
+: @color  curColor fore 4 cells move ;
+
+( clipboard )
+: selection  ( - bmp x y w h )  curTile @ tile>rgn ;
+: cbbmp! cbbmp -bmp  to cbbmp ;
+: copy   tb subwh *bmp dup cbbmp!  onto> selection movebmp ;
+: paste  tb >bmp onto>  selection 2drop at ( bmp ) drop  cbbmp 0 0 third bmpwh movebmp ;
+
+( layout )
 : beside  { y @   x @ w @ sx @ * + } 16 + x !   y ! ;
 : below   { x @   y @ h @ sy @ * + } 16 + y !   x ! ;
 : outline  w 2@ sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect ;
@@ -32,7 +41,7 @@ stage actor: tile0  16 16 sx 2!  16 16 w 2!
     :now  draw>  map0 below  outline  me transform>  0 0 at  curTile @ tile  ;
 
 stage actor: color0  256 16 w 2!
-    :now  draw>  tile0 below  !color  w 2@ rectf ;
+    :now  draw>  tile0 below  @color  w 2@ rectf  outline ;
 
 stage actor: palette0  1.5 1.5 sx 2!  palette img ! 
     :now  draw> palette imagewh w 2!  color0 below  sprite ;
@@ -46,8 +55,6 @@ stage actor: hilite0
                 tileset0 { curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+ }  x 2!
                 outline ; execute
 
-
-
 : subcols  image.subcols @ ;
 
 : box  x 2@ w 2@ sx 2@ 2* aabb 1 1 2- ;
@@ -57,8 +64,8 @@ stage actor: hilite0
 : mpos  maus x 2@ 2- sx 2@ 2/ ;
 : pick   mpos tb subwh 2/ 2pfloor tb subcols * + 1 + curtile ! ;
 : crayon  curColor  img @ >bmp  mpos 2i  al_get_pixel ;
-: paint  curTile @ tile>rgn 2drop rot onto> mpos 2+ 2i curColor 4@ al_put_pixel ;
-: eyedrop  curColor curTile @ tile>rgn 2drop mpos 2+ 2i al_get_pixel ;
+: paint  selection 2drop rot onto> mpos 2+ 2i curColor 4@ al_put_pixel ;
+: eyedrop  curColor selection 2drop mpos 2+ 2i al_get_pixel ;
 : interact?  @ maus box within? and ;
 : pan  mdelta globalscale dup 2/ sx 2@ 2/ 2negate scrollx 2+! ;
 
@@ -97,14 +104,23 @@ stage actor: ctl
 : sw  shift? if map0 's w @ else tw then ;
 : sh  shift? if map0 's h @ else th then ;
 
+: snap  map0 {  scrollx 2@ 2dup sw sh 2mod 2- scrollx 2!  } ;
+
+: ?eraser
+    map0 { maus box within? } if 0 curtile ! ;then
+    tile0 { maus box within? } if 0 0 0 0 4af curColor 4! ;then
+;
+
 : mapedit-events
     etype ALLEGRO_EVENT_KEY_CHAR = if
         keycode <s> = ctrl? and if  s" save" evaluate ;then
-        keycode <e> = if  0 curtile !  ;then
-        keycode <up> = if     sh negate map0 's scrolly +! ;then
-        keycode <down> = if   sh map0 's scrolly +! ;then
-        keycode <left> = if   sw negate map0 's scrollx +! ;then
-        keycode <right> = if  sw map0 's scrollx +! ;then
+        keycode <e> = if  ?eraser  ;then
+        keycode <c> = ctrl? and if  copy  ;then
+        keycode <v> = ctrl? and if  paste  ;then
+        keycode <up> = if     snap  sh negate map0 's scrolly +!  ;then
+        keycode <down> = if   snap  sh map0 's scrolly +!  ;then
+        keycode <left> = if   snap  sw negate map0 's scrollx +! ;then
+        keycode <right> = if  snap  sw map0 's scrollx +! ;then
     then
 ;
 
@@ -120,8 +136,12 @@ s" save" button
 nr
 s" Tileset" label
 option: clear-tile
-    curTile @ tile>rgn 2drop rot onto> at
-    !color  16 16 rectf
+    selection 2drop rot onto> at
+    write-src blend>  black 0 alpha 16 16 rectf
+;
+option: fill-tile
+    selection 2drop rot onto> at
+    @color  write-src blend> 16 16 rectf
 ;
 option: revert-tileset  (load-tileset) ;
 nr
@@ -142,13 +162,17 @@ option: load-palette  curPalette$ image-formats osopen if (load-palette) then ;
 nr
 s" <space> + LB = Pan" label
 nr
-s" cursor keys = Pan (shift=by screens)" label
+s" cursor keys = Pan (shift = by screens)" label
 nr
-s" <e> = Transparent color" label
+s" RB = Eyedropper" label
 nr
 s" <ctrl> + <s> = Save" label
 nr
-s" Resize viewport: <w> <h> tilemap0 's w 2! " label
+s" <ctrl> + <c> / <v> = Copy/Paste" label
+nr
+s" <e> = Select tile 0 / transparent" label
+nr
+s" Resize viewport: <w> <h> map0 's w 2! " label
 nr
 (load-tileset)
 (load-tilemap)
