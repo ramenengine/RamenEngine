@@ -35,15 +35,15 @@ mapedit:show
 : outline  w 2@ sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect ;
 
 stage actor: map0   /tilemap  256 256 w 2!  2 2 sx 2!  16 16 x 2!
-    :now draw>  outline  me transform>  tilemap  ;
+    :now draw>  outline  me transform>   w 2@ black 0.5 alpha rectf  tilemap ;
 
 stage actor: tile0  16 16 sx 2!  16 16 w 2!
     :now  draw>  map0 below  outline  me transform>  curTile @ tile  ;
 
 stage actor: color0  256 16 w 2!
-    :now  draw>  tile0 below  @color  w 2@ rectf  outline ;
+    :now  draw>  outline  tile0 below  @color  1 1 +at  w 2@ rectf ;
 
-stage actor: palette0  1.5 1.5 sx 2!  palette img ! 
+stage actor: palette0  24 24 sx 2!  palette img ! 
     :now  draw> palette imagewh w 2!  color0 below  sprite ;
 
 stage actor: tileset0  2 2 sx 2!  
@@ -133,6 +133,8 @@ mapedit:pump
 : (load-tileset)  0 tilebank  curTileset$ count 16 16 loadtileset ;
 : (load-palette)  curPalette$ count palette load-image ;
 
+s" dev\mapedit\smoothfbx.png" palette load-image 
+
 nr
 s" save" button
 nr
@@ -171,7 +173,9 @@ nr s" Resize viewport: <w> <h> map0 's w 2! " label
 nr
 
 : save  save-tileset save-tilemap ;
-: empty  save empty ;
+: empty  curTileset$ @ if save-tileset then
+         curTilemap$ @ if save-tilemap then
+         empty ;
 
 page
 repl off
