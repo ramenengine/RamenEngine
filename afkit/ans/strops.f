@@ -14,8 +14,7 @@ variable >out
   >out @ $outbufs + count
   >out @ 256 + 16383 and >out !
   >s @ 256 - 16383 and >s ! ;
-create zbuf 65537 allot
-: zstring  ( addr c - zaddr )   zbuf zplace  zbuf ;
+: zstring  ( addr c - zaddr )   s[ ]s over + 0 swap c! ;
 : addchar  ( c adr - )   dup >r  count + c!  1 r> c+! ;
 : uncount  ( adr c - adr-1 )   drop 1 - ;
 : strjoin  ( first c second c - first+second c )   2swap s[ +s ]s ;
