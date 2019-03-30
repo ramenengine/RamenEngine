@@ -90,6 +90,9 @@ previous
 : ?-converse me -exit state @ ?exit me >class -converse ;
 
 : as  ( obj - )
+    [defined] dev [if]
+        dup valid? 0= abort" Illegal object address"
+    [then]
     ( ?-converse )
     dup to me  >class >offsetTable to offsetTable
     ( ?converse )
@@ -216,7 +219,7 @@ previous
 ;
 
 : destruct  ( object - )
-    { me >class class.destructor @ execute } ;
+    dup { >class class.destructor @ execute } ;
 
 : destroy  ( object - )
     dup destruct
