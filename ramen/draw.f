@@ -10,7 +10,7 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : 8>p  s>f 255e f/ f>p ;
 : createcolor create rot 8>p , swap 8>p , 8>p , 1 , does> 3@ 3af fore 3! 1 alpha ;
 hex
-00 00 00 createcolor black 69 71 75 createcolor dgrey
+00 00 00 createcolor black 39 41 45 createcolor dgrey
 9d 9d 9d createcolor grey cc cc cc createcolor lgrey
 ff ff ff createcolor white f8 e0 a0 createcolor beige
 e0 68 fb createcolor pink ce 26 33 createcolor red

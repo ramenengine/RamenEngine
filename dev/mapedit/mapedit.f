@@ -10,9 +10,9 @@ nativewh resolution
 ld apptools
 0 tilebank
 
-create curTilemap$  256 /allot   s" dev/mapedit/zelda.buf" curTilemap$ place
-create curTileset$  256 /allot  s" dev/mapedit/overworld-tiles.png" curTileset$ place
-create curPalette$  256 /allot  s" dev/mapedit/NES_palette.png" curPalette$ place
+create curTilemap$  256 /allot
+create curTileset$  256 /allot
+create curPalette$  256 /allot
 variable curTile  1 curtile !
 create palette  %image sizeof /allot
 create curColor 1e sf, 1e sf, 1e sf, 1e sf,
@@ -35,10 +35,10 @@ mapedit:show
 : outline  w 2@ sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect ;
 
 stage actor: map0   /tilemap  256 256 w 2!  2 2 sx 2!  16 16 x 2!
-    :now draw>  me transform>  0 0 at  tilemap ;
+    :now draw>  outline  me transform>  tilemap  ;
 
 stage actor: tile0  16 16 sx 2!  16 16 w 2!
-    :now  draw>  map0 below  outline  me transform>  0 0 at  curTile @ tile  ;
+    :now  draw>  map0 below  outline  me transform>  curTile @ tile  ;
 
 stage actor: color0  256 16 w 2!
     :now  draw>  tile0 below  @color  w 2@ rectf  outline ;
@@ -47,7 +47,9 @@ stage actor: palette0  1.5 1.5 sx 2!  palette img !
     :now  draw> palette imagewh w 2!  color0 below  sprite ;
 
 stage actor: tileset0  2 2 sx 2!  
-    :now  draw>  map0 beside  tb img !  img @ imagewh w 2!  0 0 tb imagewh 0 bsprite ;
+    :noname  draw>  map0 beside  tb img !  img @ imagewh w 2!
+                 0 0 tb imagewh 0 bsprite
+                 outline ; execute
 
 stage actor: hilite0  
     :noname draw>  curTile @ -exit
@@ -159,24 +161,14 @@ nr
 s" Palette" label
 option: load-palette  curPalette$ image-formats osopen if (load-palette) then ;
 
+nr s" <space> + LB = Pan" label
+nr s" cursor keys = Pan (shift = by screens)" label
+nr s" RB = Eyedropper" label
+nr s" <ctrl> + <s> = Save" label
+nr s" <ctrl> + <c> / <v> = Copy/Paste" label
+nr s" <e> = Select tile 0 / transparent" label
+nr s" Resize viewport: <w> <h> map0 's w 2! " label
 nr
-s" <space> + LB = Pan" label
-nr
-s" cursor keys = Pan (shift = by screens)" label
-nr
-s" RB = Eyedropper" label
-nr
-s" <ctrl> + <s> = Save" label
-nr
-s" <ctrl> + <c> / <v> = Copy/Paste" label
-nr
-s" <e> = Select tile 0 / transparent" label
-nr
-s" Resize viewport: <w> <h> map0 's w 2! " label
-nr
-(load-tileset)
-(load-tilemap)
-(load-palette)
 
 : save  save-tileset save-tilemap ;
 : empty  save empty ;
