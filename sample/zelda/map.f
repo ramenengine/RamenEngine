@@ -11,7 +11,7 @@
 defer enemyimage  ' 2drop is enemyimage
 create enemy-handlers  0 , ' enemyimage , 0 ,
 : *enemies
-    {
+    me {
 \        s" overworld-rooms.tmx" >data open-map
 \        s" Enemy Locations" find-objgroup enemy-handlers load-objects
     }
