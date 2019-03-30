@@ -7,7 +7,7 @@ depend ramen/lib/array2d.f
 0 value floor?
 0 value ceiling?
 
-[undefined] tstep [if] create tstep 16 , 16 , [then]
+[undefined] tstep@ [if] : tstep@ 16 16 ; [then]
 
 extend: _actor
     var mbw  var mbh   \ object collision box width,height
@@ -36,7 +36,7 @@ define collisioning
     : vector   create 0 , here 0 , constant ;
     vector nx ny
     
-    : gap  tstep @ ;  \ just square tiles supported for now
+    : gap  ( - n ) tstep@ drop ;  \ just square tiles supported for now
     
     : px x @ ;
     : py y @ ;

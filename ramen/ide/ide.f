@@ -235,7 +235,7 @@ create ide-personality
     showerr  if  ." SHOWERR "  then
     steperr  if  ." STEPERR "  then ;
 
-: +blinker repl? -exit  now 16 and -exit  s[ [char] _ c+s ]s ;
+: +blinker repl? -exit  now 16 and -exit  s[ [char] _ +c ]s ;
 : .cmdbuf  #0 attribute  consolas fnt !  white  cmdbuf count +blinker type ;
 : bar      displayw  displayh #rows   fh * -  dblue  fillrect ;
 : ?trans   repl? if 1 alpha else 0.8 alpha then ;
@@ -273,15 +273,16 @@ create ide-personality
 \ --------------------------------------------------------------------------------------------------
 \ bring it all together
 
-: /ide  >ide  /output  1 1 1 1 cursor colour 4!  ( /margins ) ;  \ don't remove the >IDE; fixes a bug
+: /ide  >host  /output  1 1 1 1 cursor colour 4!  ( /margins ) ;  \ don't remove the >host; fixes a bug
 : /repl
     /s   \ clear the stack
     repl on
-    ['] >display is >ide               \ >IDE is redefined to take us to the display
-    >ide
+\    ['] >display is >host               \ >host is redefined to take us to the display
+ \   >host
+    >display
     ide-personality open-personality
 ;
-: shade  black 0.15 alpha  0 0 at  displaywh rectf  white ;
+: shade  dgrey 0.5 alpha  0 0 at  displaywh rectf  white ;
 : ?rest
     source-id close-file drop
     [in-platform] sf [if]  begin refill while interpret repeat  [then] ; 

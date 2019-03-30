@@ -85,7 +85,8 @@ _actor prototype as
 \ if there's no animation, you can pack the flip info into the index. (lower 2 bits)
 \ IMG must be subdivided and/or it must have a region table. (region table takes precedence.)
 \ if neither, then the whole IMG will be drawn
-: nsprite  ( index - )   
+: nsprite  ( index - )
+    img @ >bmp 0= if drop ;then
     anm @ if spr ! frame@ then
     ?regorg >region curflip bsprite ;
 
@@ -97,7 +98,7 @@ _actor prototype as
 ;
  
 : sprite  ( - )  \ draw sprite and advance the animation if any
-    frame@ nsprite anmspd @ +frame ;
+    frame@ nsprite  anmspd @ +frame ;
 
 \ Play an animation from the beginning, using its settings
 : animate  ( anim - )

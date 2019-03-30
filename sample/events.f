@@ -7,7 +7,7 @@ create args 100 stack,
     :noname listeners push ; 
 
 : (dispatch)  ( event c xt - event c )
-    sp@ >r { execute } r> sp! drop ;
+    sp@ >r me { execute } r> sp! drop ;
 
 : +args  ( ... #params - )
     dup >r args pushes r> args push ;

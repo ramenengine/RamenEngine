@@ -15,7 +15,7 @@ _actor prototype as
 : -vel    0 0 vx 2! ;
 : /clipsprite  x 2@ clipx 2!  draw> clipx 2@ cx 2@ 2- 16 16 clip> sprite ;
 : ipos  x 2@ ihb xy@ 2+ ;
-: toward  ( obj - x y )  >{ ipos } ipos 2- angle uvec ;
+: toward  ( obj - x y )  { ipos } ipos 2- angle uvec ;
 : !startxy x 2@ startx 2! ;
 : bit#  ( bitmask - n )  #1 32 for 2dup and if 2drop i unloop ;then 1 << loop 2drop -1 ;
 
@@ -26,7 +26,7 @@ _actor prototype as
 : hit?  ( attributes - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     flags @ and 0= if 0 ;then
     me you = if 0 ;then
-    ibox you >{ ibox } overlap? ;
+    ibox you { ibox } overlap? ;
 : draw-ibox  ibox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 :slang on-top  act> me stage push ;
 : show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;

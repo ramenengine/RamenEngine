@@ -5,5 +5,3 @@
     function: al_get_x_window_id ( display -- id )
     function: al_x_set_initial_icon ( bitmap -- bool )
 [then]
-
-function: al_show_native_message_box ( ALLEGRO_DISPLAY-*display, char-const-*title, char-const-*heading, char-const-*text, char-const-*buttons, int-flags -- )

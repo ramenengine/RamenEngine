@@ -10,7 +10,7 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 : 8>p  s>f 255e f/ f>p ;
 : createcolor create rot 8>p , swap 8>p , 8>p , 1 , does> 3@ 3af fore 3! 1 alpha ;
 hex
-00 00 00 createcolor black 69 71 75 createcolor dgrey
+00 00 00 createcolor black 39 41 45 createcolor dgrey
 9d 9d 9d createcolor grey cc cc cc createcolor lgrey
 ff ff ff createcolor white f8 e0 a0 createcolor beige
 e0 68 fb createcolor pink ce 26 33 createcolor red
@@ -28,14 +28,15 @@ fixed
 
 
 \ Bitmaps, backbuffer
+: *bmp  ( w h - bmp ) 2i al_create_bitmap ;
 : onto>  ( bmp - <code> )
     r>  al_get_target_bitmap >r  at@ 2>r
-        swap  onto call
+        swap  onto  0 0 at  call
     2r> at  r> al_set_target_bitmap ;
-: movebmp  ( src sx sy w h )  write-src BLEND>  destxy 2af 0 al_draw_bitmap ;
-: clearbmp  ( r g b a bmp )  onto>  4af al_clear_to_color ;
+: movebmp  ( src sx sy w h )  write-src BLEND>  4af  destxy 2af   0 al_draw_bitmap_region ;
 : backbuf  display al_get_backbuffer ;
 : backdrop  fore 4@ al_clear_to_color  white  0 0 at ;
+: drench  ( bmp )  onto>  backdrop ;
 
 
 
@@ -133,7 +134,7 @@ previous
 transform: p
 : 2d
     p al_identity_transform
-    p 0 0 -16384 3af viewwh globalscale dup 2* 16384 3af al_orthographic_transform
+    p 0 0 -16384 3af   displaywh 16384 3af   al_orthographic_transform
     p al_use_projection_transform    
     ALLEGRO_DEPTH_TEST #0 al_set_render_state
 ;

@@ -150,7 +150,7 @@ create graphics-types
 : collide?  ( - flag )  \ usage: <subject> as with ... <object> as <bitmask> hit?
     me you = if 0 ;then
     bitmask @ you 's flags @ and 0= if 0 ;then
-    ibox you >{ ibox } overlap? ;
+    ibox you { ibox } overlap? ;
 
 : interact  ( - )
     stage each> as  \ en @ -exit

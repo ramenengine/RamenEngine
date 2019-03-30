@@ -9,7 +9,7 @@ quest-var tempx  quest-var tempy
 quest-var maxbombs  8 maxbombs !
 quest-var maxpotions 1 maxpotions !
 
-tilebuf 0 0 16 16 section2d: roombuf 
+tilebuf 0 0 32 32 section2d: roombuf 
 
 0 value world          \ pointer to a _world
 

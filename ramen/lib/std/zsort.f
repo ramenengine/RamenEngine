@@ -22,8 +22,8 @@ using internal
                 drawem
     r> reclaim ;
 : draws ( objlist - )
-    dup 's zsort @ 0= if draws ;then
-    zdraws ;
+    dup 's zsort @ if zdraws ;then
+    draws ;
 
 previous
 stage 's zsort on

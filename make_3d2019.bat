@@ -1,1 +1,0 @@
- ./ramen/make_sfwin.bat 3d2019 sample/3d2019/3d2019.f sample\3d2019

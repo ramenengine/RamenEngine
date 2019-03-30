@@ -38,8 +38,8 @@
 : ,"  [char] " parse string, ;
 : included  2dup cr ." [Include] " type included ;
 
-\ WITHIN? - lo and hi are inclusive
-: within? ( n lo hi - flag )  over - >r - r> #1 + u< ;
+\ lo and hi are inclusive
+: inrange ( n lo hi - flag )  over - >r - r> #1 + u< ;
 
 : ifill  ( addr count val - )  -rot  0 do  over !+  loop  2drop ;
 : ierase   0 ifill ;

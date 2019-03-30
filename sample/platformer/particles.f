@@ -34,4 +34,4 @@ _particle :+ +particles  particles each> as step fade ;
 _particle :- draw  fr 4@ fore 4! x 2@ at  pixel ;
 _particle :+ draw-particles  cam view> particles each> as draw ;
 
-particles as  :now  draw> { draw-particles } act> +particles ;
+particles as  :now  draw> me { draw-particles } act> +particles ;

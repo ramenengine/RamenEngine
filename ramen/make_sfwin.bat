@@ -20,7 +20,11 @@ if %3=="" (
 ) else (
     copy /y  %3\data\*.*  bin\%buildname%\data
 )
-copy  afkit\dep\allegro5\5.2.3\*.dll  bin\%buildname%
+
+@REM copy  afkit\dep\allegro5\5.2.3\*.dll  bin\%buildname%
+
+FOR /R afkit/dep %%x IN (*.dll) DO copy "%%x" bin\%buildname% /Y 
+FOR /R prg %%x IN (*.dll) DO copy "%%x" bin\%buildname% /Y 
 
 @REM Run SwiftForth to compile and export
 if %2=="" (

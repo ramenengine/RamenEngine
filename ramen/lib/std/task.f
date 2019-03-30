@@ -54,7 +54,7 @@ main to task
 : ?end   -exit end ;
 
 decimal
-    : *taskstack  { _taskstack dynamic me } ;
+    : *taskstack  me { _taskstack dynamic me } ;
     : ?stacks  (rs) @ ?exit  *taskstack (rs) ! ;
     : perform  ( n xt - )
         ?stacks  \ tasks don't allocate their return stacks until their first PERFORM
@@ -84,7 +84,7 @@ fixed
     dup
     sp@ main 's sp !
     rp@ main 's rp !
-    main >{
+    main {
         begin
             ['] pause catch if
                 cr ." A task crashed. Halting it."
@@ -106,7 +106,7 @@ fixed
 : task:free-node
     dup _actor is? not if  destroy ;then
     dup actor:free-node
-    >{ free-task }
+    { free-task }
 ;
 
 

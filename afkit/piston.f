@@ -5,7 +5,6 @@
 \  The loop has some common controls:
 \    ALT-F12 - break the loop
 \    ALT-F4 - quit the process
-\    ALT-ENTER - toggle fullscreen
 
 \ Values
 0 value now  \ in frames  ( read-only )
@@ -22,6 +21,11 @@
 0 value me    \ for Ramen
 0 value offsetTable
 
+\ Mouse
+create mouse 0 , 0 ,
+create (mouse) 0 , 0 ,
+create mickey 0 , 0 ,
+
 \ Flags
 variable eco   \ enable to save CPU (for repl/editors etc)
 variable oscursor   oscursor on  \ turn off to hide the OS's mouse cursor
@@ -35,13 +39,16 @@ defer repl?     :noname  0 ; is repl?
 \ Event stuff
 create evt  256 /allot
 : etype  ( - ALLEGRO_EVENT_TYPE )  evt ALLEGRO_EVENT.TYPE @ ;
-z" AKFS" @ constant FULLSCREEN_EVENT
 
-: poll  ( - ) pollKB  pollJoys ;
+: !mickey  (mouse) 2@ mickey 2!  mouse 2@ (mouse) 2! ;
+: poll  ( - ) pollKB  pollJoys  !mickey ;
 : break ( - ) true to breaking? ;
 
 defer bye
-:make bye  al_uninstall_system  0 ExitProcess ; 
+
+:make bye
+    \ [defined] dev [if] s" empty" evaluate [then]
+    al_uninstall_system  0 ExitProcess ; 
 
 define internal
     transform: m1
@@ -64,16 +71,20 @@ using internal
     cliph sf@ f>s al_set_clipping_rectangle
 ;
 
+: mountw  ( - n ) res x@ #globalscale * ;
+: mounth  ( - n ) res y@ #globalscale * ;
+: mountwh ( - w h ) mountw mounth ;
+
+: mountx  ( - n ) displayw 2 / mountw 2 / - ;
+: mounty  ( - n ) repl @ if 0 else displayh 2 / mounth 2 / - then ;
+: mountxy ( - x y ) mountx mounty ;
+
+
 : mount  ( - )
     m1 al_identity_transform
     m1 #globalscale s>f 1sf dup al_scale_transform
     fs @ if
-        m1
-            nativew 2 / res x@ #globalscale * 2 / -  s>f 1sf
-            repl @ if 0 else 
-                nativeh 2 / res y@ #globalscale * 2 / -  s>f 1sf
-            then
-                al_translate_transform
+        m1 mountxy swap s>f s>f 2sf al_translate_transform
     then
     \ m1 0.625e 0.625e 2sf al_translate_transform
     m1 al_use_transform
@@ -96,7 +107,14 @@ using internal
 ;
 
 variable (catch)
-: try ( code - IOR ) dup -exit  sp@ cell+ >r  code> catch (catch) !  r> sp!  (catch) @ ;
+: try ( code - IOR )
+    dup -exit  
+    [defined] dev [if]
+        sp@ cell+ >r  code> catch (catch) !  r> sp!
+        (catch) @
+    [else] 
+        call 0 
+    [then] ;
 
 : suspend ( - ) 
     begin
@@ -109,15 +127,15 @@ variable (catch)
 ;
 
 : standard-events ( - )
-    etype ALLEGRO_EVENT_DISPLAY_RESIZE = if  display al_acknowledge_resize  then
-    etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  bye  then
-    [defined] dev [if]  etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  suspend  then  [then]
+    etype ALLEGRO_EVENT_DISPLAY_RESIZE = if  display al_acknowledge_resize  ;then
+    etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  bye  ;then
+    [defined] dev [if]  etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  suspend  ;then  [then]
     
     \ still needed in published games, don't remove
     etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if
         clearkb  false to alt?
-    then
-
+    ;then
+    
     etype ALLEGRO_EVENT_KEY_DOWN = if
         evt ALLEGRO_KEYBOARD_EVENT.keycode @ case
             <alt>    of  true to alt?  endof
@@ -126,11 +144,10 @@ variable (catch)
             <rctrl>  of  true to ctrl?  endof
             <lshift>  of  true to shift?  endof
             <rshift>  of  true to shift?  endof
-            <enter>  of  alt? -exit  fs @ not fs ! endof
             <f4>     of  alt? -exit  bye  endof
             <f12>    of  alt? -exit  break  endof  
         endcase
-    then
+    ;then
     etype ALLEGRO_EVENT_KEY_UP = if
         evt ALLEGRO_KEYBOARD_EVENT.keycode @ case
             <alt>    of  false to alt?  endof
@@ -140,90 +157,59 @@ variable (catch)
             <lshift>  of  false to shift?  endof
             <rshift>  of  false to shift?  endof
         endcase
-    then ;
-
-variable winx  variable winy
-: ?poswin ( - )   \ save/restore window position when toggling in and out of fullscreen
-    display al_get_display_flags ALLEGRO_FULLSCREEN_WINDOW and if
-        fs @ 0= if  r> call  display winx @ winy @ al_set_window_position  then
-    else
-        fs @ if     display winx winy al_get_window_position  then
-    then ;
+    ;then
+;
 
 : al-emit-user-event  ( type - )  \ EVT is expected to be filled, except for the type
     evt ALLEGRO_EVENT.type !  uesrc evt 0 al_emit_user_event ;
 
-0 value #lastscale
-variable newfs
-: 2s>f ( ix iy - f: x y ) swap s>f s>f ;
-: ?fs ( - )
-    ?poswin
-    fs @ newfs @ = ?exit
-    fs @ 0= if
-        #lastscale to #globalscale
-    then
-    
-    display ALLEGRO_FULLSCREEN_WINDOW fs @ #1 and al_set_display_flag 0= if
-        -display
-        fs @ 0= if
-            windowed +display
-        else
-            fullscreen +display
-        then
-    then
-    
-    fs @ newfs !
-    fs @ if
-        #globalscale to #lastscale
-        \ find biggest integer scaling that fits
-        nativewh 2s>f f/ 
-        res xy@ 2s>f f/ f> if
-            nativeh res y@ /
-        else
-            nativew res x@ /
-        then
-            4 min to #globalscale
-    then
-    FULLSCREEN_EVENT al-emit-user-event
-    
-    false to alt?
-;
+: ?hidemouse ( - )
+    display oscursor @ if al_show_mouse_cursor else al_hide_mouse_cursor then ; 
 
-: ?hidemouse  display oscursor @ if al_show_mouse_cursor else al_hide_mouse_cursor then ; 
+: 2s>f ( ix iy - f: x y ) swap s>f s>f ;
+: refit ( - )  \ find biggest integer scaling that fits display
+    displaywh 2s>f f/ 
+        res xy@ 2s>f f/ f> if
+        displayh res y@ /
+    else
+        displayw res x@ /
+    then
+    to #globalscale
+;
 
 : onto  ( bmp - )  dup display = if al_get_backbuffer then al_set_target_bitmap ;
 : ?greybg ( - ) fs @ -exit  display onto  unmount  0.1e 0.1e 0.1e 1e 4sf al_clear_to_color ;
 : show ( - )
+    refit  
     at@ 2>r  
         me >r  offsetTable >r
             ?greybg  mount  display onto
-            'show try (catch) !
+            'show try to showerr
             unmount  display onto  ?overlay
         r> to offsetTable  r> to me  
-    2r> at
-    (catch) @ ( ior ) throw ;
-: ?show ( - )  ['] show catch to showerr ;
+    2r> at ;
 : present ( - ) al_flip_display ;
 : ?suppress ( - ) repl? if clearkb then ;
 : step ( - )
     me >r  offsetTable >r  at@ 2>r
-    ?suppress  'step try  1 +to now
-    2r> at  r> to offsetTable  r> to me  throw ;
-: ?step  ( - )  ['] step catch to steperr ;
-: /go ( - ) resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
-: go/ ( - ) eventq al_flush_event_queue  >ide  false to breaking?  ;
+    ?suppress  'step try to steperr   1 +to now
+    2r> at  r> to offsetTable  r> to me ;
+: pump ( - ) repl? ?exit  'pump try to pumperr ;
+
+: /go ( - )  resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
+: go/ ( - )  eventq al_flush_event_queue  >host  false to breaking?  ;
 : show> ( - <code> ) r> to 'show ;  ( - <code> )  ( - )
 : step> ( - <code> ) r> to 'step ;  ( - <code> )  ( - )
 : pump> ( - <code> ) r> to 'pump ;  ( - <code> )  ( - )
 : get-next-event ( - ) eco @ if al_wait_for_event #1 else al_get_next_event then ;
 : @event ( - flag ) eventq evt get-next-event ;
-: pump ( - ) repl? ?exit  'pump try to pumperr ;
 : attend ( - )
     begin  @event  breaking? not and  while
-        me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me  ?system
+        me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me
+        ?system
         eco @ ?exit
     repeat ;
-: frame ( - ) ?show present attend poll ?step ?fs ?hidemouse ;
+: frame ( - ) show present attend poll step ?hidemouse ;
 : go ( - )   /go    begin  frame  breaking? until  go/ ;
 
 \ default demo: dark blue screen with bouncing white square

@@ -207,6 +207,7 @@ function: al_set_window_title ( display name -- )
 #define  ALLEGRO_EVENT_NATIVE_DIALOG_CLOSE   600
 
 linux-library liballegro_dialog
+function: al_init_native_dialog_addon ( -- bool )
 function: al_create_native_file_dialog ( char-const-*initial_path char-const-*title char-const-*patterns int-mode -- dialog )
 function: al_show_native_file_dialog ( ALLEGRO_DISPLAY-*display ALLEGRO_FILECHOOSER-*dialog -- bool )
 function: al_get_native_file_dialog_count ( const-ALLEGRO_FILECHOOSER-*dialog -- int )

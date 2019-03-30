@@ -3,4 +3,4 @@ stage actor: printer
 variable dialog  \ code
 
 : draw>dialog  draw>  dialog @ -exit  nes.ttf font>  dialog @ call ;
-: dialog>  r> dialog ! printer >{ draw>dialog } ; 
+: dialog>  r> dialog ! printer { draw>dialog } ; 

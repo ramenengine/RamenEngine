@@ -22,3 +22,10 @@
 : fps  fps 1p ;
 
 : gscale  globalscale dup 2* ;
+
+: mountx mountx 1p ;
+: mounty mounty 1p ;
+: mountxy mountxy 2p ;
+: mountw mountw 1p ;
+: mounth mounth 1p ;
+: mountwh mountwh 2p ;

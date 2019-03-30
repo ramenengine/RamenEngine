@@ -1,7 +1,7 @@
 exists ramen [if] \\ [then]
 true constant ramen
 include afkit/afkit.f  \ AllegroForthKit
-#1 #5 #8 [afkit] [checkver]
+#1 #6 #0 [afkit] [checkver]
 
 ( Low-level )
 0 value (count)
@@ -40,8 +40,7 @@ create ldr 256 /allot
 create project 256 /allot
 
 include ramen/publish.f  
-include ramen/draw.f     
-
+include ramen/draw.f
 include ramen/default.f
 
 : panic ( - ) step> noop ;
@@ -52,18 +51,25 @@ include ramen/default.f
     project count slashes 2drop ;  
 
 : .project  project count type ;
-: rld  ldr count nip -exit ldr count included ;
+
+variable ldl
+
 : ?project  project count nip ?exit  ldr count -filename project place ;
+
+: (included)  1 ldl +!  ['] included catch 
+            dup 0= if  -1 ldl +!  ?project  else  0 ldl !  then
+            throw ;
+
+: rld  ldr count nip -exit ldr count (included) ;
 
 : ld  ( -- <file> )
     bl parse s" .f" strjoin 2>r
         2r@ file-exists not if
             project count 2r> -path strjoin 2>r
         then
-        2r@ ['] included catch
-        2r@ ldr place
-            dup 0= if  ?project  then
-            throw 
+        ldl @ 0= if 2r@ ldr place then 
+        
+        2r@ (included)
     2r> 2drop ;
 
 : empty

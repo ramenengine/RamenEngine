@@ -1,7 +1,7 @@
-s" ---=== Zelda ===--- " label nr
-s" link0 as" button s" spawn" button nr 
-s" reload" button s" curtain-open" button nr
+s" ---=== Zelda ===--- " label
+: btn: bl parse button ;
+nr  btn: as  btn: spawn  btn: reload  btn: curtain-open
+nr  s" 0 0 from" button
+
+nr  btn: link0 
 : <ui  last @ ccount button ;
-\ : : : <ui ;
-\ : bit bit <ui ;
-\ : action action <ui ;

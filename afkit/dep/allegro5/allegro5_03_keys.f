@@ -38,16 +38,16 @@ decimal \ important
 #define <8>  35
 #define <9>  36
 
-#define <PAD_0>  37
-#define <PAD_1>  38
-#define <PAD_2>  39
-#define <PAD_3>  40
-#define <PAD_4>  41
-#define <PAD_5>  42
-#define <PAD_6>  43
-#define <PAD_7>  44
-#define <PAD_8>  45
-#define <PAD_9>  46
+#define <PAD0>  37
+#define <PAD1>  38
+#define <PAD2>  39
+#define <PAD3>  40
+#define <PAD4>  41
+#define <PAD5>  42
+#define <PAD6>  43
+#define <PAD7>  44
+#define <PAD8>  45
+#define <PAD9>  46
 
 #define <F1>  47
 #define <F2>  48

@@ -1,5 +1,5 @@
 include afkit/ans/version.f
-#1 #5 #9 [version] [afkit]
+#1 #6 #0 [version] [afkit]
 
 \ Load external libraries
 [undefined] EXTERNALS_LOADED [if]  \ ensure that external libs are only ever loaded once.
@@ -15,15 +15,6 @@ include afkit/ans/version.f
     include afkit/platforms.f
 
     true constant EXTERNALS_LOADED
-
-    [undefined] LIGHTWEIGHT [if]
-        cd afkit/ans/ffl
-            ffling +order
-                include ffl/dom.fs
-                include ffl/b64.fs
-            ffling -order
-        cd ../../..
-    [then]
 
     : empty  only forth definitions s" (empty) marker (empty)" evaluate ;
     marker (empty)
@@ -49,7 +40,7 @@ variable fs    \  enables fullscreen when on
 [undefined] initial-res [if]  : initial-res  640 480 ;  [then]
 [undefined] initial-pos [if]  : initial-pos  0 0 ;  [then]
 create res  initial-res swap , ,
-defer >ide
+defer >host
 _AL_MAX_JOYSTICK_STICKS constant MAX_STICKS
 create joysticks   MAX_STICKS /ALLEGRO_JOYSTICK_STATE * /allot
 16 cells constant /transform
@@ -68,22 +59,15 @@ create penx  0 ,  here 0 ,  constant peny
 \ Initializing Allegro and creating the display window
 
 : init-allegro-all
-  al_init
-    not if  s" Couldn't initialize Allegro." alert     -1 abort then
-  al_init_image_addon
-    not if  s" Allegro: Couldn't initialize image addon." alert      -1 abort then
-  al_init_primitives_addon
-    not if  s" Allegro: Couldn't initialize primitives addon." alert -1 abort then
-  al_init_font_addon
-    not if  s" Allegro: Couldn't initialize font addon." alert       -1 abort then
-  al_init_ttf_addon
-    not if  s" Allegro: Couldn't initialize TTF addon." alert       -1 abort then
-  al_install_mouse
-    not if  s" Allegro: Couldn't initialize mouse." alert            -1 abort then
-  al_install_keyboard
-    not if  s" Allegro: Couldn't initialize keyboard." alert         -1 abort then
-  al_install_joystick
-    not if  s" Allegro: Couldn't initialize joystick." alert         -1 abort then
+  al_init 0= abort" Couldn't initialize Allegro."  
+  al_init_image_addon 0= abort" Allegro: Couldn't initialize image addon." 
+  al_init_primitives_addon 0= abort" Allegro: Couldn't initialize primitives addon."
+  al_init_font_addon 0= abort" Allegro: Couldn't initialize font addon." 
+  al_init_ttf_addon 0= abort" Allegro: Couldn't initialize TTF addon."
+  al_install_mouse 0= abort" Allegro: Couldn't initialize mouse." 
+  al_install_keyboard 0= abort" Allegro: Couldn't initialize keyboard."
+  al_install_joystick 0= abort" Allegro: Couldn't initialize joystick."
+  al_init_native_dialog_addon 0= abort" Allegro: Couldn't initialize native dialogs."
 ;
 
 create native  /ALLEGRO_MONITOR_INFO /allot
@@ -92,20 +76,6 @@ create native  /ALLEGRO_MONITOR_INFO /allot
 : nativeh  ( - n ) nativewh nip ;
 
 \ ------------------------------------ initializing the display ------------------------------------
-
-: windowed
-    fs off
-    ALLEGRO_WINDOWED
-    ALLEGRO_RESIZABLE or
-    ALLEGRO_OPENGL or
-    al_set_new_display_flags ;
-windowed
-
-: fullscreen
-    fs on
-    ALLEGRO_FULLSCREEN_WINDOW
-    ALLEGRO_OPENGL or
-    al_set_new_display_flags ;
 
 : assertAllegro ( - ) 
     allegro? ?exit   true to allegro?  init-allegro-all
@@ -122,19 +92,20 @@ windowed
 : displaywh ( - w h ) displayw displayh ;
 
 : init-display  ( w h - )
-    locals| h w |
     assertAllegro
+    fs @ if 2drop nativewh then
+    locals| h w | 
 
     ALLEGRO_DEPTH_SIZE #24 ALLEGRO_SUGGEST  al_set_new_display_option
     ALLEGRO_VSYNC 1 ALLEGRO_SUGGEST  al_set_new_display_option
 
     [defined] dev [if]
-        fs @ if  0 0  else  initial-pos 40 +  then  al_set_new_window_position
+        fs @ 0= if  initial-pos 40 + al_set_new_window_position then  
         w h al_create_display  to display    
         fs @ 0= if   display initial-pos al_set_window_position  then
     [else]
         \ centered:
-        fs @ if  0 0 al_set_new_window_position  else  
+        fs @ 0= if
             nativew 2 / w 2 / - nativeh 2 / h 2 / - 40 - al_set_new_window_position
         then
         w h al_create_display  to display    
@@ -188,8 +159,7 @@ windowed
         display al_get_win_window_handle btf ;
 [then]
 
-:make >ide HWND btf ;
->ide
+:make >host HWND btf ;
 
 \ ----------------------------------------------- keyboard -----------------------------------------
 
@@ -236,7 +206,7 @@ transform: (identity)
 : hold>  ( - <code> )  1 al_hold_bitmap_drawing  r> call  0 al_hold_bitmap_drawing ;
 : loadbmp  ( adr c - bmp ) zstring al_load_bitmap ;
 : savebmp  ( bmp adr c - ) zstring swap al_save_bitmap 0= abort" Allegro: Error saving bitmap." ;
-: -bmp  ?dup -exit al_destroy_bitmap ;
+: -bmp  ( bmp - )  ?dup -exit al_destroy_bitmap ;
 
 create write-src  ALLEGRO_ADD , ALLEGRO_ONE   , ALLEGRO_ZERO          , ALLEGRO_ADD , ALLEGRO_ONE , ALLEGRO_ZERO , 
 create add-src    ALLEGRO_ADD , ALLEGRO_ALPHA , ALLEGRO_ONE           , ALLEGRO_ADD , ALLEGRO_ONE , ALLEGRO_ONE  , 
@@ -271,9 +241,31 @@ using internal
 : -state  ( - ) -1 >state +!  (state) al_restore_state ;
 previous
 
-windowed  +display 
+: windowed
+    fs off
+    ALLEGRO_WINDOWED
+    ALLEGRO_RESIZABLE or
+    ALLEGRO_OPENGL or
+    al_set_new_display_flags
+    +display ;
+
+: fullscreen
+    fs on
+    [defined] dev [if] ALLEGRO_FULLSCREEN_WINDOW [else] ALLEGRO_FULLSCREEN [then]
+    ALLEGRO_OPENGL or
+    al_set_new_display_flags
+    +display ;
+
+fullscreen
+
+( Misc )
+
+create (wd) #512 allot
+: zwd  ( - zadr )  al_get_current_directory zcount (wd) zplace  (wd) ;
+: cwd  ( adr c - flag )  (wd) zplace   (wd) al_change_directory 0<> ;
+
 \ --------------------------------------------------------------------------------------------------
 include afkit/piston.f
 \ --------------------------------------------------------------------------------------------------
 
->ide
+>host

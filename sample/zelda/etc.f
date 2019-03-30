@@ -5,7 +5,7 @@
     dup negate hp +! damaged !
     hp @ 0 <= if die ;then
     60 after> damaged off ;
-: in-playfield? ( - flag ) x 2@  -1 63 8 +  257 248  16 8 2- inside? ;
+: in-playfield? ( - flag ) x 2@  -1 63 8 +  257 248  16 8 2- within? ;
 : will-cross-grid? ( - f )
     x @ dup vx @ + 8 8 2/ 2i <>
     y @ dup vy @ + 8 8 2/ 2i <>
@@ -19,7 +19,7 @@
 
 ( tilemap collision stuff )
 create tileprops  s" tileprops.dat" >data file,
-:make tileprops@  >gid dup if 2 - 1i tileprops + c@ then ;
+:make tileprops@  $3ff000 and dup if 1 - 1i tileprops + c@ then ;
 :make on-tilemap-collide  onmaphit @ ?dup if >r then ; 
 : /solid   16 16 mbw 2! physics> tilebuf collide-tilemap ;
 

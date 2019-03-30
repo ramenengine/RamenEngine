@@ -12,5 +12,5 @@ ld item-assets
 : item[]  ( n - adr ) cells inventory + ;
 : get  ( qty role - ) role>type item[] +! ;
 : .item  ( obj - )  dup .type  ."  qty: " 's qty ? ;
-: pickup ( obj - ) >{ cr ." Picked up: " me .item  qty @ role @ get dismiss } ;
+: pickup ( obj - ) { cr ." Picked up: " me .item  qty @ role @ get dismiss } ;
 : have  ( role - n )  role>type item[] @ ;

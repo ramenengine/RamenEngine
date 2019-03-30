@@ -2,14 +2,17 @@
 [defined] wsing [if] \\ [then]
 
 #2 #0 #0 [version] [ws]
-#1 #5 #0 [ramen] [checkver]
+#2 #0 #0 [ramen] [checkver]
 
 only forth definitions
 
 create window  %rect sizeof /allot
 create hovered 32 stack,
-variable ui  ui on
-create mouse 0 , 0 ,
+variable ui  
+
+: mdelta  mouse 2@ mickey 2@ 2- ;
+
+ui on
 
 ( element class )
 0 node-class: _element
@@ -110,7 +113,7 @@ define wsing
     transform: r:m
     
     : relative>  ( object - <code> )
-        >{  r:m mfetch  r:m  pos@ [undefined] HD [if] 2pfloor [then] translate  r:m mpush }
+        {  r:m mfetch  r:m  pos@ [undefined] HD [if] 2pfloor [then] translate  r:m mpush }
         r> call
         mdrop ;
         
@@ -124,22 +127,22 @@ define wsing
     ;
     
     : (ui)  ( figure - )
-        /window  draw-window  margins xy@ at  dup relative>  each> as draw ;
+        /window  ( draw-window )  margins xy@ at  dup relative>  each> as draw ;
     
     \ --- interaction ---
     : ?hover  ( figure - )
         hovered vacate
         each> as
-            mouse xy@ pos@ me node.parent @ >{ pos@ } 2+ dims@ area inside? if
+            mouse xy@ pos@ me node.parent @ { pos@ } 2+ dims@ area within? if
                 me hovered push  
             then
     ;
     : click
         me
-        hovered >top @ >{
+        hovered >top @ {
             #boxed ?? if
                 #click attr or!
-                data@ } rot ( data count old-me ) as ['] evaluate catch ?.catch
+                data@ } rot ( data count old-me ) as evaluate
             ;then
             drop 
         } 
@@ -153,52 +156,64 @@ define wsing
 only forth definitions also wsing
 
 
-: window:up   figure >{ y @ rowh - y ! } ;
-: window:down figure >{ y @ rowh + 0 min y ! } ;
+: window:up   figure { y @ rowh - y ! } ;
+: window:down figure { y @ rowh + 0 min y ! } ;
 
-: ws:pageup   mouse xy@ window aabb@ inside? if window:down else ide:pageup then ;
-: ws:pagedown mouse xy@ window aabb@ inside? if window:up else ide:pagedown then ;
+: ws:pageup   mouse xy@ window aabb@ within? if window:down else ide:pageup then ;
+: ws:pagedown mouse xy@ window aabb@ within? if window:up else ide:pagedown then ;
 
 : ui-mouse
     etype ALLEGRO_EVENT_MOUSE_AXES = if
         evt ALLEGRO_MOUSE_EVENT.x 2@ 2p mouse xy!
-        { figure ?hover }
-        evt ALLEGRO_MOUSE_EVENT.dz @ 0 > if ws:pageup then
-        evt ALLEGRO_MOUSE_EVENT.dz @ 0 < if ws:pagedown then
-    then
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?click then
-    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if { unclick } then
+
+        me { figure ?hover }
+        repl @ if 
+            evt ALLEGRO_MOUSE_EVENT.dz @ 0 > if ws:pageup ;then
+            evt ALLEGRO_MOUSE_EVENT.dz @ 0 < if ws:pagedown ;then
+        then
+    ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?click ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if me { unclick } ;then
 ;
 
 : blank  ( figure )
-    vacate
-;
-: button  ( text c )  { figure *element data! #boxed attr ! } ;
-: label  ( text c )   { figure *element data! } ;
-: nr  { figure *element #newrow attr ! } ;  \ new row
+    vacate ;
+
+0 value lastel
+: named  lastel constant ;
+
+: /button  data! #boxed attr ! ;
+: /label   data! ;
+: button  ( text c )  me { figure *element me to lastel /button } ;
+: label  ( text c )   me { figure *element me to lastel /label } ;
+: nr  me { figure *element #newrow attr ! } ;  \ new row
 : drawui  consolas font>  unmount  figure (ui) ;
 
 : ?toggle-ui
     etype ALLEGRO_EVENT_KEY_DOWN = keycode <f10> = and if  ui @ not ui !  then
     etype ALLEGRO_EVENT_KEY_DOWN = keycode <f2> = and if
-        repl @ ui @ or if page repl off ui off else repl on ui on then
+        repl @ if page then 
+        repl @ ui @ or if repl off ui off else repl on ui on then
     then 
 ;
 : (system)   ide-system  ?toggle-ui  ui @ if ui-mouse then ;
 
 [defined] dev [if]
-    0 value ui:lasterr
     :make ?system
-        ['] (system) catch
-        dup if ui:lasterr 0= if cr ." GUI error." dup to ui:lasterr throw ;then then
-        to ui:lasterr
+        ['] (system) catch ?dup if cr ." GUI error." i. then
     ;
-    
+        
     :make ?overlay  ide-overlay  ui @ if drawui then  unmount ;
     
     :make free-node  destroy ;
     
-    : empty  hovered vacate  fs @ not if unclick then  figure blank  _element invalidate-pool  empty ;
+    : empty
+        hovered vacate
+        fs @ not if unclick then
+        figure blank
+        _element invalidate-pool
+        empty
+    ;
     
     oscursor on 
 [then]

@@ -1,0 +1,1 @@
+ ./ramen/make_sfwin.bat newyear sample/newyear/newyear.f sample\newyear

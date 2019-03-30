@@ -27,23 +27,14 @@ the following repositories will house the stable releases of each dependency fro
 * Basic sound support
 * Collections with [Venery](https://github.com/RogerLevy/venery)
 
-## See Ramen in Action
-
-Want to watch some videos? Here's footage of examples from Ramen's predecessor. They're being updated to work on Ramen.
-
-[https://www.youtube.com/playlist?list=PLO8m1cHe8erpbejS5yZVJAsQNI4Lmpo\_Y](https://www.youtube.com/playlist?list=PLO8m1cHe8erpbejS5yZVJAsQNI4Lmpo_Y)
-
-Also check out [The Lady](https://store.steampowered.com/app/341060/The_Lady/%20), a commercial game I wrote in Forth to prove it can be done. Large chunks of this game's engine live on in Ramen.
-
 ## Getting Started
 
 1. Download [SwiftForth](https://www.forth.com/swiftforth/). 
 1. After installation is complete, add SwiftForth's bin\ folder to your PATH.
-1. Download or clone [ramenExamples](https://github.com/RogerLevy/ramenExamples)
 1. Copy kitconfig.f to your drive's root folder and customize it if desired.
-1. Start start.bat or from the commandline type "sf include loader"
+1. Run ramen.bat
 
-Note: SwiftForth's evaluation version doesn't support creating executables, and therefore none of the make scripts will work.  Work on porting to VFX is underway.
+Note: SwiftForth's evaluation version doesn't support creating executables, therefore none of the make scripts will work.  Work on porting to GForth is underway.
 
 ## Help
 

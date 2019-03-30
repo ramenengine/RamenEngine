@@ -18,8 +18,6 @@
 : y+!  cell+ +! ;
 : vcopy  swap 2@ rot 2! ;
 : vclamp  ( lowx lowy highx highy vec - )  >r  2@ 2min 2max r> 2! ;
-: 0v  0 0 rot 2! ;
-: 1v  1 1 rot 2! ;
 : 2rnd  ( x y - x y )  rnd swap rnd swap ;
 : vrnd  >r  2rnd  r> 2! ;
 : uvec  ( deg - x y )   >r  r@ cos  r> sin ;  \ get unit vector from angle

@@ -6,7 +6,7 @@ create $buffers  16384 allot  \ string concatenation buffer stack (circular)
 variable >s                   \ pointer into $buffers
 : s[  ( adr c - )  >s @ 256 + 16383 and >s !  >s @ $buffers + place ;
 : +s  ( adr c - )  >s @ $buffers + append ;
-: c+s  ( c - )     >s @ $buffers + count + c!  1 >s @ $buffers + +! ;
+: +c  ( c - )     >s @ $buffers + count + c!  1 >s @ $buffers + +! ;
 create $outbufs  16384 allot \ output buffers; circular stack of buffers
 variable >out
 : ]s  ( - adr c )  \ fetch finished string
@@ -14,10 +14,8 @@ variable >out
   >out @ $outbufs + count
   >out @ 256 + 16383 and >out !
   >s @ 256 - 16383 and >s ! ;
-: tempbuf    >out @ $outbufs +   >out @ 256 + 16383 and >out ! ;
-create zbuf 1024 allot
-: zstring  ( addr c - zaddr )   zbuf zplace  zbuf ;
-\ : cappend  ( adr c - )   swap dup >r  count + c!  1 r> c+! ;
+: zstring  ( addr c - zaddr )   s[ ]s over + 0 swap c! ;
+: addchar  ( c adr - )   dup >r  count + c!  1 r> c+! ;
 : uncount  ( adr c - adr-1 )   drop 1 - ;
 : strjoin  ( first c second c - first+second c )   2swap s[ +s ]s ;
 \ : input  ( adr c - )   over 1 +  swap accept  swap  c! ;

@@ -1,3 +1,5 @@
+depend ramen/lib/std/tilemap2.f
+
 ( misc )
 : enum  dup constant 1 + ;
 : ztype zcount type ;
@@ -5,7 +7,7 @@
 : (those)  ( filter-xt code objlist - filter-xt code )
     each> as over execute if dup >r then ;
 : those>  ( filter-xt objlist - <code> )  ( - )  \ note you can't pass anything to <code>
-    r> { swap (those) 2drop } ;
+    r> me { swap (those) 2drop } ;
 : njump  ( n adr - ) 
     swap cells + @ execute ;
 : rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
@@ -61,14 +63,14 @@ extend: _actor
     var targetid 
 ;class
 
-: ?waste  target @ >{ ?id } ?dup if @ targetid @ <> ?end then ;
-: target!   dup target ! >{ ?id } ?dup if @ targetid ! then ;
+: ?waste  target @ { ?id } ?dup if @ targetid @ <> ?end then ;
+: target!   dup target ! { ?id } ?dup if @ targetid ! then ;
 : *task  me tasks one  target!  act> ?waste ;
-: (after)  perform> pauses (xt) @ target @ >{ execute } end ;
-: after  ( xt n - ) { *task swap (xt) ! (after) } ;
+: (after)  perform> pauses (xt) @ target @ { execute } end ;
+: after  ( xt n - ) me { *task swap (xt) ! (after) } ;
 : after>  ( n - <code> ) r> code> swap after ;
-: (every)  perform> begin (xt) @ target @ >{ execute } dup pauses again ;
-: every  ( xt n - ) { *task swap (xt) ! (every) } ;
+: (every)  perform> begin (xt) @ target @ { execute } dup pauses again ;
+: every  ( xt n - ) me { *task swap (xt) ! (every) } ;
 : every>  ( n - <code> ) r> code> swap every ;
 
 ( physics )
@@ -78,7 +80,7 @@ _actor fields:   var 'physics <adr \ code
 
 ( tilemap collision )
 _actor fields:  var onmaphit <word \ xt
-:make tileprops@  >gid 1.0 and 0<> ;
+:make tileprops@  $3ff000 and 1.0 and 0<> ;
 :make on-tilemap-collide  onmaphit @ execute ; 
 
 ( extend loop )

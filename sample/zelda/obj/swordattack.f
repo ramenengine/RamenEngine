@@ -12,6 +12,6 @@ type: swordattack
     : swordstab  spawn *swordattack ['] retract 7 after 9 live-for ;
     :listen
         s" player-swung-sword" occurred if
-            p1 { swordstab }
+            p1 me { swordstab }
         ;then   
     ;

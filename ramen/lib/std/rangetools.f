@@ -17,7 +17,7 @@
 
 \ find if 2 rectangles (x1,y1,x2,y2) and (x3,y3,x4,y4) overlap.
 : overlap? ( xyxy xyxy - flag )
-  2swap 2rot rot > -rot < and >r rot > -rot < and r> and ;
+  2swap 2rot rot >= -rot <= and >r rot >= -rot <= and r> and ;
 
-: inside?  ( xy xyxy - flag )  2>r 2>r 2dup 2r> 2r> overlap? ;
+: within?  ( xy xyxy - flag )  2>r 2>r 2dup 2r> 2r> overlap? ;
 

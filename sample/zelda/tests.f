@@ -31,5 +31,5 @@ include sample/zelda/loz.f
 \ note: Tiled stores positions with Y representing the BOTTOM of the object.
 \ we compensate by subtracting 16 from it.
 :make enemyimage ( node gid - )
-    2drop  at@ roombox inside? if roomxy 2negate 64 + 16 - +at *test then
+    2drop  at@ roombox within? if roomxy 2negate 64 + 16 - +at *test then
 ;

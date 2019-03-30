@@ -50,9 +50,9 @@ only forth definitions
 12 constant /FRAC
 $FFFFF000 constant INT_MASK
 $00000FFF constant FRAC_MASK
-\ 4096e fconstant FPGRAN
-\ #define FPGRAN 4096e
-: FPGRAN  s" 4096e" evaluate ; immediate
+\ 4096e fconstant FPRES
+\ #define FPRES 4096e
+: FPRES  s" 4096e" evaluate ; immediate
 4096  constant PGRAN
 $1000 constant 1.0
 1.0 negate constant -1.0
@@ -71,13 +71,13 @@ wordlist constant fixpointing
 ?: 2i  swap 1i swap 1i ;
 ?: 3i  rot 1i rot 1i rot 1i ;
 ?: 4i  2i 2swap 2i 2swap ;
-?: 1pf  s>f FPGRAN f/ ;
+?: 1pf  s>f FPRES f/ ;
 ?: 2pf  swap 1pf 1pf ;
 ?: pfloor  INT_MASK and ;
 ?: pceil   pfloor 1.0 + ;
 ?: 2pfloor  pfloor swap pfloor swap ;
 ?: 2pceil   pceil swap pceil swap ;
-?: f>p  FPGRAN f* f>s ;
+?: f>p  FPRES f* f>s ;
 ?: p*  1pf s>f f* f>s ;
 ?: p/  swap s>f 1pf f/ f>s ;
 ?: i.  base @ >r decimal . r> base ! ;
@@ -120,7 +120,7 @@ variable sign
   dup ?exit drop
   2dup >pfloat if
     2drop
-    FPGRAN f* (f>s) ['] literal
+    FPRES f* (f>s) ['] literal
     exit
   then
   0 ;

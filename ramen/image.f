@@ -28,8 +28,8 @@ asset: %image
 
 \ load-image  ( path c image - ) 
 \ free-image  ( image - )  
-: load-image  >r  zstring al_load_bitmap  r> init-image ;
 : free-image  image.bmp @ -bmp ;
+: load-image  dup free-image init-image ;
 
 \ Canvas (images without source files)
 
@@ -49,14 +49,13 @@ asset: %image
 \ subdivide  ( tilew tileh image - )  calculate subimage parameters
 \ subxy  ( n img - x y )  locate a subimg by index
 \ subxywh  ( n img - x y w h )  get full rect of subimage
-\ imgsubbmp  ( n img - subbmp )  create a sub-bitmap from a subimage
 : subdivide  
     >r  2dup r@ image.subw 2!  
     r@ imagewh  r@ image.subw 2@  2/ 2pfloor  r@ image.subcols 2!
     *  r> image.subcount ! ;
 : subxy  >r  pfloor  r@ image.subcols @  /mod  2pfloor  r> image.subw 2@ 2* ;
-: subxywh  dup >r  subxy r> image.subw 2@ ;
-: imgsubbmp  dup >bmp  -rot  subxywh 4i  al_create_sub_bitmap ;
+: subwh   image.subw 2@ ;
+: subxywh  dup >r  subxy r> subwh ;
 
 : tileset:  ( tilew tileh imagepath c - <name> )
     image: lastbody subdivide ;
