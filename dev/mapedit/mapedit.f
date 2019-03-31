@@ -10,57 +10,59 @@ nativewh resolution
 ld apptools
 0 tilebank
 
-create curTilemap$  256 /allot
-create curTileset$  256 /allot
-create curPalette$  256 /allot
+create tilemap$  256 /allot
+create tileset$  256 /allot
+create palette$  256 /allot
 variable curTile  1 curtile !
 create palette  %image sizeof /allot
 create curColor 1e sf, 1e sf, 1e sf, 1e sf,
-0 value cbbmp  \ clipboard bitmap
 
 : mapedit:show  show> ramenbg unmount stage draws ;
 mapedit:show
 
 : @color  curColor fore 4 cells move ;
 
-( clipboard )
+( tile clipboard )
+0 value cbbmp  \ clipboard bitmap
 : selection  ( - bmp x y w h )  curTile @ tile>rgn ;
 : cbbmp! cbbmp -bmp  to cbbmp ;
 : copy   tb subwh *bmp dup cbbmp!  onto> selection movebmp ;
 : paste  tb >bmp onto>  selection 2drop at ( bmp ) drop  cbbmp 0 0 third bmpwh movebmp ;
+
 
 ( layout )
 : beside  { y @   x @ w @ sx @ * + } 16 + x !   y ! ;
 : below   { x @   y @ h @ sy @ * + } 16 + y !   x ! ;
 : outline  w 2@ sx 2@ 2*  2dup  white rect  -1 -1 +at  2 2 2+ black rect ;
 
-stage actor: map0   /tilemap  256 256 w 2!  2 2 sx 2!  16 16 x 2!
-    :now draw>  outline  me transform>   w 2@ black 0.5 alpha rectf  tilemap ;
-
-stage actor: tile0  16 16 sx 2!  16 16 w 2!
-    :now  draw>  map0 below  outline  me transform>  curTile @ tile  ;
-
-stage actor: color0  256 16 w 2!
-    :now  draw>  outline  tile0 below  @color  1 1 +at  w 2@ rectf ;
-
-stage actor: palette0  24 24 sx 2!  palette img ! 
-    :now  draw> palette imagewh w 2!  color0 below  sprite ;
-
-stage actor: tileset0  2 2 sx 2!  
-    :noname  draw>  map0 beside  tb img !  img @ imagewh w 2!
+stage actor: tileseta  2 2 sx 2!  16 16 x 2!
+    :noname  draw>  tb img !  img @ imagewh w 2!
                  0 0 tb imagewh 0 bsprite
                  outline ; execute
 
-stage actor: hilite0  
+stage actor: mapa   /tilemap  256 256 w 2!  2 2 sx 2!  16 16 x 2!
+    :now  draw>  tileseta beside  outline  me transform>   w 2@ black 0.5 alpha rectf  tilemap ;
+
+stage actor: tilea  16 16 sx 2!  16 16 w 2!  
+    :now  draw>  mapa below  outline  me transform>  curTile @ tile  ;
+
+stage actor: colora  256 16 w 2!
+    :now  draw>  outline  tilea below  @color  1 1 +at  w 2@ rectf ;
+
+stage actor: pala  24 24 sx 2!  palette img ! 
+    :now  draw> palette imagewh w 2!  colora below  sprite ;
+
+
+stage actor: hilitea  
     :noname draw>  curTile @ -exit
-                tile0 { w 2@ }  tileset0 { sx 2@ }  2*  w 2!
-                tileset0 { curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+ }  x 2!
+                tilea { w 2@ }  tileseta { sx 2@ }  2*  w 2!
+                tileseta { curTile @ 1 - tb subxy sx 2@ 2*   x 2@ 2+ }  x 2!
                 outline ; execute
 
 : subcols  image.subcols @ ;
 
 : box  x 2@ w 2@ sx 2@ 2* aabb 1 1 2- ;
-: (tile)  map0 { curtile @ maus x 2@ 2- sx 2@ 2/ scrollx 2@ 2+ tb subwh 2/ tilebuf loc } ;
+: (tile)  mapa { curtile @ maus x 2@ 2- sx 2@ 2/ scrollx 2@ 2+ tb subwh 2/ tilebuf loc } ;
 : that   (tile) @ curtile ! ;
 : lay  (tile) ! ;
 : mpos  maus x 2@ 2- sx 2@ 2/ ;
@@ -68,21 +70,24 @@ stage actor: hilite0
 : crayon  curColor  img @ >bmp  mpos 2i  al_get_pixel ;
 : paint  selection 2drop rot onto> mpos 2+ 2i curColor 4@ al_put_pixel ;
 : eyedrop  curColor selection 2drop mpos 2+ 2i al_get_pixel ;
-: interact?  @ maus box within? and ;
+: hovering?  maus box within? ;
+: interact?  @ hovering? and ;
 : pan  mdelta globalscale dup 2/ sx 2@ 2/ 2negate scrollx 2+! ;
+
+ld stamp
 
 stage actor: ctl
 :noname act>
-    map0 as 
+    mapa as 
         <space> kstate lb @ and if  pan  ;then
         lb interact? if  lay  ;then
         rb interact? if  that   ;then
-    tile0 as 
+    tilea as 
         lb interact? if  paint  then
         rb interact? if  eyedrop  then
-    tileset0 as 
+    tileseta as 
         lb interact? if  pick  then
-    palette0 as 
+    pala as 
         lb interact? if  crayon  then
         rb interact? if  crayon  then
 ; execute
@@ -91,47 +96,32 @@ stage actor: ctl
     tb >r  tilebank  tb >bmp   r> to tb ;
 
 : save-tileset
-    curTileset$ @ 0= if  curTileset$ image-formats ossave -exit then
-    0 tilebankbmp curTileset$ count savebmp
+    tileset$ @ 0= if  tileset$ image-formats ossave -exit then
+    0 tilebankbmp tileset$ count savebmp
 ;
 
 : save-tilemap
-    curTilemap$ @ 0= if  curTilemap$ s" *.buf" ossave -exit then
-    tilebuf count2d curTilemap$ count file!
+    tilemap$ @ 0= if  tilemap$ s" *.buf" ossave -exit then
+    tilebuf count2d tilemap$ count file!
 ;
 
 : tw  tb subwh drop ;
 : th  tb subwh nip ;
 
-: sw  shift? if map0 's w @ else tw then ;
-: sh  shift? if map0 's h @ else th then ;
+: sw  shift? if mapa 's w @ else tw then ;
+: sh  shift? if mapa 's h @ else th then ;
 
-: snap  map0 {  scrollx 2@ 2dup sw sh 2mod 2- scrollx 2!  } ;
+: snap  mapa {  scrollx 2@ 2dup sw sh 2mod 2- scrollx 2!  } ;
 
 : ?eraser
-    map0 { maus box within? } if 0 curtile ! ;then
-    tile0 { maus box within? } if 0 0 0 0 4af curColor 4! ;then
+    mapa { hovering? } if 0 curtile ! ;then
+    tilea { hovering? } if 0 0 0 0 4af curColor 4! ;then
 ;
 
-: mapedit-events
-    etype ALLEGRO_EVENT_KEY_CHAR = if
-        keycode <s> = ctrl? and if  s" save" evaluate ;then
-        keycode <e> = if  ?eraser  ;then
-        keycode <c> = ctrl? and if  copy  ;then
-        keycode <v> = ctrl? and if  paste  ;then
-        keycode <up> = if     snap  sh negate map0 's scrolly +!  ;then
-        keycode <down> = if   snap  sh map0 's scrolly +!  ;then
-        keycode <left> = if   snap  sw negate map0 's scrollx +! ;then
-        keycode <right> = if  snap  sw map0 's scrollx +! ;then
-    then
-;
 
-: mapedit:pump  pump> app-events mapedit-events ;
-mapedit:pump
-
-: (load-tilemap)  curTilemap$ count 0 0 tilebuf loc 512 512 * cells @file ;
-: (load-tileset)  0 tilebank  curTileset$ count 16 16 loadtileset ;
-: (load-palette)  curPalette$ count palette load-image ;
+: (load-tilemap)  tilemap$ count 0 0 tilebuf loc 512 512 * cells @file ;
+: (load-tileset)  0 tilebank  tileset$ count 16 16 loadtileset ;
+: (load-palette)  palette$ count palette load-image ;
 
 s" dev\mapedit\smoothfbx.png" palette load-image 
 
@@ -150,18 +140,18 @@ option: fill-tile
 option: revert-tileset  (load-tileset) ;
 nr
 s" save-tileset" button
-option: new-tileset  16 16 256 1024 dimbank  curTileset$ off ; 
-option: load-tileset  curTileset$ image-formats osopen if (load-tileset) then ;
+option: new-tileset  16 16 256 1024 dimbank  tileset$ off ; 
+option: load-tileset  tileset$ image-formats osopen if (load-tileset) then ;
 nr
 s" Tilemap" label
 option: revert-tilemap  (load-tilemap) ;
 nr
 s" save-tilemap" button
-option: new-tilemap  tilebuf clear2d  curTilemap$ off ;
-option: load-tilemap  curTilemap$ s" *.buf" osopen if (load-tilemap) then ;
+option: new-tilemap  tilebuf clear2d  tilemap$ off ;
+option: load-tilemap  tilemap$ s" *.buf" osopen if (load-tilemap) then ;
 nr
 s" Palette" label
-option: load-palette  curPalette$ image-formats osopen if (load-palette) then ;
+option: load-palette  palette$ image-formats osopen if (load-palette) then ;
 
 nr s" <space> + LB = Pan" label
 nr s" cursor keys = Pan (shift = by screens)" label
@@ -169,13 +159,41 @@ nr s" RB = Eyedropper" label
 nr s" <ctrl> + <s> = Save" label
 nr s" <ctrl> + <c> / <v> = Copy/Paste" label
 nr s" <e> = Select tile 0 / transparent" label
-nr s" Resize viewport: <w> <h> map0 's w 2! " label
+nr s" Resize viewport: <w> <h> mapa 's w 2! " label
 nr
 
 : save  save-tileset save-tilemap ;
-: empty  curTileset$ @ if save-tileset then
-         curTilemap$ @ if save-tilemap then
+: empty  tileset$ @ if save-tileset then
+         tilemap$ @ if save-tilemap then
          empty ;
+
+: load
+    (load-palette) (load-tileset) (load-tilemap) ;
+
+: ?copy  
+    mapa { hovering? } if stampify ;then
+    copy ;
+    
+: ?paste
+    mapa { hovering? } if stamp ;then
+    paste ;
+
+: mapedit-events
+    etype ALLEGRO_EVENT_KEY_CHAR = if
+        keycode <s> = ctrl? and if  s" save" evaluate ;then
+        keycode <e> = if  ?eraser  ;then
+        keycode <c> = ctrl? and if  ?copy  ;then
+        keycode <v> = ctrl? and if  ?paste  ;then
+        keycode <del> = if  clear-tile  ;then
+        keycode <up> = if     snap  sh negate mapa 's scrolly +!  ;then
+        keycode <down> = if   snap  sh mapa 's scrolly +!  ;then
+        keycode <left> = if   snap  sw negate mapa 's scrollx +! ;then
+        keycode <right> = if  snap  sw mapa 's scrollx +! ;then
+    then
+;
+
+: mapedit:pump  pump> app-events mapedit-events ;
+mapedit:pump
 
 page
 repl off
