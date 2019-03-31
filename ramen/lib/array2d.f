@@ -30,9 +30,6 @@ struct %array2d
 : array2d:  ( numcols numrows - <name> )
     create array2d, ;
 
-: count2d ( array2d - data size )
-    dup array2d.data @ swap array2d.cols 2@ * cells ;
-
 : dims  ( array2d - numcols numrows )
     array2d.cols 2@ ;
 
@@ -43,46 +40,50 @@ struct %array2d
 : (clamp)  ( col row array2d - col row array2d  )
     >r  2pfloor  0 0 r@ array2d.cols 2@ 2clamp  r> ;
 
+: ?ref
+  dup array2d.ref @ ?dup if nip then ;
+  
+: >data
+  ?ref array2d.data @ ;
+
+: pitch@
+  ?ref array2d.pitch @ ;
+
+: colrow+
+  array2d.col 2@ 2+ ;
+
 : loc  ( col row array2d - adr )
-    (clamp) >r  r@ array2d.pitch @ * swap cells +  r> array2d.data @ + ;
+    (clamp) >r  r@ colrow+  r@ pitch@ * swap cells +  r> >data + ;
 
-: /section2d  ( section2d - )
-    locals| a |
-    a array2d.col 2@ a array2d.ref @ loc a array2d.data !
-    a array2d.ref @ array2d.pitch @ a array2d.pitch ! ;
-
-: (section2d)  ( loadtrig - )
-    loadtrig-size + @ /section2d ;
+: count2d ( array2d - data size )
+    dup >data swap array2d.cols 2@ * cells ;
 
 : section2d:  ( array2d col row #cols #rows - <name> )
-    ['] (section2d) +loadtrig  here 0 , 
-    create here swap !  array2d-head,  lastbody array2d.ref 3!
-    lastbody /section2d ; 
-
-: pitch@  ( array2d - pitch )
-    array2d.pitch @ ;
+    create array2d-head,  lastbody array2d.ref 3! ;
 
 : adr-pitch  ( col row array2d - adr /pitch )
     dup >r loc r> pitch@ ;
 
-: each2d  ( ... col row #cols #rows XT array2d - ... )  ( ... adr #cells - ... )
+: eachrow  ( ... col row #cols #rows XT array2d - ... )  ( ... adr #cells - ... )
     swap  >r >r  r@ dims clip   2swap r> adr-pitch
     r>  locals| xt pitch src #rows #cols |
     #rows 0 do  src #cols xt execute  pitch +to src  loop ;
     
-: each2d>  r> code> each2d ;
+: eachrow>  ( ... col row #cols #rows array2d - ... )  ( ... adr #cells - ... )
+    r> code> swap eachrow ;
 
-:noname  third ifill ;
-: fill2d  ( val col row #cols #rows array2d - )  literal each2d  drop ;
+: fill2d  ( val col row #cols #rows array2d - )
+    eachrow> third ifill ;
 
-: clear2d  >r 0 0 0 r@ dims r> fill2d ;
+: clear2d  ( array2d - )
+    >r 0 0 0 r@ dims r> fill2d ;
 
-:noname  cr  cells bounds do  i @ h.  cell +loop ;
-: 2d.  >r 0 0 r@ dims 16 16 2min  r> literal each2d  ;
+: 2d.  >r 0 0 r@ dims 16 16 2min  r>
+    eachrow> cr  cells bounds do  i @ h.  cell +loop ;
 
-: put2d  ( src-array2d dest-array2d col row - )  \ no clipping
+: put2d  ( src-array2d dest-array2d col row - )  \ uses SRCRECT ; no clipping
     rot adr-pitch 2>r
-    srcrect xy@ rot adr-pitch 2r> ( adr pitch adr pitch )
+    srcrect xy@ rot adr-pitch 2r> ( adr pitch adr pitch ) 
     srcrect wh@ >r cells r> 2move ;
 
 
