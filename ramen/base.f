@@ -43,8 +43,8 @@ include ramen/publish.f
 include ramen/draw.f
 include ramen/default.f
 
-: panic ( - ) step> noop ;
-: void ( - ) panic show> ramenbg ;
+: stop ( - ) step> noop ;
+: void ( - ) stop show> ramenbg ;
 
 : project:  ( -- <path> )
     bl parse project place  s" /" project append
