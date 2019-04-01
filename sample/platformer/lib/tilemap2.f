@@ -1,7 +1,7 @@
 ( ---=== Tilemap rendering and objects ===--- )
 
-depend ramen/lib/array2d.f
-depend ramen/lib/buffer2d.f
+depend sample/platformer/lib/array2d.f
+depend sample/platformer/lib/buffer2d.f
 
 512 512 buffer2d: tilebuf
 8 stack: tilebanks
@@ -130,4 +130,4 @@ extend: _actor
 \         scrollx 2@ tilebuf loc  tilebuf pitch@  w 2@ isotilemap ;
 
 \ Tilemap collision
-include ramen/lib/std/collision.f
+depend sample/platformer/lib/collision.f

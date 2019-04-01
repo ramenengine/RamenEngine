@@ -1,4 +1,4 @@
-depend ramen/lib/std/tilemap2.f
+depend sample/platformer/lib/tilemap2.f
 
 ( misc )
 : enum  dup constant 1 + ;

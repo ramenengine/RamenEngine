@@ -1,4 +1,4 @@
-depend ramen/lib/array2d.f
+depend sample/platformer/lib/array2d.f
 
 decimal  \ necessary because tilemaps can be quite large
 : init-buffer2d  ( array2d - )

@@ -116,5 +116,5 @@ objlist: stage  \ default object list
 
 : .objlist  ( objlist - )
     dup length 1i i. each>
-        {  cr me h. ." ID: " id ?  ."  X/Y: " x 2?  } ;
+        {  cr me h. ." ID: " id ?  ."  X/Y: " x 2@ 2.  } ;
 

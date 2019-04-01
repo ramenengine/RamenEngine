@@ -1,5 +1,5 @@
 ( Simple tilemap collision )
-depend ramen/lib/array2d.f
+depend sample/platformer/lib/array2d.f
 
 ( what sides the object collided )
 0 value lwall?
