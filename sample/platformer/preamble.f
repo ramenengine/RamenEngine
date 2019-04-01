@@ -5,7 +5,6 @@ include ramen/lib/std/tilemap2.f
 ( misc )
 depend afkit/ans/param-enclosures.f
 depend sample/tools.f
-depend sample/events.f
 
 create startxy 0 , 0 ,
 stage actor: cam
