@@ -192,7 +192,7 @@ only forth definitions also wsing
 : ?toggle-ui
     etype ALLEGRO_EVENT_KEY_DOWN = keycode <f10> = and if  ui @ not ui !  then
     etype ALLEGRO_EVENT_KEY_DOWN = keycode <f2> = and if
-        repl @ if page then 
+        page
         repl @ ui @ or if repl off ui off else repl on ui on then
     then 
 ;
