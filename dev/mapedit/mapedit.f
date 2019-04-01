@@ -18,7 +18,6 @@ create palette  %image sizeof /allot
 create curColor 1e sf, 1e sf, 1e sf, 1e sf,
 
 : mapedit:show  show> ramenbg unmount stage draws ;
-mapedit:show
 
 : @color  curColor fore 4 cells move ;
 
@@ -125,6 +124,13 @@ stage actor: ctl
 
 s" dev\mapedit\smoothfbx.png" palette load-image 
 
+also wsing
+    s" Test" label named test
+    : (p.)  1pf #2 (f.) ;
+    stage one
+    :now act> mapa 's scrollx 2@ swap (p.) s[ (p.) +s ]s test { data! } ;    
+previous
+
 nr
 s" save" button
 nr
@@ -162,7 +168,7 @@ nr s" <e> = Select tile 0 / transparent" label
 nr s" Resize viewport: <w> <h> mapa 's w 2! " label
 nr
 
-: save  save-tileset save-tilemap ;
+: save  save-tileset save-tilemap  cr ." Saved." ;
 : empty  tileset$ @ if save-tileset then
          tilemap$ @ if save-tilemap then
          empty ;
@@ -193,7 +199,12 @@ nr
 ;
 
 : mapedit:pump  pump> app-events mapedit-events ;
-mapedit:pump
 
-page
-repl off
+: mapedit
+    page
+    repl off
+    mapedit:pump
+    mapedit:show
+;
+mapedit
+

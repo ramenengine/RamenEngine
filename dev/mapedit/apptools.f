@@ -17,13 +17,6 @@ stage one :now act> ui on ;  \ workspace always on
 
 : maus   mouse 2@ globalscale dup 2/ ;
 
-also wsing
-    s" Test" label named mauser
-    : (p.)  1pf #2 (f.) ;
-    stage one
-    :now act> maus swap (p.) s[ (p.) +s ]s mauser { data! } ;    
-previous
-
 : (dialog)
         al_create_native_file_dialog
         display over al_show_native_file_dialog if
