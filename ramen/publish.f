@@ -8,8 +8,7 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
 
 : boot
     false to allegro?
-    #3 to #globalscale
-    fs @ if fullscreen else windowed then
+    fullscreen
     al-default-font default-font font.fnt !
     project off
     oscursor off

@@ -176,7 +176,7 @@ variable (catch)
 ;
 
 : onto  ( bmp - )  dup display = if al_get_backbuffer then al_set_target_bitmap ;
-: ?greybg ( - ) fs @ -exit  display onto  unmount  0.1e 0.1e 0.1e 1e 4sf al_clear_to_color ;
+: ?greybg ( - )  display onto  unmount  0.1e 0.1e 0.1e 1e 4sf al_clear_to_color ;
 : show ( - )
     refit  
     at@ 2>r  
