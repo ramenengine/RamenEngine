@@ -2,7 +2,7 @@
 
 \ [x] - Classed objects
 \ [x] - Prototypes
-\ [x] - Two kinds of allocation - dictionary (static) and heap (dynamic)
+\ [x] - Two kinds of allocation - static and dynamic
 \ [x] - Smart fields - different classes' fields can reuse names and you can check for field ownership on a class basis.
 \ [x] - Private words
 \ [x] - Constructors and destructors

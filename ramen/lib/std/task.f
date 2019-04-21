@@ -10,6 +10,8 @@
 
 0 value task  \ current task
 
+fixed
+
 extend: _actor
     var sp <adr  64 cells field ds <skip
     var rp <adr  var (rs) <adr
@@ -47,7 +49,7 @@ main to task
 ;
 : pauses  ( n - ) for  pause  loop ;
 : seconds  ( n - n ) fps * ;  \ not meant for precision timing
-: dally  ( n - ) seconds pauses ;
+: delay  ( n - ) seconds pauses ;
 : running?     sp@ ds >= sp@ dtop < and ;
 : halt   (task) off  running? if pause then ;
 : end    dismiss halt ;

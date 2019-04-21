@@ -75,7 +75,7 @@ objlist: stage  \ default object list
 ( actions )
 : is-action?  field.attributes @ ;
 
-: action   ( - <name> ) ( ??? - ??? )
+: action:   ( - <name> ) ( ??? - ??? )
     _role fields:
     cell ?superfield <adr ( flag ) 
     true lastField field.attributes ! 
