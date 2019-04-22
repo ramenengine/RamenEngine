@@ -16,9 +16,9 @@ depend sample/platformer/lib/tilemap2.f
 : sf@+  dup sf@ cell+ ;
 : tinted   fore sf@+ f>p swap sf@+ f>p swap sf@+ f>p swap sf@+ f>p nip tint 4! ;
 : /sprite  draw> sprite ;
-: *sprite   ( image ) stage one tinted img ! /sprite ;
+: *sprite   ( image - obj ) stage one { tinted img ! /sprite me } ;
 : csprite  img @ imagewh 0.5 0.5 2* cx 2!  sprite ;
-: *csprite  ( image ) stage one tinted img ! draw> csprite ;
+: *csprite  ( image - obj ) stage one { tinted img ! draw> csprite me } ;
 : >data  project count s" data/" strjoin 2swap strjoin ;  \ prepend assets with data path
 : hide  's hidden on ;
 : reveal  's hidden off ;

@@ -31,7 +31,7 @@ _node sizeof 0 class: _tween
 
 define tweening
 
-    : dismiss  me dup >parent remove ;
+    : dismiss  dup >parent remove ;
 
     : store  ( val - ) dest @ ! ; \ storer @ execute ;
 
@@ -49,10 +49,10 @@ define tweening
 
     : +tween  ( - )
         now starttime @ < ?exit
-        orphaned? if dismiss ;then
+        orphaned? if me dismiss ;then
         startval @  delta @  now starttime @ - endtime @ starttime @ - / ( start delta ratio )
             in/out @ execute ease @ execute store
-        now endtime @ = if dismiss ;then
+        now endtime @ = if me dismiss ;then
     ;
     
 

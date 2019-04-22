@@ -29,7 +29,7 @@ extend: _actor
 : .ds  ds 64 cells idump ;
 
 
-create main _actor static \ proxy for the Forth data and return stacks
+create main _actor static drop \ proxy for the Forth data and return stacks
 main to task
 
 : (more)  ( - flag )
@@ -52,12 +52,11 @@ main to task
 : delay  ( n - ) seconds pauses ;
 : running?     sp@ ds >= sp@ dtop < and ;
 : halt   (task) off  running? if pause then ;
-: end    dismiss halt ;
+: end    me dismiss halt ;
 : ?end   -exit end ;
 
 decimal
-    : *taskstack  me { _taskstack dynamic me } ;
-    : ?stacks  (rs) @ ?exit  *taskstack (rs) ! ;
+    : ?stacks  (rs) @ ?exit  _taskstack dynamic (rs) ! ;
     : perform  ( n xt - )
         ?stacks  \ tasks don't allocate their return stacks until their first PERFORM
         (task) on

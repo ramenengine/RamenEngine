@@ -190,20 +190,22 @@ previous
 : /object  ( class object - )
     >r 
         dup prototype r@ rot sizeof move
-    r> as 
-    me >class class.constructor @ execute
-    ( initialize embedded objects )
-\    me >class >fields each>
-\        dup field.class @ dup if
-\            ( field class )
-\            swap  @ offsetTable + @ me +
-\                { recurse }
-\        else
-\            drop drop
-\        then
+    r> {
+        me >class class.constructor @ execute
+    \    ( initialize embedded objects )
+    \    me >class >fields each>
+    \        dup field.class @ dup if
+    \            ( field class )
+    \            swap  @ offsetTable + @ me +
+    \                { recurse }
+    \        else
+    \            drop drop
+    \        then
+    }
 ;
 
-: static  dup allocation allotment /object ;
+: static  ( class - object )
+    dup allocation allotment dup >r /object r> ;
 
 : dynamic  ( class - object )
 \    dup class.useHeap @ if
@@ -215,7 +217,8 @@ previous
             dup sizeof allotment 
         then
 \    then
-    /object
+    dup >r /object
+    r>
 ;
 
 : destruct  ( object - )
