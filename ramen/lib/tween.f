@@ -37,7 +37,7 @@ define tweening
     
     : orphaned?  ( - flag ) target @ { ?id } dup if @ targetid @ <> then ;
 
-    : +tween  ( - )
+    : tween+  ( - )
         now starttime @ < ?exit
         orphaned? if me dismiss ;then
         startval @  delta @  now starttime @ - endtime @ starttime @ - / ( start delta ratio )
@@ -96,10 +96,16 @@ using tweening
 : tween  ( adr start end ease-xt in/out-xt - )
     *tween drop ;
 
-: +tweens  ( - )
-    tweens each> as +tween ;
+: tween  ( adr start end ease-xt in/out-xt - )
+    *tween drop ;
+
+: tweento  ( adr end ease-xt in/out-xt - )
+    2>r over @ swap 2r> tween ;
+
+: tweens+  ( - )
+    tweens each> as tween+ ;
 
 stage actor: tweener
-:now act> me stage push me { +tweens } ;
+:now act> me stage push me { tweens+ } ;
 
 previous
