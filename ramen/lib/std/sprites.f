@@ -86,7 +86,7 @@ _actor prototype as
 \ IMG must be subdivided and/or it must have a region table. (region table takes precedence.)
 \ if neither, then the whole IMG will be drawn
 : nsprite  ( index - )
-    img @ >bmp 0= if drop ;then
+    img @ 0= if drop ;then
     anm @ if frm ! frame@ then
     ?regorg >region curflip bsprite ;
 
