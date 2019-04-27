@@ -62,7 +62,7 @@ objlist: stage  \ default object list
 
 ( static actors )
 : actor,  ( parent - )  _actor static as  me swap push  /actor ;
-: actor:   ( parent - <name> )  create  actor, ;
+: actor:   ( parent - <name> )  create  actor,  _actor fields: ;
 
 ( role stuff )
 
@@ -80,8 +80,8 @@ objlist: stage  \ default object list
     -exit
     does>  _role superfield>offset role @ + @ execute ;    
 
-: role-var  _role fields: var ;
-: role-field  _role fields: field ;
+: role-var  class  _role to class  var  to class ;
+: role-field  class >r  _role to class  field  r> to class ;
 
 : :to   ( role - <name> ... )
     postpone 's :noname swap ! ;
@@ -103,6 +103,7 @@ objlist: stage  \ default object list
 : role:  ( - <name> )
     ?update  create  _role static as
     me to lastRole
+    _actor fields:
     ['] is-action? _role >fields some>
         :noname swap
             field.offset @
