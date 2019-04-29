@@ -35,7 +35,7 @@ extend: _actor
     var anmctr    \ animation counter
 ;class
 
-_actor prototype as
+_actor >prototype as
     1 1 sx 2!
     1 1 1 1 tint 4!
     1 anmspd !

@@ -65,7 +65,7 @@ also venery
 previous
 
 ( class utils )
-: prototype  ( class - object )  class.prototype @ ;
+: >prototype  ( class - object )  class.prototype @ ;
 : >wordlist  ( class - wordlist )  class.wordlist @ ;
 : sizeof  ( class - n ) class.size @ ;
 : >offsetTable  ( class - adr )  [ 0 class>offsetTable ]# ?literal s" +" evaluate ; immediate
@@ -189,7 +189,7 @@ previous
 
 : /object  ( class object - )
     >r 
-        dup prototype r@ rot sizeof move
+        dup >prototype r@ rot sizeof move
     r> {
         me >class class.constructor @ execute
     \    ( initialize embedded objects )
@@ -343,6 +343,12 @@ previous definitions
 : invalidate-pool  ( class )
     class>pool 0node ;
 
+: static,  ( class - )
+    static drop ;
+
+\ fixes "illegal object address" bug on first call to {
+create dummy dummy as
+
 
 ( TEST )
 
@@ -350,4 +356,5 @@ marker dispose
 : test  not abort" Super Objects unit test fail" ;
 
 dispose
+
 

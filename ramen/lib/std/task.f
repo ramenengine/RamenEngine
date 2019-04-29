@@ -29,7 +29,7 @@ extend: _actor
 : .ds  ds 64 cells idump ;
 
 
-create main _actor static drop \ proxy for the Forth data and return stacks
+create main _actor static, \ proxy for the Forth data and return stacks
 main to task
 
 : (more)  ( - flag )

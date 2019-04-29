@@ -16,12 +16,9 @@ variable nextid
     var dyn <flag          \ is dynamic
 ;class
 
-: basis  _role prototype ;  \ default role-var and action values for all newly created roles
+: basis  _role >prototype ;  \ default role-var and action values for all newly created roles
 
-_actor prototype as
-    en on
-
-create objlists  _node static drop           \ parent of all objlists
+create objlists  _node static,           \ parent of all objlists
 
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;
@@ -120,5 +117,6 @@ objlist: stage  \ default object list
     dup length 1i i. each>
         {  cr me h. ." ID: " id ?  ."  X/Y: " x 2@ 2.  } ;
 
-_actor prototype as
+_actor >prototype as
+    en on
     basis role !
