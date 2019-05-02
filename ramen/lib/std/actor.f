@@ -55,6 +55,9 @@ create objlists  _node static,           \ parent of all objlists
 ( stage )
 objlist: stage  \ default object list
 
+: one  ( - actor )
+    stage *actor ;
+
 ( static actors )
 : actor,  ( parent - )  _actor static as  me swap push  !id ;
 : actor:   ( parent - <name> )  create  actor,  _actor fields: ;
