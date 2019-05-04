@@ -28,5 +28,5 @@ ld camera
 ;
 
 ( test stuff )
-: test  guy 0 0 from stage one as blue /box ;
-:now stage one as act> <t> pressed if test then ;
+: test  guy 0 0 from stage *actor as blue /b6ox ;
+:now stage *actor as act> <t> pressed if test then ;

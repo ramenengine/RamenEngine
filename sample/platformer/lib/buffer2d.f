@@ -18,5 +18,5 @@ fixed
     r> init-buffer2d ;
 
 : buffer2d:   ( cols rows - <name> )  ( - array2d )
-    create  /assetheader /allot  %array2d sizeof allotment  init-buffer2d
+    create  /assetheader /allot  %array2d *struct  init-buffer2d
     does>  /assetheader + ; 

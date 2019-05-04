@@ -25,10 +25,9 @@ create objlists  _node static,           \ parent of all objlists
 : >parent  ( node - node|0 ) node.parent @ ;
 : ?id  id $80000000 and 0= if id else 0 then ;
 : !id  1 nextid +!  nextid @ id ! ;
-: /actor  ( - )  !id ;
-: one ( parent - obj )  _actor dynamic {  me swap push  /actor  at@ x 2!  dyn on  me } ;
-: detach  ( obj - ) dup >parent dup if remove else drop drop then ;
-: dismiss ( obj - ) 's marked on ;
+: *actor ( parent - actor )  _actor dynamic {  me swap push  !id  at@ x 2!  dyn on  me } ;
+: detach  ( node - ) dup >parent dup if remove else drop drop then ;
+: dismiss ( actor - ) 's marked on ;
 
 : actor:free-node
     dup _actor is? not if  destroy ;then
@@ -49,16 +48,15 @@ create objlists  _node static,           \ parent of all objlists
 : acts  ( objlist ) each> as act ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
-: from  ( obj x y - ) rot 's x 2@ 2+ at ;
+: from  ( actor x y - ) rot 's x 2@ 2+ at ;
 : -act  ( - ) act> noop ;
 : objlist:  ( - <name> )  create _actor static objlists push ;
 
 ( stage )
 objlist: stage  \ default object list
-: /stage  stage vacate  0 nextid ! ;
 
 ( static actors )
-: actor,  ( parent - )  _actor static as  me swap push  /actor ;
+: actor,  ( parent - )  _actor static as  me swap push  !id ;
 : actor:   ( parent - <name> )  create  actor,  _actor fields: ;
 
 ( role stuff )
@@ -110,7 +108,7 @@ objlist: stage  \ default object list
 
 
 ( inspection )
-: .role  ( obj - )
+: .role  ( actor - )
     >class ?dup if peek else ." No role" then ;
 
 : .objlist  ( objlist - )

@@ -33,7 +33,7 @@ create mestk  0 , 16 cells allot
 
 also venery
     
-    struct %class
+    struct: %class
         %class %node sembed class>node   
         %class svar class.size           <int
         %class svar class.wordlist       <hex
@@ -47,11 +47,11 @@ also venery
         %class %node sembed class>fields
         %class 1024 cells sfield class>offsetTable  <int
 
-    struct %superfield
+    struct: %superfield
         %superfield svar superfield.offset  <int
         %superfield svar superfield.magic
     
-    struct %field 
+    struct: %field 
         %field %node sembed superfield>node 
         %field svar field.size        <int   
         %field svar field.offset      <int      
@@ -151,7 +151,6 @@ previous
         class class>offsetTable
             (superfield) superfield.offset @ ( the offset slot offset ) + !
     
-    
     %field old-sizeof allotment >r
         r@ to lastfield  \ needed for defining inspectors
         r@ /node
@@ -214,7 +213,7 @@ previous
         dup class>pool length if
             dup class>pool pop
         else
-            dup sizeof allotment 
+            dup *struct 
         then
 \    then
     dup >r /object
@@ -285,10 +284,10 @@ previous definitions
 : :+ ( class - <name> <code> ; )
     (knowing) knowinging +order : ;
 
-: field  ( size - <name> ) ( object - object+n )
+: field  ( size - <name> ) ( - object+n )
     ?superfield drop ;
     
-: var  ( - <name> ) ( object - object+n )
+: var  ( - <name> ) ( - object+n )
     cell field ;
 
 : fields:  ( class - )
@@ -336,7 +335,7 @@ previous definitions
 
 ( Dynamic classes - based on _node )
 
-: node-class:  ( maxsize )
+: node-class:  ( maxsize - <name> )
     _node sizeof swap class:
     ['] me/node lastClass class.constructor ! ;
 

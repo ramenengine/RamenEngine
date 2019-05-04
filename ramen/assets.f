@@ -32,7 +32,7 @@ variable #permanents
     including -name #1 + 2swap strjoin 2dup file-exists ?exit
     true abort" File not found" ;
 
-: asset:  ( - <name> )  struct  /assetheader lastbody struct.size ! ;
+: asset:  ( - <name> )  struct:  /assetheader lastbody struct.size ! ;
 : .asset  ( asset - ) srcfile count dup if  type  else  2drop  then ;
 : .assets  ( - ) assets each> cr .asset ;
 : asset?  srcfile count nip 0<> ;

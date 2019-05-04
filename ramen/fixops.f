@@ -92,8 +92,8 @@ previous definitions
 : asin  ( n - deg )  1pf fasin r>d f>p ;
 : acos  ( n - deg )  1pf facos r>d f>p ;
 fixed
-: lerp  ( src dest factor - )  >r over - r> * + ;
-: anglerp  ( src dest factor - )
+: lerp  ( src dest factor - n )  >r over - r> * + ;
+: anglerp  ( src dest factor - n )
   >r  over -  360 mod  540 +  360 mod  180 -  r> * + ;
 
 : sqrt  ( n - n )  1pf fsqrt f>p ;
@@ -105,15 +105,6 @@ fixed
   locals| max2 min2 max1 min1 n |
   n min1 -  max1 min1 -  /  max2 min2 -  *  min2 + ;
 : >rad  1pf  d>r  f>p ;
-
-\ Color stuff
-: c>p  ( c - n )  \ convert from 0...255 (byte) to 0...1.0 (fixed)
-  4 <<  1 $ff0 */ ;
-: byt  dup $ff and c>p swap 8 >> ;
-: 4reverse   swap 2swap swap ;
-: 3reverse   swap rot ;
-: >rgba  ( val - r g b a ) byt byt byt byt drop >r 3reverse r> ;
-: >rgb   ( val - r g b )  byt byt byt drop 3reverse ;
 
 \ on-stack vector stuff (fixed point specific)
 : 2*  rot * >r * r> ;
