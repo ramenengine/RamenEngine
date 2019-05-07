@@ -99,7 +99,17 @@ create native  /ALLEGRO_MONITOR_INFO /allot
     ALLEGRO_DEPTH_SIZE #24 ALLEGRO_SUGGEST  al_set_new_display_option
     ALLEGRO_VSYNC 1 ALLEGRO_SUGGEST  al_set_new_display_option
 
-    w h al_create_display  to display    
+    [defined] dev [if]
+        fs @ 0= if  initial-pos 40 + al_set_new_window_position then  
+        w h al_create_display  to display    
+        fs @ 0= if   display initial-pos al_set_window_position  then
+    [else]
+        \ centered:
+        fs @ 0= if
+            nativew 2 / w 2 / - nativeh 2 / h 2 / - 40 - al_set_new_window_position
+        then
+        w h al_create_display  to display    
+    [then]
     
     display al_get_display_refresh_rate dup 0= if drop 60 then to fps
 
@@ -172,21 +182,22 @@ create native  /ALLEGRO_MONITOR_INFO /allot
 \ NTS: we don't handle connecting/disconnecting devices yet,
 \   though Allegro 5 /does/ support it. (via an event)
 
-: joy[] ( n - adr ) /ALLEGRO_JOYSTICK_STATE *  joysticks + ;
+: joystick[] ( n - adr ) /ALLEGRO_JOYSTICK_STATE *  joysticks + ;
 : >joyhandle ( n - ALLEGRO_JOYSTICK_STATE ) al_get_joystick ;
 : stick  ( joy# stick# - f: x y )  \ get stick position
-  /ALLEGRO_JOYSTICK_STATE_STICK *  swap joy[]
+  /ALLEGRO_JOYSTICK_STATE_STICK *  swap joystick[]
   ALLEGRO_JOYSTICK_STATE.sticks + dup sf@ cell+ sf@ ;
 : btn  ( joy# button# - n# )  \ get button state
-  cells swap joy[] ALLEGRO_JOYSTICK_STATE.buttons + @ ;
+  cells swap joystick[] ALLEGRO_JOYSTICK_STATE.buttons + @ ;
 : #joys ( - n ) al_get_num_joysticks ;
-: pollJoys ( - )  #joys for  i >joyhandle i joy[] al_get_joystick_state  loop ;
+: pollJoys ( - )  #joys for  i >joyhandle i joystick[] al_get_joystick_state  loop ;
 \ ----------------------------------------- end joysticks ------------------------------------------
 
 \ --------------------------------------------------------------------------------------------------
 \ Graphics essentials; no-fixed-point version
 : transform:  create  here  /transform allot  al_identity_transform ;
 transform: (identity)
+: 0transform  (identity) swap /transform move ;
 
 \ integer stuff
 : bmpw   ( bmp - n )  al_get_bitmap_width  ;
@@ -230,6 +241,14 @@ using internal
 : -state  ( - ) -1 >state +!  (state) al_restore_state ;
 previous
 
+: windowed
+    fs off
+    ALLEGRO_WINDOWED
+    ALLEGRO_RESIZABLE or
+    ALLEGRO_OPENGL or
+    al_set_new_display_flags
+    +display ;
+
 : fullscreen
     fs on
     [defined] dev [if] ALLEGRO_FULLSCREEN_WINDOW [else] ALLEGRO_FULLSCREEN [then]
@@ -238,6 +257,12 @@ previous
     +display ;
 
 fullscreen
+
+( Misc )
+
+create (wd) #512 allot
+: zwd  ( - zadr )  al_get_current_directory zcount (wd) zplace  (wd) ;
+: cwd  ( adr c - flag )  (wd) zplace   (wd) al_change_directory 0<> ;
 
 \ --------------------------------------------------------------------------------------------------
 include afkit/piston.f

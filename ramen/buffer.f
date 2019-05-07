@@ -13,7 +13,7 @@ asset: %buffer
     ['] recreate-buffer ['] unload-buffer r> register ;
 
 : buffer  ( size - )
-    %buffer *struct  init-buffer ;
+    %buffer sizeof allotment  init-buffer ;
 
 : buffer:   ( size - <name> )
     create  buffer  does>  buffer.data @ ; 

@@ -1,4 +1,4 @@
-depend sample/platformer/lib/tilemap2.f
+depend ramen/lib/std/tilemap2.f
 
 ( misc )
 : enum  dup constant 1 + ;
@@ -16,9 +16,9 @@ depend sample/platformer/lib/tilemap2.f
 : sf@+  dup sf@ cell+ ;
 : tinted   fore sf@+ f>p swap sf@+ f>p swap sf@+ f>p swap sf@+ f>p nip tint 4! ;
 : /sprite  draw> sprite ;
-: *sprite   ( image - obj ) stage *actor { tinted img ! /sprite me } ;
+: *sprite   ( image ) stage one tinted img ! /sprite ;
 : csprite  img @ imagewh 0.5 0.5 2* cx 2!  sprite ;
-: *csprite  ( image - obj ) stage *actor { tinted img ! draw> csprite me } ;
+: *csprite  ( image ) stage one tinted img ! draw> csprite ;
 : >data  project count s" data/" strjoin 2swap strjoin ;  \ prepend assets with data path
 : hide  's hidden on ;
 : reveal  's hidden off ;
@@ -65,7 +65,7 @@ extend: _actor
 
 : ?waste  target @ { ?id } ?dup if @ targetid @ <> ?end then ;
 : target!   dup target ! { ?id } ?dup if @ targetid ! then ;
-: *task  me tasks *actor  target!  act> ?waste ;
+: *task  me tasks one  target!  act> ?waste ;
 : (after)  perform> pauses (xt) @ target @ { execute } end ;
 : after  ( xt n - ) me { *task swap (xt) ! (after) } ;
 : after>  ( n - <code> ) r> code> swap after ;

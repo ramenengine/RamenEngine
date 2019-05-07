@@ -8,6 +8,7 @@ depend ramen/lib/std/kb.f
 depend ramen/lib/std/audio.f     
 depend ramen/lib/std/sprites.f   
 depend ramen/lib/std/transform.f 
+depend ramen/lib/array2d.f       
 depend ramen/lib/utils.f         
 
 : show-stage  ( - ) show> ramenbg mount stage draws ;

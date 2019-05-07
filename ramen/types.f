@@ -1,12 +1,12 @@
 \ essential "types"
 
-struct: %color
+struct %color
     %color svar color.r
     %color svar color.g 
     %color svar color.b
     %color svar color.a
 
-struct: %rect
+struct %rect
     %rect svar rect.x
     %rect svar rect.y
     %rect svar rect.w

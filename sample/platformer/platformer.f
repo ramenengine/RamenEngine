@@ -1,15 +1,9 @@
 include ramen/ramen.f           \ goes first
+
 empty                           \ closes and frees any previous project
 project: sample/platformer      \ sets the project's root folder so that LD knows where to look
-depend ramen/basic.f
-ld lib/tilemap2
-depend afkit/ans/param-enclosures.f
-ld tools
-320 240 resolution
 
-create startxy 0 , 0 ,
-stage actor: cam
-
+ld preamble                     \ loads dependencies and sets up some global stuff like upscaling
 ld map                          \ loads the map data
 ld helpers                      \ physics and tile stuff
 ld particles                    \ simple particle system
@@ -28,5 +22,5 @@ ld camera
 ;
 
 ( test stuff )
-: test  guy 0 0 from stage *actor as blue /b6ox ;
-:now stage *actor as act> <t> pressed if test then ;
+: test  guy 0 0 from stage one blue /box ;
+:now stage one act> <t> pressed if test then ;

@@ -16,18 +16,22 @@ variable nextid
     var dyn <flag          \ is dynamic
 ;class
 
-: basis  _role >prototype ;  \ default role-var and action values for all newly created roles
+: basis _role prototype ;  \ default role-var and action values for all newly created roles
 
-create objlists  _node static,           \ parent of all objlists
+_actor prototype as
+    en on
+
+create objlists  _node static            \ parent of all objlists
 
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;
 : >parent  ( node - node|0 ) node.parent @ ;
 : ?id  id $80000000 and 0= if id else 0 then ;
 : !id  1 nextid +!  nextid @ id ! ;
-: *actor ( parent - actor )  _actor dynamic {  me swap push  !id  at@ x 2!  dyn on  me } ;
-: detach  ( node - ) dup >parent dup if remove else drop drop then ;
-: dismiss ( actor - ) 's marked on ;
+: /actor  ( - )  !id ;
+: one ( parent - me=obj )  _actor dynamic  me swap push  /actor  at@ x 2!  dyn on ;
+: detach  ( obj - ) dup >parent dup if remove else drop drop then ;
+: dismiss ( - ) marked on ;
 
 : actor:free-node
     dup _actor is? not if  destroy ;then
@@ -48,45 +52,42 @@ create objlists  _node static,           \ parent of all objlists
 : acts  ( objlist ) each> as act ;
 : draw>  ( - <code> ) r> drw ! hidden off ;
 : act>   ( - <code> ) r> beha ! ;
-: from  ( actor x y - ) rot 's x 2@ 2+ at ;
+: from  ( obj x y - ) rot 's x 2@ 2+ at ;
 : -act  ( - ) act> noop ;
-: objlist:  ( - <name> )  create _actor static objlists push ;
+: objlist:  ( - <name> )  create _actor static me objlists push ;
 
 ( stage )
 objlist: stage  \ default object list
-
-: one  ( - actor )
-    stage *actor ;
+: /stage  stage vacate  0 nextid ! ;
 
 ( static actors )
-: actor,  ( parent - )  _actor static as  me swap push  !id ;
-: actor:   ( parent - <name> )  create  actor,  _actor fields: ;
+: actor,  ( parent - )  _actor static  me swap push  /actor ;
+: actor:   ( parent - <name> )  create  actor, ;
 
 ( role stuff )
+: role@  ( - role )
+    role @ dup 0= abort" Error: Role is null." ;
 
 : role's  ( - <field> adr )
-    s" role @" evaluate  ' >body _role superfield>offset ?literal s" +" evaluate
+    s" role@" evaluate  ' >body _role superfield>offset ?literal s" +" evaluate
 ; immediate
 
 ( actions )
 : is-action?  field.attributes @ ;
 
-: action:   ( - <name> ) ( ??? - ??? )
+: action   ( - <name> ) ( ??? - ??? )
     _role fields:
     cell ?superfield <adr ( flag ) 
     true lastField field.attributes ! 
     -exit
-    does>  _role superfield>offset role @ + @ execute ;    
+    does>  _role superfield>offset role@ + @ execute ;    
 
-: role-var  class  _role to class  var  to class ;
-: role-field  class >r  _role to class  field  r> to class ;
+: role-var  _role fields: var ;
+: role-field  _role fields: field ;
+
 
 : :to   ( role - <name> ... )
     postpone 's :noname swap ! ;
-
-: :action   ( - <name> <code> ; )  ( ??? - ??? )
-    >in @  action:  >in !  basis :to ;
-
 
 : ->  ( role - <action> )
     postpone 's s" @ execute" evaluate ; immediate
@@ -99,9 +100,8 @@ objlist: stage  \ default object list
     >in ! ;
 
 : role:  ( - <name> )
-    ?update  create  _role static as
+    ?update  create  _role static
     me to lastRole
-    _actor fields:
     ['] is-action? _role >fields some>
         :noname swap
             field.offset @
@@ -111,13 +111,10 @@ objlist: stage  \ default object list
 
 
 ( inspection )
-: .role  ( actor - )
+: .role  ( obj - )
     >class ?dup if peek else ." No role" then ;
 
 : .objlist  ( objlist - )
     dup length 1i i. each>
-        {  cr me h. ." ID: " id ?  ."  X/Y: " x 2@ 2.  } ;
+        {  cr me h. ." ID: " id ?  ."  X/Y: " x 2?  } ;
 
-_actor >prototype as
-    en on
-    basis role !

@@ -1,4 +1,4 @@
-depend sample/platformer/lib/array2d.f
+depend ramen/lib/array2d.f
 
 decimal  \ necessary because tilemaps can be quite large
 : init-buffer2d  ( array2d - )
@@ -18,5 +18,5 @@ fixed
     r> init-buffer2d ;
 
 : buffer2d:   ( cols rows - <name> )  ( - array2d )
-    create  /assetheader /allot  %array2d *struct  init-buffer2d
+    create  /assetheader /allot  %array2d sizeof allotment  init-buffer2d
     does>  /assetheader + ; 

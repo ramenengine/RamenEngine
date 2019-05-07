@@ -65,7 +65,7 @@ variable ldl
 : ld  ( -- <file> )
     bl parse s" .f" strjoin 2>r
         2r@ file-exists not if
-            project count 2r> strjoin 2>r
+            project count 2r> -path strjoin 2>r
         then
         ldl @ 0= if 2r@ ldr place then 
         

@@ -1,7 +1,7 @@
-asset: %font
-    %font svar font.fnt
-    %font svar font.size
-    %font svar font.flags
+asset: font
+    font svar font.fnt
+    font svar font.size
+    font svar font.flags
 : >fnt ( font - ALLEGRO_FONT ) font.fnt @ ;
 
 : reload-font  ( font - )
@@ -16,7 +16,7 @@ asset: %font
     r> reload-font ;
 
 : font:  ( path c size flags - <name> )
-    create  %font *struct  init-font ;
+    create  font sizeof allotment  init-font ;
 
 create (chr)  0 c, 0 c,
 : chrw    ( font chr - n ) (chr) c!  >fnt (chr) al_get_text_width 1p ;

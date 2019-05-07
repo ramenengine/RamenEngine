@@ -1,0 +1,1 @@
+ ./ramen/make_sfwin.bat zelda sample\zelda\main.f sample\zelda

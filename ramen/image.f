@@ -23,7 +23,7 @@ asset: %image
 : reload-image  >r  r@ srcfile count  findfile  zstring al_load_bitmap  r> image.bmp ! ;
 : unload-image  image.bmp @ al_destroy_bitmap ;
 : init-image  >r  r@ srcfile place  ['] reload-image ['] unload-image r@ register  r> reload-image ;
-: image:  create  %image *struct init-image  ;
+: image:  create  %image sizeof allotment init-image  ;
 : >bmp  image.bmp @ ;
 
 \ load-image  ( path c image - ) 
@@ -42,7 +42,7 @@ asset: %image
 :slang ?samesize  >r  2dup r@ canvas.w 2@ d= if  2drop  r> r> 2drop  exit then  r> ;
 : resize-canvas  ?samesize  >r r@ free-image  r@  canvas.w 2!  r> recreate-canvas ;
 : init-canvas  >r    ['] recreate-canvas ['] unload-canvas r@ register  r@  canvas.w 2!  r> recreate-canvas ;
-: canvas:  create  %image *struct init-canvas  ;
+: canvas:  create  %image sizeof allotment init-canvas  ;
 
 \ Sub-image stuff
 

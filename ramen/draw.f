@@ -57,7 +57,7 @@ fixed
 : xblit ( bmp scalex scaley angle flip )
     locals| flip ang sy sx bmp |
     bmp -exit
-    bmp fore 4@ bmp >center destxy  4af  sx sy ang >rad 3af  flip
+    bmp fore 4@ bmp >center destxy  4af  sx sy ang 3af  flip
     al_draw_tinted_scaled_rotated_bitmap ;
 : bblit  ( bmp x y w h flip )
     locals| flip h w y x bmp |

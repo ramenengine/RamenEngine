@@ -293,7 +293,7 @@ only forth definitions also ideing
 
 : ide-system  idekeys ;
 : ide-overlay  0 0 at  unmount  repl @ if shade then  .output  bottom at .cmdline ;
-: rasa  ['] ide-system  is ?system  ['] ide-overlay  is ?overlay ;
+: rasa  ['] ide-system  is  ?system  ['] ide-overlay  is ?overlay ;
 : -ide  close-personality  HWND btf ;
 : ide  rasa  /repl  ['] ?rest catch ?.catch  go  -ide ;
 : /s  S0 @ SP! ;

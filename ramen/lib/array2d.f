@@ -1,5 +1,5 @@
 fixed
-struct: %array2d
+struct %array2d
     %array2d svar array2d.cols
     %array2d svar array2d.rows
     %array2d svar array2d.pitch

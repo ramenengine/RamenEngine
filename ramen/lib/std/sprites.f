@@ -30,12 +30,12 @@ extend: _actor
     \ animation state; all can be modified freely.  only required value is IMG.
     var img <body \ image asset
     var anm <adr  \ animation base
-    var frm       \ sprite index
+    var spr       \ sprite index
     var anmspd    \ animation speed (1.0 = normal, 0.5 = half, 2.0 = double ...)
     var anmctr    \ animation counter
 ;class
 
-_actor >prototype as
+_actor prototype as
     1 1 sx 2!
     1 1 1 1 tint 4!
     1 anmspd !
@@ -67,18 +67,18 @@ _actor >prototype as
 ;
 
 ( Animation )
-: >frame  ( anm - adr )
+: frame[]  ( anm - adr )
     ( skip the settings ) 2 cells + anmctr @ pfloor /frame * + ;
 
 : curflip  ( index - index n )
-    anm @ if anm @ >frame @ #3 and ;then  dup 3 and ;
+    anm @ if anm @ frame[] @ #3 and ;then  dup 3 and ;
 
 : ?regorg  ( index - index )  \ apply the region origin
     img @ -exit  rgntbl @ -exit
     rgntbl @ over /region * + 4 cells + 2@ cx 2! ;
 
-: frame@  ( - n )  \ fetch FRM if ANM is 0
-    anm @ dup if  >frame @  else  drop  frm @  then ;
+: frame@  ( - n | 0 )  \ 0 if anm is null
+    anm @ dup if frame[] @ then ;
 
 \ NSPRITE
 \ draw a sprite either from a subdivided image, animation, or image plus region table.
@@ -86,15 +86,15 @@ _actor >prototype as
 \ IMG must be subdivided and/or it must have a region table. (region table takes precedence.)
 \ if neither, then the whole IMG will be drawn
 : nsprite  ( index - )
-    img @ 0= if drop ;then
-    anm @ if frm ! frame@ then
+    img @ >bmp 0= if drop ;then
+    anm @ if spr ! frame@ then
     ?regorg >region curflip bsprite ;
 
 : +frame  ( speed - )  \ Advance the animation
     ?dup -exit anm @ -exit 
     anmctr +!
     ( looping: )
-    frame@ $deadbeef = if  anm @ >frame cell+ @ anmctr +!  animlooped  then
+    frame@ $deadbeef = if  anm @ frame[] cell+ @ anmctr +!  animlooped  then
 ;
  
 : sprite  ( - )  \ draw sprite and advance the animation if any

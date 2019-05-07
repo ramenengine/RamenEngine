@@ -6,7 +6,6 @@
     include ramen/base.f          \ gilded
     [in-platform] sf [if]
         include ramen/ide/ide.f   \ gilded
-        include ramen/system.f    \ gilded, extends `IDE`
     [then]
 [then]
 
