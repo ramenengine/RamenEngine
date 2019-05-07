@@ -18,7 +18,10 @@ variable nextid
 
 : basis  _role >prototype ;  \ default role-var and action values for all newly created roles
 
-create objlists  _node static,           \ parent of all objlists
+64 cells node-class: _objlist
+;class
+
+create objlists  _objlist static,           \ parent of all objlists
 
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;
@@ -50,7 +53,7 @@ create objlists  _node static,           \ parent of all objlists
 : act>   ( - <code> ) r> beha ! ;
 : from  ( actor x y - ) rot 's x 2@ 2+ at ;
 : -act  ( - ) act> noop ;
-: objlist:  ( - <name> )  create _actor static objlists push ;
+: objlist:  ( - <name> )  create _objlist static objlists push ;
 
 ( stage )
 objlist: stage  \ default object list

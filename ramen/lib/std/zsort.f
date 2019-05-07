@@ -4,6 +4,9 @@ depend ramen/lib/rsort.f
 
 extend: _actor
     var zorder  \ defines z order.  lower = more behind, higher = more in front
+;class
+
+extend: _objlist
     var zsort   \ enables zsort on object lists
 ;class
 
