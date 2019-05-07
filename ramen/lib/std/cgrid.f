@@ -4,7 +4,7 @@
 \ numbers of AABB (axis-aligned bounding boxes).
 \ Very useful for broad-phase collision checks.
 
-struct cbox
+struct: cbox
 
 define cgriding
     cbox svar x1    cbox svar y1
@@ -27,7 +27,7 @@ define cgriding
     0 value cgrid  \ current cgrid
     : cgrid-var  sfield  does> @ cgrid + ;
 
-    struct %cgrid
+    struct: %cgrid
     %cgrid cell cgrid-var cols
     %cgrid cell cgrid-var rows
     %cgrid cell cgrid-var sectors         \ link to array of sectors
@@ -128,7 +128,7 @@ using cgriding
 : >#sectors  sectw 1 - secth 1 - 2+  sectw secth 2/  2pfloor ;
 
 : cgrid:  ( maxboxes width height - <name> )  \ give width and height in regular units
-  create  %cgrid sizeof allotment  to cgrid
+  create  %cgrid *struct to cgrid
   >#sectors
   2dup cols 2!  here sectors !  ( cols rows ) * cells /allot
                 here links !    ( maxboxes )  4 * 2 cells * /allot ;

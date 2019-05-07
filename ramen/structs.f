@@ -11,7 +11,7 @@ also venery
         %field svar field.size
         %field svar field.inspector
 
-    : struct  create %struct *struct /node ;
+    : struct:  create %struct *struct /node ;
     
     : (.field)  ( adr size - )
         bounds ?do i @ dup if . else i. then cell +loop ;
@@ -45,7 +45,7 @@ previous
 : struct,  ( struct - )
     *struct drop ;
 
-: is>  ( - <code> )  ( adr size - )
+: is>  ( - <code> ; )  ( adr size - )
     r> code> lastfield field.inspector ! ;
 
 : (.fields)
@@ -69,7 +69,8 @@ previous
 [defined] f. [if]
     : <float is> drop sf@ f. ." e" ;
 [then]
-: <cstring  is> drop count type ;
+: <cstring  is> drop ccount type ;
+: <string  is> drop count type ;
 : <flag  is> drop @ if ." true " else ." false " then ;
 : <body  is> drop @ .name ;
 : <word  is> drop @ dup if >body .name else i. then ;

@@ -7,7 +7,7 @@ extend: _actor
 : -vel    0 0 0 vel 3! ;
 
 ( cuboid struct )
-struct %cuboid
+struct: %cuboid
     %cuboid %rect sizeof sfield cuboid>rect
     %cuboid svar cuboid.z
     %cuboid svar cuboid.d
@@ -27,10 +27,10 @@ struct %cuboid
 
 ( 3D actors )
 extend: _role
-    action start ( - )
-    action idle ( - )
-    action walk ( - )
-    action turn ( angle )
+    :action start ( - ) ;
+    :action idle ( - ) ;
+    :action walk ( - ) ;
+    :action turn ( angle ) drop ;
 ;class
 
 extend: _actor
@@ -41,7 +41,7 @@ extend: _actor
     %cuboid sizeof field ihb  \ interaction hitbox; relative to position
 ;class
 
-0 0 0 16 16 16 _actor prototype 's ihb xyzwhd!
+0 0 0 16 16 16 _actor >prototype 's ihb xyzwhd!
 
 \ : ipos     pos 3@ ihb xyz@ 3+ ;
 \ : toward   ( obj - x y )  { ipos } ipos 2- angle uvec ;
@@ -63,7 +63,7 @@ extend: _actor
 
 \ : draw-ibox  cbox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 : on-top  act> me stage push ;
-\ : show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
+\ : show-iboxes  stage *actor  on-top  draw> stage each> as draw-ibox ;
 
 
 ( misc 3d stuff )
@@ -73,7 +73,7 @@ objlist: models
 : tmodel  tint 3@ rgb ['] !vcolor mdl @ veach model ;
 : uv!  ( u v n - )  >r 2af r> mdl @ v[] ALLEGRO_VERTEX.u 2! ;
 : !3pos  at3@ pos 3! ;
-: *model  ( model - )  models one mdl ! !3pos ;
+: *model  ( model - )  models *actor as mdl ! !3pos ;
 : tri  2 * 1 - abs 1 swap - ;
 : +alphatex
     ALLEGRO_ALPHA_FUNCTION ALLEGRO_RENDER_GREATER al_set_render_state
@@ -86,11 +86,11 @@ objlist: models
 
 
 ( lowres 3d loop )
-depend ramen/lib/tweening.f
+depend ramen/lib/tween.f
 depend ramen/lib/upscale.f
 : think  tasks multi  stage acts  models acts  stage multi  models multi ;
 : render  +alphatex 3d ['] draws catch -alphatex 2d throw ;
 : scaledwh  viewwh globalscale dup 2* ;
 : cdraws  scaledwh 2halve translate tpush draws tpop ;
 :now  show> ramenbg 0 0 at upscale> 2d stage cdraws  models render ;
-:now  step>  think physics  +tweens  sweep ;
+:now  step>  think physics  tweens+  sweep ;

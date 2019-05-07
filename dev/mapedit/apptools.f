@@ -2,7 +2,7 @@
 
 variable lb
 variable rb
-stage one :now act> ui on ;  \ workspace always on
+stage *actor as :now act> ui on ;  \ workspace always on
 
 
 : ?b  

@@ -1,4 +1,4 @@
-struct %v3d
+struct: %v3d
     %v3d svar v3d.x
     %v3d svar v3d.y
     %v3d svar v3d.z

@@ -182,15 +182,15 @@ create native  /ALLEGRO_MONITOR_INFO /allot
 \ NTS: we don't handle connecting/disconnecting devices yet,
 \   though Allegro 5 /does/ support it. (via an event)
 
-: joystick[] ( n - adr ) /ALLEGRO_JOYSTICK_STATE *  joysticks + ;
+: joy[] ( n - adr ) /ALLEGRO_JOYSTICK_STATE *  joysticks + ;
 : >joyhandle ( n - ALLEGRO_JOYSTICK_STATE ) al_get_joystick ;
 : stick  ( joy# stick# - f: x y )  \ get stick position
-  /ALLEGRO_JOYSTICK_STATE_STICK *  swap joystick[]
+  /ALLEGRO_JOYSTICK_STATE_STICK *  swap joy[]
   ALLEGRO_JOYSTICK_STATE.sticks + dup sf@ cell+ sf@ ;
 : btn  ( joy# button# - n# )  \ get button state
-  cells swap joystick[] ALLEGRO_JOYSTICK_STATE.buttons + @ ;
+  cells swap joy[] ALLEGRO_JOYSTICK_STATE.buttons + @ ;
 : #joys ( - n ) al_get_num_joysticks ;
-: pollJoys ( - )  #joys for  i >joyhandle i joystick[] al_get_joystick_state  loop ;
+: pollJoys ( - )  #joys for  i >joyhandle i joy[] al_get_joystick_state  loop ;
 \ ----------------------------------------- end joysticks ------------------------------------------
 
 \ --------------------------------------------------------------------------------------------------

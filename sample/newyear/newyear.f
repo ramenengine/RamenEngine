@@ -12,7 +12,7 @@ nativewh 4 4 2/ resolution              \ set the virtual screen resolution (dep
 
 depend sample/tools.f                   \ common toolkit for the samples
 depend sample/events.f                  \ event system
-depend ramen/lib/tweening.f             \ tweening support
+depend ramen/lib/tween.f                \ tweening support
 depend afkit/ans/param-enclosures.f
 
 ld tools                                \ 3d2019-specific tools
@@ -78,20 +78,20 @@ extend: _actor
 
 ( star background )
 : /outward  act>  5 ang +!  vx 2@ 0.97 dup 2* vx 2! ;                       \ spin and decelerate outward
-: *star  star.png *csprite /outward  2 2 sx 2!  1 0.5 0.5 tint 3! ;         \ create a start, scale (2,2), pink color
-: burst   0 0 at  300 for *star 360 rnd 5 45 between vec vx 2! loop ;      \ create a bunch of stars,
+: *star  star.png *csprite /outward  2 2 sx 2!  1 0.5 0.5 tint 3! ;      \ create a start, scale (2,2), pink color
+: burst   0 0 at  300 for *star 360 rnd 5 45 between vec vx 2! loop ;       \ create a bunch of stars,
                                                                             \ setting angle to random value and
                                                                             \ velocity to random value between 5 and 45
 
 ( big 2019 )
 : pulse  4.5 lifetime +!  1( 7 lifetime @ sin 1.6 * + ) dup sx 2! ;         \ apply sine formula to scale
 : wobble lifetime @ 0.48 * sin 30 * ang ! ;                                 \ apply sine formula to angle
-: *2019  yellow 2019.png  0 0 at  *csprite act> pulse wobble ;              \ create the 2019 sprite
+: *2019  yellow 2019.png  0 0 at  *csprite act> pulse wobble ;           \ create the 2019 sprite
                                                                             \ and make it pulse and wobble.
 
 ( displaying the message )
 create message ," HAPPY NEW YEAR"
-: nextchar  dup c@ me { *letter /dance } #1 + ;                                \ takes an address and returns it, inc. by #1
+: nextchar  dup c@ me { *letter /dance } #1 + ;                          \ takes an address and returns it, inc. by #1
 
 ( kickoff the demo )
 : demo 

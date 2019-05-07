@@ -24,8 +24,7 @@ ui on
 ;class
 :noname  data @ free throw ; _element class.destructor !
 
-create figure _element static
-
+create figure _element static,
     
 define wsing
     include ws/rangetools.f
@@ -46,8 +45,8 @@ define wsing
     : dims!  span wh! ;
     : ew@   dims@ drop ;
     : eh@   dims@ nip ;
-    : *element  ( figure - me=new )  \ add an element
-        _element dynamic  me swap push ;
+    : *element  ( figure - new )  \ add an element
+        _element dynamic dup rot push ;
     : data@  ( - adr n )
         data @ datasize @ ;
     : data!  ( adr n - )
@@ -184,9 +183,9 @@ only forth definitions also wsing
 
 : /button  data! #boxed attr ! ;
 : /label   data! ;
-: button  ( text c )  me { figure *element me to lastel /button } ;
-: label  ( text c )   me { figure *element me to lastel /label } ;
-: nr  me { figure *element #newrow attr ! } ;  \ new row
+: button  ( text c )  figure *element { me to lastel /button } ;
+: label  ( text c )   figure *element { me to lastel /label } ;
+: nr  figure *element { #newrow attr ! } ;  \ new row
 : drawui  consolas font>  unmount  figure (ui) ;
 
 : ?toggle-ui

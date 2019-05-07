@@ -1,11 +1,9 @@
 variable (delay)
 variable (length)
 
-\ call this before calling EASE
-: timespan  ( delay length - )  \ in frames
-    (length) ! (delay) ! ;
 
-create tweens _node static
+
+create tweens _node static drop
 
 _node sizeof 0 class: _tween
     
@@ -16,7 +14,7 @@ _node sizeof 0 class: _tween
     var startval
     var dest <adr
     var delta
-    var ease <word
+    var ease <adr
     
     var starttime  \ start time in frames
     var endtime    \ end time in frames
@@ -31,32 +29,24 @@ _node sizeof 0 class: _tween
 
 define tweening
 
-    : dismiss  me dup >parent remove ;
+    : dismiss  dup >parent remove ;
 
     : store  ( val - ) dest @ ! ; \ storer @ execute ;
 
-    : target!   dup target ! { ?id ?dup if @ targetid ! then } ;
-
-    : *tween  ( adr start end ease-xt in/out-xt - me=tween )
-        me  _tween dynamic  me tweens push  target!
-        in/out !  ease !  over - delta !  startval !
-        dest !
-        (delay) @ now + dup starttime !
-            (length) @ + endtime !
-    ;
+    : target!   dup target ! { ?id } ?dup if @ targetid ! then ;
     
-    : orphaned?  ( - flag ) target @ { ?id dup if @ targetid @ <> then } ;
+    : orphaned?  ( - flag ) target @ { ?id } dup if @ targetid @ <> then ;
 
-    : +tween  ( - )
+    : tween+  ( - )
         now starttime @ < ?exit
-        orphaned? if dismiss ;then
+        orphaned? if me dismiss ;then
         startval @  delta @  now starttime @ - endtime @ starttime @ - / ( start delta ratio )
             in/out @ execute ease @ execute store
-        now endtime @ = if dismiss ;then
+        now endtime @ = if me dismiss ;then
     ;
     
 
-only forth definitions also tweening
+using tweening
 
 : does-xt  does> @ ;
 : :xt  create does-xt here 0 , :noname swap ! ;
@@ -89,10 +79,33 @@ only forth definitions also tweening
 : overshoot-func  >r dup dup r@ 1 + * r> - * * * + ;
 :xt OVERSHOOT     1.70158 overshoot-func ;
 
-: tween  ( adr start end ease-xt in/out-xt - )
-    me { *tween } ;
+\ call this before calling TWEEN
+: timespan  ( delay length - )  \ in frames
+    (length) ! (delay) ! ;
 
-: +tweens  ( - )
-    tweens each> as +tween ;
+: *tween  ( adr start end ease-xt in/out-xt - tween )
+     me  _tween dynamic {
+        me tweens push  target!
+        in/out !  ease !  over - delta !  startval !
+        dest !
+        (delay) @ now + dup starttime !
+           (length) @ + endtime !
+     me }
+;
+
+: tween  ( adr start end ease-xt in/out-xt - )
+    *tween drop ;
+
+: tween  ( adr start end ease-xt in/out-xt - )
+    *tween drop ;
+
+: tweento  ( adr end ease-xt in/out-xt - )
+    2>r over @ swap 2r> tween ;
+
+: tweens+  ( - )
+    tweens each> as tween+ ;
+
+stage actor: tweener
+:now act> me stage push me { tweens+ } ;
 
 previous

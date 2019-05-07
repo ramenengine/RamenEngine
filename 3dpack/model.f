@@ -15,7 +15,7 @@ ALLEGRO_PRIM_TRIANGLE_FAN   constant TRIANGLE_FAN
 ALLEGRO_PRIM_POINT_LIST     constant POINT_LIST
 
 \ Model data structs
-struct %modeldata
+struct: %modeldata
     %modeldata 2 cells sfield vertices   \ pointer, count
     %modeldata 2 cells sfield indices    \ pointer, count
     %modeldata svar primtype
@@ -58,7 +58,7 @@ extend: _actor
     var tex <adr
 ;class
 
-_actor prototype as
+_actor >prototype as
     1 1 1 scl 3!
 
 

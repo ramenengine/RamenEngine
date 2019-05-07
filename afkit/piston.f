@@ -199,13 +199,15 @@ variable (catch)
 : show> ( - <code> ) r> to 'show ;  ( - <code> )  ( - )
 : step> ( - <code> ) r> to 'step ;  ( - <code> )  ( - )
 : pump> ( - <code> ) r> to 'pump ;  ( - <code> )  ( - )
-: get-next-event ( - ) eco @ if al_wait_for_event #1 else al_get_next_event then ;
+: get-next-event ( - n ) eco @ if al_wait_for_event #1 else al_get_next_event then ;
 : @event ( - flag ) eventq evt get-next-event ;
 : attend ( - )
     begin  @event  breaking? not and  while
-        me >r  offsetTable >r  pump  standard-events  r> to offsetTable  r> to me
+        me >r  offsetTable >r
+            pump
+            standard-events  
+        r> to offsetTable  r> to me
         ?system
-        eco @ ?exit
     repeat ;
 : frame ( - ) show present attend poll step ?hidemouse ;
 : go ( - )   /go    begin  frame  breaking? until  go/ ;

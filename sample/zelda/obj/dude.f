@@ -1,3 +1,3 @@
 type: dude
-    dude :to setup  /npc   1 spr ! ;
+    dude :to setup  /npc   1 frm ! ;
 

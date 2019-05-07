@@ -2,7 +2,7 @@
 
 \ [x] - Classed objects
 \ [x] - Prototypes
-\ [x] - Two kinds of allocation - dictionary (static) and heap (dynamic)
+\ [x] - Two kinds of allocation - static and dynamic
 \ [x] - Smart fields - different classes' fields can reuse names and you can check for field ownership on a class basis.
 \ [x] - Private words
 \ [x] - Constructors and destructors
@@ -22,7 +22,7 @@
 
 \ 0 value me  \ defined in piston.f
 
-0 value cc \ current Class
+0 value class \ current Class
 0 value nextOffsetSlot \ next offset in offset table
 0 value (superfield)  \ temporary variable
 0 value (size)        \ temporary variable
@@ -33,7 +33,7 @@ create mestk  0 , 16 cells allot
 
 also venery
     
-    struct %class
+    struct: %class
         %class %node sembed class>node   
         %class svar class.size           <int
         %class svar class.wordlist       <hex
@@ -47,11 +47,11 @@ also venery
         %class %node sembed class>fields
         %class 1024 cells sfield class>offsetTable  <int
 
-    struct %superfield
+    struct: %superfield
         %superfield svar superfield.offset  <int
         %superfield svar superfield.magic
     
-    struct %field 
+    struct: %field 
         %field %node sembed superfield>node 
         %field svar field.size        <int   
         %field svar field.offset      <int      
@@ -65,7 +65,7 @@ also venery
 previous
 
 ( class utils )
-: prototype  ( class - object )  class.prototype @ ;
+: >prototype  ( class - object )  class.prototype @ ;
 : >wordlist  ( class - wordlist )  class.wordlist @ ;
 : sizeof  ( class - n ) class.size @ ;
 : >offsetTable  ( class - adr )  [ 0 class>offsetTable ]# ?literal s" +" evaluate ; immediate
@@ -134,7 +134,7 @@ previous
 : superfield=  field.superfield @ (superfield) = ;
 
 : ?already
-    cc >fields 0 ['] superfield= rot which@ dup if
+    class >fields 0 ['] superfield= rot which@ dup if
         r> drop
         ( found-field ) to lastField
         \ (Superfield) .name
@@ -147,22 +147,21 @@ previous
     
     ?already  \ early out if instance of superfield already in class
     
-    cc sizeof
-        cc class>offsetTable
+    class sizeof
+        class class>offsetTable
             (superfield) superfield.offset @ ( the offset slot offset ) + !
-    
     
     %field old-sizeof allotment >r
         r@ to lastfield  \ needed for defining inspectors
         r@ /node
         (superfield)  r@ field.superfield !
         (size) r@ field.size !
-        cc class.size @ r@ field.offset !
+        class class.size @ r@ field.offset !
         ['] (.field) r@ field.inspector !
-        r@ cc add-field
+        r@ class add-field
     r> drop
 
-    (size) cc class.size +!
+    (size) class class.size +!
 ;
 
 : create-superfield  ( - <name> )  ( - adr )
@@ -189,21 +188,23 @@ previous
 
 : /object  ( class object - )
     >r 
-        dup prototype r@ rot sizeof move
-    r> as 
-    me >class class.constructor @ execute
-    ( initialize embedded objects )
-\    me >class >fields each>
-\        dup field.class @ dup if
-\            ( field class )
-\            swap  @ offsetTable + @ me +
-\                { recurse }
-\        else
-\            drop drop
-\        then
+        dup >prototype r@ rot sizeof move
+    r> {
+        me >class class.constructor @ execute
+    \    ( initialize embedded objects )
+    \    me >class >fields each>
+    \        dup field.class @ dup if
+    \            ( field class )
+    \            swap  @ offsetTable + @ me +
+    \                { recurse }
+    \        else
+    \            drop drop
+    \        then
+    }
 ;
 
-: static  dup allocation allotment /object ;
+: static  ( class - object )
+    dup allocation allotment dup >r /object r> ;
 
 : dynamic  ( class - object )
 \    dup class.useHeap @ if
@@ -212,10 +213,11 @@ previous
         dup class>pool length if
             dup class>pool pop
         else
-            dup sizeof allotment 
+            dup *struct 
         then
 \    then
-    /object
+    dup >r /object
+    r>
 ;
 
 : destruct  ( object - )
@@ -233,33 +235,33 @@ previous
 
 : class:  ( initialsize maxsize - <name> )  \ pass 0 for maxsize to not have one
     create
-        %class old-sizeof allotment to cc
-        cc to lastClass
+        %class old-sizeof allotment to class
+        class to lastClass
 
-    cc /node
-    cc >fields /node
-    cc >pool /node
-    wordlist cc class.wordlist !
-    ( maxsize ) cc class.maxSize !    
-    ( initialsize ) cell max cc class.size !
-    ['] noop cc class.constructor !
-    ['] noop cc class.destructor !
-    cc class>offsetTable  1024  $80000000  ifill
+    class /node
+    class >fields /node
+    class >pool /node
+    wordlist class class.wordlist !
+    ( maxsize ) class class.maxSize !    
+    ( initialsize ) cell max class class.size !
+    ['] noop class class.constructor !
+    ['] noop class class.destructor !
+    class class>offsetTable  1024  $80000000  ifill
 ;
 
 : !prototype
-    cc class.prototype @ 0= if
+    class class.prototype @ 0= if
         \ create a new prototype copied from superclass
-        cc allocation allotment cc class.prototype !
-        cc allocation cc class.prototypeSize !  \ support extensions
-        cc dup prototype class!  \ set the prototype's class, v. important
+        class allocation allotment class class.prototype !
+        class allocation class class.prototypeSize !  \ support extensions
+        class dup >prototype class!  \ set the prototype's class, v. important
     else
-        cc class.maxSize @ 0= if
+        class class.maxSize @ 0= if
             \ create a new prototype copied from the current one.  (for when extending classes)
-            cc prototype 
-                cc allocation allotment cc class.prototype !
-                ( prototype ) cc prototype cc class.prototypeSize @ move
-            cc allocation cc class.prototypeSize !
+            class >prototype 
+                class allocation allotment class class.prototype !
+                ( prototype ) class >prototype class class.prototypeSize @ move
+            class allocation class class.prototypeSize !
         then
     then
 ;
@@ -282,14 +284,14 @@ previous definitions
 : :+ ( class - <name> <code> ; )
     (knowing) knowinging +order : ;
 
-: field  ( size - <name> ) ( object - object+n )
+: field  ( size - <name> ) ( - object+n )
     ?superfield drop ;
     
-: var  ( - <name> ) ( object - object+n )
+: var  ( - <name> ) ( - object+n )
     cell field ;
 
 : fields:  ( class - )
-    to cc ;
+    to class ;
 
 \ superfield offset utility
 : superfield>offset  ( superfield class - offset )
@@ -321,7 +323,7 @@ previous definitions
     only forth definitions ' >body converse ;
 
 : extend:  ( - <name> )
-    ' >body to cc 
+    ' >body to class 
 ;
 
 ( Node class )
@@ -333,12 +335,18 @@ previous definitions
 
 ( Dynamic classes - based on _node )
 
-: node-class:  ( maxsize )
+: node-class:  ( maxsize - <name> )
     _node sizeof swap class:
     ['] me/node lastClass class.constructor ! ;
 
 : invalidate-pool  ( class )
     class>pool 0node ;
+
+: static,  ( class - )
+    static drop ;
+
+\ fixes "illegal object address" bug on first call to {
+create dummy dummy as
 
 
 ( TEST )
@@ -347,4 +355,5 @@ marker dispose
 : test  not abort" Super Objects unit test fail" ;
 
 dispose
+
 

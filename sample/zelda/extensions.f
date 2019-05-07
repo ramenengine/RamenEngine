@@ -5,10 +5,10 @@ extend: _role
 ;class
 
 ( actions ) nr
-action start ( - )
-action idle ( - )
-action walk ( - )
-action turn ( angle )
+:action start ( - ) ;
+:action idle ( - ) ;
+:action walk ( - ) ;
+:action turn ( angle ) drop ;
 
 ( vars ) nr
 extend: _actor 
@@ -20,6 +20,6 @@ extend: _actor
     var dir \ angle
     var flags <hex
 ;class
-_actor prototype as
+_actor >prototype as
     2 hp !
     2 maxhp !

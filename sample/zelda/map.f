@@ -45,7 +45,7 @@ nodetree: worlds
 ;class
     
 : world:  ( - <name> )  ( - )
-    create _world static  me to world  me worlds push
+    create _world static as   me to world  me worlds push
     does>  to world  0 world worlds indexof world# !
 ;
 

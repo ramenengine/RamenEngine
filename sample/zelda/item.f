@@ -3,7 +3,7 @@
 _actor fields:
     var qty
 
-_actor prototype as
+_actor >prototype as
     1 qty !
 
 ld item-assets
@@ -12,5 +12,7 @@ ld item-assets
 : item[]  ( n - adr ) cells inventory + ;
 : get  ( qty role - ) role>type item[] +! ;
 : .item  ( obj - )  dup .type  ."  qty: " 's qty ? ;
-: pickup ( obj - ) { cr ." Picked up: " me .item  qty @ role @ get dismiss } ;
 : have  ( role - n )  role>type item[] @ ;
+: pickup ( obj - ) { cr ." Picked up: "
+    me .item  qty @ role @ get
+    ." Have: " role @ have .  me dismiss } ;

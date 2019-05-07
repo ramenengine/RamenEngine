@@ -6,7 +6,7 @@ _node sizeof  32 cells  class: _particle
     var fr <float var fg <float var fb <float var fa <float
     var ax var ay var afade <float
 ;class
-_particle prototype as
+_particle >prototype as
     1 fric !
     1 1 1 1 4af fr 4!
 
@@ -14,10 +14,11 @@ objlist: particles
 
 variable groundy
 
-: *particle  ( lifespan )
-    _particle dynamic lifespan !
+: *particle  ( lifespan - obj )
+    _particle dynamic { lifespan !
     me particles push  at@ x 2!
-    groundy @ gnd !  fore 4@ fr 4! ;
+    groundy @ gnd !  fore 4@ fr 4!
+    me } ;
 
 _particle :- die  me destroy ;
 _particle :- expired  lifetime @ lifespan @ >= ;

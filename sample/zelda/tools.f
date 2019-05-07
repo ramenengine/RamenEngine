@@ -7,7 +7,7 @@ extend: _actor
     var flags <hex
     var dir \ angle
 ;class
-_actor prototype as
+_actor >prototype as
     0 0 16 16 ihb xywh!
 
 ( misc )
@@ -29,7 +29,7 @@ _actor prototype as
     ibox you { ibox } overlap? ;
 : draw-ibox  ibox 2over 2- 2swap 2pfloor at red 1 1 2+ rect ;
 :slang on-top  act> me stage push ;
-: show-iboxes  stage one  on-top  draw> stage each> as draw-ibox ;
+: show-iboxes  stage *actor as  on-top  draw> stage each> as draw-ibox ;
 
 ( actor spawning )
 stage value spawner

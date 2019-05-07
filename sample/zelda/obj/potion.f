@@ -1,2 +1,2 @@
 type: potion
-    potion :to setup  /item  10 spr ! ;
+    potion :to setup  /item  10 frm ! ;

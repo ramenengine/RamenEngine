@@ -14,6 +14,6 @@ asset: %sample
     r> reload-sample ;
 
 \ sample:  create named sample
-: sample:   ( loopmode path c - >name> sample )
-    create  %sample sizeof allotment init-sample ; 
+: sample:   ( path c loopmode - >name> sample )
+    -rot  create  %sample *struct init-sample ; 
 

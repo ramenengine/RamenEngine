@@ -8,10 +8,10 @@ _actor fields:
     var ctr
     var trigged
 
-action idle
-action walk  
-action start
-action attack
+:action idle   ( - ) ;
+:action walk   ( - ) ;
+:action start  ( - ) ;
+:action attack ( - ) ;
 
 ( Data )
 16 16 s" link-tiles-sheet.png" >data tileset: link.image

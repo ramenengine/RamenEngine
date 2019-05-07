@@ -5,9 +5,9 @@ depend ramen/lib/std/tilemap2.f
 : ztype zcount type ;
 : live-for  ( n - ) perform> pauses end ;
 : (those)  ( filter-xt code objlist - filter-xt code )
-    each> as over execute if dup >r then ;
-: those>  ( filter-xt objlist - <code> )  ( - )  \ note you can't pass anything to <code>
-    r> me { swap (those) 2drop } ;
+    each> { over execute if me over call then } ;
+: those>  ( filter-xt objlist - <code> )  ( obj - )  \ note you can't pass anything to <code>
+    r> swap (those) 2drop ;
 : njump  ( n adr - ) 
     swap cells + @ execute ;
 : rndcolor  ( - ) 1 rnd 1 rnd 1 rnd rgb ;    
@@ -16,9 +16,9 @@ depend ramen/lib/std/tilemap2.f
 : sf@+  dup sf@ cell+ ;
 : tinted   fore sf@+ f>p swap sf@+ f>p swap sf@+ f>p swap sf@+ f>p nip tint 4! ;
 : /sprite  draw> sprite ;
-: *sprite   ( image ) stage one tinted img ! /sprite ;
-: csprite  img @ imagewh 0.5 0.5 2* cx 2!  sprite ;
-: *csprite  ( image ) stage one tinted img ! draw> csprite ;
+: *sprite   ( image - obj ) stage *actor as tinted img ! /sprite ;
+: /csprite  ( - )  draw>  img @ imagewh 0.5 0.5 2* cx 2!  sprite ;
+: *csprite  ( image - obj ) stage *actor as tinted img ! /csprite ;
 : >data  project count s" data/" strjoin 2swap strjoin ;  \ prepend assets with data path
 : hide  's hidden on ;
 : reveal  's hidden off ;
@@ -65,7 +65,7 @@ extend: _actor
 
 : ?waste  target @ { ?id } ?dup if @ targetid @ <> ?end then ;
 : target!   dup target ! { ?id } ?dup if @ targetid ! then ;
-: *task  me tasks one  target!  act> ?waste ;
+: *task  me tasks *actor as  target!  act> ?waste ;
 : (after)  perform> pauses (xt) @ target @ { execute } end ;
 : after  ( xt n - ) me { *task swap (xt) ! (after) } ;
 : after>  ( n - <code> ) r> code> swap after ;

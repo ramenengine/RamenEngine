@@ -26,7 +26,7 @@ create tileprops  s" tileprops.dat" >data file,
 
 ( actor directional stuff )
 var olddir
-action evoke-direction  ( - )
+:action evoke-direction  ( - ) ;
 : !face  ( - ) dir @ olddir !  evoke-direction ; 
 : downward  ( - ) 90 dir ! !face ;
 : upward    ( - ) 270 dir ! !face ;

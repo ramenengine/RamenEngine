@@ -24,9 +24,9 @@ extend: _role
     var typeid
     
     ( actions )
-    action setup ( - )
-    action start ( - )
-    action die ( - )
+    :action setup ( - ) ;
+    :action start ( - ) ;
+    :action die ( - ) end ;
 ;class
 
 basis :to die ( - ) end ;   
@@ -61,7 +61,7 @@ create typeRoles 255 stack,
 
 ( common graphics types )
 : (clip)  clipx 2@ cx 2@ 2- 16 16 ;
-: obj-sprite #gfxclip set? if (clip) clip> then spr @ nsprite ;
+: obj-sprite #gfxclip set? if (clip) clip> then frm @ nsprite ;
 : obj-animate  #gfxclip set? if (clip) clip> then sprite ;
 
 : gfx-sprite draw> obj-sprite ;
@@ -103,7 +103,7 @@ create graphics-types
 ;
 
 ( defining object types )
-: spawner:  ( role - <name> )  ( - )  create , <ui does> @  stage one  /obj ;
+: spawner:  ( role - <name> )  ( - )  create , <ui does> @  stage *actor as  /obj ;
 : initializer:  ( role - <name> )  ( - ) create , does> @ /obj ;
 
 \ creates 3 words in addition to the role (if it wasn't already defined)
@@ -131,7 +131,7 @@ create graphics-types
 : actiontable:  ( #cells - <name> )  ( n - )
     _role fields:
     cells ?superfield <adr  -exit
-    does> _role superfield>offset role@ + swap cells + @ execute ;
+    does> _role superfield>offset role @ + swap cells + @ execute ;
 
 ( interactions )
 
