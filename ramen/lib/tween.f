@@ -96,9 +96,6 @@ using tweening
 : tween  ( adr start end ease-xt in/out-xt - )
     *tween drop ;
 
-: tween  ( adr start end ease-xt in/out-xt - )
-    *tween drop ;
-
 : tweento  ( adr end ease-xt in/out-xt - )
     2>r over @ swap 2r> tween ;
 

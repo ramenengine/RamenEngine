@@ -1,13 +1,3 @@
-
-\ Multitasking for game objects
-
-\ The following words should only be used within a task:
-\  PAUSE END FRAMES SECS
-\ The following words should never be used within a task:
-\  - External calls
-\  - Console output 
-\  (See below for a workaround)
-
 0 value task  \ current task
 
 fixed
