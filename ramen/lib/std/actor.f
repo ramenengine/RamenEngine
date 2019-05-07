@@ -10,7 +10,8 @@ variable nextid
     var en <flag
     var hidden <flag
     var marked <flag \ for deletion
-    var x  var y  var vx  var vy
+    var x  var y  var z
+    var vx  var vy  var vz
     var drw <adr
     var beha <adr
     var dyn <flag          \ is dynamic

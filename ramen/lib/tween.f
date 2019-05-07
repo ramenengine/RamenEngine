@@ -3,7 +3,7 @@ variable (length)
 
 
 
-create tweens _node static drop
+create tweens _node static,
 
 _node sizeof 0 class: _tween
     
