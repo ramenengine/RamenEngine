@@ -11,7 +11,7 @@
 \ POP                ( collection -- val )
 \   Fetch vel from end of collection and remove it.
 \ EACH               ( xt collection -- )  ( val -- )
-\   Itterate over all the items in a collection.  Adr may be address of value or a node.
+\   Itterate over all the items in a collection.  Val in the case of nodetrees will be a node.
 \ DELETES            ( index count collection -- )
 \   Delete range from a collection.
 \ .EACH              ( collection -- )
@@ -52,7 +52,7 @@
 \ GATHER             ( src-collection dest-collection -- )
 \   Pushes all the items from one collection to another.
 \ COPY               ( src-collection dest-collection -- )
-\   Same as gather but vacates the destinatino collection.
+\   Same as gather but vacates the destination collection.
 \ UNSERT             ( i collection -- val )
 \   Reverse of INSERT; extracts a value/node from a collection at given index i.
 \ WHICH              ( i xt collection -- i | -1 )  ( val -- flag )
@@ -60,6 +60,7 @@
 \   If it's not found, it returns -1.
 \ INDEXOF            ( index val collection -- index )
 \   Get the index of the first instance of val, starting the search at given index.
+
 \ TODO: (generics)
 \ DIFF               ( filter-xt src-collection dest-collection -- )  ( adr -- flag )  
 
