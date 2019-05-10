@@ -1,5 +1,4 @@
 true constant dev
-\ true constant HD
 
 include ramen/ramen.f         
 ide

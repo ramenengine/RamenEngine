@@ -36,10 +36,8 @@ include afkit/ans/roger.f          \ ANS
 0 value display
 create uesrc 32 cells /allot
 variable fs    \  enables fullscreen when on
-[defined] initial-scale [if] initial-scale [else] 1 [then] value #globalscale
-[undefined] initial-res [if]  : initial-res  640 480 ;  [then]
-[undefined] initial-pos [if]  : initial-pos  0 0 ;  [then]
-create res  initial-res swap , ,
+1 value #globalscale
+create res  0 , 0 ,
 defer >host
 _AL_MAX_JOYSTICK_STICKS constant MAX_STICKS
 create joysticks   MAX_STICKS /ALLEGRO_JOYSTICK_STATE * /allot
@@ -70,16 +68,10 @@ create penx  0 ,  here 0 ,  constant peny
   al_init_native_dialog_addon 0= abort" Allegro: Couldn't initialize native dialogs."
 ;
 
-create native  /ALLEGRO_MONITOR_INFO /allot
-: nativewh  ( - w h )  native 2 cells + 2@ native 2@ 2- ;
-: nativew  ( - n ) nativewh drop ;
-: nativeh  ( - n ) nativewh nip ;
-
 \ ------------------------------------ initializing the display ------------------------------------
 
 : assertAllegro ( - ) 
     allegro? ?exit   true to allegro?  init-allegro-all
-    0 native al_get_monitor_info 0= abort" Couldn't get monitor info; try replugging the monitor or restarting"
     [defined] allegro-audio [if]  initaudio  [then]
 ; 
 
@@ -93,13 +85,16 @@ create native  /ALLEGRO_MONITOR_INFO /allot
 
 : init-display  ( w h - )
     assertAllegro
-    fs @ if 2drop nativewh then
+    fs @ if 2drop -1 -1 then
     locals| h w | 
 
     ALLEGRO_DEPTH_SIZE #24 ALLEGRO_SUGGEST  al_set_new_display_option
     ALLEGRO_VSYNC 1 ALLEGRO_SUGGEST  al_set_new_display_option
 
-    w h al_create_display  to display    
+    w h al_create_display  to display
+    displaywh res 2!
+
+    \ 0 native al_get_monitor_info 0= abort" Couldn't get monitor info; try replugging the monitor or restarting"
     
     display al_get_display_refresh_rate dup 0= if drop 60 then to fps
 
