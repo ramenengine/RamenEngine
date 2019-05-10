@@ -12,7 +12,7 @@ variable (m)
 ( transformation ops )
 : translate  ( x y - ) 2af mtop -rot al_translate_transform ;
 : scale  ( sx sy - ) 2af mtop -rot al_scale_transform ;
-: rotate  ( angle - ) 1af mtop swap al_rotate_transform ;
+: rotate  ( angle - ) >rad 1af mtop swap al_rotate_transform ;
 : hshear  ( n - ) 1af mtop swap al_horizontal_shear_transform ;
 : vshear  ( n - ) 1af mtop swap al_vertical_shear_transform ;
 : identity  ( - ) mtop al_identity_transform ;
@@ -37,8 +37,8 @@ identity tpush
     1 1 sx 2@ 2/ scale
 ;
 
-: view>  ( object - <code> )
-    { view } tpush r> call tpop ;
+: view>  ( - <code> )
+    view tpush r> call tpop ;
 
-: transform>  ( object - <code> )
-    r> swap  at@ 2>r  { transform } tpush  call  tpop  2r> at ;
+: transform>  ( - <code> )
+    r> at@ 2>r  transform tpush  call  tpop  2r> at ;
