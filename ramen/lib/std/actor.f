@@ -22,7 +22,7 @@ variable nextid
 64 cells node-class: _objlist
 ;class
 
-create objlists  _objlist static,           \ parent of all objlists
+create objlists  _node static,           \ parent of all objlists
 
 : >first  ( node - node|0 ) node.first @ ;
 : >last   ( node - node|0 ) node.last @ ;

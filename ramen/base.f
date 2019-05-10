@@ -73,6 +73,8 @@ variable ldl
     2r> 2drop ;
 
 : empty
+    displaywh resolution
+    oscursor on
     page
     cr
     ." [Empty]"
