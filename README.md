@@ -10,12 +10,10 @@ the following repositories will house the stable releases of each dependency fro
 - [Ramen](https://github.com/RogerLevy/ramen) (archived for history)
 - [Workspace](https://github.com/RogerLevy/ws)
 - [Venery](https://github.com/RogerLevy/venery)
-- [3d Packet](https://github.com/RogerLevy/3dpack)
 
 ## Features
 
 * Built on Allegro 5, using [AllegroForthKit](https://github.com/RogerLevy/AllegroForthKit).
-* [Tiled](https://www.mapeditor.org/) map support \(partial\)
 * Sprite animation
 * Multiple display list support
 * Interactive commandline console
