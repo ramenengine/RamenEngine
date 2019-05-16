@@ -32,9 +32,12 @@ identity tpush
 ;
 
 : view  ( - )
+    identity
     x 2@ [undefined] HD [if] 2pfloor [then] 2negate translate
-    ang @ negate rotate
+\    ang @ negate rotate
     1 1 sx 2@ 2/ scale
+    compose
+    0 0 at
 ;
 
 : view>  ( - <code> )
