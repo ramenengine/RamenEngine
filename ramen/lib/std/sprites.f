@@ -108,7 +108,7 @@ _actor >prototype as
 : anim:  ( image speed - <name> loopadr )
     create  2,  here ;
 : autoanim:  ( image speed - <name> loopadr ) ( - )
-    anim: does> animate ;
+    anim: does> animate  drw @ ?exit  draw> sprite ;
     
 : ,,  for  dup , loop drop  ;
 : loop:  drop here ;
