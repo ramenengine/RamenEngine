@@ -168,7 +168,9 @@ previous
     >in @ create >in !
     nextOffsetSlot , $12345678 ,
     nextOffsetSlot cell+ #4095 and to nextOffsetSlot
-    does> superfield.offset @ offsetTable + @ me + 
+    immediate does> superfield.offset @ s" offsetTable" evaluate
+        state @ 0= if swap then ?literal s" + @ me + " evaluate
+    \ does> superfield.offset @ offsetTable + @ me + 
 ;
 
 : ?superfield  ( size - <name> flag )  ( - adr )    
