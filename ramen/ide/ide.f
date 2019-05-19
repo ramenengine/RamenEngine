@@ -14,9 +14,9 @@ include ramen/ide/v2d.f
 create cursor 6 cells /allot   \ col, row, color (r,g,b,a)
 : colour 2 cells + ;
 variable scrolling  scrolling on
-create replbuf #1024 /allot
-create cmdbuf #1024 /allot
-create history #1024 /allot
+create replbuf #65536 /allot
+create cmdbuf #65536 /allot
+create history #65536 /allot
 create ch  0 c, 0 c,
 create attributes
   1 , 1 , 1 , 1 ,      \ 0 white
@@ -49,7 +49,11 @@ create attributes
 : store   cmdbuf count dup if  history place  else  2drop  then ;
 : typechar  cmdbuf count + count!  #1 cmdbuf count+! ;
 : rub       cmdbuf count nip  #1 -  0 max  cmdbuf count! ;
-: paste     clipb@  cmdbuf append ;
+: sanitized
+    clipb@ 2dup
+    1p for dup c@ dup #13 = swap #10 = or if bl over c! then #1 + loop
+    drop ;
+: paste     sanitized cmdbuf append ;
 : copy      cmdbuf count clipb! ;
 
 ( init )
@@ -204,7 +208,7 @@ create ide-personality
 
 ( rendering )
 : draw-outbuf
-  >outbuf  
+  hold>  >outbuf  
   consolas font>
   at@ 2>r
   #rows   for
