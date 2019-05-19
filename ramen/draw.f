@@ -53,11 +53,11 @@ fixed
     locals| dh dw |
     ?dup -exit
     ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  destxy dw dh 4af  0  al_draw_tinted_scaled_bitmap ;
-: >center  bmpwh 1 >> swap 1 >> swap ;
+: >center  dup al_get_bitmap_width 2 / swap al_get_bitmap_height 2 / 2p ;
 : xblit ( bmp scalex scaley angle flip )
     locals| flip ang sy sx bmp |
     bmp -exit
-    bmp fore 4@ bmp >center destxy  4af  sx sy ang >rad 3af  flip
+    bmp  fore 4@  bmp >center destxy  4af  sx sy ang >rad 3af  flip
     al_draw_tinted_scaled_rotated_bitmap ;
 : bblit  ( bmp x y w h flip )
     locals| flip h w y x bmp |

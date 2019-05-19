@@ -43,7 +43,8 @@ include ramen/publish.f
 include ramen/draw.f
 include ramen/default.f
 
-: stop ( - ) step> noop ;
+: -pump  ( - ) pump> noop ;
+: stop ( - ) -pump step> noop ;
 : void ( - ) stop show> ramenbg ;
 
 : project:  ( -- <path> )
