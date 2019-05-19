@@ -23,11 +23,10 @@
 : uvec  ( deg - x y )   >r  r@ cos  r> sin ;  \ get unit vector from angle
 : vec  ( deg len - x y )  >r  uvec  r> dup 2* ;
 : angle  ( x y - deg ) 1pf 1pf fatan2 r>d f>p  360 + 360 mod ;
-: magnitude  ( x y - n )  2pf fdup f* fswap fdup f* f+ fsqrt f>p ;
-: normalize  ( vec - )  dup 2@ 2dup 0 0 d= ?exit  2dup magnitude dup 2/  ( 1 1 2+ ) rot 2! ;
+: hypot  ( x y - n )  2pf fdup f* fswap fdup f* f+ fsqrt f>p ;
+: normalize  ( vec - )  dup 2@ 2dup 0 0 d= ?exit  2dup hypot dup 2/  ( 1 1 2+ ) rot 2! ;
 : vdif  ( vec1 vec2 - x y )  2@ rot 2@ 2- ;
-: proximity  ( vec1 vec2 - n ) vdif magnitude ;   \ distance between two vectors
-: hypot  ( vec - n )  2@ 1pf fdup f* 1pf fdup f* f+ fsqrt f>p ;
+: proximity  ( vec1 vec2 - n ) vdif hypot ;   \ distance between two vectors
 : dotp  ( vec1 vec2 - n ) swap 2@ rot 2@  -rot ( b.x a.y ) * >r  ( a.x b.y ) *  r> - ;
 : rotate  ( deg vec - )
     swap  dup cos  swap sin  locals| sin(ang) cos(ang) v |
