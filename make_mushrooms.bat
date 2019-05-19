@@ -1,0 +1,1 @@
+ ./ramen/make_sfwin.bat mushrooms ex/mushrooms/mushrooms.f ex\mushrooms
