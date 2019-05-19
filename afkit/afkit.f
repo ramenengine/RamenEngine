@@ -92,7 +92,7 @@ create penx  0 ,  here 0 ,  constant peny
     ALLEGRO_VSYNC 1 ALLEGRO_SUGGEST  al_set_new_display_option
 
     w h al_create_display  to display
-    displaywh res 2!
+    res 2@ or 0= if  displaywh res 2!  then
 
     \ 0 native al_get_monitor_info 0= abort" Couldn't get monitor info; try replugging the monitor or restarting"
     
@@ -227,7 +227,8 @@ previous
 
 : fullscreen
     fs on
-    [defined] dev [if] ALLEGRO_FULLSCREEN_WINDOW [else] ALLEGRO_FULLSCREEN [then]
+    \ [defined] dev [if] ALLEGRO_FULLSCREEN_WINDOW [else] ALLEGRO_FULLSCREEN [then]
+    ALLEGRO_FULLSCREEN_WINDOW 
     ALLEGRO_OPENGL or
     al_set_new_display_flags
     +display ;
