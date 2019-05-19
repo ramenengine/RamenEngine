@@ -25,3 +25,7 @@
 : mountw mountw 1p ;
 : mounth mounth 1p ;
 : mountwh mountwh 2p ;
+
+: clip ( x y w h - ) 
+    4i al_set_clipping_rectangle
+;
