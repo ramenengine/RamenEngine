@@ -8,11 +8,12 @@
     project count s" data/" strjoin 2swap strjoin ;  
 
 
-: /pan  \ move something with arrowkeys
-    act>
-        <left> kstate if -1 x +! then
-        <right> kstate if 1 x +! then
-        <up> kstate if -1 y +! then
-        <down> kstate if 1 y +! then
+: /pan  ( speed - ) \ move something with arrowkeys
+    perform> begin
+        <left> kstate if dup negate x +! then
+        <right> kstate if dup x +! then
+        <up> kstate if dup negate y +! then
+        <down> kstate if dup y +! then
+        pause again
 ;
         
