@@ -39,6 +39,8 @@ defer repl?     :noname  0 ; is repl?
 \ Event stuff
 create evt  256 /allot
 : etype  ( - ALLEGRO_EVENT_TYPE )  evt ALLEGRO_EVENT.TYPE @ ;
+: keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
+: unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
 
 : !mickey  (mouse) 2@ mickey 2!  mouse 2@ (mouse) 2! ;
 : poll  ( - ) pollKB  pollJoys  !mickey ;
@@ -58,15 +60,7 @@ define internal
 
 using internal
 : clip ( x y w h - ) 
-    #globalscale * s>f cliph sf!
-    #globalscale * s>f clipw sf!
-    s>f  clipy sf!
-    s>f  clipx sf!
-    m1   clipx clipy   al_transform_coordinates
-    clipx sf@ f>s
-    clipy sf@ f>s
-    clipw sf@ f>s
-    cliph sf@ f>s al_set_clipping_rectangle
+    al_set_clipping_rectangle
 ;
 
 : mountw  ( - n ) res x@ #globalscale * ;
@@ -87,7 +81,7 @@ using internal
     \ m1 0.625e 0.625e 2sf al_translate_transform
     m1 al_use_transform
 
-    0 0 res xy@ clip
+    mountxy mountwh clip
     
     ALLEGRO_ADD ALLEGRO_ALPHA ALLEGRO_INVERSE_ALPHA
     ALLEGRO_ADD ALLEGRO_ONE   ALLEGRO_ONE

@@ -1,8 +1,6 @@
 \ SwiftForth only
 
 s" ramen/ide/data/consolab.ttf" 26 ALLEGRO_TTF_NO_KERNING font: consolas
-: keycode  evt ALLEGRO_KEYBOARD_EVENT.keycode @ ;
-: unichar  evt ALLEGRO_KEYBOARD_EVENT.unichar @ ;
 create margins 4 cells /allot
 : ?.catch  ?dup if  postpone [  .catch  then ;
 
