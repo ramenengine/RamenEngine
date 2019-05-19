@@ -102,8 +102,11 @@ myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
 : -v  0 0 vx 2! ;
 : rdelay  0.5 2 between delay ;
 : /wander  0 perform> begin -v rdelay 360 rnd 0.5 vec vx 2! rdelay again ;
+: dist  's x x proximity ;
+: enlist  act> p1 dist 40 <= ?exit  p1 's x 2@ x 2@ 2- angle 1.5 vec vx 2! ;
+: /?enlist  act> p1 dist 64 <= if cr ." Enlist!" enlist then ;
 \ : /myconid  #2 rnd if /myconid1 else /myconid2 then /wander ;
-: /myconid  /myconid2 /wander ;
+: /myconid  /myconid2 /wander /?enlist ;
 : myconids  for  playfield-box somewhere at  one /myconid  loop ; 
 : /avatar  1.333 /pan ;
 
