@@ -43,26 +43,27 @@ _actor >prototype as
 ( Drawing )
 : bsprite ( srcx srcy w h flip )
     locals| flip h w y x |
-    img @ -exit
-    img @ >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 2@ 2af
+    img @ ?dup -exit
+    >bmp  x y w h 4af  tint 4@ 4af  cx 2@  destxy  4af  sx 2@ 2af
     ang @ >rad 1af  flip
         al_draw_tinted_scaled_rotated_bitmap_region ;
 
 ( Frame stuff )
-: rgntbl  img @ image.regions ;
+: rgntbl  img @ dup -exit image.regions ;
 
 : framexywh  ( n rgntbl - srcx srcy w h )
     swap /region * + 4@ ;
 
 : >region  ( n - srcx srcy w h )
-    img @ 0= if 0 0 0 0 ;then
-    rgntbl @ if
-        rgntbl @ framexywh
+    img @ ?dup 0= if drop 0 0 0 0 ;then
+    locals| image |
+    rgntbl @ ?dup if
+        framexywh
     ;then
-    img @ image.subw @ if
-        img @ subxywh
+    image image.subw @ if
+        image subxywh
     else
-        0 0 img @ imagewh
+        0 0 image imagewh
     then
 ;
 
@@ -71,11 +72,11 @@ _actor >prototype as
     ( skip the settings ) 2 cells + anmctr @ pfloor /frame * + ;
 
 : curflip  ( index - index n )
-    anm @ if anm @ >frame @ #3 and ;then  dup 3 and ;
+    anm @ ?dup if >frame @ #3 and ;then  dup 3 and ;
 
 : ?regorg  ( index - index )  \ apply the region origin
-    img @ -exit  rgntbl @ -exit
-    rgntbl @ over /region * + 4 cells + 2@ cx 2! ;
+    rgntbl @ ?dup -exit
+        over /region * + 4 cells + 2@ cx 2! ;
 
 : frame@  ( - n )  \ fetch FRM if ANM is 0
     anm @ dup if  >frame @  else  drop  frm @  then ;
@@ -99,6 +100,16 @@ _actor >prototype as
  
 : sprite  ( - )  \ draw sprite and advance the animation if any
     frame@ nsprite  anmspd @ +frame ;
+
+: spritewh  ( - w h )
+    frm @ >region 2nip ;
+  
+: spritew  ( - w )
+    spritewh drop ;
+    
+: spriteh  ( - h )
+    spritewh nip ;
+    
 
 \ Play an animation from the beginning, using its settings
 : animate  ( anim - )
