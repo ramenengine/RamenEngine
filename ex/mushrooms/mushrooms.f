@@ -11,6 +11,7 @@ project: ex/mushrooms
 _actor fields:
     var scrollx var scrolly
     var w var h
+    var leader
 
 ( variables )
 128 128 * array: tilebuf
@@ -69,7 +70,12 @@ mushroom-bg.png to bank
 : /bg  draw> scrolled tilemap ;
 
 
-( generate world )
+( map tools )
+: savemap  ( - )
+    0 0 tilebuf loc
+        tilebuf length cells
+        s" stage.tilemap" >datapath
+        file! ;
 : clearmap  0 0 tilebuf loc tilebuf length 8 ifill ;
 : pepper  swap for  dup 128 128 2rnd tilebuf loc !  loop drop ;
 : grasses  5 pepper ;
@@ -101,10 +107,22 @@ myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
 : /myconid2  /shadowed /myconid2.anim ;
 : -v  0 0 vx 2! ;
 : rdelay  0.5 2 between delay ;
-: /wander  0 perform> begin -v rdelay 360 rnd 0.5 vec vx 2! rdelay again ;
 : dist  's x x proximity ;
-: enlist  act> p1 dist 40 <= ?exit  p1 's x 2@ x 2@ 2- angle 1.5 vec vx 2! ;
-: /?enlist  act> p1 dist 64 <= if cr ." Enlist!" enlist then ;
+: close?  leader @ dist 40 < ;
+: /wander  0 perform> begin
+    leader @ if
+        close? if
+            360 rnd 0.5 vec vx 2! rdelay -v rdelay 
+        else
+            pause
+        then
+    else
+        -v rdelay 360 rnd 0.5 vec vx 2! rdelay 
+    then
+    again ;
+: chase   leader @ 's x 2@ x 2@ 2- angle 1.5 vec vx 2! ;
+: enlist  p1 leader ! /wander act> close? not if chase /wander then ;
+: /?enlist  act> p1 dist 32 <= if cr ." Enlist!" enlist then ;
 \ : /myconid  #2 rnd if /myconid1 else /myconid2 then /wander ;
 : /myconid  /myconid2 /wander /?enlist ;
 : myconids  for  playfield-box somewhere at  one /myconid  loop ; 
@@ -148,14 +166,6 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
     reload
     gussy \ replace certain tiles with objects
 ;
-
-
-( map editing tools )
-: savemap  ( - )
-    0 0 tilebuf loc
-        tilebuf length cells
-        s" stage.tilemap" >datapath
-        file! ;
 
 
 ( setup the stage. )
