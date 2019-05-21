@@ -130,8 +130,8 @@ myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
 
 
 ( houses - tiles 37, 38 )
-: /house1   mushroom-bg.png img !  draw> 0 0 32 48 0 bsprite ;
-: /house2   mushroom-bg.png img !  draw> 32 0 32 48 0 bsprite ;
+: /house1   mushroom-bg.png img !  draw> 0 -30 +at  0 0 32 48 0 bsprite ;
+: /house2   mushroom-bg.png img !  draw> 0 -30 +at  32 0 32 48 0 bsprite ;
 
 
 ( cheeselord )
