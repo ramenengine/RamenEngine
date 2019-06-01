@@ -61,6 +61,7 @@ fixed
     al_draw_tinted_scaled_rotated_bitmap ;
 : bblit  ( bmp x y w h flip )
     locals| flip h w y x bmp |
+    bmp -exit
     bmp  fore 4@  x y w h 4af  destxy 2af  flip  al_draw_tinted_bitmap_region ;
 
 

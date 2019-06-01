@@ -24,7 +24,7 @@ asset: %image
 : unload-image  image.bmp @ al_destroy_bitmap ;
 : init-image  >r  r@ srcfile place  ['] reload-image ['] unload-image r@ register  r> reload-image ;
 : image:  create  %image *struct init-image  ;
-: >bmp  image.bmp @ ;
+: >bmp  dup if image.bmp @ ;then ;
 
 \ load-image  ( path c image - ) 
 \ free-image  ( image - )  

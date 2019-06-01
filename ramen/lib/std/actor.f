@@ -64,7 +64,7 @@ objlist: stage  \ default object list
 
 ( static actors )
 : actor:   ( parent - <name> )
-    create  _actor static as  me swap push  !id
+    create  _actor static as  !id  ?dup if me swap push then  
     _actor fields: ;
 
 ( role stuff )
