@@ -8,8 +8,14 @@ project: ex/mushrooms
 320 240 resolution
 ld gfx
 
-( assets )
+: strings:  ( - <name> ) ( n - adr c )
+    create does> swap for count + loop count ;
+
+( data )
 16 16 s" mushroom-bg.png" >datapath tileset: mushroom-bg.png
+
+strings: level[]
+    ," test.tilemap"
 
 ( myconid fields )
 _actor fields:
@@ -17,33 +23,35 @@ _actor fields:
 
 ( variables )
 stage actor: p1
+0 value level#
 
 ( roles )
 role: [myconid]
 role: [cheeselord]
 
 ( map tools )
+: level$  level# level[] ;
 : savemap  ( - )
     0 0 tilebuf loc
         tilebuf length cells
-        s" stage.tilemap" >datapath
+        level$ >datapath
         file! ;
 : clearmap  0 0 tilebuf loc tilebuf length 8 ifill ;
-: pepper  swap for  dup 128 128 2rnd tilebuf loc !  loop drop ;
+create fence  128 , 128 , 
+: pepper  swap for  dup fence 2@ 2rnd tilebuf loc !  loop drop ;
 : grasses  5 pepper ;
 : flowers  21 pepper ;
 
+
+( plants )
 16 16 s" mushroom-plants.png" >datapath tileset: mushroom-plants.png
 
-( grass )
-\ define self-playing animation.
-\ AUTOANIM: ( image speed - <name> )
+\ define self-playing animation. AUTOANIM: ( image speed - <name> )
 mushroom-plants.png  1 8 /  autoanim: /grass.anim 0 , 1 , 2 , 1 , ;anim
+mushroom-plants.png 1 8 / autoanim: /flower.anim 3 , 4 , 5 , 4 , ;anim
+
 : /culled  draw> sprite ;
 : /grass  /culled /grass.anim ;
-
-( flower )
-mushroom-plants.png 1 8 / autoanim: /flower.anim 3 , 4 , 5 , 4 , ;anim
 : /flower  /culled /flower.anim ;
 
 ( myconids )
@@ -51,9 +59,6 @@ mushroom-plants.png 1 8 / autoanim: /flower.anim 3 , 4 , 5 , 4 , ;anim
 1 32 / constant walk-anim-speed
 myconids.png walk-anim-speed autoanim: /myconid1.anim 1 , 1 ,h ;anim
 myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
-: -at  2negate +at ;
-: shadow     2>r tint 4@ 0 0 0 1 tint 4! 2r@ +at sprite 2r> -at tint 4! ;
-: /shadowed  draw> 1 1 shadow sprite ;
 : /myconid1  /shadowed /myconid1.anim ;
 : /myconid2  /shadowed /myconid2.anim ;
 : -v  0 0 vx 2! ;
@@ -112,18 +117,19 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 : reload
     cleanup  \ clean up the stage of any and all sprites we've added
     mushroom-bg.png to bank
-    s" stage.tilemap" >datapath 0 tilebuf [] tilebuf length cells @file  \ grab that tilemap
-    /gfx
+    level$ >datapath 0 tilebuf [] tilebuf length cells @file  \ grab that tilemap
 ;
-: loadmap
+: level ( n - )
+    to level#
     reload
     gussy \ replace certain tiles with objects
 ;
 
 
 ( setup the stage. )
+/gfx 
 bg as /bg
-cam as p1 /follow viewwh w 2!
+cam as p1 /follow 
 p1 as /myconid1 /avatar
 
 
@@ -133,6 +139,7 @@ p1 as /myconid1 /avatar
 : physics  stage each> as vx 2@ x 2+!  contain ;
 : mushrooms/step  step> think physics sweep ;
 mushrooms/step
+
 
 loadmap
 

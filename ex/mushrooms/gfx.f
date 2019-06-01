@@ -8,7 +8,7 @@ _actor fields:
 ( variables )
 stage actor: bg 
 [undefined] p1 [if] stage actor: p1 [then]
-stage actor: cam
+stage actor: cam   viewwh w 2!
 : playfield-box  0 0  128 16 * dup ;
 : mydims  img @ if spritewh else w 2@ then ;
 : playfield-clamp  playfield-box 2>r 2max 2r> mydims 2- 2min ;
@@ -56,6 +56,10 @@ stage actor: cam
 
 : /bg  draw> scrolled tilemap ;
 
+( shadows )
+: -at  2negate +at ;
+: shadow     2>r tint 4@ 0 0 0 1 tint 4! 2r@ +at sprite 2r> -at tint 4! ;
+: /shadowed  draw> 1 1 shadow sprite ;
 
 \ renderer; apply view transform at camera's pov
 : y!z  stage each> as  y @ spriteh + zorder ! ;
