@@ -6,69 +6,21 @@ depend ramen/lib/std/tilecol.f
 depend ramen/lib/std/zsort.f
 project: ex/mushrooms
 320 240 resolution
+ld gfx
 
-( tilemap fields )
+( assets )
+16 16 s" mushroom-bg.png" >datapath tileset: mushroom-bg.png
+
+( myconid fields )
 _actor fields:
-    var scrollx var scrolly
-    var w var h
     var leader
 
 ( variables )
-128 128 * array: tilebuf
-:make loc  ( col row array2d - adr )  >r 2pfloor 128 * + r> [] ;
-stage actor: bg 
 stage actor: p1
-stage actor: cam
-: playfield-box  0 0  128 16 * dup ;
-: mydims  img @ if spritewh else w 2@ then ;
-: playfield-clamp  playfield-box 2>r 2max 2r> mydims 2- 2min ;
 
-( visibility culling )
-: sprite  ( - )
-    x 2@ spritewh aabb cam 's x 2@ viewwh aabb overlap? if sprite ;then ;
-
-( camera )
-: update-camera
-    cam as
-    x 2@ playfield-clamp x 2!   \ keep in playfield (otherwise things glitch visually)
-    x 2@ bg 's scrollx 2!    \ copy position to bg scroll
-    x 2@ bg 's x 2!   \ move the bg in step with the camera to counteract view transform
-;
-
-: /follow  ( actor - )
-    perform>  begin  dup { x 2@ spritewh 2 2 2/ 2+ } viewwh 2 2 2/ 2- x 2!  pause again ;
-
-( draw tiles )
-0 value bank  \ image
-: ?skip  dup ?exit  drop  r> drop ;
-: tile  ?skip 1 - >r bank >bmp r> bank subxywh 0 bblit ;
-: tile+  tile 16 0 +at ;
-
-( load tileset )
-16 16 s" mushroom-bg.png" >datapath tileset: mushroom-bg.png
-mushroom-bg.png to bank
-
-( tilemap renderer )
-: scrolled  ( - col row )
-    scrollx 2@ playfield-clamp scrollx 2!
-    scrollx 2@ 2pfloor 16 16 2mod 2negate +at
-    scrollx 2@ 2pfloor 16 16 2/ 2pfloor ;
-    
-: tilemap  ( col row - )
-    tilebuf loc
-    hold>
-    viewh 16 / pfloor 1 + for
-        dup  at@ 2>r
-        vieww 16 / pfloor 1 + for
-            dup @ tile+
-            cell+ 
-        loop
-        drop 128 cells +
-        2r> 0 16 2+ at 
-    loop  drop ;
-
-: /bg  draw> scrolled tilemap ;
-
+( roles )
+role: [myconid]
+role: [cheeselord]
 
 ( map tools )
 : savemap  ( - )
@@ -80,7 +32,6 @@ mushroom-bg.png to bank
 : pepper  swap for  dup 128 128 2rnd tilebuf loc !  loop drop ;
 : grasses  5 pepper ;
 : flowers  21 pepper ;
-
 
 16 16 s" mushroom-plants.png" >datapath tileset: mushroom-plants.png
 
@@ -124,9 +75,9 @@ myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
 : enlist  p1 leader ! /wander act> close? not if chase /wander then ;
 : /?enlist  act> p1 dist 32 <= if cr ." Enlist!" enlist then ;
 \ : /myconid  #2 rnd if /myconid1 else /myconid2 then /wander ;
-: /myconid  /myconid2 /wander /?enlist ;
+: /myconid  [myconid] role !  /myconid2 /wander /?enlist ;
 : myconids  for  playfield-box somewhere at  one /myconid  loop ; 
-: /avatar  1.333 /pan ;
+: /avatar   [myconid] role !  1.333 /pan ;
 
 
 ( houses - tiles 37, 38 )
@@ -137,7 +88,7 @@ myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
 ( cheeselord )
 96 128 s" cheeselord.png" >datapath tileset: cheeselord.png
 cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
-: /cheeselord  /cheeselord.anim /wander draw> 4 4 shadow sprite ;
+: /cheeselord  [cheeselord] role !  /cheeselord.anim /wander draw> 4 4 shadow sprite ;
 
 
 ( load map )
@@ -160,7 +111,9 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 ;
 : reload
     cleanup  \ clean up the stage of any and all sprites we've added
+    mushroom-bg.png to bank
     s" stage.tilemap" >datapath 0 tilebuf [] tilebuf length cells @file  \ grab that tilemap
+    /gfx
 ;
 : loadmap
     reload
@@ -180,13 +133,6 @@ p1 as /myconid1 /avatar
 : physics  stage each> as vx 2@ x 2+!  contain ;
 : mushrooms/step  step> think physics sweep ;
 mushrooms/step
-
-
-\ replace the renderer; apply view transform at camera's pov
-: y!z  stage each> as  y @ spriteh + zorder ! ;
-: !forcez  bg as  0 zorder ! ;
-: playfield  cam as view> y!z !forcez hold> stage draws ;
-:now  show> ramenbg mount update-camera playfield ;
 
 loadmap
 
