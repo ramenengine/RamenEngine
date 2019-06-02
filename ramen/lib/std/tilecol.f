@@ -9,11 +9,17 @@
 [undefined] tstep@ [if] : tstep@ 16 16 ; [then]
 
 extend: _actor
-    var mbw  var mbh   \ object collision box width,height
+    var mbx  var mby   \ tilemap collision box x,y,relative to origin (0,0 local)
+    var mbw  var mbh   \ tilemap collision box width,height
 ;class
+_actor >prototype {
+    -8 -8 mbx 2!
+    16 16 mbw 2!
+}
 
-defer on-tilemap-collide  ' drop is on-tilemap-collide  ( tilecell - )
-defer tileprops@   :noname drop 0 ; is tileprops@  ( tilecell - bitmask )  
+
+defer on-tilemap-collide  ' drop is on-tilemap-collide  ( tileval - )
+defer tileprops@   :noname drop 0 ; is tileprops@  ( tileval - bitmask )  
 [undefined] loc [if] defer loc [then]   ( col row array2d - adr )
 
 
@@ -35,16 +41,19 @@ define collisioning
     : wrt? BIT_WRT and ; \ ' wall right '
     
     : vector   create 0 , here 0 , constant ;
-    vector nx ny
+    vector nx ny  \ new velocity
     
     : gap  ( - n ) tstep@ drop ;  \ just square tiles supported for now
     
-    : px x @ ;
-    : py y @ ;
+    : px x @ mbx @ + ;
+    : py y @ mby @ + ;
 
     variable t
-    : xy>cr  ( x y tilesize - ) dup  2/  2pfloor ;
-    : pt  gap xy>cr  map@ dup t !  tileprops@ ;          \ point
+    : xy>cr  ( x y tilesize - c r )
+        dup  2/  2pfloor ;
+        
+    : pt  ( x y tilesize - n )  \ point
+        gap xy>cr  map@ dup t !  tileprops@ ;          
 
     ( increment coordinates )
     : ve+  swap gap +  mbw @ #1 - px +  min  swap ;
@@ -66,7 +75,7 @@ define collisioning
     : pr ( xy ) drop gap mod negate gap + +vx  true to lwall?  t @ on-tilemap-collide ;
 
     ( check left/right )
-    : cl mbh @ gap /  2 + for 2dup pt wrt? if pr unloop exit then he+ loop 2drop ;
+    : cl  mbh @ gap / 2 + for 2dup pt wrt? if pr unloop exit then he+ loop 2drop ;
     : crt mbh @ gap / 2 + for 2dup pt wlt? if pl unloop exit then he+ loop 2drop ;
 
     : ud vy @ -exit vy @ 0 < if px ny @ cu exit then px ny @ mbh @ + cd ;
@@ -77,6 +86,6 @@ define collisioning
 only forth definitions fixed 
 also collisioning
 
-: collide-tilemap ( array2d - ) to map  init ud lr ;
+: tilemap-physics ( array - ) to map  init ud lr ;
 
 only forth definitions
