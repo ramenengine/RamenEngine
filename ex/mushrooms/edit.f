@@ -11,6 +11,10 @@ variable tile
       
 : saveas  ( - <path> )
     <filespec> level$ place save ;
+
+: load  ( - <path> )
+    <filespec> level$ place reload ;
+
   
 : clear  ( - )
     0 0 tilebuf loc tilebuf length 8 ifill cleanup ;

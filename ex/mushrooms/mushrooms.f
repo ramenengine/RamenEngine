@@ -19,7 +19,7 @@ ld gfx
 
 strings: level[]
     ," test.map" \ 0
-    ," test.map" \ 1
+    ," 1-1.map"  \ 1
     ," test.map" \ 2
     ," test.map" \ 3
     ," test.map" \ 4
@@ -45,7 +45,6 @@ fixed
 stage actor: p1
 0 value level#
 create level$ 256 /allot
-create fence  128 , 128 , 
 _actor fields:
     var flags
 
@@ -54,6 +53,22 @@ _actor fields:
 #1
     flag solid# solid?
 drop
+
+( myconid states )
+0
+    enum roaming#
+    enum enlisted#
+    enum captured#
+    enum transiting#
+    enum saved#
+drop
+
+( myconid jobs )
+0
+    enum worker#
+    enum engineer#
+drop
+
 
 ( roles )
 role: [myconid]
@@ -88,9 +103,13 @@ mushroom-plants.png 1 8 / autoanim: /flower.anim 3 , 4 , 5 , 4 , ;anim
 16 16 s" myconids.png" >datapath tileset: myconids.png
 _actor fields:
     var leader
+    var state
+    var job
 1 32 / constant walk-anim-speed
-myconids.png walk-anim-speed autoanim: /myconid1.anim 1 , 1 ,h ;anim
-myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
+myconids.png walk-anim-speed autoanim: /myconid1.anim 2 , 3 , 4 , 3 , ;anim
+myconids.png walk-anim-speed autoanim: /myconid2.anim 6 , 7 , 8 , 7 , ;anim
+myconids.png walk-anim-speed autoanim: /engineer.anim 11 , 12 , 13 , 12 , ;anim
+
 : /myconid1  /shadowed /myconid1.anim ;
 : /myconid2  /shadowed /myconid2.anim ;
 : -v  0 0 vx 2! ;
@@ -109,10 +128,12 @@ myconids.png walk-anim-speed autoanim: /myconid2.anim 2 , 2 ,h ;anim
     then
     again ;
 : chase   leader @ 's x x vdif angle 1.5 vec vx 2! ;
-: enlist  p1 leader ! /wander act> close? not if chase /wander then ;
+: enlist  p1 leader !  enlisted# state !  /wander act> close? not if chase /wander then ;
 : /?enlist  act> p1 dist 32 <= if cr ." Join!" enlist then ;
 \ : /myconid  #2 rnd if /myconid1 else /myconid2 then /wander ;
 : /myconid  [myconid] role !  /myconid2 /solid /wander /?enlist ;
+: /engineer [myconid] role !  engineer# job !  /solid /wander /?enlist
+    /engineer.anim   draw>  !org  1 1 shadow sprite     9 nsprite ;
 : myconids  for  playfield-box somewhere at  one /myconid  loop ; 
 : /avatar   [myconid] role !  1.333 /vpan  /solid ;
 
@@ -128,6 +149,29 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 : /cheeselord  [cheeselord] role !  /cheeselord.anim /wander draw> 4 4 shadow sprite ;
 
 
+( hud )
+: #myconids ( - n )
+    0 stage each> 's role @ [myconid] = if 1 + then ;
+: #roaming ( - n )
+    0 stage each> { role @ [myconid] =  state @ roaming# =  and if 1 + then } ;
+: #enlisted ( - n )
+    0 stage each> { role @ [myconid] =  state @ enlisted# =  and if 1 + then } ;
+: #engineers ( - n )
+    0 stage each> { role @ [myconid] =  job @ engineer# =  and if 1 + then } ;
+
+: /hud
+    draw>
+        default-font font>
+        s" Roaming: " print 100 0 +at
+        #roaming 1i (.) print 50 0 +at
+        s" Enlisted: " print 100 0 +at
+        #enlisted 1i (.) print 50 0 +at
+        s" Engineers: " print -200 40 +at
+        #engineers 1i (.) print 
+;
+
+ 
+
 ( load map )
 : thinout  each> { dyn @ if me dismiss then } ;
 : cleanup  stage thinout sweep ;
@@ -136,6 +180,7 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
             dup @ 5 = if  >grass  one /grass ;then
             dup @ 21 = if >grass  one /flower ;then
             dup @ 22 = if >grass  at@ p1 's x 2! ;then
+            dup @ 23 = if >grass  one /engineer ;then
             dup @ 37 = if >grass  one /house1 ;then
             dup @ 38 = if >grass  one /house2 ;then
             dup @ 39 = if >grass  one /myconid ;then
@@ -168,7 +213,7 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 bg as /bg
 cam as p1 /follow 
 p1 as /myconid1 /avatar
-
+32 32 at one /hud me hud push
 
 \ replace the stepper; collisions etc
 : think  stage acts stage multi ;

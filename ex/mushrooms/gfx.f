@@ -1,3 +1,5 @@
+objlist: hud
+create fence  128 , 128 , 
 _actor fields:
     var scrollx var scrolly
     var mbx var mby
@@ -73,6 +75,7 @@ stage actor: cam   viewwh mbw 2!
     bg stage push
     p1 stage push
     cam stage push
-    show> ramenbg mount update-camera playfield 
+    show> ramenbg mount update-camera playfield hud draws
 ;
-/gfx 
+/gfx
+
