@@ -135,6 +135,7 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 : ?object  ( tileadr - )
             dup @ 5 = if  >grass  one /grass ;then
             dup @ 21 = if >grass  one /flower ;then
+            dup @ 22 = if >grass  at@ p1 's x 2! ;then
             dup @ 37 = if >grass  one /house1 ;then
             dup @ 38 = if >grass  one /house2 ;then
             dup @ 39 = if >grass  one /myconid ;then
