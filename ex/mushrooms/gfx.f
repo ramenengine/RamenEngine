@@ -1,6 +1,7 @@
 _actor fields:
     var scrollx var scrolly
-    var w var h
+    var mbx var mby
+    var mbw var mbh
     
 128 128 * array: tilebuf
 :make loc  ( col row array2d - adr )  >r 2pfloor 128 * + r> [] ;
@@ -8,9 +9,9 @@ _actor fields:
 ( variables )
 stage actor: bg 
 [undefined] p1 [if] stage actor: p1 [then]
-stage actor: cam   viewwh w 2!
-: playfield-box  0 0  128 16 * dup ;
-: mydims  img @ if spritewh else w 2@ then ;
+stage actor: cam   viewwh mbw 2!
+: playfield-box  0 0  fence 2@ 16 16 2* ;
+: mydims  img @ if spritewh else mbw 2@ then ;
 : playfield-clamp  playfield-box 2>r 2max 2r> mydims 2- 2min ;
 
 ( visibility culling )
@@ -59,7 +60,8 @@ stage actor: cam   viewwh w 2!
 ( shadows )
 : -at  2negate +at ;
 : shadow     2>r tint 4@ 0 0 0 1 tint 4! 2r@ +at sprite 2r> -at tint 4! ;
-: /shadowed  draw> 1 1 shadow sprite ;
+: !org  img @ -exit  img @ subwh 2 2 2/ cx 2! ;
+: /shadowed  draw>  !org  1 1 shadow sprite ;
 
 \ renderer; apply view transform at camera's pov
 : y!z  stage each> as  y @ spriteh + zorder ! ;

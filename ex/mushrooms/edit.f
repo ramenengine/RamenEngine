@@ -1,4 +1,21 @@
+( ---=== Mushroom EDITOR ===--- )
+
 variable tile
+
+: save  ( - )
+    0 0 tilebuf loc
+        tilebuf length cells
+        level$ count >datapath
+        file!
+        cr ." Saved." ;
+      
+: saveas  ( - <path> )
+    <filespec> level$ place save ;
+  
+: clear  ( - )
+    0 0 tilebuf loc tilebuf length 8 ifill cleanup ;
+
+: .level  level$ count type ;
 
 : cursor  ( - col row ) p1 's x 2@ bank subwh 2 2 2/ 2+ bank subwh 2/ 2pfloor ;
 : tilebuf   ( - array ) tilebuf ;
@@ -25,7 +42,7 @@ variable tile
         ctrl? if
             keycode case
                 <r> of  reload  endof
-                <s> of  savemap  cr ." Saved." endof
+                <s> of  save  endof
             endcase
         ;then
         keycode case
@@ -53,7 +70,7 @@ variable tile
 : /edit
     0 perform>
         begin
-            2 <space> kstate if 2 * then
+            shift? if 4 else 2 then
             <left> kstate if dup negate x +! then
             <right> kstate if dup x +! then
             <up> kstate if dup negate y +! then
@@ -62,6 +79,8 @@ variable tile
         pause
         again 
 ;
+
+s" mushrooms.f" ldr place
 
 reload 
 p1 { /edit :now act> scontrols ; }
