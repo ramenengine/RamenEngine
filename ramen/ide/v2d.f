@@ -1,5 +1,4 @@
 : vector:  ( x y - <name> )  create swap , , ;
-2 cells constant /vector
 : 2.  swap . . ;
 : 2?  swap ? ? ;
 : x@  @ ;
