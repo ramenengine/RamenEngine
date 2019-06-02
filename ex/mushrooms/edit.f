@@ -17,7 +17,7 @@ variable tile
 
 : .level  level$ count type ;
 
-: cursor  ( - col row ) p1 's x 2@ bank subwh 2 2 2/ 2+ bank subwh 2/ 2pfloor ;
+: cursor  ( - col row ) p1 's x 2@ bank subwh 2/ 2pfloor ;
 : tilebuf   ( - array ) tilebuf ;
 : bankcols  ( - cols ) bank image.subcols @ ;
 
