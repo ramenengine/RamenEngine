@@ -53,24 +53,31 @@ include ramen/default.f
 
 : .project  project count type ;
 
-variable ldl
+variable ldl  \ load-level 
 
-: ?project  project count nip ?exit  ldr count -filename project place ;
+: ?project  \ set project path if not already set
+    project count nip ?exit  ldr count -filename project place ;
 
 : (included)  1 ldl +!  ['] included catch 
             dup 0= if  -1 ldl +!  ?project  else  0 ldl !  then
             throw ;
 
-: rld  ldr count nip -exit ldr count (included) ;
+: rld
+    ldr count nip -exit
+    ldr count 2dup
+        file-exists not if
+            project count 2swap strjoin 
+        then        
+        (included) ;
 
 : ld  ( -- <file> )
     bl parse s" .f" strjoin 2>r
-        2r@ file-exists not if
-            project count 2r> strjoin 2>r
-        then
-        ldl @ 0= if 2r@ ldr place then 
-        
-        2r@ (included)
+        ldl @ 0= if 2r@ ldr place then
+        2r@ 2dup
+            file-exists not if
+                project count 2swap strjoin 
+            then                    
+            (included)
     2r> 2drop ;
 
 : empty
