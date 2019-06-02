@@ -5,7 +5,8 @@
 \  - "V" registers with push and pop words.  all "vector" params implicit?
 
 : vector:  ( x y - <name> )  create swap , , ;
-2 cells constant /vector
+2 cells constant vector
+: vectors vector * ;
 : 2.  swap . . ;
 : 3.  rot . 2. ;
 : 2?  swap ? ? ;
@@ -25,7 +26,7 @@
 : angle  ( x y - deg ) 1pf 1pf fatan2 r>d f>p  360 + 360 mod ;
 : hypot  ( x y - n )  2pf fdup f* fswap fdup f* f+ fsqrt f>p ;
 : normalize  ( vec - )  dup 2@ 2dup 0 0 d= ?exit  2dup hypot dup 2/  ( 1 1 2+ ) rot 2! ;
-: vdif  ( vec1 vec2 - x y )  2@ rot 2@ 2- ;
+: vdif  ( vec1 vec2 - x y )  swap 2@ rot 2@ 2- ;
 : proximity  ( vec1 vec2 - n ) vdif hypot ;   \ distance between two vectors
 : dotp  ( vec1 vec2 - n ) swap 2@ rot 2@  -rot ( b.x a.y ) * >r  ( a.x b.y ) *  r> - ;
 : rotate  ( deg vec - )
