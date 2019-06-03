@@ -82,13 +82,12 @@ _actor >prototype as
     anm @ dup if  >frame @  else  drop  frm @  then ;
 
 \ NSPRITE
-\ draw a sprite either from a subdivided image, animation, or image plus region table.
-\ if there's no animation, you can pack the flip info into the index. (lower 2 bits)
+\ draw a sprite either from a subdivided image or an image's region table.
+\ you can pack the flip info into the index. (lower 2 bits)
 \ IMG must be subdivided and/or it must have a region table. (region table takes precedence.)
 \ if neither, then the whole IMG will be drawn
 : nsprite  ( index - )
     img @ 0= if drop ;then
-    anm @ if frm ! frame@ then
     ?regorg >region curflip bsprite ;
 
 : +frame  ( speed - )  \ Advance the animation
