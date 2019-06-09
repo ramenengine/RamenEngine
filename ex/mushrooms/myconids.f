@@ -1,5 +1,6 @@
 ( myconids )
 16 16 s" myconids.png" >datapath tileset: myconids.png
+s" dig.png" >datapath image: dig.png
 _actor fields:
     var leader
     var state
@@ -28,16 +29,28 @@ myconids.png walk-anim-speed autoanim: /engineer.anim 11 , 12 , 13 , 12 , ;anim
         then
     again ;
 : chase   leader @ 's x x vdif angle 1.5 vec vx 2! ;
-: enlist  p1 leader !  enlisted# state !  /wander act> close? not if chase /wander then ;
-\ : drawn?   p1 dist 32 <= ;
-: drawn?   ( - f ) p1 's net @ dup -exit dup dist swap 's radius @ <= ;
+: enlist  p1 leader !  enlisted# state !  /wander
+    me party push 
+    act> close? not if chase /wander then ;
+: drawn?   ( - f ) p1 's net @ dup -exit dup dist swap 's radius @ 2 + <= ;
 : /?enlist  act> drawn? if cr ." Join!" enlist then ;
-: disengage  cr ." Leave!"  /wander  leader off  roaming# state !  /?enlist ;
+: disengage  cr ." Leave!"  /wander  leader off  roaming# state !  /?enlist
+    me party remove ;
 
 : /myconid  [myconid] role !  /myconid2 /solid /wander /?enlist ;
 : /engineer [myconid] role !  engineer# job !  /solid  /wander /?enlist
     /engineer.anim   draw>  !org  1 1 shadow sprite     9 nsprite ;
+
+: in-party ( job - n )
+    locals| j |
+    0 party each> { job @ j = if 1 + then } 
+;
+
+( digging stuff )
+: ?dig
     
+;
+
 ( avatar )
 : /strobe  ( amount ) perform> grow 5 pauses 0.05 fadeout p1 's net off end ;
 : strobe ( radius - )  me 0 0 from stage *actor dup net ! { /net /strobe } ;
@@ -46,4 +59,5 @@ myconids.png walk-anim-speed autoanim: /engineer.anim 11 , 12 , 13 , 12 , ;anim
     act>
         <space> pressed if 40 strobe then
         <q> pressed if release then
+        <d> pressed if ?dig then
 ;

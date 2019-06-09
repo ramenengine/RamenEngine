@@ -47,6 +47,7 @@ stage actor: p1
 create level$ 256 /allot
 _actor fields:
     var flags
+100 stack: party
 
 : checker   bit does> @ flags @ and 0<> ;
 : flag  dup constant checker ;  
@@ -73,6 +74,7 @@ drop
 ( roles )
 role: [myconid]
 role: [cheeselord]
+role: [goal]
 
 ( map tools )
 : pepper  swap for  dup fence 2@ 2rnd tilebuf loc !  loop drop ;
@@ -115,8 +117,25 @@ ld myconids
 
 
 ( houses - tiles 37, 38 )
-: /house1   mushroom-bg.png img !  draw> 0 -30 +at  0 0 32 48 0 bsprite ;
-: /house2   mushroom-bg.png img !  draw> 0 -30 +at  32 0 32 48 0 bsprite ;
+: /house1
+    [goal] role !  mushroom-bg.png img !
+    act>
+        engineer# in-party if
+            p1 dist 20 <= if
+                <d> pressed if
+                    cr ." Digigigigg"
+                then
+            then
+        then
+    draw>
+        -16 -36 +at  0 0 32 48 0 bsprite 
+        engineer# in-party if
+            p1 dist 20 <= if
+                x 2@ 8 -20 2+ at dig.png >bmp blit  \ dig icon
+            then
+        then
+;
+\ : /house2   /house draw> -16 -36 +at  32 0 32 48 0 bsprite ;
 
 
 ( cheeselord )
@@ -131,7 +150,7 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 : #roaming ( - n )
     0 stage each> { role @ [myconid] =  state @ roaming# =  and if 1 + then } ;
 : #enlisted ( - n )
-    0 stage each> { role @ [myconid] =  state @ enlisted# =  and if 1 + then } ;
+    party length ;
 : #engineers ( - n )
     0 stage each> { role @ [myconid] =  job @ engineer# =  and if 1 + then } ;
 : hudtext
@@ -159,7 +178,7 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
             dup @ 22 = if >grass  at@ p1 's x 2! ;then
             dup @ 23 = if >grass  one /engineer ;then
             dup @ 37 = if >grass  one /house1 ;then
-            dup @ 38 = if >grass  one /house2 ;then
+            \ dup @ 38 = if >grass  one /house2 ;then
             dup @ 39 = if >grass  one /myconid ;then
             drop
 ;

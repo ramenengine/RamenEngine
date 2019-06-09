@@ -1,3 +1,4 @@
+( variables )
 objlist: hud
 create fence  128 , 128 , 
 _actor fields:
@@ -6,12 +7,14 @@ _actor fields:
     var mbw var mbh
     
 128 128 * array: tilebuf
-:make loc  ( col row array2d - adr )  >r 2pfloor 128 * + r> [] ;
 
-( variables )
+:make loc  ( col row array2d - adr )
+    >r 2pfloor 128 * + r> [] ;
+
 stage actor: bg 
 [undefined] p1 [if] stage actor: p1 [then]
 stage actor: cam   viewwh mbw 2!
+
 : playfield-box  0 0  fence 2@ 16 16 2* ;
 : mydims  img @ if spritewh else mbw 2@ then ;
 : playfield-clamp  playfield-box 2>r 2max 2r> mydims 2- 2min ;
