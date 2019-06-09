@@ -84,8 +84,7 @@ variable tile
         again 
 ;
 
-s" mushrooms.f" ldr place
-
+s" session.f" ldr place
 reload 
 p1 { /edit :now act> scontrols ; }
 :now  show> ramenbg mount shove update-camera playfield editor ;

@@ -27,7 +27,7 @@ strings: level[]
 
 vectors: fence[]
     128 , 128 , \ 0
-    128 , 128 , \ 1
+    60 , 45 ,   \ 1
     128 , 128 , \ 2
     128 , 128 , \ 3
     128 , 128 , \ 4
@@ -99,43 +99,19 @@ mushroom-plants.png 1 8 / autoanim: /flower.anim 3 , 4 , 5 , 4 , ;anim
     vx 2@ x 2+!
 ;
 
-( myconids )
-16 16 s" myconids.png" >datapath tileset: myconids.png
+( "net" )
 _actor fields:
-    var leader
-    var state
-    var job
-1 32 / constant walk-anim-speed
-myconids.png walk-anim-speed autoanim: /myconid1.anim 2 , 3 , 4 , 3 , ;anim
-myconids.png walk-anim-speed autoanim: /myconid2.anim 6 , 7 , 8 , 7 , ;anim
-myconids.png walk-anim-speed autoanim: /engineer.anim 11 , 12 , 13 , 12 , ;anim
+    var radius
+    var net    \ allows actors to have associated nets
+: /circlef  draw>  tint 4@ rgba radius @ circlef ;
+: /net  1 0 0 0.5 tint 4!  /circlef ;
+: grow ( amount )  6 / for 6 radius +! pause loop ;
+: a  tint color.a ;
+: fadeout ( spd )  negate begin pause dup a +! a @ 0 <= until drop 0 a ! ;
+\ : /glued ( net - )  net ! act> x 2@ vx 2@ net @ { vx 2! x 2! } ;
 
-: /myconid1  /shadowed /myconid1.anim ;
-: /myconid2  /shadowed /myconid2.anim ;
-: -v  0 0 vx 2! ;
-: rdelay  0.5 2 between delay ;
-: dist  's x x proximity ;
-: close?  leader @ dist 40 < ;
-: /wander  0 perform> begin
-    leader @ if
-        close? if
-            360 rnd 0.5 vec vx 2! rdelay -v rdelay 
-        else
-            pause
-        then
-    else
-        -v rdelay 360 rnd 0.5 vec vx 2! rdelay 
-    then
-    again ;
-: chase   leader @ 's x x vdif angle 1.5 vec vx 2! ;
-: enlist  p1 leader !  enlisted# state !  /wander act> close? not if chase /wander then ;
-: /?enlist  act> p1 dist 32 <= if cr ." Join!" enlist then ;
-\ : /myconid  #2 rnd if /myconid1 else /myconid2 then /wander ;
-: /myconid  [myconid] role !  /myconid2 /solid /wander /?enlist ;
-: /engineer [myconid] role !  engineer# job !  /solid /wander /?enlist
-    /engineer.anim   draw>  !org  1 1 shadow sprite     9 nsprite ;
-: myconids  for  playfield-box somewhere at  one /myconid  loop ; 
-: /avatar   [myconid] role !  1.333 /vpan  /solid ;
+( myconids )
+ld myconids
 
 
 ( houses - tiles 37, 38 )
@@ -158,16 +134,17 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
     0 stage each> { role @ [myconid] =  state @ enlisted# =  and if 1 + then } ;
 : #engineers ( - n )
     0 stage each> { role @ [myconid] =  job @ engineer# =  and if 1 + then } ;
-
-: /hud
-    draw>
-        default-font font>
-        s" Roaming: " print 100 0 +at
+: hudtext
+    default-font font>
+        s" Roaming=" print 100 0 +at
         #roaming 1i (.) print 50 0 +at
-        s" Enlisted: " print 100 0 +at
-        #enlisted 1i (.) print 50 0 +at
-        s" Engineers: " print -200 40 +at
+        s" Party=" print 100 0 +at
+        #enlisted 1i (.) print -250 8 +at
+        s" Engineers=" print 100 0 +at
         #engineers 1i (.) print 
+;
+: /hud
+    draw> at@ 1 1 +at black hudtext at white hudtext
 ;
 
  
@@ -187,8 +164,8 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
             drop
 ;
 : gussy
-    128 for
-        128 for
+    fence y@ for
+        fence x@ for
             i j 16 16 2* at  
             i j tilebuf loc ?object     ( pass the tile's address to ?OBJECT (replaces some tiles with sprites)
         loop
@@ -208,12 +185,16 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 ;
 
 
+( misc )
+: myconids  for  playfield-box somewhere at  one /myconid  loop ; 
+
+
 ( setup the stage. )
 /gfx 
 bg as /bg
 cam as p1 /follow 
 p1 as /myconid1 /avatar
-32 32 at one /hud me hud push
+0 viewh 16 - at one /hud me hud push
 
 \ replace the stepper; collisions etc
 : think  stage acts stage multi ;
@@ -222,6 +203,3 @@ p1 as /myconid1 /avatar
 : ?edit  [defined] dev [if] <f12> pressed if s" ld edit" evaluate wipe then [then] ;
 : mushrooms/step  step> think physics sweep ?edit ; 
 mushrooms/step
-
-
-0 level

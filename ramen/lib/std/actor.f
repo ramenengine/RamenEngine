@@ -59,8 +59,7 @@ create objlists  _node static,           \ parent of all objlists
 ( stage )
 objlist: stage  \ default object list
 
-: one  ( - )
-    stage *actor as ;
+: one  ( - )  stage *actor as ;
 
 ( static actors )
 : actor:   ( parent - <name> )

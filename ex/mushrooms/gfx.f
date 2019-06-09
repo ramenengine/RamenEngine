@@ -66,7 +66,7 @@ stage actor: cam   viewwh mbw 2!
 : /shadowed  draw>  !org  1 1 shadow sprite ;
 
 \ renderer; apply view transform at camera's pov
-: y!z  stage each> as  y @ spriteh + zorder ! ;
+: y!z  stage each> as  y @ mbx @ + mbh @ + zorder ! ;
 : !forcez  bg as  0 zorder ! ;
 : playfield  cam as view> y!z !forcez hold> stage draws ;
 
