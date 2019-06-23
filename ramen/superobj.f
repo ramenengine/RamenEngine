@@ -186,7 +186,8 @@ previous
     then
 ;
 
-: allocation  dup class.maxSize @ dup if nip else drop class.size @ then ;
+: allocation  ( class - size )
+    dup class.maxSize @ dup if nip else drop class.size @ then ;
 
 : /object  ( class object - )
     >r 
