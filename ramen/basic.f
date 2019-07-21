@@ -3,7 +3,7 @@
 fixed
 depend ramen/lib/std/actor.f     
 depend ramen/lib/std/rangetools.f
-depend ramen/lib/std/task.f      
+depend ramen/lib/std/multi.f      
 depend ramen/lib/std/v2d.f       
 depend ramen/lib/std/kb.f        
 depend ramen/lib/std/audio.f     

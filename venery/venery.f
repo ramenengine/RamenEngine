@@ -49,10 +49,6 @@
 \   DOES> style SOME.
 \ []@                ( i collection -- val )      \ pronounced "brackets-fetch"
 \   Fetch item from collection at given index i.
-\ GATHER             ( src-collection dest-collection -- )
-\   Pushes all the items from one collection to another.
-\ COPY               ( src-collection dest-collection -- )
-\   Same as gather but vacates the destination collection.
 \ UNSERT             ( i collection -- val )
 \   Reverse of INSERT; extracts a value/node from a collection at given index i.
 \ WHICH              ( i xt collection -- i | -1 )  ( val -- flag )
@@ -168,13 +164,13 @@ constant collection-vtable-size
 : []@  ( i collection -- val )
     dup >r [] r> ?@ ;
     
-: gather ( src-collection dest-collection -- )
-    locals| b a |
-    a length b length + b capacity > abort" Error in GATHER: Destination collection is too small."
-    a length 0 do  i a []@  b push  loop ;
-
-: copy ( src-collection dest-collection -- )
-    dup vacate gather ;
+\ : gather ( src-collection dest-collection -- )
+\     locals| b a |
+\     a length b length + b capacity > abort" Error in GATHER: Destination collection is too small."
+\     a length 0 do  i a []@  b push  loop ;
+\ 
+\ : copy ( src-collection dest-collection -- )
+\     dup vacate gather ;
     
 : more? ( collection n -- flag )  \ checks if out of space or empty after n items added/subtracted
     swap dup >r length + dup 0 < swap  r> capacity > or ;

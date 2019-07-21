@@ -94,7 +94,7 @@ collection-vtable-size vtable node-vtable  ( collection 0 )
 2drop
 
 : /node  ( node -- )
-    $ffffffff over collection.capacity !
+    100000 over collection.capacity !
     node-vtable swap collection.vtable ! ;
 
 : 0node  ( node -- )

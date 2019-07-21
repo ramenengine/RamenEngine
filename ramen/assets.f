@@ -1,6 +1,6 @@
 ( ---=== Asset framework ===--- )
 
-cell #256 + cell+ constant /assetheader
+cell #64 + cell+ constant /assetheader
 defer initdata ( - )
 
 create assets 1000 *stack drop

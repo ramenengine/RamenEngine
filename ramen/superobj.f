@@ -75,7 +75,7 @@ previous
 
 ( object utils )
 : >class  ( object - class )  s" @" evaluate ; immediate
-: size  ( object - n )  >class sizeof ;
+: objdata  ( object - adr n )  dup >class sizeof cell- cell u+ ;
 : class!  ( class object - ) ! ;
 : is?  ( object class - flag ) swap >class = ;
 
