@@ -91,6 +91,7 @@ variable ldl  \ load-level
     0 to now
     source-id 0> if including -name #1 + slashes project place then  \ swiftforth
     empty
+    fixed
 ;
 : gild
     only forth definitions

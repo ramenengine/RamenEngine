@@ -20,14 +20,14 @@ asset: %image
 \ init-image  ( path c image - )  normal asset init 
 \ image:  ( path c - <name> )  declare named image.  
 \ >bmp  ( image - ALLEGRO_BITMAP )
+\ load-image  ( path c image - ) 
+\ free-image  ( image - )  
+
 : reload-image  >r  r@ srcfile count  findfile  zstring al_load_bitmap  r> image.bmp ! ;
 : unload-image  image.bmp @ al_destroy_bitmap ;
 : init-image  >r  r@ srcfile place  ['] reload-image ['] unload-image r@ register  r> reload-image ;
 : image:  create  %image *struct init-image  ;
 : >bmp  dup if image.bmp @ ;then ;
-
-\ load-image  ( path c image - ) 
-\ free-image  ( image - )  
 : free-image  image.bmp @ -bmp ;
 : load-image  dup free-image init-image ;
 
@@ -37,6 +37,7 @@ asset: %image
 \ resize-canvas  ( w h image - )
 \ init-canvas  ( w h image - )
 \ canvas:  ( w h - <name> )
+
 : recreate-canvas  #24 al_set_new_bitmap_depth  >r  r@ canvas.w 2@ 2i al_create_bitmap  r> image.bmp ! ;
 : unload-canvas  unload-image ;
 :slang ?samesize  >r  2dup r@ canvas.w 2@ d= if  2drop  r> r> 2drop  exit then  r> ;
