@@ -26,6 +26,7 @@
 : bounds  over + swap ;
 : lastbody  last @ name> >body ;
 : ccount  dup c@ 1 u+ ;
+: cplace  place ;
 : .name  dup if body> >name ccount type space else . then ;
 : $=  compare 0= ;
 
