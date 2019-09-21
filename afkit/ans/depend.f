@@ -5,7 +5,7 @@
 
 \ Conditional INCLUDE
 : include  ( - <path> )
-    >in @ >r  bl parse included  r> >in !  create ;
+    >in @ >r  create   r> >in !  bl parse included ;
 : depend  ( - <path> )
     >in @  exists if drop exit then  >in !
     include ;

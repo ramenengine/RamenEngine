@@ -70,7 +70,7 @@
 : :slang  ( - <name> <code> ; )   create immediate here 0 , does-slang  :noname swap ! ;
 
 \ vocabulary helpers
-: define
+: define  ( -- <name> )
     >in @
     exists if >in ! also ' execute definitions exit then  \ already defined
     dup >in !  vocabulary
