@@ -2,6 +2,7 @@ Ramen 2.0
 
 a 2D game dev framework and optional engine for making commercial-quality PC games in Forth.
 
+Update:
 i've gone from a submodule-based system to including all dependencies in the repository.
 
 the following repositories will house the stable releases of each dependency from now on:
