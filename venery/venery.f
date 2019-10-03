@@ -224,3 +224,7 @@ include venery/string.f
 include venery/nodetree.f
 
 only forth definitions
+
+: array:  create array, ;
+: stack:  create stack, ;
+

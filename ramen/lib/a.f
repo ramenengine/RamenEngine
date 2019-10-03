@@ -1,4 +1,6 @@
 0 value a@
+: !a  a@ ! ;
+: @a  a@ @ ;
 : @+  a@ @  cell +to a@ ;
 : !+  a@ !  cell +to a@ ;
 : a!  to a@ ;

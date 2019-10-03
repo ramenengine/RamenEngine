@@ -48,4 +48,8 @@ decimal
 
 : 0file  ( adr c len - )
   locals| len c adr |
-    here len erase  here len adr c file! ;
+    len allocate throw  dup len adr c file!  free throw ;
+
+: -file  ( adr c - )
+  begin 2dup file-exists while 2dup delete-file drop repeat 2drop ;
+  

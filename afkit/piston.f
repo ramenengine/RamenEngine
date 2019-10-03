@@ -25,6 +25,8 @@
 create mouse 0 , 0 ,
 create (mouse) 0 , 0 ,
 create mickey 0 , 0 ,
+variable lb
+variable rb
 
 \ Flags
 variable eco   \ enable to save CPU (for repl/editors etc)
@@ -45,6 +47,10 @@ create evt  256 /allot
 : !mickey  (mouse) 2@ mickey 2!  mouse 2@ (mouse) 2! ;
 : poll  ( - ) pollKB  pollJoys  !mickey ;
 : break ( - ) true to breaking? ;
+: ?b  
+    evt ALLEGRO_MOUSE_EVENT.button @ #1 = if lb ;then
+    evt ALLEGRO_MOUSE_EVENT.button @ #2 = if rb ;then
+;
 
 defer bye
 
@@ -150,6 +156,13 @@ variable (catch)
             <rshift>  of  false to shift?  endof
         endcase
     ;then
+
+    etype ALLEGRO_EVENT_MOUSE_AXES = if
+        evt ALLEGRO_MOUSE_EVENT.x 2@ mouse 2!
+    then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_DOWN = if ?b on ;then
+    etype ALLEGRO_EVENT_MOUSE_BUTTON_UP = if ?b off ;then
+    
 ;
 
 : al-emit-user-event  ( type - )  \ EVT is expected to be filled, except for the type
@@ -217,5 +230,5 @@ define internal
         vy @ 0< if  y @ 0 < if  vy @ negate vy !  then then
         vx @ 0> if  x @ res x@ 50 - >= if  vx @ negate vx !  then then
         vy @ 0> if  y @ res y@ 50 - >= if  vy @ negate vy !  then then
-        ;  execute
+    ; execute
 only forth definitions

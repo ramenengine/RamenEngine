@@ -146,6 +146,10 @@ create penx  0 ,  here 0 ,  constant peny
 
 :make >host HWND btf ;
 
+create (wd) #512 allot
+: zwd  ( - zadr )  al_get_current_directory zcount (wd) zplace  (wd) ;
+: cwd  ( adr c - flag )  (wd) zplace   (wd) al_change_directory 0<> ;
+
 \ ----------------------------------------------- keyboard -----------------------------------------
 
 : pollKB  ( - )
@@ -188,8 +192,8 @@ transform: (identity)
 : bmph   ( bmp - n )  al_get_bitmap_height  ;
 : bmpwh  ( bmp - w h )  dup bmpw swap bmph ;
 : hold>  ( - <code> )  1 al_hold_bitmap_drawing  r> call  0 al_hold_bitmap_drawing ;
-: loadbmp  ( adr c - bmp ) zstring al_load_bitmap ;
-: savebmp  ( bmp adr c - ) zstring swap al_save_bitmap 0= abort" Allegro: Error saving bitmap." ;
+: loadbmp  ( adr c - bmp ) zstring al_load_bitmap dup 0 = abort" Error loading a bitmap." ;
+: savebmp  ( bmp adr c - ) zstring swap al_save_bitmap 0 = abort" Allegro: Error saving a bitmap." ;
 : -bmp  ( bmp - )  ?dup -exit al_destroy_bitmap ;
 
 create write-src  ALLEGRO_ADD , ALLEGRO_ONE   , ALLEGRO_ZERO          , ALLEGRO_ADD , ALLEGRO_ONE , ALLEGRO_ZERO , 
@@ -231,7 +235,8 @@ previous
     ALLEGRO_FULLSCREEN_WINDOW 
     ALLEGRO_OPENGL or
     al_set_new_display_flags
-    +display ;
+    +display
+;
 
 fullscreen
 

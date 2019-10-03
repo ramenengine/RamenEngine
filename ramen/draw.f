@@ -37,7 +37,7 @@ fixed
 : backbuf  display al_get_backbuffer ;
 : backdrop  fore 4@ al_clear_to_color  white  0 0 at ;
 : drench  ( bmp )  onto>  backdrop ;
-
+: *subbmp  ( bmp x y w h - subbmp ) 4i al_create_sub_bitmap ;
 
 
 \ Bitmap drawing words
@@ -52,7 +52,7 @@ fixed
 : sblit  ( bmp destw desth )
     locals| dh dw |
     ?dup -exit
-    ( bmp )  dup >r  fore 4@  0 0 r> bmpwh 4af  destxy dw dh 4af  0  al_draw_tinted_scaled_bitmap ;
+    ( bmp )  dup >r  0 0 r> bmpwh 4af  destxy dw dh 4af  0  al_draw_scaled_bitmap ;
 : >center  dup al_get_bitmap_width 2 / swap al_get_bitmap_height 2 / 2p ;
 : xblit ( bmp scalex scaley angle flip )
     locals| flip ang sy sx bmp |
@@ -62,24 +62,24 @@ fixed
 : bblit  ( bmp x y w h flip )
     locals| flip h w y x bmp |
     bmp -exit
-    bmp  fore 4@  x y w h 4af  destxy 2af  flip  al_draw_tinted_bitmap_region ;
+    bmp  x y w h 4af  destxy 2af  flip  al_draw_bitmap_region ;
 
 
 \ Text; uses Ramen font assets
 variable fnt  default-font fnt !
 : stringw    ( adr c - n ) zstring fnt @ >fnt swap al_get_text_width 1p ;
 : stringwh   ( adr c - w h ) stringw fnt @ chrh ;
-: (print) ( str count alignment - )
+: (text) ( str count alignment - )
     -rot  zstring >r  >r  fnt @ >fnt fore 4@ destxy 2af r> r> al_draw_text ;
-: print   ( str c - ) ALLEGRO_ALIGN_LEFT (print)  ;
-: printr  ( str c - ) ALLEGRO_ALIGN_RIGHT (print) ;
-: printc  ( str c - ) ALLEGRO_ALIGN_CENTER (print) ;
+: text   ( str c - ) ALLEGRO_ALIGN_LEFT   (text)  ;
+: textr  ( str c - ) ALLEGRO_ALIGN_RIGHT  (text) ;
+: textc  ( str c - ) ALLEGRO_ALIGN_CENTER (text) ;
 : font>   ( font - ) r> fnt @ >r swap fnt ! call r> fnt ! ;
 
 \ Primitives
 1e fnegate 1sf constant hairline
-: pofs   0.625 dup 2+ ;
-: -pofs  -1 dup 2+ ;
+: pofs   ; \ 0.625 dup 2+ ;
+: -pofs  ; \ -1 dup 2+ ;
 : line   ( dx dy ) destxy pofs  2swap 4af fore 4@ hairline al_draw_line ;
 : pixel  destxy pofs  2af  fore 4@  al_draw_pixel ;
 : rect   ( w h )  -pofs destxy pofs  2swap 2over 2+ 4af fore 4@ hairline al_draw_rectangle ;

@@ -212,7 +212,7 @@ create ide-personality
   consolas font>
   at@ 2>r
   #rows   for
-    dup #cols 1i #128 min print
+    dup #cols 1i #128 min text
     0 fh +at
     #128 +
   loop
