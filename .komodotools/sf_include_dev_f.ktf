@@ -3,10 +3,10 @@
   "parseRegex": "", 
   "doNotOpenOutputWindow": 1, 
   "keyboard_shortcut": "F5", 
-  "name": "sf include loader.f", 
+  "name": "sf include dev.f", 
   "operateOnSelection": 0, 
   "value": [
-    "sf include loader.f"
+    "sf include dev.f"
   ], 
   "parseOutput": 0, 
   "version": "1.1.5", 
