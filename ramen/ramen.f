@@ -10,4 +10,6 @@
     [then]
 [then]
 
+permanent off  \ assets from here on are not permanent
 cr .( Loaded Ramen. ) \ "
+

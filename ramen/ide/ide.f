@@ -5,8 +5,20 @@ create margins 4 cells /allot
 : ?.catch  ?dup if  postpone [  .catch  then ;
 
 define ideing
+
 include afkit/plat/win/clipb.f
 include ramen/ide/v2d.f
+
+( ~~~~~~~~~~~~~~~~ Session script ~~~~~~~~~~~~~~~~ )
+
+create session ," session.f"
+: ?session
+    session count file-exists if
+        session count s[ ]s session off included
+    then
+;
+
+( ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ )
 
 0 value outbuf
 0 value >outbuf
@@ -294,7 +306,10 @@ only forth definitions also ideing
 : ide:pagedown  pagedown ;
 
 : ide-system  idekeys ;
-: ide-overlay  0 0 at  unmount  repl @ if shade then  .output  bottom at .cmdline ;
+: ide-overlay
+  ['] ?session catch ?.catch  
+  0 0 at  unmount  repl @ if shade then  .output  bottom at .cmdline
+;
 : rasa  ['] ide-system  is ?system  ['] ide-overlay  is ?overlay ;
 : -ide  close-personality  HWND btf ;
 : ide  rasa  /repl  ['] ?rest catch ?.catch  go  -ide ;

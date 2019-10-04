@@ -94,9 +94,11 @@ variable ldl  \ load-level
     fixed
 ;
 : gild
+    get-order get-current
     only forth definitions
     s" marker (empty)" evaluate
     cr ." [Gild] "
+    set-current set-order
 ;
 : now  now 1p ;  \ must go last
 

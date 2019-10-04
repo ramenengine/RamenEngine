@@ -192,8 +192,22 @@ transform: (identity)
 : bmph   ( bmp - n )  al_get_bitmap_height  ;
 : bmpwh  ( bmp - w h )  dup bmpw swap bmph ;
 : hold>  ( - <code> )  1 al_hold_bitmap_drawing  r> call  0 al_hold_bitmap_drawing ;
-: loadbmp  ( adr c - bmp ) zstring al_load_bitmap dup 0 = abort" Error loading a bitmap." ;
-: savebmp  ( bmp adr c - ) zstring swap al_save_bitmap 0 = abort" Allegro: Error saving a bitmap." ;
+: loadbmp  ( adr c - bmp )
+    zstring dup al_load_bitmap dup 0 = if
+      cr zcount type
+      true abort" AFKit: Error loading a bitmap." 
+    else
+      nip
+    then
+;
+: savebmp  ( bmp adr c - )
+    zstring dup rot al_save_bitmap 0 = if
+      cr zcount type
+      true abort" AFKit: Error saving a bitmap."
+    else
+      drop
+    then
+;
 : -bmp  ( bmp - )  ?dup -exit al_destroy_bitmap ;
 
 create write-src  ALLEGRO_ADD , ALLEGRO_ONE   , ALLEGRO_ZERO          , ALLEGRO_ADD , ALLEGRO_ONE , ALLEGRO_ZERO , 
@@ -239,6 +253,25 @@ previous
 ;
 
 fullscreen
+
+
+( -=- Dialog box errors -=- )
+
+: error  ( message count - )
+    zstring >r  display z" Error" z" "  r>  z" Shoot" ALLEGRO_MESSAGEBOX_ERROR
+        al_show_native_message_box drop ;
+
+[defined] dev [in-platform] sf and [if]
+  : softcatch  ( xt - ) catch ?dup if cr (THROW) type then ;
+[else]
+  : softcatch  ( xt - ) catch throw ;
+[then]
+
+[in-platform] sf [if]
+  : ?alert  ( xt - ) catch ?dup if (THROW) error then ;
+[else]
+  : ?alert  ( xt - ) softcatch ;
+[then]
 
 \ --------------------------------------------------------------------------------------------------
 include afkit/piston.f

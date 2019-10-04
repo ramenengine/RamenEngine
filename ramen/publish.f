@@ -19,19 +19,8 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
 : kickoff  
     boot cold warm go ;
 
-: error  ( message count - )
-    zstring >r  display z" Bad trouble" z" "  r>  z" Shoot" ALLEGRO_MESSAGEBOX_ERROR
-        al_show_native_message_box drop ;
-
 : runtime
-    [in-platform] sf [if]
-        ['] kickoff catch ?dup if
-           (THROW) error
-        then
-    [else]
-        kickoff 
-    [then]
-    bye ;
+    ['] kickoff ?alert bye ;
 
 : relify
     dup asset? if srcfile dup count s" data/" search if  rot place  else 3drop then
@@ -45,7 +34,16 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
           ['] relify assets each
           ['] runtime 'main !
           program
-          >host ;
+          >host
+      ;
+          
+      : debug  ( - <name> )
+          cr ." Publishing to "  >in @ bl parse type >in !  ." .exe (DEBUG) ..."
+          ['] relify assets each
+          ['] development 'main !
+          program
+          >host
+      ;
           
   [else]
       cr .( PROGRAM not defined; PUBLISH disabled )

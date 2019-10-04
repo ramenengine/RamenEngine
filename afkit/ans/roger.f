@@ -1,5 +1,4 @@
 : zcount ( zaddr - addr n )   dup dup if  65535 0 scan drop over - then ;
-: zlength ( zaddr - n )   zcount nip ;
 : zplace ( from n to - )   tuck over + >r  cmove  0 r> c! ;
 : zappend ( from n to - )   zcount + zplace ;
 [undefined] third [if] : third  >r over r> swap ; [then]

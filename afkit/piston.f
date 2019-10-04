@@ -77,7 +77,6 @@ using internal
 : mounty  ( - n ) repl @ if 0 else displayh 2 / mounth 2 / - then ;
 : mountxy ( - x y ) mountx mounty ;
 
-
 : mount  ( - )
     m1 al_identity_transform
     m1 #globalscale s>f 1sf dup al_scale_transform
@@ -192,8 +191,8 @@ variable (catch)
             'show try to showerr
             unmount  display onto  ?overlay
         r> to offsetTable  r> to me  
-    2r> at ;
-: present ( - ) al_flip_display ;
+    2r> at
+    al_flip_display ;
 : ?suppress ( - ) repl? if clearkb then ;
 : step ( - )
     me >r  offsetTable >r  at@ 2>r
@@ -214,8 +213,9 @@ variable (catch)
         ?system
         eco @ ?exit
     repeat ;
-: frame ( - ) show present attend poll step ?hidemouse ;
-: go ( - )   /go    begin  frame  breaking? until  go/ ;
+: frame ( - ) show attend poll step ?hidemouse ;
+
+: go ( - )   /go  begin  frame  breaking? until  go/ ;
 
 \ default demo: dark blue screen with bouncing white square
 define internal
