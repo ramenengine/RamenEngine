@@ -113,11 +113,15 @@ variable (catch)
         call 0 
     [then] ;
 
+
+: pump ( - ) repl? ?exit  'pump try to pumperr ;
+
 : suspend ( - ) 
     begin
         eventq evt al_wait_for_event
         etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if
             clearkb  false to alt?
+            'pump try to pumperr 
             exit 
         then
     again    
@@ -198,7 +202,6 @@ variable (catch)
     me >r  offsetTable >r  at@ 2>r
     ?suppress  'step try to steperr   1 +to now
     2r> at  r> to offsetTable  r> to me ;
-: pump ( - ) repl? ?exit  'pump try to pumperr ;
 
 : /go ( - )  resetkb  false to breaking?   >display  false to alt?  false to ctrl?  false to shift? ;
 : go/ ( - )  eventq al_flush_event_queue  >host  false to breaking?  ;
