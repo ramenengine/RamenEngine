@@ -8,6 +8,7 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
 
 : boot
     false to allegro?
+    0 to display
     fullscreen
     al-default-font default-font font.fnt !
     project off
@@ -35,6 +36,7 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
           ['] runtime 'main !
           program
           >host
+          s" :make bye 0 ExitProcess ;" evaluate
       ;
           
       : debug  ( - <name> )
@@ -43,6 +45,7 @@ defer warm  :make warm ;   \ warm boot: executed potentially multiple times
           ['] development 'main !
           program
           >host
+          s" :make bye 0 ExitProcess ;" evaluate
       ;
           
   [else]
