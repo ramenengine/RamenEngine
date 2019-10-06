@@ -110,7 +110,7 @@ create penx  0 ,  here 0 ,  constant peny
     ALLEGRO_DEPTH_TEST 0 al_set_render_state
 ;
 
-: valid?  ( adr - flag ) ['] @ catch nip 0 = ;
+: valid?  ( adr - flag ) 0<> ;
 : scaled-res  ( - w h ) res x@ #globalscale * res y@ #globalscale * ;
 : +display  ( - ) display valid? ?exit  scaled-res init-display ;
 : -display  ( - ) display valid? -exit
