@@ -77,7 +77,7 @@ create attributes
 
 ( metrics )
 consolas char A chrw constant fw
-consolas chrh constant fh
+consolas fonth constant fh
 \ : right-margin  ( - n ) margins x2@ fw /  displayw fw /  min ;
 \ : bottom-margin  ( - n ) margins y2@ fh /  displayh 3 rows - fh /  min ;
 : #cols  ( - n ) displayw fw / pfloor 128 min ;

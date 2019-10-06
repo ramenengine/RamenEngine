@@ -16,7 +16,7 @@ ff ff ff createcolor white f8 e0 a0 createcolor beige
 e0 68 fb createcolor pink ce 26 33 createcolor red
 73 29 30 createcolor dred  eb 89 31 createcolor lbrown
 a4 64 22 createcolor brown f7 e2 5b createcolor yellow
-bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
+bc b3 30 createcolor dyellow 3c ae 27 createcolor lgreen
 44 89 1a createcolor green 21 5c 2e createcolor dgreen
 27 c1 a7 createcolor cyan 14 80 7e createcolor dcyan
 24 5a ef createcolor blue 34 2a 97 createcolor dblue
@@ -68,7 +68,7 @@ fixed
 \ Text; uses Ramen font assets
 variable fnt  default-font fnt !
 : stringw    ( adr c - n ) zstring fnt @ >fnt swap al_get_text_width 1p ;
-: stringwh   ( adr c - w h ) stringw fnt @ chrh ;
+: stringwh   ( adr c - w h ) stringw fnt @ fonth ;
 : (text) ( str count alignment - )
     -rot  zstring >r  >r  fnt @ >fnt fore 4@ destxy 2af r> r> al_draw_text ;
 : text   ( str c - ) ALLEGRO_ALIGN_LEFT   (text)  ;
