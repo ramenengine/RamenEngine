@@ -67,8 +67,6 @@ fixed
 
 \ Text; uses Ramen font assets
 variable fnt  default-font fnt !
-: stringw    ( adr c - n ) zstring fnt @ >fnt swap al_get_text_width 1p ;
-: stringwh   ( adr c - w h ) stringw fnt @ fonth ;
 : (text) ( str count alignment - )
     -rot  zstring >r  >r  fnt @ >fnt fore 4@ destxy 2af r> r> al_draw_text ;
 : text   ( str c - ) ALLEGRO_ALIGN_LEFT   (text)  ;

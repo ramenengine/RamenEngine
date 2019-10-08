@@ -19,6 +19,15 @@ asset: %font
     create  %font *struct  init-font ;
 
 create (chr)  0 c, 0 c,
-: chrw    ( font chr - n ) (chr) c!  >fnt (chr) al_get_text_width 1p ;
 
-: fonth    ( font - n ) >fnt al_get_font_line_height 1p ;
+: chrw    ( font chr - n )
+    (chr) c!  >fnt (chr) al_get_text_width 1p ;
+
+: fonth    ( font - n )
+    >fnt al_get_font_line_height 1p ;
+
+: stringw    ( adr c font - n )
+    >r zstring r> >fnt swap al_get_text_width 1p ;
+
+: stringwh   ( adr c font - w h )
+    >r r@ stringw r> fonth ;
