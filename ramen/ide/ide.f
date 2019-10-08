@@ -185,7 +185,7 @@ create ide-personality
             <f5> of
                 shift? if
                     s" session.f" file-exists if
-                        s" session.f" included
+                        s" session.f" ['] included catch ?.catch
                     then
                 else
                     [defined] rld [if] ['] (rld) catch ?.catch [then]
