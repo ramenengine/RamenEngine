@@ -12,11 +12,9 @@
 
 
 : ext-kb
-    etype ALLEGRO_EVENT_KEY_DOWN = keycode <f2> = and if
-        page
-        repl? if repl off else repl on then
-    ;then 
+    etype ALLEGRO_EVENT_KEY_DOWN = keycode <f2> = and if   page   ;then 
 ;
+
 : (system)  ext-kb  ext-mouse  ide-system  ;
 
 also ideing

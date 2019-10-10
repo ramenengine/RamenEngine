@@ -159,7 +159,6 @@ create ide-personality
 : obey     store  echo  ['] interp catch ?.catch  0 cmdbuf ! ;
 
 ( hotkey stuff )
-: toggle  dup @ not swap ! ;
 
 : (rld)    cr ." Reloading... " s" rld" evaluate ;
 
@@ -181,7 +180,7 @@ create ide-personality
     etype ALLEGRO_EVENT_KEY_DOWN = if
         keycode #37 < ?exit
         keycode case
-            <tab> of  repl toggle  endof
+            <tab> of  repl @ dup if page then 0 = repl !   endof
             <f5> of
                 shift? if
                     s" session.f" file-exists if
