@@ -7,6 +7,7 @@ depend ramen/lib/std/tilecol.f
 depend ramen/lib/std/zsort.f
 320 240 resolution
 ld gfx
+ld tunnel
 
 : strings:  ( - <name> ) ( n - adr )
     create does> swap for count + loop ;
@@ -45,9 +46,12 @@ fixed
 stage actor: p1
 0 value level#
 create level$ 256 /allot
+
 _actor fields:
     var flags
+
 100 stack: party
+
 
 : checker   bit does> @ flags @ and 0<> ;
 : flag  dup constant checker ;  
@@ -145,14 +149,16 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 
 
 ( hud )
+: is?  role @ = ;
+: count>  r> locals| f |  0 swap each> f call if 1 + then ;
 : #myconids ( - n )
-    0 stage each> 's role @ [myconid] = if 1 + then ;
+    stage count> { [myconid] is? } ;
 : #roaming ( - n )
-    0 stage each> { role @ [myconid] =  state @ roaming# =  and if 1 + then } ;
+    stage count> { [myconid] is?  state @ roaming# =  and } ;
 : #enlisted ( - n )
     party length ;
 : #engineers ( - n )
-    0 stage each> { role @ [myconid] =  job @ engineer# =  and if 1 + then } ;
+    stage count> { [myconid] is?  job @ engineer# =  and } ;
 : hudtext
     default-font font>
         s" Roaming=" print 100 0 +at
@@ -168,7 +174,7 @@ cheeselord.png walk-anim-speed autoanim: /cheeselord.anim 0 , 1 , ;anim
 
  
 
-( load map )
+( loading levels )
 : thinout  each> { dyn @ if me dismiss then } ;
 : cleanup  stage thinout sweep ;
 : >grass   8 swap ! ;
