@@ -9,3 +9,4 @@
 : c+a  +to a@ ;
 : c!+  a@ c! #1 +to a@ ;
 : c@+  a@ c@ #1 +to a@ ;
+: f@+  a@ sf@ cell +to a@ ;

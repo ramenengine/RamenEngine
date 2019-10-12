@@ -7,8 +7,9 @@ create fore 1e sf, 1e sf, 1e sf, 1e sf,
 
 
 \ Predefined Colors; stored in fixed-point so you can modify them with `['] <color> >BODY`
-: 8>p  s>f 255e f/ f>p ;
-: createcolor create rot 8>p , swap 8>p , 8>p , 1 , does> 3@ 3af fore 3! 1 alpha ;
+\ stored as ALLEGRO_COLOR's (singles)
+: 8>f  s>f 255e f/ ;
+: createcolor create rot 8>f sf, swap 8>f sf, 8>f sf, 1e sf, does> 4@ fore 4! ;
 hex
 00 00 00 createcolor black 39 41 45 createcolor dgrey
 9d 9d 9d createcolor grey cc cc cc createcolor lgrey
